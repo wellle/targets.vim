@@ -122,10 +122,10 @@ a ( b ( cccccccc ) d ) e
 
 ### Next and Last Pair
 
-    in( in) inb in{ in} inB in[ in] inr in< in> ina    il( il) ilb il{ il} ilB il[ il] ilr il< il> ila
-    an( an) anb an{ an} anB an[ an] anr an< an> ana    al( al) alb al{ al} alB al[ al] alr al< al> ala
-    In( In) Inb In{ In} InB In[ In] Inr In< In> Ina    Il( Il) Ilb Il{ Il} IlB Il[ Il] Ilr Il< Il> Ila
-    An( An) Anb An{ An} AnB An[ An] Anr An< An> Ana    Al( Al) Alb Al{ Al} AlB Al[ Al] Alr Al< Al> Ala
+    in( in) inb in{ in} inB in[ in] inr in< in> ina  il( il) ilb il{ il} ilB il[ il] ilr il< il> ila
+    an( an) anb an{ an} anB an[ an] anr an< an> ana  al( al) alb al{ al} alB al[ al] alr al< al> ala
+    In( In) Inb In{ In} InB In[ In] Inr In< In> Ina  Il( Il) Ilb Il{ Il} IlB Il[ Il] Ilr Il< Il> Ila
+    An( An) Anb An{ An} AnB An[ An] Anr An< An> Ana  Al( Al) Alb Al{ Al} AlB Al[ Al] Alr Al< Al> Ala
 
 Work directly on distant pairs without moving there separately.
 
@@ -336,14 +336,14 @@ a , b , cccccccc , d , e
 
 ### Next and Last Separator
 
-    in, in. in; in: in+ in- in~ in_ in* in/ in| in\    il, il. il; il: il+ il- il~ il_ il* il/ il| il\
-    an, an. an; an: an+ an- an~ an_ an* an/ an| an\    al, al. al; al: al+ al- al~ al_ al* al/ al| al\
-    In, In. In; In: In+ In- In~ In_ In* In/ In| In\    Il, Il. Il; Il: Il+ Il- Il~ Il_ Il* Il/ Il| Il\
-    An, An. An; An: An+ An- An~ An_ An* An/ An| An\    Al, Al. Al; Al: Al+ Al- Al~ Al_ Al* Al/ Al| Al\
-    iN, iN. iN; iN: iN+ iN- iN~ iN_ iN* iN/ iN| iN\    iL, iL. iL; iL: iL+ iL- iL~ iL_ iL* iL/ iL| iL\
-    aN, aN. aN; aN: aN+ aN- aN~ aN_ aN* aN/ aN| aN\    aL, aL. aL; aL: aL+ aL- aL~ aL_ aL* aL/ aL| aL\
-    IN, IN. IN; IN: IN+ IN- IN~ IN_ IN* IN/ IN| IN\    IL, IL. IL; IL: IL+ IL- IL~ IL_ IL* IL/ IL| IL\
-    AN, AN. AN; AN: AN+ AN- AN~ AN_ AN* AN/ AN| AN\    AL, AL. AL; AL: AL+ AL- AL~ AL_ AL* AL/ AL| AL\
+    in, in. in; in: in+ in- in~ in_ in* in/ in| in\  il, il. il; il: il+ il- il~ il_ il* il/ il| il\
+    an, an. an; an: an+ an- an~ an_ an* an/ an| an\  al, al. al; al: al+ al- al~ al_ al* al/ al| al\
+    In, In. In; In: In+ In- In~ In_ In* In/ In| In\  Il, Il. Il; Il: Il+ Il- Il~ Il_ Il* Il/ Il| Il\
+    An, An. An; An: An+ An- An~ An_ An* An/ An| An\  Al, Al. Al; Al: Al+ Al- Al~ Al_ Al* Al/ Al| Al\
+    iN, iN. iN; iN: iN+ iN- iN~ iN_ iN* iN/ iN| iN\  iL, iL. iL; iL: iL+ iL- iL~ iL_ iL* iL/ iL| iL\
+    aN, aN. aN; aN: aN+ aN- aN~ aN_ aN* aN/ aN| aN\  aL, aL. aL; aL: aL+ aL- aL~ aL_ aL* aL/ aL| aL\
+    IN, IN. IN; IN: IN+ IN- IN~ IN_ IN* IN/ IN| IN\  IL, IL. IL; IL: IL+ IL- IL~ IL_ IL* IL/ IL| IL\
+    AN, AN. AN; AN: AN+ AN- AN~ AN_ AN* AN/ AN| AN\  AL, AL. AL; AL: AL+ AL- AL~ AL_ AL* AL/ AL| AL\
 
 Work directly on distant separators without moving there separately.
 
