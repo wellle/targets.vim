@@ -13,7 +13,8 @@ set cpo&vim
 " followed by optional selection modifiers
 function! targets#match(opening, closing, matchers)
     call targets#init(a:opening, a:closing)
-    if targets#findMatch(a:matchers)
+    call targets#findMatch(a:matchers)
+    if targets#foundMatch()
         call cursor(s:sl, s:sc)
         normal! v
         call cursor(s:el, s:ec)
@@ -51,7 +52,20 @@ function! targets#findMatch(matchers)
         call Matcher()
     endfor
     unlet! Matcher
-    return !s:fail && s:sl > 0 && s:el > 0 && s:sc <= s:ec
+endfunction
+
+function! targets#foundMatch()
+    if s:fail || s:sl == 0 || s:el == 0
+        return 0
+    elseif s:sl < s:el
+        return 1
+    elseif s:sl > s:el
+        return 0
+    elseif s:sc > s:ec
+        return 0
+    else
+        return 1
+    endif
 endfunction
 
 " mark current matching run as failed
