@@ -401,7 +401,7 @@ Use your favorite plugin manager.
 
 - [Repeating an operator-pending mapping forgets its last
   count.](https://groups.google.com/forum/?fromgroups#!topic/vim_dev/G4SSgcRVN7g)
-- Empty matches can't be selected because it is no possible to visually select
+- Empty matches can't be selected because it is not possible to visually select
   zero-character ranges.
 - Forcing to motion to work linewise by inserting `V` in `dVan(` doesn't work
   for operator-pending mappings. See `:h o_V`.
