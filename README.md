@@ -63,11 +63,13 @@ Pair text objects work over multiple lines.
 
 `i( i) ib i{ i} iB i[ i] ir i< i> ia`
 
-Select inside of pair characters. This overrides Vim's default text object to
-allow seeking for the next pair in the current line to the right or left when
-the cursor is not inside a pair. This behavior is similar to Vim's seeking
-behavior of `di'` when not inside of quotes, but it works both ways. See below
-for details about seeking. Accepts a count to select multiple blocks.
+- Select inside of pair characters.
+- This overrides Vim's default text object to allow seeking for the next pair
+  in the current line to the right or left when the cursor is not inside a
+  pair. This behavior is similar to Vim's seeking behavior of `di'` when not
+  inside of quotes, but it works both ways. See below for details about
+  seeking.
+- Accepts a count to select multiple blocks.
 
 ```
       ............
@@ -80,8 +82,9 @@ a ( b ( cccccccc ) d ) e
 
 `a( a) ab a{ a} aB a[ a] ar a< a> aa`
 
-Select a pair including pair characters. Overrides Vim's default text object to
-allow seeking. Accepts a count.
+- Select a pair including pair characters.
+- Overrides Vim's default text object to allow seeking.
+- Accepts a count.
 
 ```
       ............
@@ -94,9 +97,11 @@ a ( b ( cccccccc ) d ) e
 
 `I( I) Ib I{ I} IB I[ I] Ir I< I> Ia`
 
-Select contents of pair characters. Like inside of parentheses, but
-exclude whitespace at both ends. Useful for changing contents while
-preserving spacing. Supports seeking. Accepts a count.
+- Select contents of pair characters.
+- Like inside of parentheses, but exclude whitespace at both ends. Useful for
+  changing contents while preserving spacing.
+- Supports seeking.
+- Accepts a count.
 
 ```
       ............
@@ -109,9 +114,11 @@ a ( b ( cccccccc ) d ) e
 
 `A( A) Ab A{ A} AB A[ A] Ar A< A> Aa`
 
-Select around pair characters. Like a pair, but include whitespace at one side
-of the pair. Prefers to select trailing whitespace, falls back to select
-leading whitespace. Supports seeking. Accepts a count.
+- Select around pair characters.
+- Like a pair, but include whitespace at one side of the pair. Prefers to
+  select trailing whitespace, falls back to select leading whitespace.
+- Supports seeking.
+- Accepts a count.
 
 ```
       ............
@@ -188,8 +195,9 @@ left or right of the cursor.
 
 `` i' i" i` ``
 
-Select inside quote. This overrides Vim's default text object to allow
-seeking in both directions. See below for details about seeking.
+- Select inside quote.
+- This overrides Vim's default text object to allow seeking in both directions.
+  See below for details about seeking.
 
 ```
   ............
@@ -201,9 +209,10 @@ a ' bbbbbbbb ' c ' d
 
 ``a' a" a` ``
 
-Select a quote. This overrides Vim's default text object to support seeking.
-Includes surrounding whitespace in one direction, exactly like Vim's built in
-quote text objects.
+- Select a quote.
+- This overrides Vim's default text object to support seeking.
+- Includes surrounding whitespace in one direction, exactly like Vim's built in
+  quote text objects.
 
 ```
   ............
@@ -215,9 +224,10 @@ a ' bbbbbbbb ' c ' d
 
 ``I' I" I` ``
 
-Select contents of a quote. Like inside quote, but exclude whitespace at
-both ends. Useful for changing contents while preserving spacing. Supports
-seeking.
+- Select contents of a quote.
+- Like inside quote, but exclude whitespace at both ends. Useful for changing
+  contents while preserving spacing.
+- Supports seeking.
 
 ```
   ............
@@ -284,7 +294,8 @@ Separator text objects work on the current line only.
 
 `i, i. i; i: i+ i- i~ i_ i* i/ i| i\`
 
-Select inside separators. Similar to in quote. Supports seeking.
+- Select inside separators. Similar to in quote.
+- Supports seeking.
 
 ```
       ...........
@@ -296,10 +307,11 @@ a , b , cccccccc , d , e
 
 `a, a. a; a: a+ a- a~ a_ a* a/ a| a\`
 
-Select an item in a list separated by the separator character. This includes
-the leading separator, but excludes the trailing one. This leaves a proper list
-separated by the separator character after deletion. See the examples above.
-Supports seeking.
+- Select an item in a list separated by the separator character.
+- Includes the leading separator, but excludes the trailing one. This leaves
+  a proper list separated by the separator character after deletion. See the
+  examples above.
+- Supports seeking.
 
 ```
       ...........
@@ -311,9 +323,10 @@ a , b , cccccccc , d , e
 
 `I, I. I; I: I+ I- I~ I_ I* I/ I| I\`
 
-Select contents between separators. Like inside separators, but
-exclude whitespace at both ends. Useful for changing contents while
-preserving spacing. Supports seeking.
+- Select contents between separators.
+- Like inside separators, but exclude whitespace at both ends. Useful for
+  changing contents while preserving spacing.
+- Supports seeking.
 
 ```
       ...........
@@ -325,8 +338,10 @@ a , b , cccccccc , d , e
 
 `A, A. A; A: A+ A- A~ A_ A* A/ A| A\`
 
-Select around a pair of separators. This includes both separators and a
-surrounding whitespace, similar to `a'` and `A(`. Supports seeking.
+- Select around a pair of separators.
+- Includes both separators and a surrounding whitespace, similar to `a'` and
+  `A(`.
+- Supports seeking.
 
 ```
       ...........
