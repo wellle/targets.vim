@@ -1,10 +1,11 @@
 ## Introduction
 
-**Targets.vim** is a Vim plugin that adds various text objects to give you more
-targets to operate on.  It expands on the idea of simple commands like `di'`
-(delete inside the single quotes around the cursor) to give you more
-opportunities to craft powerful commands that can be repeated reliably. One
-major goal is to handle all corner cases correctly.
+**Targets.vim** is a Vim plugin that adds various [text objects][textobjects]
+to give you more targets to [operate][operator] on.  It expands on the idea of
+simple commands like `di'` (delete inside the single quotes around the cursor)
+to give you more opportunities to craft powerful commands that can be
+[repeated][repeat] reliably. One major goal is to handle all corner cases
+correctly.
 
 ## Examples
 
@@ -51,8 +52,7 @@ Supported trigger characters:
 - `[` `]` `r` (work on square brackets)
 - `<` `>` `a` (work on angle brackets)
 
-We borrowed the aliases `r` and `a` from the [`vim-surround`
-plugin](https://github.com/tpope/vim-surround).
+We borrowed the aliases `r` and `a` from the [`vim-surround` plugin][surround].
 
 The following examples will use parentheses, but they all work for each listed
 trigger character accordingly.
@@ -394,19 +394,19 @@ This is similar to using the explicit version containing `n` or `l`.
 
 Use your favorite plugin manager.
 
-- [NeoBundle](https://github.com/Shougo/neobundle.vim)
+- [NeoBundle][neobundle]
 
     ```vim
     NeoBundle 'wellle/targets.vim'
     ```
 
-- [Vundle](https://github.com/gmarik/vundle)
+- [Vundle][vundle]
 
     ```vim
     Bundle 'wellle/targets.vim'
     ```
 
-- [Pathogen](https://github.com/tpope/vim-pathogen)
+- [Pathogen][pathogen]
 
     ```sh
     git clone git://github.com/wellle/targets.vim.git ~/.vim/bundle/targets.vim
@@ -414,16 +414,26 @@ Use your favorite plugin manager.
 
 ## Issues
 
-- [Repeating an operator-pending mapping forgets its last
-  count.](https://groups.google.com/forum/?fromgroups#!topic/vim_dev/G4SSgcRVN7g)
+- [Repeating an operator-pending mapping forgets its last count.][repeatcount]
 - Empty matches can't be selected because it is not possible to visually select
   zero-character ranges.
 - Forcing to motion to work linewise by inserting `V` in `dVan(` doesn't work
-  for operator-pending mappings. See `:h o_V`.
+  for operator-pending mappings. [See `:h o_v`][o_v].
 - Report issues or submit pull requests to
-  [github.com/wellle/targets.vim](https://github.com/wellle/targets.vim).
+  [github.com/wellle/targets.vim][targets].
 
 ## Todos
 
 Create more mappings to support commands like `danw` or `danp` to delete the
 next word or paragraph.
+
+[textobjects]: http://vimdoc.sourceforge.net/htmldoc/motion.html#text-objects
+[operator]: http://vimdoc.sourceforge.net/htmldoc/motion.html#operator
+[repeat]: http://vimdoc.sourceforge.net/htmldoc/repeat.html#single-repeat
+[surround]: https://github.com/tpope/vim-surround
+[neobundle]: https://github.com/Shougo/neobundle.vim
+[vundle]: https://github.com/gmarik/vundle
+[pathogen]: https://github.com/tpope/vim-pathogen
+[repeatcount]: https://groups.google.com/forum/?fromgroups#!topic/vim_dev/G4SSgcRVN7g
+[targets]: https://github.com/wellle/targets.vim
+[o_v]: http://vimdoc.sourceforge.net/htmldoc/motion.html#o_v
