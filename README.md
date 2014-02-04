@@ -17,17 +17,17 @@ part of the line that the command will operate on.
 To change the text in the next pair of parentheses, use the `cin)` command
 
 ```
-.....................
-This is example text (with a pair of parentheses).
-                      └───────── cin) ─────────┘
+cursor position │    .....................
+buffer line     │    This is example text (with a pair of parentheses).
+selection       │                          └───────── cin) ─────────┘
 ```
 
 To delete the item in a comma separated list under the cursor, use `da,`
 
 ```
-                              .........
-Shopping list: oranges, apples, bananas, tomatoes
-                              └─ da, ─┘
+cursor position │                                  .........
+buffer line     │    Shopping list: oranges, apples, bananas, tomatoes
+selection       │                                  └─ da, ─┘
 ```
 
 Notice how the selection includes exactly one of the surrounding commas to
