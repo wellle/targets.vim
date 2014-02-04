@@ -219,8 +219,12 @@ endfunction
 " line │ a .  b  . c
 " out  │    └───┘
 function! targets#drop()
-    let s:sc += 1
-    let s:ec -= 1
+    call cursor(s:sl, s:sc)
+    execute "normal 1 "
+    let [_, s:sl, s:sc, _] = getpos('.')
+    call cursor(s:el, s:ec)
+    execute "normal \<BS>"
+    let [_, s:el, s:ec, _] = getpos('.')
 endfunction
 
 " drop right delimiter
