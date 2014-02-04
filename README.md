@@ -129,10 +129,7 @@ a ( b ( cccccccc ) d ) e
 
 ### Next and Last Pair
 
-    in( in) inb in{ in} inB in[ in] inr in< in> ina  il( il) ilb il{ il} ilB il[ il] ilr il< il> ila
-    an( an) anb an{ an} anB an[ an] anr an< an> ana  al( al) alb al{ al} alB al[ al] alr al< al> ala
-    In( In) Inb In{ In} InB In[ In] Inr In< In> Ina  Il( Il) Ilb Il{ Il} IlB Il[ Il] Ilr Il< Il> Ila
-    An( An) Anb An{ An} AnB An[ An] Anr An< An> Ana  Al( Al) Alb Al{ Al} AlB Al[ Al] Alr Al< Al> Ala
+`in( an( In( An( il( al( Il( Al( ...`
 
 Work directly on distant pairs without moving there separately.
 
@@ -141,30 +138,7 @@ including the letter `n`. The command `in)` selects inside of the next
 pair. Use the letter `l` instead to work on the previous (last) pair. Uses
 a count to skip multiple pairs. Skipping works over multiple lines.
 
-The following charts summarizes all pair mappings for a list of pairs and
-nested pairs:
-
-```
-                           ..........
-a ( bbbbbbbb ) ( ccccccc ) ( dddddd ) ( eeeeeee ) ( ffffffff ) g
-  ││└ 2Il) ┘│││││└ Il) ┘│││││└ I) ┘│││││└ In) ┘│││││└ 2In) ┘│││
-  │└─ 2il) ─┘│││└─ il) ─┘│││└─ i) ─┘│││└─ in) ─┘│││└─ 2in) ─┘││
-  ├── 2al) ──┘│├── al) ──┘│├── a) ──┘│├── an) ──┘│├── 2an) ──┘│
-  └── 2Al) ───┘└── Al) ───┘└── A) ───┘└── An) ───┘└── 2An) ───┘
-```
-
-```
-                           ..........
-a ( b ( cccccccc ) d ) ( e ( ffffff ) g ) ( h ( iiiiiiii ) j ) k
-  │││ ││└ 2Il) ┘││││││││││ ││└ I) ┘││││││││││ ││└ 2In) ┘│││││││
-  │││ │└─ 2il) ─┘│││││││││ │└─ i) ─┘│││││││││ │└─ 2in) ─┘││││││
-  │││ ├── 2al) ──┘││││││││ ├── a) ──┘││││││││ ├── 2an) ──┘│││││
-  │││ └── 2Al) ───┘│││││││ └── A) ───┘│││││││ └── 2An) ───┘││││
-  ││└───── Il) ────┘│││││└─── 2I) ────┘│││││└───── In) ────┘│││
-  │└────── il) ─────┘│││└──── 2i) ─────┘│││└────── in) ─────┘││
-  ├─────── al) ──────┘│├───── 2a) ──────┘│├─────── an) ──────┘│
-  └─────── Al) ───────┘└───── 2A) ───────┘└─────── An) ───────┘
-```
+See our [Cheat Sheet][cheatsheet] for two charts summarizing all pair mappings.
 
 ### Pair Seek
 
@@ -237,11 +211,7 @@ a ' bbbbbbbb ' c ' d
 
 ### Next and Last Quote
 
-```
-in' in" in` il' il" il`    an' an" an` al' al" al`
-In' In" In` Il' Il" Il`    iN' iN" iN` iL' iL" iL`
-aN' aN" aN` aL' aL" aL`    IN' IN" IN` IL' IL" IL`
-```
+`in' In' An' il' Il' Al' iN' IN' AN' iL' IL' AL' ...`
 
 Work directly on distant quotes without moving there separately.
 
@@ -254,16 +224,7 @@ Use uppercase `N` and `L` to jump from within one quote into the next
 proper quote, instead of into the pseudo quote in between. (Using `N`
 instead of `n` is actually just doubling the count to achieve this.)
 
-The following chart summarizes all quote mappings:
-
-```
-                      ..........
-a ' bbbbbbb ' ccccccc ' dddddd ' eeeeeee ' fffffff ' g
-  ││└ IL' ┘│││└ Il' ┘│││└ I' ┘│││└ In' ┘│││└ IN' ┘│ │
-  │└─ iL' ─┘│├─ il' ─┘│├─ i' ─┘│├─ in' ─┘│├─ iN' ─┘ │
-  └── aL' ──┼┘        └┼─ a' ──┼┘        └┼─ aN' ───┘
-            └── al' ───┘       └── an' ───┘
-```
+See our [Cheat Sheet][cheatsheet] for a chart summarizing all quote mappings.
 
 ### Quote Seek
 
@@ -351,14 +312,7 @@ a , b , cccccccc , d , e
 
 ### Next and Last Separator
 
-    in, in. in; in: in+ in- in~ in_ in* in/ in| in\  il, il. il; il: il+ il- il~ il_ il* il/ il| il\
-    an, an. an; an: an+ an- an~ an_ an* an/ an| an\  al, al. al; al: al+ al- al~ al_ al* al/ al| al\
-    In, In. In; In: In+ In- In~ In_ In* In/ In| In\  Il, Il. Il; Il: Il+ Il- Il~ Il_ Il* Il/ Il| Il\
-    An, An. An; An: An+ An- An~ An_ An* An/ An| An\  Al, Al. Al; Al: Al+ Al- Al~ Al_ Al* Al/ Al| Al\
-    iN, iN. iN; iN: iN+ iN- iN~ iN_ iN* iN/ iN| iN\  iL, iL. iL; iL: iL+ iL- iL~ iL_ iL* iL/ iL| iL\
-    aN, aN. aN; aN: aN+ aN- aN~ aN_ aN* aN/ aN| aN\  aL, aL. aL; aL: aL+ aL- aL~ aL_ aL* aL/ aL| aL\
-    IN, IN. IN; IN: IN+ IN- IN~ IN_ IN* IN/ IN| IN\  IL, IL. IL; IL: IL+ IL- IL~ IL_ IL* IL/ IL| IL\
-    AN, AN. AN; AN: AN+ AN- AN~ AN_ AN* AN/ AN| AN\  AL, AL. AL; AL: AL+ AL- AL~ AL_ AL* AL/ AL| AL\
+`in, an, In, An, il, al, Il, Al, iN, aN, IN, AN, iL, aL, IL, AL, ...`
 
 Work directly on distant separators without moving there separately.
 
@@ -371,17 +325,7 @@ Use uppercase `N` and `L` to jump from within one pair of separators into
 the next distinct pair, instead of into the adjacent one. (Using `N`
 instead of `n` is actually just doubling the count to achieve this.)
 
-The following chart summarizes all separator mappings:
-
-```
-                      .........
-a , bbbbbbb , ccccccc , dddddd , eeeeeee , fffffff , g
-  ││└ IL, ┘│││└ Il, ┘│││└ I, ┘│││└ In, ┘│││└ IN, ┘│ │
-  │└─ iL, ─┤│├─ il, ─┤│├─ i, ─┤│├─ in, ─┤│├─ iN, ─┤ │
-  ├── aL, ─┘├┼─ al, ─┘├┼─ a, ─┘├┼─ an, ─┘├┼─ aN, ─┘ │
-  └── AL, ──┼┘        └┼─ A, ──┼┘        └┼─ AN, ───┘
-            └─  Al,  ──┘       └─  An,  ──┘
-```
+See our [Cheat Sheet][cheatsheet] for a chart summarizing all separator mappings.
 
 ### Separator Seek
 
@@ -427,6 +371,7 @@ Use your favorite plugin manager.
 Create more mappings to support commands like `danw` or `danp` to delete the
 next word or paragraph.
 
+[cheatsheet]: cheatsheet.md
 [textobjects]: http://vimdoc.sourceforge.net/htmldoc/motion.html#text-objects
 [operator]: http://vimdoc.sourceforge.net/htmldoc/motion.html#operator
 [repeat]: http://vimdoc.sourceforge.net/htmldoc/repeat.html#single-repeat
