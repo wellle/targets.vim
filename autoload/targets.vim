@@ -220,10 +220,10 @@ endfunction
 " out  │    └───┘
 function! targets#drop()
     call cursor(s:sl, s:sc)
-    execute "normal 1 "
+    execute "normal! 1 "
     let [_, s:sl, s:sc, _] = getpos('.')
     call cursor(s:el, s:ec)
-    execute "normal \<BS>"
+    execute "normal! \<BS>"
     let [_, s:el, s:ec, _] = getpos('.')
 endfunction
 
