@@ -147,20 +147,20 @@ function! targets#lastp()
     let s:count = 1
 endfunction
 
-" if there's no opening delimiter to the left, search to the right
-" if there's no closing delimiter to the right, search to the left
+" if there's no opening delimiter to the right, search to the left
+" if there's no closing delimiter to the left, search to the right
 " uses count for next or last
 " in   │ ..     │  .   │     ..
 " line │ a '  ' │ ' '  │ '  ' b
 " out  │   1  2 │  .   │ 2  1
 function! targets#seek()
-    let [line, _] = searchpos(s:opening, 'bcn', line('.'))
-    if line == 0 " no match to the left
-        call targets#next()
-    endif
-    let [line, _] = searchpos(s:closing, 'n', line('.'))
+    let [line, _] = searchpos(s:opening, 'n', line('.'))
     if line == 0 " no match to the right
         call targets#last()
+    endif
+    let [line, _] = searchpos(s:closing, 'bcn', line('.'))
+    if line == 0 " no match to the left
+        call targets#next()
     endif
     unlet line
 endfunction
