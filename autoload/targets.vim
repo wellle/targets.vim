@@ -43,6 +43,9 @@ function! targets#findMatch(matchers)
     for matcher in split(a:matchers)
         let Matcher = function('targets#' . matcher)
         call Matcher()
+        if s:failed
+            break
+        endif
     endfor
     unlet! Matcher
 endfunction
