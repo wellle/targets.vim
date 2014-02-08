@@ -50,6 +50,7 @@ function! targets#findMatch(matchers)
     unlet! Matcher
 endfunction
 
+" handle the match by either selecting or aborting it
 function! targets#handleMatch()
     if s:failed || s:sl == 0 || s:el == 0
         call targets#abortMatch()
@@ -57,6 +58,9 @@ function! targets#handleMatch()
         call targets#selectMatch()
     elseif s:sl > s:el
         call targets#abortMatch()
+    elseif s:sc == s:ec + 1
+        " zero width match found
+        call targets#handleEmptyMatch()
     elseif s:sc > s:ec
         call targets#abortMatch()
     else
@@ -64,12 +68,21 @@ function! targets#handleMatch()
     endif
 endfunction
 
+" select a proper match
 function! targets#selectMatch()
     call cursor(s:sl, s:sc)
     silent! normal! v
     call cursor(s:el, s:ec)
 endfunction
 
+" empty matches can't visually be selected
+" most operator just move to the end delimiter
+" when change was requested, insert in between
+function! targets#handleEmptyMatch()
+    call targets#abortMatch()
+endfunction
+
+" abort when no match was found
 function! targets#abortMatch()
     call setpos('.', s:oldpos)
     " get into normal mode and beep
