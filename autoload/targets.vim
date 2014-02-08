@@ -15,12 +15,9 @@ function! targets#match(opening, closing, matchers)
     call targets#init(a:opening, a:closing)
     call targets#findMatch(a:matchers)
     if targets#foundMatch()
-        call cursor(s:sl, s:sc)
-        normal! v
-        call cursor(s:el, s:ec)
+        call targets#selectMatch()
     else
-        call setpos('.', s:oldpos)
-        return
+        call targets#failMatch()
     endif
     call targets#cleanUp()
 endfunction
@@ -66,6 +63,17 @@ function! targets#foundMatch()
     else
         return 1
     endif
+endfunction
+
+function! targets#selectMatch()
+    call cursor(s:sl, s:sc)
+    normal! v
+    call cursor(s:el, s:ec)
+endfunction
+
+function! targets#failMatch()
+    call setpos('.', s:oldpos)
+    return
 endfunction
 
 " mark current matching run as failed
