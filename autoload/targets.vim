@@ -32,7 +32,7 @@ function! targets#init(opening, closing)
     let s:closing = escape(a:closing, '".~\')
     let [s:sl, s:sc, s:el, s:ec] = [0, 0, 0, 0]
     let s:oldpos = getpos('.')
-    let s:fail = 0
+    let s:failed = 0
 endfunction
 
 " clean up script variables after match
@@ -42,7 +42,7 @@ function! targets#cleanUp()
     unlet s:closing
     unlet s:sl s:sc s:el s:ec
     unlet s:oldpos
-    unlet s:fail
+    unlet s:failed
 endfunction
 
 " try to find match and return 1 in case of success
@@ -55,7 +55,7 @@ function! targets#findMatch(matchers)
 endfunction
 
 function! targets#foundMatch()
-    if s:fail || s:sl == 0 || s:el == 0
+    if s:failed || s:sl == 0 || s:el == 0
         return 0
     elseif s:sl < s:el
         return 1
@@ -69,8 +69,8 @@ function! targets#foundMatch()
 endfunction
 
 " mark current matching run as failed
-function! targets#fail()
-    let s:fail = 1
+function! targets#setFailed()
+    let s:failed = 1
 endfunction
 
 " position modifiers
@@ -176,11 +176,11 @@ endfunction
 function! targets#select()
     let [s:sl, s:sc] = searchpos(s:opening, 'bc', line('.'))
     if s:sc == 0 " no match to the left
-        return targets#fail()
+        return targets#setFailed()
     endif
     let [s:el, s:ec] = searchpos(s:closing, '', line('.'))
     if s:ec == 0 " no match to the right
-        return targets#fail()
+        return targets#setFailed()
     endif
 endfunction
 
@@ -201,7 +201,7 @@ function! targets#selectp()
     let [_, s:sl, s:sc, _] = getpos('.')
     normal! v
     if s:sc == s:ec
-        return targets#fail()
+        return targets#setFailed()
     endif
 endfunction
 
