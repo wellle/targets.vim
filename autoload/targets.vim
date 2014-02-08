@@ -14,11 +14,7 @@ set cpo&vim
 function! targets#match(opening, closing, matchers)
     call targets#init(a:opening, a:closing)
     call targets#findMatch(a:matchers)
-    if targets#foundMatch()
-        call targets#selectMatch()
-    else
-        call targets#failMatch()
-    endif
+    call targets#handleMatch()
     call targets#cleanUp()
 endfunction
 
@@ -51,17 +47,17 @@ function! targets#findMatch(matchers)
     unlet! Matcher
 endfunction
 
-function! targets#foundMatch()
+function! targets#handleMatch()
     if s:failed || s:sl == 0 || s:el == 0
-        return 0
+        call targets#failMatch()
     elseif s:sl < s:el
-        return 1
+        call targets#selectMatch()
     elseif s:sl > s:el
-        return 0
+        call targets#failMatch()
     elseif s:sc > s:ec
-        return 0
+        call targets#failMatch()
     else
-        return 1
+        call targets#selectMatch()
     endif
 endfunction
 
