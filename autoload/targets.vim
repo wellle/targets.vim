@@ -52,13 +52,13 @@ endfunction
 
 function! targets#handleMatch()
     if s:failed || s:sl == 0 || s:el == 0
-        call targets#failMatch()
+        call targets#abortMatch()
     elseif s:sl < s:el
         call targets#selectMatch()
     elseif s:sl > s:el
-        call targets#failMatch()
+        call targets#abortMatch()
     elseif s:sc > s:ec
-        call targets#failMatch()
+        call targets#abortMatch()
     else
         call targets#selectMatch()
     endif
@@ -70,7 +70,7 @@ function! targets#selectMatch()
     call cursor(s:el, s:ec)
 endfunction
 
-function! targets#failMatch()
+function! targets#abortMatch()
     call setpos('.', s:oldpos)
     return
 endfunction
