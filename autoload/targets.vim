@@ -101,7 +101,7 @@ function! targets#quote()
         endwhile
         call setpos('.', oldpos)
         if closing " cursor is on closing delimiter
-            normal! h
+            silent! normal! h
         endif
         unlet oldpos closing line
     endif
@@ -129,7 +129,7 @@ function! targets#last()
         call searchpos(s:closing, 'b', line('.'))
     endfor
     let s:count = 1
-    normal! h
+    silent! normal! h
 endfunction
 
 " find `count` next opening delimiter (multi line)
@@ -198,10 +198,12 @@ endfunction
 "          │ └── 2 ──┘
 function! targets#selectp()
     " `normal! %` doesn't work with `<>`
-    execute 'normal! va' . s:opening
-    for _ in range(s:count - 1)
-        execute 'normal! a' . s:opening
+    silent! execute 'normal! v'
+    for _ in range(s:count)
+        silent! execute 'normal! a' . s:opening
+        " TODO: fail if selection didn't change
     endfor
+
     let s:count = 1
     let [_, s:el, s:ec, _] = getpos('.')
     normal! o
@@ -227,10 +229,10 @@ endfunction
 " out  │    └───┘
 function! targets#drop()
     call cursor(s:sl, s:sc)
-    execute "normal! 1 "
+    silent! execute "normal! 1 "
     let [_, s:sl, s:sc, _] = getpos('.')
     call cursor(s:el, s:ec)
-    execute "normal! \<BS>"
+    silent! execute "normal! \<BS>"
     let [_, s:el, s:ec, _] = getpos('.')
 endfunction
 
