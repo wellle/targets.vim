@@ -19,7 +19,15 @@ function! s:createTextObject(prefix, trigger, opening, closing, matchers)
     let lhs = '<silent>' . a:prefix . a:trigger
     let rhs = ":<C-U>call targets#match('" . opening . "', '" . closing . "', '" . a:matchers . "')"
     execute 'onoremap ' . lhs . ' ' . rhs . '<CR>'
-    execute 'vnoremap ' . lhs . ' ' . rhs . '<CR>'
+
+    " don't create vmaps beginning with `A` or `I`
+    " conflict with `^VA` and `^VI` to append before or insert after visual
+    " block selection. would like to have mapping only for visual, but not for
+    " visual block mode. #6
+    if a:prefix !~# "^[AI]"
+        execute 'vnoremap ' . lhs . ' ' . rhs . '<CR>'
+    endif
+
     unlet opening closing lhs rhs
 endfunction
 
