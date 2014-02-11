@@ -359,8 +359,8 @@ Use your favorite plugin manager.
 ## Issues
 
 - [Repeating an operator-pending mapping forgets its last count.][repeatcount]
-- Empty matches can't be selected because it is not possible to visually select
-  zero-character ranges.
+- [Empty matches can't be selected because it is not possible to visually select
+  zero-character ranges.][emptyrange]
 - Forcing to motion to work linewise by inserting `V` in `dVan(` doesn't work
   for operator-pending mappings. [See `:h o_v`][o_v].
 - Report issues or submit pull requests to
@@ -380,5 +380,6 @@ next word or paragraph.
 [vundle]: https://github.com/gmarik/vundle
 [pathogen]: https://github.com/tpope/vim-pathogen
 [repeatcount]: https://groups.google.com/forum/?fromgroups#!topic/vim_dev/G4SSgcRVN7g
+[emptyrange]: https://groups.google.com/forum/#!topic/vim_use/qialxUwdcMc
 [targets]: https://github.com/wellle/targets.vim
 [o_v]: http://vimdoc.sourceforge.net/htmldoc/motion.html#o_v
