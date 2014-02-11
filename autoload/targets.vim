@@ -74,7 +74,17 @@ function! targets#abortMatch()
     call setpos('.', s:oldpos)
     " get into normal mode and beep
     execute "normal! \<C-\>\<C-N>\<Esc>"
+    " undo partial command
+    let undoseq = undotree().seq_cur
+    call feedkeys(":call targets#undo(" . undoseq . ")\<CR>")
     return
+endfunction
+
+function! targets#undo(lastseq)
+    if undotree().seq_cur > a:lastseq
+        normal! u
+    endif
+    " echo 'lastseq' a:lastseq 'curseq' undotree().seq_cur
 endfunction
 
 " mark current matching run as failed
