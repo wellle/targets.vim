@@ -14,14 +14,7 @@ set cpo&vim
 function! targets#match(opening, closing, matchers)
     call targets#init(a:opening, a:closing)
     call targets#findMatch(a:matchers)
-    if targets#foundMatch()
-        call cursor(s:sl, s:sc)
-        normal! v
-        call cursor(s:el, s:ec)
-    else
-        call setpos('.', s:oldpos)
-        return
-    endif
+    call targets#handleMatch()
     call targets#cleanUp()
 endfunction
 
@@ -32,7 +25,7 @@ function! targets#init(opening, closing)
     let s:closing = escape(a:closing, '".~\')
     let [s:sl, s:sc, s:el, s:ec] = [0, 0, 0, 0]
     let s:oldpos = getpos('.')
-    let s:fail = 0
+    let s:failed = 0
 endfunction
 
 " clean up script variables after match
@@ -42,7 +35,7 @@ function! targets#cleanUp()
     unlet s:closing
     unlet s:sl s:sc s:el s:ec
     unlet s:oldpos
-    unlet s:fail
+    unlet s:failed
 endfunction
 
 " try to find match and return 1 in case of success
@@ -50,27 +43,53 @@ function! targets#findMatch(matchers)
     for matcher in split(a:matchers)
         let Matcher = function('targets#' . matcher)
         call Matcher()
+        if s:failed
+            break
+        endif
     endfor
     unlet! Matcher
 endfunction
 
-function! targets#foundMatch()
-    if s:fail || s:sl == 0 || s:el == 0
-        return 0
+function! targets#handleMatch()
+    if s:failed || s:sl == 0 || s:el == 0
+        call targets#abortMatch()
     elseif s:sl < s:el
-        return 1
+        call targets#selectMatch()
     elseif s:sl > s:el
-        return 0
+        call targets#abortMatch()
     elseif s:sc > s:ec
-        return 0
+        call targets#abortMatch()
     else
-        return 1
+        call targets#selectMatch()
     endif
 endfunction
 
+function! targets#selectMatch()
+    call cursor(s:sl, s:sc)
+    normal! v
+    call cursor(s:el, s:ec)
+endfunction
+
+function! targets#abortMatch()
+    call setpos('.', s:oldpos)
+    " get into normal mode and beep
+    execute "normal! \<C-\>\<C-N>\<Esc>"
+    " undo partial command
+    let undoseq = undotree().seq_cur
+    call feedkeys(":call targets#undo(" . undoseq . ")\<CR>")
+    return
+endfunction
+
+function! targets#undo(lastseq)
+    if undotree().seq_cur > a:lastseq
+        normal! u
+    endif
+    " echo 'lastseq' a:lastseq 'curseq' undotree().seq_cur
+endfunction
+
 " mark current matching run as failed
-function! targets#fail()
-    let s:fail = 1
+function! targets#setFailed()
+    let s:failed = 1
 endfunction
 
 " position modifiers
@@ -94,7 +113,7 @@ function! targets#quote()
         endwhile
         call setpos('.', oldpos)
         if closing " cursor is on closing delimiter
-            normal! h
+            silent! normal! h
         endif
         unlet oldpos closing line
     endif
@@ -122,7 +141,7 @@ function! targets#last()
         call searchpos(s:closing, 'b', line('.'))
     endfor
     let s:count = 1
-    normal! h
+    silent! normal! h
 endfunction
 
 " find `count` next opening delimiter (multi line)
@@ -176,11 +195,11 @@ endfunction
 function! targets#select()
     let [s:sl, s:sc] = searchpos(s:opening, 'bc', line('.'))
     if s:sc == 0 " no match to the left
-        return targets#fail()
+        return targets#setFailed()
     endif
     let [s:el, s:ec] = searchpos(s:closing, '', line('.'))
     if s:ec == 0 " no match to the right
-        return targets#fail()
+        return targets#setFailed()
     endif
 endfunction
 
@@ -191,17 +210,19 @@ endfunction
 "          │ └── 2 ──┘
 function! targets#selectp()
     " `normal! %` doesn't work with `<>`
-    execute 'normal! va' . s:opening
-    for _ in range(s:count - 1)
-        execute 'normal! a' . s:opening
+    silent! execute 'normal! v'
+    for _ in range(s:count)
+        silent! execute 'normal! a' . s:opening
+        " TODO: fail if selection didn't change
     endfor
+
     let s:count = 1
     let [_, s:el, s:ec, _] = getpos('.')
     normal! o
     let [_, s:sl, s:sc, _] = getpos('.')
     normal! v
     if s:sc == s:ec
-        return targets#fail()
+        return targets#setFailed()
     endif
 endfunction
 
@@ -220,10 +241,10 @@ endfunction
 " out  │    └───┘
 function! targets#drop()
     call cursor(s:sl, s:sc)
-    execute "normal! 1 "
+    silent! execute "normal! 1 "
     let [_, s:sl, s:sc, _] = getpos('.')
     call cursor(s:el, s:ec)
-    execute "normal! \<BS>"
+    silent! execute "normal! \<BS>"
     let [_, s:el, s:ec, _] = getpos('.')
 endfunction
 
