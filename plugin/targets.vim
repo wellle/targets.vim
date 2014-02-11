@@ -19,8 +19,7 @@ function! s:createTextObject(prefix, trigger, opening, closing, matchers)
     " first silent to silence first call
     let lhs = '<silent>' . a:prefix . a:trigger
     " second silent to silence calls repeated with `.`
-    " let rhs = ":<C-U>silent call targets#match('" . opening . "', '" . closing . "', '" . a:matchers . "')"
-    let rhs = ":<C-U>call targets#match('" . opening . "', '" . closing . "', '" . a:matchers . "')"
+    let rhs = ":<C-U>silent call targets#match('" . opening . "', '" . closing . "', '" . a:matchers . "')"
     execute 'onoremap ' . lhs . ' ' . rhs . '<CR>'
 
     " don't create vmaps beginning with `A` or `I`
