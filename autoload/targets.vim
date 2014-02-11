@@ -77,13 +77,13 @@ function! targets#abortMatch()
     " undo partial command
     if exists("*undotree")
         let undoseq = undotree().seq_cur
-        call feedkeys(":call targets#undo(" . undoseq . ")\<CR>\<C-L>")
+        call feedkeys(":call targets#undo(" . undoseq . ")\<CR>")
     endif
 endfunction
 
 function! targets#undo(lastseq)
     if undotree().seq_cur > a:lastseq
-        silent! normal! u
+        silent! execute "normal! \<C-L>u"
     endif
     " echo 'lastseq' a:lastseq 'curseq' undotree().seq_cur
 endfunction
