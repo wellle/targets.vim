@@ -66,7 +66,7 @@ endfunction
 
 function! targets#selectMatch()
     call cursor(s:sl, s:sc)
-    normal! v
+    silent! normal! v
     call cursor(s:el, s:ec)
 endfunction
 
@@ -75,14 +75,15 @@ function! targets#abortMatch()
     " get into normal mode and beep
     execute "normal! \<C-\>\<C-N>\<Esc>"
     " undo partial command
-    let undoseq = undotree().seq_cur
-    call feedkeys(":call targets#undo(" . undoseq . ")\<CR>")
-    return
+    if exists("*undotree")
+        let undoseq = undotree().seq_cur
+        call feedkeys(":call targets#undo(" . undoseq . ")\<CR>\<C-L>")
+    endif
 endfunction
 
 function! targets#undo(lastseq)
     if undotree().seq_cur > a:lastseq
-        normal! u
+        silent! normal! u
     endif
     " echo 'lastseq' a:lastseq 'curseq' undotree().seq_cur
 endfunction
@@ -218,9 +219,9 @@ function! targets#selectp()
 
     let s:count = 1
     let [_, s:el, s:ec, _] = getpos('.')
-    normal! o
+    silent! normal! o
     let [_, s:sl, s:sc, _] = getpos('.')
-    normal! v
+    silent! normal! v
     if s:sc == s:ec
         return targets#setFailed()
     endif
@@ -266,8 +267,7 @@ function! targets#shrink()
     let [s:el, s:ec] = searchpos('\S', 'b', line('.'))
     if s:ec <= s:sc
         " fall back to drop when there's only whitespace in between
-        call targets#drop()
-        return
+        return targets#drop()
     endif
     call cursor(s:sl, s:sc)
     let [s:sl, s:sc] = searchpos('\S', '', line('.'))
