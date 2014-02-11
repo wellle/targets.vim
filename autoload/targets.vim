@@ -72,6 +72,8 @@ endfunction
 
 function! targets#abortMatch()
     call setpos('.', s:oldpos)
+    " get into normal mode and beep
+    execute "normal! \<C-\>\<C-N>\<Esc>"
     return
 endfunction
 
