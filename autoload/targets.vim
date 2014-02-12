@@ -73,17 +73,17 @@ endfunction
 function! targets#abortMatch()
     call setpos('.', s:oldpos)
     " get into normal mode and beep
-    execute "normal! \<C-\>\<C-N>\<Esc>"
+    call feedkeys("\<C-\>\<C-N>\<Esc>", 'n')
     " undo partial command
     if exists("*undotree")
         let undoseq = undotree().seq_cur
-        call feedkeys(":call targets#undo(" . undoseq . ")\<CR>")
+        call feedkeys(":call targets#undo(" . undoseq . ")\<CR>\<C-L>", 'n')
     endif
 endfunction
 
 function! targets#undo(lastseq)
     if undotree().seq_cur > a:lastseq
-        silent! execute "normal! \<C-L>u"
+        silent! execute "normal! u"
     endif
     " echo 'lastseq' a:lastseq 'curseq' undotree().seq_cur
 endfunction
