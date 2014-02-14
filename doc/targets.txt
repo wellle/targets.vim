@@ -376,10 +376,14 @@ pair of separators, it seeks for the separator before or after the cursor.
 This is similar to using the explicit version containing `n` or `l`.
 
 ==============================================================================
-ISSUES                                                        *targets-issues*
+NOTES                                                          *targets-notes*
 
 Repeating an operator-pending mapping forgets its last count.
     https://groups.google.com/forum/?fromgroups#!topic/vim_dev/G4SSgcRVN7g
+Works since Vim 7.4.160
+
+==============================================================================
+ISSUES                                                        *targets-issues*
 
 Empty matches can't be selected because it is no possible to visually select
 zero-character ranges.

@@ -356,9 +356,13 @@ Use your favorite plugin manager.
     git clone git://github.com/wellle/targets.vim.git ~/.vim/bundle/targets.vim
     ```
 
-## Issues
+## Notes
 
 - [Repeating an operator-pending mapping forgets its last count.][repeatcount]
+    Works since Vim 7.4.160
+
+## Issues
+
 - [Empty matches can't be selected because it is not possible to visually select
   zero-character ranges.][emptyrange]
 - Forcing to motion to work linewise by inserting `V` in `dVan(` doesn't work
