@@ -77,7 +77,7 @@ function! targets#abortMatch()
     " undo partial command
     if exists("*undotree")
         let undoseq = undotree().seq_cur
-        call feedkeys(":call targets#undo(" . undoseq . ")\<CR>\<C-L>", 'n')
+        call feedkeys(":call targets#undo(" . undoseq . ")\<CR>:\<C-C>", 'n')
     endif
 endfunction
 
