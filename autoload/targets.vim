@@ -88,6 +88,10 @@ function! targets#abortMatch()
     " get into normal mode and beep
     call feedkeys("\<C-\>\<C-N>\<Esc>", 'n')
     " undo partial command
+    call targets#triggerUndo()
+endfunction
+
+function! targets#triggerUndo()
     if exists("*undotree")
         let undoseq = undotree().seq_cur
         call feedkeys(":call targets#undo(" . undoseq . ")\<CR>:\<C-C>", 'n')
