@@ -59,7 +59,6 @@ function! targets#handleMatch()
     elseif s:sl > s:el
         call targets#abortMatch()
     elseif s:sc == s:ec + 1
-        " zero width match found
         call targets#handleEmptyMatch()
     elseif s:sc > s:ec
         call targets#abortMatch()
@@ -76,10 +75,17 @@ function! targets#selectMatch()
 endfunction
 
 " empty matches can't visually be selected
-" most operator just move to the end delimiter
-" when change was requested, insert in between
+" most operators would like to move to the end delimiter
+" for change or delete, insert temporary character that will be operated on
 function! targets#handleEmptyMatch()
-    call targets#abortMatch()
+    if v:operator !~# "^[cd]$"
+        return targets#abortMatch()
+    endif
+
+    " move cursor to delimiter after zero width match
+    call cursor(s:sl, s:sc)
+    " insert single character and visually select it
+    silent! execute "normal! ix\<Esc>v"
 endfunction
 
 " abort when no match was found
@@ -91,6 +97,7 @@ function! targets#abortMatch()
     call targets#triggerUndo()
 endfunction
 
+" feed keys to call undo after aborted operation and clear the command line
 function! targets#triggerUndo()
     if exists("*undotree")
         let undoseq = undotree().seq_cur
@@ -98,11 +105,11 @@ function! targets#triggerUndo()
     endif
 endfunction
 
+" undo last operation if it created a new undo position
 function! targets#undo(lastseq)
     if undotree().seq_cur > a:lastseq
         silent! execute "normal! u"
     endif
-    " echo 'lastseq' a:lastseq 'curseq' undotree().seq_cur
 endfunction
 
 " mark current matching run as failed
