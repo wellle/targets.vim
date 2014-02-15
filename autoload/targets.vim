@@ -50,6 +50,7 @@ function! targets#findMatch(matchers)
     unlet! Matcher
 endfunction
 
+" handle the match by either selecting or aborting it
 function! targets#handleMatch()
     if s:failed || s:sl == 0 || s:el == 0
         call targets#abortMatch()
@@ -57,6 +58,8 @@ function! targets#handleMatch()
         call targets#selectMatch()
     elseif s:sl > s:el
         call targets#abortMatch()
+    elseif s:sc == s:ec + 1
+        call targets#handleEmptyMatch()
     elseif s:sc > s:ec
         call targets#abortMatch()
     else
@@ -64,28 +67,49 @@ function! targets#handleMatch()
     endif
 endfunction
 
+" select a proper match
 function! targets#selectMatch()
     call cursor(s:sl, s:sc)
     silent! normal! v
     call cursor(s:el, s:ec)
 endfunction
 
+" empty matches can't visually be selected
+" most operators would like to move to the end delimiter
+" for change or delete, insert temporary character that will be operated on
+function! targets#handleEmptyMatch()
+    if v:operator !~# "^[cd]$"
+        return targets#abortMatch()
+    endif
+
+    " move cursor to delimiter after zero width match
+    call cursor(s:sl, s:sc)
+    " insert single character and visually select it
+    silent! execute "normal! ix\<Esc>v"
+endfunction
+
+" abort when no match was found
 function! targets#abortMatch()
     call setpos('.', s:oldpos)
     " get into normal mode and beep
     call feedkeys("\<C-\>\<C-N>\<Esc>", 'n')
     " undo partial command
+    call targets#triggerUndo()
+endfunction
+
+" feed keys to call undo after aborted operation and clear the command line
+function! targets#triggerUndo()
     if exists("*undotree")
         let undoseq = undotree().seq_cur
         call feedkeys(":call targets#undo(" . undoseq . ")\<CR>:\<C-C>", 'n')
     endif
 endfunction
 
+" undo last operation if it created a new undo position
 function! targets#undo(lastseq)
     if undotree().seq_cur > a:lastseq
         silent! execute "normal! u"
     endif
-    " echo 'lastseq' a:lastseq 'curseq' undotree().seq_cur
 endfunction
 
 " mark current matching run as failed
