@@ -1,5 +1,5 @@
 set runtimepath+=../
-set softtabstop=10 expandtab
+set softtabstop=16 expandtab
 source ../plugin/targets.vim
 
 function! s:execute(operation, motions)
@@ -7,6 +7,9 @@ function! s:execute(operation, motions)
         execute "normal " . a:operation . a:motions . "\<C-R>\"\<Esc>v`[r_"
     else
         execute "normal " . a:operation . a:motions
+    endif
+    if a:operation == 'y'
+        execute "normal A\<Tab>'\<C-R>\"'"
     endif
     execute "normal I" . a:operation . a:motions . "\<Tab>\<Esc>"
 endfunction
@@ -22,7 +25,7 @@ for delset in [
             \ ]
     normal "lyy
 
-    for op in [ 'c', 'd' ]
+    for op in [ 'c', 'd', 'y' ]
         for cnt in [ '', '1', '2' ]
             for nl in [ '', 'n', 'l' ]
                 for iaIA in [ 'i', 'a', 'I', 'A' ]
