@@ -13,29 +13,26 @@ set cpo&vim
 
 " create a text object by combining prefix and trigger to call Match with
 " the given delimiters and matchers
-function! s:createTextObject(prefix, trigger, opening, closing, matchers)
-    let opening = substitute(a:opening, "'", "''", '')
-    let closing = substitute(a:closing, "'", "''", '')
-    " first silent to silence first call
+function! s:createTextObject(prefix, trigger, delimiters, matchers)
+    let delimiters = substitute(a:delimiters, "'", "''", 'g')
     let lhs = '<silent>' . a:prefix . a:trigger
-    " second silent to silence calls repeated with `.`
-    let rhs = ":<C-U>silent call targets#match('" . opening . "', '" . closing . "', '" . a:matchers . "')"
-    execute 'onoremap ' . lhs . ' ' . rhs . '<CR>'
+    let rhs = ":<C-U>call targets#match('" . delimiters . "', '" . a:matchers . "')<CR>"
+    execute 'onoremap ' . lhs . ' ' . rhs
 
-    " don't create vmaps beginning with `A` or `I`
+    " don't create xmaps beginning with `A` or `I`
     " conflict with `^VA` and `^VI` to append before or insert after visual
     " block selection. would like to have mapping only for visual, but not for
     " visual block mode. #6
     if a:prefix !~# "^[AI]"
-        execute 'vnoremap ' . lhs . ' ' . rhs . '<CR>'
+        execute 'xnoremap ' . lhs . ' ' . rhs
     endif
 
-    unlet opening closing lhs rhs
+    unlet delimiters lhs rhs
 endfunction
 
 " creat a text object for a single delimiter
 function! s:createSimpleTextObject(prefix, delimiter, matchers)
-    call s:createTextObject(a:prefix, a:delimiter, a:delimiter, a:delimiter, a:matchers)
+    call s:createTextObject(a:prefix, a:delimiter, a:delimiter, a:matchers)
 endfunction
 
 " create multiple text objects for a pair of delimiters and optional
@@ -43,7 +40,7 @@ endfunction
 function! s:createPairTextObject(prefix, delimiters, matchers)
     let [opening, closing] = [a:delimiters[0], a:delimiters[1]]
     for trigger in split(a:delimiters, '\zs')
-        call s:createTextObject(a:prefix, trigger, opening, closing, a:matchers)
+        call s:createTextObject(a:prefix, trigger, opening . closing, a:matchers)
     endfor
     unlet opening closing
 endfunction
