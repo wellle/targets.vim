@@ -1708,3 +1708,2176 @@ y2iL`           a ` b ` c ` d ` e ` x ` g ` h ` i ` k ` l       ' b '
 y2aL`           a ` b ` c ` d ` e ` x ` g ` h ` i ` k ` l       '` b ` '
 y2IL`           a ` b ` c ` d ` e ` x ` g ` h ` i ` k ` l       'b'
 
+a , b , c , d , e , x , g , h , i , k , l
+ci,             a , b , c , d , e ,___, g , h , i , k , l
+ca,             a , b , c , d , e ____, g , h , i , k , l
+cI,             a , b , c , d , e , _ , g , h , i , k , l
+cA,             a , b , c , d , e ______g , h , i , k , l
+cin,            a , b , c , d , e , x ,___, h , i , k , l
+can,            a , b , c , d , e , x ____, h , i , k , l
+cIn,            a , b , c , d , e , x , _ , h , i , k , l
+cAn,            a , b , c , d , e , x ______h , i , k , l
+cil,            a , b , c , d ,___, x , g , h , i , k , l
+cal,            a , b , c , d ____, x , g , h , i , k , l
+cIl,            a , b , c , d , _ , x , g , h , i , k , l
+cAl,            a , b , c , d ______x , g , h , i , k , l
+ciN,            a , b , c , d , e , x , g ,___, i , k , l
+caN,            a , b , c , d , e , x , g ____, i , k , l
+cIN,            a , b , c , d , e , x , g , _ , i , k , l
+cAN,            a , b , c , d , e , x , g ______i , k , l
+ciL,            a , b , c ,___, e , x , g , h , i , k , l
+caL,            a , b , c ____, e , x , g , h , i , k , l
+cIL,            a , b , c , _ , e , x , g , h , i , k , l
+cAL,            a , b , c ______e , x , g , h , i , k , l
+c1i,            a , b , c , d , e ,___, g , h , i , k , l
+c1a,            a , b , c , d , e ____, g , h , i , k , l
+c1I,            a , b , c , d , e , _ , g , h , i , k , l
+c1A,            a , b , c , d , e ______g , h , i , k , l
+c1in,           a , b , c , d , e , x ,___, h , i , k , l
+c1an,           a , b , c , d , e , x ____, h , i , k , l
+c1In,           a , b , c , d , e , x , _ , h , i , k , l
+c1An,           a , b , c , d , e , x ______h , i , k , l
+c1il,           a , b , c , d ,___, x , g , h , i , k , l
+c1al,           a , b , c , d ____, x , g , h , i , k , l
+c1Il,           a , b , c , d , _ , x , g , h , i , k , l
+c1Al,           a , b , c , d ______x , g , h , i , k , l
+c1iN,           a , b , c , d , e , x , g ,___, i , k , l
+c1aN,           a , b , c , d , e , x , g ____, i , k , l
+c1IN,           a , b , c , d , e , x , g , _ , i , k , l
+c1AN,           a , b , c , d , e , x , g ______i , k , l
+c1iL,           a , b , c ,___, e , x , g , h , i , k , l
+c1aL,           a , b , c ____, e , x , g , h , i , k , l
+c1IL,           a , b , c , _ , e , x , g , h , i , k , l
+c1AL,           a , b , c ______e , x , g , h , i , k , l
+c2i,            a , b , c , d , e ,___, g , h , i , k , l
+c2a,            a , b , c , d , e ____, g , h , i , k , l
+c2I,            a , b , c , d , e , _ , g , h , i , k , l
+c2A,            a , b , c , d , e ______g , h , i , k , l
+c2in,           a , b , c , d , e , x , g ,___, i , k , l
+c2an,           a , b , c , d , e , x , g ____, i , k , l
+c2In,           a , b , c , d , e , x , g , _ , i , k , l
+c2An,           a , b , c , d , e , x , g ______i , k , l
+c2il,           a , b , c ,___, e , x , g , h , i , k , l
+c2al,           a , b , c ____, e , x , g , h , i , k , l
+c2Il,           a , b , c , _ , e , x , g , h , i , k , l
+c2Al,           a , b , c ______e , x , g , h , i , k , l
+c2iN,           a , b , c , d , e , x , g , h , i ,___, l
+c2aN,           a , b , c , d , e , x , g , h , i ____, l
+c2IN,           a , b , c , d , e , x , g , h , i , _ , l
+c2AN,           a , b , c , d , e , x , g , h , i ______l
+c2iL,           a ,___, c , d , e , x , g , h , i , k , l
+c2aL,           a ____, c , d , e , x , g , h , i , k , l
+c2IL,           a , _ , c , d , e , x , g , h , i , k , l
+c2AL,           a ______c , d , e , x , g , h , i , k , l
+di,             a , b , c , d , e ,, g , h , i , k , l
+da,             a , b , c , d , e , g , h , i , k , l
+dI,             a , b , c , d , e ,  , g , h , i , k , l
+dA,             a , b , c , d , e g , h , i , k , l
+din,            a , b , c , d , e , x ,, h , i , k , l
+dan,            a , b , c , d , e , x , h , i , k , l
+dIn,            a , b , c , d , e , x ,  , h , i , k , l
+dAn,            a , b , c , d , e , x h , i , k , l
+dil,            a , b , c , d ,, x , g , h , i , k , l
+dal,            a , b , c , d , x , g , h , i , k , l
+dIl,            a , b , c , d ,  , x , g , h , i , k , l
+dAl,            a , b , c , d x , g , h , i , k , l
+diN,            a , b , c , d , e , x , g ,, i , k , l
+daN,            a , b , c , d , e , x , g , i , k , l
+dIN,            a , b , c , d , e , x , g ,  , i , k , l
+dAN,            a , b , c , d , e , x , g i , k , l
+diL,            a , b , c ,, e , x , g , h , i , k , l
+daL,            a , b , c , e , x , g , h , i , k , l
+dIL,            a , b , c ,  , e , x , g , h , i , k , l
+dAL,            a , b , c e , x , g , h , i , k , l
+d1i,            a , b , c , d , e ,, g , h , i , k , l
+d1a,            a , b , c , d , e , g , h , i , k , l
+d1I,            a , b , c , d , e ,  , g , h , i , k , l
+d1A,            a , b , c , d , e g , h , i , k , l
+d1in,           a , b , c , d , e , x ,, h , i , k , l
+d1an,           a , b , c , d , e , x , h , i , k , l
+d1In,           a , b , c , d , e , x ,  , h , i , k , l
+d1An,           a , b , c , d , e , x h , i , k , l
+d1il,           a , b , c , d ,, x , g , h , i , k , l
+d1al,           a , b , c , d , x , g , h , i , k , l
+d1Il,           a , b , c , d ,  , x , g , h , i , k , l
+d1Al,           a , b , c , d x , g , h , i , k , l
+d1iN,           a , b , c , d , e , x , g ,, i , k , l
+d1aN,           a , b , c , d , e , x , g , i , k , l
+d1IN,           a , b , c , d , e , x , g ,  , i , k , l
+d1AN,           a , b , c , d , e , x , g i , k , l
+d1iL,           a , b , c ,, e , x , g , h , i , k , l
+d1aL,           a , b , c , e , x , g , h , i , k , l
+d1IL,           a , b , c ,  , e , x , g , h , i , k , l
+d1AL,           a , b , c e , x , g , h , i , k , l
+d2i,            a , b , c , d , e ,, g , h , i , k , l
+d2a,            a , b , c , d , e , g , h , i , k , l
+d2I,            a , b , c , d , e ,  , g , h , i , k , l
+d2A,            a , b , c , d , e g , h , i , k , l
+d2in,           a , b , c , d , e , x , g ,, i , k , l
+d2an,           a , b , c , d , e , x , g , i , k , l
+d2In,           a , b , c , d , e , x , g ,  , i , k , l
+d2An,           a , b , c , d , e , x , g i , k , l
+d2il,           a , b , c ,, e , x , g , h , i , k , l
+d2al,           a , b , c , e , x , g , h , i , k , l
+d2Il,           a , b , c ,  , e , x , g , h , i , k , l
+d2Al,           a , b , c e , x , g , h , i , k , l
+d2iN,           a , b , c , d , e , x , g , h , i ,, l
+d2aN,           a , b , c , d , e , x , g , h , i , l
+d2IN,           a , b , c , d , e , x , g , h , i ,  , l
+d2AN,           a , b , c , d , e , x , g , h , i l
+d2iL,           a ,, c , d , e , x , g , h , i , k , l
+d2aL,           a , c , d , e , x , g , h , i , k , l
+d2IL,           a ,  , c , d , e , x , g , h , i , k , l
+d2AL,           a c , d , e , x , g , h , i , k , l
+yi,             a , b , c , d , e , x , g , h , i , k , l       ' x '
+ya,             a , b , c , d , e , x , g , h , i , k , l       ', x '
+yI,             a , b , c , d , e , x , g , h , i , k , l       'x'
+yA,             a , b , c , d , e , x , g , h , i , k , l       ', x , '
+yin,            a , b , c , d , e , x , g , h , i , k , l       ' g '
+yan,            a , b , c , d , e , x , g , h , i , k , l       ', g '
+yIn,            a , b , c , d , e , x , g , h , i , k , l       'g'
+yAn,            a , b , c , d , e , x , g , h , i , k , l       ', g , '
+yil,            a , b , c , d , e , x , g , h , i , k , l       ' e '
+yal,            a , b , c , d , e , x , g , h , i , k , l       ', e '
+yIl,            a , b , c , d , e , x , g , h , i , k , l       'e'
+yAl,            a , b , c , d , e , x , g , h , i , k , l       ', e , '
+yiN,            a , b , c , d , e , x , g , h , i , k , l       ' h '
+yaN,            a , b , c , d , e , x , g , h , i , k , l       ', h '
+yIN,            a , b , c , d , e , x , g , h , i , k , l       'h'
+yAN,            a , b , c , d , e , x , g , h , i , k , l       ', h , '
+yiL,            a , b , c , d , e , x , g , h , i , k , l       ' d '
+yaL,            a , b , c , d , e , x , g , h , i , k , l       ', d '
+yIL,            a , b , c , d , e , x , g , h , i , k , l       'd'
+yAL,            a , b , c , d , e , x , g , h , i , k , l       ', d , '
+y1i,            a , b , c , d , e , x , g , h , i , k , l       ' x '
+y1a,            a , b , c , d , e , x , g , h , i , k , l       ', x '
+y1I,            a , b , c , d , e , x , g , h , i , k , l       'x'
+y1A,            a , b , c , d , e , x , g , h , i , k , l       ', x , '
+y1in,           a , b , c , d , e , x , g , h , i , k , l       ' g '
+y1an,           a , b , c , d , e , x , g , h , i , k , l       ', g '
+y1In,           a , b , c , d , e , x , g , h , i , k , l       'g'
+y1An,           a , b , c , d , e , x , g , h , i , k , l       ', g , '
+y1il,           a , b , c , d , e , x , g , h , i , k , l       ' e '
+y1al,           a , b , c , d , e , x , g , h , i , k , l       ', e '
+y1Il,           a , b , c , d , e , x , g , h , i , k , l       'e'
+y1Al,           a , b , c , d , e , x , g , h , i , k , l       ', e , '
+y1iN,           a , b , c , d , e , x , g , h , i , k , l       ' h '
+y1aN,           a , b , c , d , e , x , g , h , i , k , l       ', h '
+y1IN,           a , b , c , d , e , x , g , h , i , k , l       'h'
+y1AN,           a , b , c , d , e , x , g , h , i , k , l       ', h , '
+y1iL,           a , b , c , d , e , x , g , h , i , k , l       ' d '
+y1aL,           a , b , c , d , e , x , g , h , i , k , l       ', d '
+y1IL,           a , b , c , d , e , x , g , h , i , k , l       'd'
+y1AL,           a , b , c , d , e , x , g , h , i , k , l       ', d , '
+y2i,            a , b , c , d , e , x , g , h , i , k , l       ' x '
+y2a,            a , b , c , d , e , x , g , h , i , k , l       ', x '
+y2I,            a , b , c , d , e , x , g , h , i , k , l       'x'
+y2A,            a , b , c , d , e , x , g , h , i , k , l       ', x , '
+y2in,           a , b , c , d , e , x , g , h , i , k , l       ' h '
+y2an,           a , b , c , d , e , x , g , h , i , k , l       ', h '
+y2In,           a , b , c , d , e , x , g , h , i , k , l       'h'
+y2An,           a , b , c , d , e , x , g , h , i , k , l       ', h , '
+y2il,           a , b , c , d , e , x , g , h , i , k , l       ' d '
+y2al,           a , b , c , d , e , x , g , h , i , k , l       ', d '
+y2Il,           a , b , c , d , e , x , g , h , i , k , l       'd'
+y2Al,           a , b , c , d , e , x , g , h , i , k , l       ', d , '
+y2iN,           a , b , c , d , e , x , g , h , i , k , l       ' k '
+y2aN,           a , b , c , d , e , x , g , h , i , k , l       ', k '
+y2IN,           a , b , c , d , e , x , g , h , i , k , l       'k'
+y2AN,           a , b , c , d , e , x , g , h , i , k , l       ', k , '
+y2iL,           a , b , c , d , e , x , g , h , i , k , l       ' b '
+y2aL,           a , b , c , d , e , x , g , h , i , k , l       ', b '
+y2IL,           a , b , c , d , e , x , g , h , i , k , l       'b'
+y2AL,           a , b , c , d , e , x , g , h , i , k , l       ', b , '
+a . b . c . d . e . x . g . h . i . k . l
+ci.             a . b . c . d . e .___. g . h . i . k . l
+ca.             a . b . c . d . e ____. g . h . i . k . l
+cI.             a . b . c . d . e . _ . g . h . i . k . l
+cA.             a . b . c . d . e ______g . h . i . k . l
+cin.            a . b . c . d . e . x .___. h . i . k . l
+can.            a . b . c . d . e . x ____. h . i . k . l
+cIn.            a . b . c . d . e . x . _ . h . i . k . l
+cAn.            a . b . c . d . e . x ______h . i . k . l
+cil.            a . b . c . d .___. x . g . h . i . k . l
+cal.            a . b . c . d ____. x . g . h . i . k . l
+cIl.            a . b . c . d . _ . x . g . h . i . k . l
+cAl.            a . b . c . d ______x . g . h . i . k . l
+ciN.            a . b . c . d . e . x . g .___. i . k . l
+caN.            a . b . c . d . e . x . g ____. i . k . l
+cIN.            a . b . c . d . e . x . g . _ . i . k . l
+cAN.            a . b . c . d . e . x . g ______i . k . l
+ciL.            a . b . c .___. e . x . g . h . i . k . l
+caL.            a . b . c ____. e . x . g . h . i . k . l
+cIL.            a . b . c . _ . e . x . g . h . i . k . l
+cAL.            a . b . c ______e . x . g . h . i . k . l
+c1i.            a . b . c . d . e .___. g . h . i . k . l
+c1a.            a . b . c . d . e ____. g . h . i . k . l
+c1I.            a . b . c . d . e . _ . g . h . i . k . l
+c1A.            a . b . c . d . e ______g . h . i . k . l
+c1in.           a . b . c . d . e . x .___. h . i . k . l
+c1an.           a . b . c . d . e . x ____. h . i . k . l
+c1In.           a . b . c . d . e . x . _ . h . i . k . l
+c1An.           a . b . c . d . e . x ______h . i . k . l
+c1il.           a . b . c . d .___. x . g . h . i . k . l
+c1al.           a . b . c . d ____. x . g . h . i . k . l
+c1Il.           a . b . c . d . _ . x . g . h . i . k . l
+c1Al.           a . b . c . d ______x . g . h . i . k . l
+c1iN.           a . b . c . d . e . x . g .___. i . k . l
+c1aN.           a . b . c . d . e . x . g ____. i . k . l
+c1IN.           a . b . c . d . e . x . g . _ . i . k . l
+c1AN.           a . b . c . d . e . x . g ______i . k . l
+c1iL.           a . b . c .___. e . x . g . h . i . k . l
+c1aL.           a . b . c ____. e . x . g . h . i . k . l
+c1IL.           a . b . c . _ . e . x . g . h . i . k . l
+c1AL.           a . b . c ______e . x . g . h . i . k . l
+c2i.            a . b . c . d . e .___. g . h . i . k . l
+c2a.            a . b . c . d . e ____. g . h . i . k . l
+c2I.            a . b . c . d . e . _ . g . h . i . k . l
+c2A.            a . b . c . d . e ______g . h . i . k . l
+c2in.           a . b . c . d . e . x . g .___. i . k . l
+c2an.           a . b . c . d . e . x . g ____. i . k . l
+c2In.           a . b . c . d . e . x . g . _ . i . k . l
+c2An.           a . b . c . d . e . x . g ______i . k . l
+c2il.           a . b . c .___. e . x . g . h . i . k . l
+c2al.           a . b . c ____. e . x . g . h . i . k . l
+c2Il.           a . b . c . _ . e . x . g . h . i . k . l
+c2Al.           a . b . c ______e . x . g . h . i . k . l
+c2iN.           a . b . c . d . e . x . g . h . i .___. l
+c2aN.           a . b . c . d . e . x . g . h . i ____. l
+c2IN.           a . b . c . d . e . x . g . h . i . _ . l
+c2AN.           a . b . c . d . e . x . g . h . i ______l
+c2iL.           a .___. c . d . e . x . g . h . i . k . l
+c2aL.           a ____. c . d . e . x . g . h . i . k . l
+c2IL.           a . _ . c . d . e . x . g . h . i . k . l
+c2AL.           a ______c . d . e . x . g . h . i . k . l
+di.             a . b . c . d . e .. g . h . i . k . l
+da.             a . b . c . d . e . g . h . i . k . l
+dI.             a . b . c . d . e .  . g . h . i . k . l
+dA.             a . b . c . d . e g . h . i . k . l
+din.            a . b . c . d . e . x .. h . i . k . l
+dan.            a . b . c . d . e . x . h . i . k . l
+dIn.            a . b . c . d . e . x .  . h . i . k . l
+dAn.            a . b . c . d . e . x h . i . k . l
+dil.            a . b . c . d .. x . g . h . i . k . l
+dal.            a . b . c . d . x . g . h . i . k . l
+dIl.            a . b . c . d .  . x . g . h . i . k . l
+dAl.            a . b . c . d x . g . h . i . k . l
+diN.            a . b . c . d . e . x . g .. i . k . l
+daN.            a . b . c . d . e . x . g . i . k . l
+dIN.            a . b . c . d . e . x . g .  . i . k . l
+dAN.            a . b . c . d . e . x . g i . k . l
+diL.            a . b . c .. e . x . g . h . i . k . l
+daL.            a . b . c . e . x . g . h . i . k . l
+dIL.            a . b . c .  . e . x . g . h . i . k . l
+dAL.            a . b . c e . x . g . h . i . k . l
+d1i.            a . b . c . d . e .. g . h . i . k . l
+d1a.            a . b . c . d . e . g . h . i . k . l
+d1I.            a . b . c . d . e .  . g . h . i . k . l
+d1A.            a . b . c . d . e g . h . i . k . l
+d1in.           a . b . c . d . e . x .. h . i . k . l
+d1an.           a . b . c . d . e . x . h . i . k . l
+d1In.           a . b . c . d . e . x .  . h . i . k . l
+d1An.           a . b . c . d . e . x h . i . k . l
+d1il.           a . b . c . d .. x . g . h . i . k . l
+d1al.           a . b . c . d . x . g . h . i . k . l
+d1Il.           a . b . c . d .  . x . g . h . i . k . l
+d1Al.           a . b . c . d x . g . h . i . k . l
+d1iN.           a . b . c . d . e . x . g .. i . k . l
+d1aN.           a . b . c . d . e . x . g . i . k . l
+d1IN.           a . b . c . d . e . x . g .  . i . k . l
+d1AN.           a . b . c . d . e . x . g i . k . l
+d1iL.           a . b . c .. e . x . g . h . i . k . l
+d1aL.           a . b . c . e . x . g . h . i . k . l
+d1IL.           a . b . c .  . e . x . g . h . i . k . l
+d1AL.           a . b . c e . x . g . h . i . k . l
+d2i.            a . b . c . d . e .. g . h . i . k . l
+d2a.            a . b . c . d . e . g . h . i . k . l
+d2I.            a . b . c . d . e .  . g . h . i . k . l
+d2A.            a . b . c . d . e g . h . i . k . l
+d2in.           a . b . c . d . e . x . g .. i . k . l
+d2an.           a . b . c . d . e . x . g . i . k . l
+d2In.           a . b . c . d . e . x . g .  . i . k . l
+d2An.           a . b . c . d . e . x . g i . k . l
+d2il.           a . b . c .. e . x . g . h . i . k . l
+d2al.           a . b . c . e . x . g . h . i . k . l
+d2Il.           a . b . c .  . e . x . g . h . i . k . l
+d2Al.           a . b . c e . x . g . h . i . k . l
+d2iN.           a . b . c . d . e . x . g . h . i .. l
+d2aN.           a . b . c . d . e . x . g . h . i . l
+d2IN.           a . b . c . d . e . x . g . h . i .  . l
+d2AN.           a . b . c . d . e . x . g . h . i l
+d2iL.           a .. c . d . e . x . g . h . i . k . l
+d2aL.           a . c . d . e . x . g . h . i . k . l
+d2IL.           a .  . c . d . e . x . g . h . i . k . l
+d2AL.           a c . d . e . x . g . h . i . k . l
+yi.             a . b . c . d . e . x . g . h . i . k . l       ' x '
+ya.             a . b . c . d . e . x . g . h . i . k . l       '. x '
+yI.             a . b . c . d . e . x . g . h . i . k . l       'x'
+yA.             a . b . c . d . e . x . g . h . i . k . l       '. x . '
+yin.            a . b . c . d . e . x . g . h . i . k . l       ' g '
+yan.            a . b . c . d . e . x . g . h . i . k . l       '. g '
+yIn.            a . b . c . d . e . x . g . h . i . k . l       'g'
+yAn.            a . b . c . d . e . x . g . h . i . k . l       '. g . '
+yil.            a . b . c . d . e . x . g . h . i . k . l       ' e '
+yal.            a . b . c . d . e . x . g . h . i . k . l       '. e '
+yIl.            a . b . c . d . e . x . g . h . i . k . l       'e'
+yAl.            a . b . c . d . e . x . g . h . i . k . l       '. e . '
+yiN.            a . b . c . d . e . x . g . h . i . k . l       ' h '
+yaN.            a . b . c . d . e . x . g . h . i . k . l       '. h '
+yIN.            a . b . c . d . e . x . g . h . i . k . l       'h'
+yAN.            a . b . c . d . e . x . g . h . i . k . l       '. h . '
+yiL.            a . b . c . d . e . x . g . h . i . k . l       ' d '
+yaL.            a . b . c . d . e . x . g . h . i . k . l       '. d '
+yIL.            a . b . c . d . e . x . g . h . i . k . l       'd'
+yAL.            a . b . c . d . e . x . g . h . i . k . l       '. d . '
+y1i.            a . b . c . d . e . x . g . h . i . k . l       ' x '
+y1a.            a . b . c . d . e . x . g . h . i . k . l       '. x '
+y1I.            a . b . c . d . e . x . g . h . i . k . l       'x'
+y1A.            a . b . c . d . e . x . g . h . i . k . l       '. x . '
+y1in.           a . b . c . d . e . x . g . h . i . k . l       ' g '
+y1an.           a . b . c . d . e . x . g . h . i . k . l       '. g '
+y1In.           a . b . c . d . e . x . g . h . i . k . l       'g'
+y1An.           a . b . c . d . e . x . g . h . i . k . l       '. g . '
+y1il.           a . b . c . d . e . x . g . h . i . k . l       ' e '
+y1al.           a . b . c . d . e . x . g . h . i . k . l       '. e '
+y1Il.           a . b . c . d . e . x . g . h . i . k . l       'e'
+y1Al.           a . b . c . d . e . x . g . h . i . k . l       '. e . '
+y1iN.           a . b . c . d . e . x . g . h . i . k . l       ' h '
+y1aN.           a . b . c . d . e . x . g . h . i . k . l       '. h '
+y1IN.           a . b . c . d . e . x . g . h . i . k . l       'h'
+y1AN.           a . b . c . d . e . x . g . h . i . k . l       '. h . '
+y1iL.           a . b . c . d . e . x . g . h . i . k . l       ' d '
+y1aL.           a . b . c . d . e . x . g . h . i . k . l       '. d '
+y1IL.           a . b . c . d . e . x . g . h . i . k . l       'd'
+y1AL.           a . b . c . d . e . x . g . h . i . k . l       '. d . '
+y2i.            a . b . c . d . e . x . g . h . i . k . l       ' x '
+y2a.            a . b . c . d . e . x . g . h . i . k . l       '. x '
+y2I.            a . b . c . d . e . x . g . h . i . k . l       'x'
+y2A.            a . b . c . d . e . x . g . h . i . k . l       '. x . '
+y2in.           a . b . c . d . e . x . g . h . i . k . l       ' h '
+y2an.           a . b . c . d . e . x . g . h . i . k . l       '. h '
+y2In.           a . b . c . d . e . x . g . h . i . k . l       'h'
+y2An.           a . b . c . d . e . x . g . h . i . k . l       '. h . '
+y2il.           a . b . c . d . e . x . g . h . i . k . l       ' d '
+y2al.           a . b . c . d . e . x . g . h . i . k . l       '. d '
+y2Il.           a . b . c . d . e . x . g . h . i . k . l       'd'
+y2Al.           a . b . c . d . e . x . g . h . i . k . l       '. d . '
+y2iN.           a . b . c . d . e . x . g . h . i . k . l       ' k '
+y2aN.           a . b . c . d . e . x . g . h . i . k . l       '. k '
+y2IN.           a . b . c . d . e . x . g . h . i . k . l       'k'
+y2AN.           a . b . c . d . e . x . g . h . i . k . l       '. k . '
+y2iL.           a . b . c . d . e . x . g . h . i . k . l       ' b '
+y2aL.           a . b . c . d . e . x . g . h . i . k . l       '. b '
+y2IL.           a . b . c . d . e . x . g . h . i . k . l       'b'
+y2AL.           a . b . c . d . e . x . g . h . i . k . l       '. b . '
+a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l
+ci;             a ; b ; c ; d ; e ;___; g ; h ; i ; k ; l
+ca;             a ; b ; c ; d ; e ____; g ; h ; i ; k ; l
+cI;             a ; b ; c ; d ; e ; _ ; g ; h ; i ; k ; l
+cA;             a ; b ; c ; d ; e ______g ; h ; i ; k ; l
+cin;            a ; b ; c ; d ; e ; x ;___; h ; i ; k ; l
+can;            a ; b ; c ; d ; e ; x ____; h ; i ; k ; l
+cIn;            a ; b ; c ; d ; e ; x ; _ ; h ; i ; k ; l
+cAn;            a ; b ; c ; d ; e ; x ______h ; i ; k ; l
+cil;            a ; b ; c ; d ;___; x ; g ; h ; i ; k ; l
+cal;            a ; b ; c ; d ____; x ; g ; h ; i ; k ; l
+cIl;            a ; b ; c ; d ; _ ; x ; g ; h ; i ; k ; l
+cAl;            a ; b ; c ; d ______x ; g ; h ; i ; k ; l
+ciN;            a ; b ; c ; d ; e ; x ; g ;___; i ; k ; l
+caN;            a ; b ; c ; d ; e ; x ; g ____; i ; k ; l
+cIN;            a ; b ; c ; d ; e ; x ; g ; _ ; i ; k ; l
+cAN;            a ; b ; c ; d ; e ; x ; g ______i ; k ; l
+ciL;            a ; b ; c ;___; e ; x ; g ; h ; i ; k ; l
+caL;            a ; b ; c ____; e ; x ; g ; h ; i ; k ; l
+cIL;            a ; b ; c ; _ ; e ; x ; g ; h ; i ; k ; l
+cAL;            a ; b ; c ______e ; x ; g ; h ; i ; k ; l
+c1i;            a ; b ; c ; d ; e ;___; g ; h ; i ; k ; l
+c1a;            a ; b ; c ; d ; e ____; g ; h ; i ; k ; l
+c1I;            a ; b ; c ; d ; e ; _ ; g ; h ; i ; k ; l
+c1A;            a ; b ; c ; d ; e ______g ; h ; i ; k ; l
+c1in;           a ; b ; c ; d ; e ; x ;___; h ; i ; k ; l
+c1an;           a ; b ; c ; d ; e ; x ____; h ; i ; k ; l
+c1In;           a ; b ; c ; d ; e ; x ; _ ; h ; i ; k ; l
+c1An;           a ; b ; c ; d ; e ; x ______h ; i ; k ; l
+c1il;           a ; b ; c ; d ;___; x ; g ; h ; i ; k ; l
+c1al;           a ; b ; c ; d ____; x ; g ; h ; i ; k ; l
+c1Il;           a ; b ; c ; d ; _ ; x ; g ; h ; i ; k ; l
+c1Al;           a ; b ; c ; d ______x ; g ; h ; i ; k ; l
+c1iN;           a ; b ; c ; d ; e ; x ; g ;___; i ; k ; l
+c1aN;           a ; b ; c ; d ; e ; x ; g ____; i ; k ; l
+c1IN;           a ; b ; c ; d ; e ; x ; g ; _ ; i ; k ; l
+c1AN;           a ; b ; c ; d ; e ; x ; g ______i ; k ; l
+c1iL;           a ; b ; c ;___; e ; x ; g ; h ; i ; k ; l
+c1aL;           a ; b ; c ____; e ; x ; g ; h ; i ; k ; l
+c1IL;           a ; b ; c ; _ ; e ; x ; g ; h ; i ; k ; l
+c1AL;           a ; b ; c ______e ; x ; g ; h ; i ; k ; l
+c2i;            a ; b ; c ; d ; e ;___; g ; h ; i ; k ; l
+c2a;            a ; b ; c ; d ; e ____; g ; h ; i ; k ; l
+c2I;            a ; b ; c ; d ; e ; _ ; g ; h ; i ; k ; l
+c2A;            a ; b ; c ; d ; e ______g ; h ; i ; k ; l
+c2in;           a ; b ; c ; d ; e ; x ; g ;___; i ; k ; l
+c2an;           a ; b ; c ; d ; e ; x ; g ____; i ; k ; l
+c2In;           a ; b ; c ; d ; e ; x ; g ; _ ; i ; k ; l
+c2An;           a ; b ; c ; d ; e ; x ; g ______i ; k ; l
+c2il;           a ; b ; c ;___; e ; x ; g ; h ; i ; k ; l
+c2al;           a ; b ; c ____; e ; x ; g ; h ; i ; k ; l
+c2Il;           a ; b ; c ; _ ; e ; x ; g ; h ; i ; k ; l
+c2Al;           a ; b ; c ______e ; x ; g ; h ; i ; k ; l
+c2iN;           a ; b ; c ; d ; e ; x ; g ; h ; i ;___; l
+c2aN;           a ; b ; c ; d ; e ; x ; g ; h ; i ____; l
+c2IN;           a ; b ; c ; d ; e ; x ; g ; h ; i ; _ ; l
+c2AN;           a ; b ; c ; d ; e ; x ; g ; h ; i ______l
+c2iL;           a ;___; c ; d ; e ; x ; g ; h ; i ; k ; l
+c2aL;           a ____; c ; d ; e ; x ; g ; h ; i ; k ; l
+c2IL;           a ; _ ; c ; d ; e ; x ; g ; h ; i ; k ; l
+c2AL;           a ______c ; d ; e ; x ; g ; h ; i ; k ; l
+di;             a ; b ; c ; d ; e ;; g ; h ; i ; k ; l
+da;             a ; b ; c ; d ; e ; g ; h ; i ; k ; l
+dI;             a ; b ; c ; d ; e ;  ; g ; h ; i ; k ; l
+dA;             a ; b ; c ; d ; e g ; h ; i ; k ; l
+din;            a ; b ; c ; d ; e ; x ;; h ; i ; k ; l
+dan;            a ; b ; c ; d ; e ; x ; h ; i ; k ; l
+dIn;            a ; b ; c ; d ; e ; x ;  ; h ; i ; k ; l
+dAn;            a ; b ; c ; d ; e ; x h ; i ; k ; l
+dil;            a ; b ; c ; d ;; x ; g ; h ; i ; k ; l
+dal;            a ; b ; c ; d ; x ; g ; h ; i ; k ; l
+dIl;            a ; b ; c ; d ;  ; x ; g ; h ; i ; k ; l
+dAl;            a ; b ; c ; d x ; g ; h ; i ; k ; l
+diN;            a ; b ; c ; d ; e ; x ; g ;; i ; k ; l
+daN;            a ; b ; c ; d ; e ; x ; g ; i ; k ; l
+dIN;            a ; b ; c ; d ; e ; x ; g ;  ; i ; k ; l
+dAN;            a ; b ; c ; d ; e ; x ; g i ; k ; l
+diL;            a ; b ; c ;; e ; x ; g ; h ; i ; k ; l
+daL;            a ; b ; c ; e ; x ; g ; h ; i ; k ; l
+dIL;            a ; b ; c ;  ; e ; x ; g ; h ; i ; k ; l
+dAL;            a ; b ; c e ; x ; g ; h ; i ; k ; l
+d1i;            a ; b ; c ; d ; e ;; g ; h ; i ; k ; l
+d1a;            a ; b ; c ; d ; e ; g ; h ; i ; k ; l
+d1I;            a ; b ; c ; d ; e ;  ; g ; h ; i ; k ; l
+d1A;            a ; b ; c ; d ; e g ; h ; i ; k ; l
+d1in;           a ; b ; c ; d ; e ; x ;; h ; i ; k ; l
+d1an;           a ; b ; c ; d ; e ; x ; h ; i ; k ; l
+d1In;           a ; b ; c ; d ; e ; x ;  ; h ; i ; k ; l
+d1An;           a ; b ; c ; d ; e ; x h ; i ; k ; l
+d1il;           a ; b ; c ; d ;; x ; g ; h ; i ; k ; l
+d1al;           a ; b ; c ; d ; x ; g ; h ; i ; k ; l
+d1Il;           a ; b ; c ; d ;  ; x ; g ; h ; i ; k ; l
+d1Al;           a ; b ; c ; d x ; g ; h ; i ; k ; l
+d1iN;           a ; b ; c ; d ; e ; x ; g ;; i ; k ; l
+d1aN;           a ; b ; c ; d ; e ; x ; g ; i ; k ; l
+d1IN;           a ; b ; c ; d ; e ; x ; g ;  ; i ; k ; l
+d1AN;           a ; b ; c ; d ; e ; x ; g i ; k ; l
+d1iL;           a ; b ; c ;; e ; x ; g ; h ; i ; k ; l
+d1aL;           a ; b ; c ; e ; x ; g ; h ; i ; k ; l
+d1IL;           a ; b ; c ;  ; e ; x ; g ; h ; i ; k ; l
+d1AL;           a ; b ; c e ; x ; g ; h ; i ; k ; l
+d2i;            a ; b ; c ; d ; e ;; g ; h ; i ; k ; l
+d2a;            a ; b ; c ; d ; e ; g ; h ; i ; k ; l
+d2I;            a ; b ; c ; d ; e ;  ; g ; h ; i ; k ; l
+d2A;            a ; b ; c ; d ; e g ; h ; i ; k ; l
+d2in;           a ; b ; c ; d ; e ; x ; g ;; i ; k ; l
+d2an;           a ; b ; c ; d ; e ; x ; g ; i ; k ; l
+d2In;           a ; b ; c ; d ; e ; x ; g ;  ; i ; k ; l
+d2An;           a ; b ; c ; d ; e ; x ; g i ; k ; l
+d2il;           a ; b ; c ;; e ; x ; g ; h ; i ; k ; l
+d2al;           a ; b ; c ; e ; x ; g ; h ; i ; k ; l
+d2Il;           a ; b ; c ;  ; e ; x ; g ; h ; i ; k ; l
+d2Al;           a ; b ; c e ; x ; g ; h ; i ; k ; l
+d2iN;           a ; b ; c ; d ; e ; x ; g ; h ; i ;; l
+d2aN;           a ; b ; c ; d ; e ; x ; g ; h ; i ; l
+d2IN;           a ; b ; c ; d ; e ; x ; g ; h ; i ;  ; l
+d2AN;           a ; b ; c ; d ; e ; x ; g ; h ; i l
+d2iL;           a ;; c ; d ; e ; x ; g ; h ; i ; k ; l
+d2aL;           a ; c ; d ; e ; x ; g ; h ; i ; k ; l
+d2IL;           a ;  ; c ; d ; e ; x ; g ; h ; i ; k ; l
+d2AL;           a c ; d ; e ; x ; g ; h ; i ; k ; l
+yi;             a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       ' x '
+ya;             a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       '; x '
+yI;             a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       'x'
+yA;             a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       '; x ; '
+yin;            a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       ' g '
+yan;            a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       '; g '
+yIn;            a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       'g'
+yAn;            a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       '; g ; '
+yil;            a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       ' e '
+yal;            a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       '; e '
+yIl;            a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       'e'
+yAl;            a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       '; e ; '
+yiN;            a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       ' h '
+yaN;            a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       '; h '
+yIN;            a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       'h'
+yAN;            a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       '; h ; '
+yiL;            a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       ' d '
+yaL;            a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       '; d '
+yIL;            a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       'd'
+yAL;            a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       '; d ; '
+y1i;            a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       ' x '
+y1a;            a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       '; x '
+y1I;            a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       'x'
+y1A;            a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       '; x ; '
+y1in;           a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       ' g '
+y1an;           a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       '; g '
+y1In;           a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       'g'
+y1An;           a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       '; g ; '
+y1il;           a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       ' e '
+y1al;           a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       '; e '
+y1Il;           a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       'e'
+y1Al;           a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       '; e ; '
+y1iN;           a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       ' h '
+y1aN;           a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       '; h '
+y1IN;           a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       'h'
+y1AN;           a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       '; h ; '
+y1iL;           a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       ' d '
+y1aL;           a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       '; d '
+y1IL;           a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       'd'
+y1AL;           a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       '; d ; '
+y2i;            a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       ' x '
+y2a;            a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       '; x '
+y2I;            a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       'x'
+y2A;            a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       '; x ; '
+y2in;           a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       ' h '
+y2an;           a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       '; h '
+y2In;           a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       'h'
+y2An;           a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       '; h ; '
+y2il;           a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       ' d '
+y2al;           a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       '; d '
+y2Il;           a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       'd'
+y2Al;           a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       '; d ; '
+y2iN;           a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       ' k '
+y2aN;           a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       '; k '
+y2IN;           a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       'k'
+y2AN;           a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       '; k ; '
+y2iL;           a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       ' b '
+y2aL;           a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       '; b '
+y2IL;           a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       'b'
+y2AL;           a ; b ; c ; d ; e ; x ; g ; h ; i ; k ; l       '; b ; '
+a : b : c : d : e : x : g : h : i : k : l
+ci:             a : b : c : d : e :___: g : h : i : k : l
+ca:             a : b : c : d : e ____: g : h : i : k : l
+cI:             a : b : c : d : e : _ : g : h : i : k : l
+cA:             a : b : c : d : e ______g : h : i : k : l
+cin:            a : b : c : d : e : x :___: h : i : k : l
+can:            a : b : c : d : e : x ____: h : i : k : l
+cIn:            a : b : c : d : e : x : _ : h : i : k : l
+cAn:            a : b : c : d : e : x ______h : i : k : l
+cil:            a : b : c : d :___: x : g : h : i : k : l
+cal:            a : b : c : d ____: x : g : h : i : k : l
+cIl:            a : b : c : d : _ : x : g : h : i : k : l
+cAl:            a : b : c : d ______x : g : h : i : k : l
+ciN:            a : b : c : d : e : x : g :___: i : k : l
+caN:            a : b : c : d : e : x : g ____: i : k : l
+cIN:            a : b : c : d : e : x : g : _ : i : k : l
+cAN:            a : b : c : d : e : x : g ______i : k : l
+ciL:            a : b : c :___: e : x : g : h : i : k : l
+caL:            a : b : c ____: e : x : g : h : i : k : l
+cIL:            a : b : c : _ : e : x : g : h : i : k : l
+cAL:            a : b : c ______e : x : g : h : i : k : l
+c1i:            a : b : c : d : e :___: g : h : i : k : l
+c1a:            a : b : c : d : e ____: g : h : i : k : l
+c1I:            a : b : c : d : e : _ : g : h : i : k : l
+c1A:            a : b : c : d : e ______g : h : i : k : l
+c1in:           a : b : c : d : e : x :___: h : i : k : l
+c1an:           a : b : c : d : e : x ____: h : i : k : l
+c1In:           a : b : c : d : e : x : _ : h : i : k : l
+c1An:           a : b : c : d : e : x ______h : i : k : l
+c1il:           a : b : c : d :___: x : g : h : i : k : l
+c1al:           a : b : c : d ____: x : g : h : i : k : l
+c1Il:           a : b : c : d : _ : x : g : h : i : k : l
+c1Al:           a : b : c : d ______x : g : h : i : k : l
+c1iN:           a : b : c : d : e : x : g :___: i : k : l
+c1aN:           a : b : c : d : e : x : g ____: i : k : l
+c1IN:           a : b : c : d : e : x : g : _ : i : k : l
+c1AN:           a : b : c : d : e : x : g ______i : k : l
+c1iL:           a : b : c :___: e : x : g : h : i : k : l
+c1aL:           a : b : c ____: e : x : g : h : i : k : l
+c1IL:           a : b : c : _ : e : x : g : h : i : k : l
+c1AL:           a : b : c ______e : x : g : h : i : k : l
+c2i:            a : b : c : d : e :___: g : h : i : k : l
+c2a:            a : b : c : d : e ____: g : h : i : k : l
+c2I:            a : b : c : d : e : _ : g : h : i : k : l
+c2A:            a : b : c : d : e ______g : h : i : k : l
+c2in:           a : b : c : d : e : x : g :___: i : k : l
+c2an:           a : b : c : d : e : x : g ____: i : k : l
+c2In:           a : b : c : d : e : x : g : _ : i : k : l
+c2An:           a : b : c : d : e : x : g ______i : k : l
+c2il:           a : b : c :___: e : x : g : h : i : k : l
+c2al:           a : b : c ____: e : x : g : h : i : k : l
+c2Il:           a : b : c : _ : e : x : g : h : i : k : l
+c2Al:           a : b : c ______e : x : g : h : i : k : l
+c2iN:           a : b : c : d : e : x : g : h : i :___: l
+c2aN:           a : b : c : d : e : x : g : h : i ____: l
+c2IN:           a : b : c : d : e : x : g : h : i : _ : l
+c2AN:           a : b : c : d : e : x : g : h : i ______l
+c2iL:           a :___: c : d : e : x : g : h : i : k : l
+c2aL:           a ____: c : d : e : x : g : h : i : k : l
+c2IL:           a : _ : c : d : e : x : g : h : i : k : l
+c2AL:           a ______c : d : e : x : g : h : i : k : l
+di:             a : b : c : d : e :: g : h : i : k : l
+da:             a : b : c : d : e : g : h : i : k : l
+dI:             a : b : c : d : e :  : g : h : i : k : l
+dA:             a : b : c : d : e g : h : i : k : l
+din:            a : b : c : d : e : x :: h : i : k : l
+dan:            a : b : c : d : e : x : h : i : k : l
+dIn:            a : b : c : d : e : x :  : h : i : k : l
+dAn:            a : b : c : d : e : x h : i : k : l
+dil:            a : b : c : d :: x : g : h : i : k : l
+dal:            a : b : c : d : x : g : h : i : k : l
+dIl:            a : b : c : d :  : x : g : h : i : k : l
+dAl:            a : b : c : d x : g : h : i : k : l
+diN:            a : b : c : d : e : x : g :: i : k : l
+daN:            a : b : c : d : e : x : g : i : k : l
+dIN:            a : b : c : d : e : x : g :  : i : k : l
+dAN:            a : b : c : d : e : x : g i : k : l
+diL:            a : b : c :: e : x : g : h : i : k : l
+daL:            a : b : c : e : x : g : h : i : k : l
+dIL:            a : b : c :  : e : x : g : h : i : k : l
+dAL:            a : b : c e : x : g : h : i : k : l
+d1i:            a : b : c : d : e :: g : h : i : k : l
+d1a:            a : b : c : d : e : g : h : i : k : l
+d1I:            a : b : c : d : e :  : g : h : i : k : l
+d1A:            a : b : c : d : e g : h : i : k : l
+d1in:           a : b : c : d : e : x :: h : i : k : l
+d1an:           a : b : c : d : e : x : h : i : k : l
+d1In:           a : b : c : d : e : x :  : h : i : k : l
+d1An:           a : b : c : d : e : x h : i : k : l
+d1il:           a : b : c : d :: x : g : h : i : k : l
+d1al:           a : b : c : d : x : g : h : i : k : l
+d1Il:           a : b : c : d :  : x : g : h : i : k : l
+d1Al:           a : b : c : d x : g : h : i : k : l
+d1iN:           a : b : c : d : e : x : g :: i : k : l
+d1aN:           a : b : c : d : e : x : g : i : k : l
+d1IN:           a : b : c : d : e : x : g :  : i : k : l
+d1AN:           a : b : c : d : e : x : g i : k : l
+d1iL:           a : b : c :: e : x : g : h : i : k : l
+d1aL:           a : b : c : e : x : g : h : i : k : l
+d1IL:           a : b : c :  : e : x : g : h : i : k : l
+d1AL:           a : b : c e : x : g : h : i : k : l
+d2i:            a : b : c : d : e :: g : h : i : k : l
+d2a:            a : b : c : d : e : g : h : i : k : l
+d2I:            a : b : c : d : e :  : g : h : i : k : l
+d2A:            a : b : c : d : e g : h : i : k : l
+d2in:           a : b : c : d : e : x : g :: i : k : l
+d2an:           a : b : c : d : e : x : g : i : k : l
+d2In:           a : b : c : d : e : x : g :  : i : k : l
+d2An:           a : b : c : d : e : x : g i : k : l
+d2il:           a : b : c :: e : x : g : h : i : k : l
+d2al:           a : b : c : e : x : g : h : i : k : l
+d2Il:           a : b : c :  : e : x : g : h : i : k : l
+d2Al:           a : b : c e : x : g : h : i : k : l
+d2iN:           a : b : c : d : e : x : g : h : i :: l
+d2aN:           a : b : c : d : e : x : g : h : i : l
+d2IN:           a : b : c : d : e : x : g : h : i :  : l
+d2AN:           a : b : c : d : e : x : g : h : i l
+d2iL:           a :: c : d : e : x : g : h : i : k : l
+d2aL:           a : c : d : e : x : g : h : i : k : l
+d2IL:           a :  : c : d : e : x : g : h : i : k : l
+d2AL:           a c : d : e : x : g : h : i : k : l
+yi:             a : b : c : d : e : x : g : h : i : k : l       ' x '
+ya:             a : b : c : d : e : x : g : h : i : k : l       ': x '
+yI:             a : b : c : d : e : x : g : h : i : k : l       'x'
+yA:             a : b : c : d : e : x : g : h : i : k : l       ': x : '
+yin:            a : b : c : d : e : x : g : h : i : k : l       ' g '
+yan:            a : b : c : d : e : x : g : h : i : k : l       ': g '
+yIn:            a : b : c : d : e : x : g : h : i : k : l       'g'
+yAn:            a : b : c : d : e : x : g : h : i : k : l       ': g : '
+yil:            a : b : c : d : e : x : g : h : i : k : l       ' e '
+yal:            a : b : c : d : e : x : g : h : i : k : l       ': e '
+yIl:            a : b : c : d : e : x : g : h : i : k : l       'e'
+yAl:            a : b : c : d : e : x : g : h : i : k : l       ': e : '
+yiN:            a : b : c : d : e : x : g : h : i : k : l       ' h '
+yaN:            a : b : c : d : e : x : g : h : i : k : l       ': h '
+yIN:            a : b : c : d : e : x : g : h : i : k : l       'h'
+yAN:            a : b : c : d : e : x : g : h : i : k : l       ': h : '
+yiL:            a : b : c : d : e : x : g : h : i : k : l       ' d '
+yaL:            a : b : c : d : e : x : g : h : i : k : l       ': d '
+yIL:            a : b : c : d : e : x : g : h : i : k : l       'd'
+yAL:            a : b : c : d : e : x : g : h : i : k : l       ': d : '
+y1i:            a : b : c : d : e : x : g : h : i : k : l       ' x '
+y1a:            a : b : c : d : e : x : g : h : i : k : l       ': x '
+y1I:            a : b : c : d : e : x : g : h : i : k : l       'x'
+y1A:            a : b : c : d : e : x : g : h : i : k : l       ': x : '
+y1in:           a : b : c : d : e : x : g : h : i : k : l       ' g '
+y1an:           a : b : c : d : e : x : g : h : i : k : l       ': g '
+y1In:           a : b : c : d : e : x : g : h : i : k : l       'g'
+y1An:           a : b : c : d : e : x : g : h : i : k : l       ': g : '
+y1il:           a : b : c : d : e : x : g : h : i : k : l       ' e '
+y1al:           a : b : c : d : e : x : g : h : i : k : l       ': e '
+y1Il:           a : b : c : d : e : x : g : h : i : k : l       'e'
+y1Al:           a : b : c : d : e : x : g : h : i : k : l       ': e : '
+y1iN:           a : b : c : d : e : x : g : h : i : k : l       ' h '
+y1aN:           a : b : c : d : e : x : g : h : i : k : l       ': h '
+y1IN:           a : b : c : d : e : x : g : h : i : k : l       'h'
+y1AN:           a : b : c : d : e : x : g : h : i : k : l       ': h : '
+y1iL:           a : b : c : d : e : x : g : h : i : k : l       ' d '
+y1aL:           a : b : c : d : e : x : g : h : i : k : l       ': d '
+y1IL:           a : b : c : d : e : x : g : h : i : k : l       'd'
+y1AL:           a : b : c : d : e : x : g : h : i : k : l       ': d : '
+y2i:            a : b : c : d : e : x : g : h : i : k : l       ' x '
+y2a:            a : b : c : d : e : x : g : h : i : k : l       ': x '
+y2I:            a : b : c : d : e : x : g : h : i : k : l       'x'
+y2A:            a : b : c : d : e : x : g : h : i : k : l       ': x : '
+y2in:           a : b : c : d : e : x : g : h : i : k : l       ' h '
+y2an:           a : b : c : d : e : x : g : h : i : k : l       ': h '
+y2In:           a : b : c : d : e : x : g : h : i : k : l       'h'
+y2An:           a : b : c : d : e : x : g : h : i : k : l       ': h : '
+y2il:           a : b : c : d : e : x : g : h : i : k : l       ' d '
+y2al:           a : b : c : d : e : x : g : h : i : k : l       ': d '
+y2Il:           a : b : c : d : e : x : g : h : i : k : l       'd'
+y2Al:           a : b : c : d : e : x : g : h : i : k : l       ': d : '
+y2iN:           a : b : c : d : e : x : g : h : i : k : l       ' k '
+y2aN:           a : b : c : d : e : x : g : h : i : k : l       ': k '
+y2IN:           a : b : c : d : e : x : g : h : i : k : l       'k'
+y2AN:           a : b : c : d : e : x : g : h : i : k : l       ': k : '
+y2iL:           a : b : c : d : e : x : g : h : i : k : l       ' b '
+y2aL:           a : b : c : d : e : x : g : h : i : k : l       ': b '
+y2IL:           a : b : c : d : e : x : g : h : i : k : l       'b'
+y2AL:           a : b : c : d : e : x : g : h : i : k : l       ': b : '
+a + b + c + d + e + x + g + h + i + k + l
+ci+             a + b + c + d + e +___+ g + h + i + k + l
+ca+             a + b + c + d + e ____+ g + h + i + k + l
+cI+             a + b + c + d + e + _ + g + h + i + k + l
+cA+             a + b + c + d + e ______g + h + i + k + l
+cin+            a + b + c + d + e + x +___+ h + i + k + l
+can+            a + b + c + d + e + x ____+ h + i + k + l
+cIn+            a + b + c + d + e + x + _ + h + i + k + l
+cAn+            a + b + c + d + e + x ______h + i + k + l
+cil+            a + b + c + d +___+ x + g + h + i + k + l
+cal+            a + b + c + d ____+ x + g + h + i + k + l
+cIl+            a + b + c + d + _ + x + g + h + i + k + l
+cAl+            a + b + c + d ______x + g + h + i + k + l
+ciN+            a + b + c + d + e + x + g +___+ i + k + l
+caN+            a + b + c + d + e + x + g ____+ i + k + l
+cIN+            a + b + c + d + e + x + g + _ + i + k + l
+cAN+            a + b + c + d + e + x + g ______i + k + l
+ciL+            a + b + c +___+ e + x + g + h + i + k + l
+caL+            a + b + c ____+ e + x + g + h + i + k + l
+cIL+            a + b + c + _ + e + x + g + h + i + k + l
+cAL+            a + b + c ______e + x + g + h + i + k + l
+c1i+            a + b + c + d + e +___+ g + h + i + k + l
+c1a+            a + b + c + d + e ____+ g + h + i + k + l
+c1I+            a + b + c + d + e + _ + g + h + i + k + l
+c1A+            a + b + c + d + e ______g + h + i + k + l
+c1in+           a + b + c + d + e + x +___+ h + i + k + l
+c1an+           a + b + c + d + e + x ____+ h + i + k + l
+c1In+           a + b + c + d + e + x + _ + h + i + k + l
+c1An+           a + b + c + d + e + x ______h + i + k + l
+c1il+           a + b + c + d +___+ x + g + h + i + k + l
+c1al+           a + b + c + d ____+ x + g + h + i + k + l
+c1Il+           a + b + c + d + _ + x + g + h + i + k + l
+c1Al+           a + b + c + d ______x + g + h + i + k + l
+c1iN+           a + b + c + d + e + x + g +___+ i + k + l
+c1aN+           a + b + c + d + e + x + g ____+ i + k + l
+c1IN+           a + b + c + d + e + x + g + _ + i + k + l
+c1AN+           a + b + c + d + e + x + g ______i + k + l
+c1iL+           a + b + c +___+ e + x + g + h + i + k + l
+c1aL+           a + b + c ____+ e + x + g + h + i + k + l
+c1IL+           a + b + c + _ + e + x + g + h + i + k + l
+c1AL+           a + b + c ______e + x + g + h + i + k + l
+c2i+            a + b + c + d + e +___+ g + h + i + k + l
+c2a+            a + b + c + d + e ____+ g + h + i + k + l
+c2I+            a + b + c + d + e + _ + g + h + i + k + l
+c2A+            a + b + c + d + e ______g + h + i + k + l
+c2in+           a + b + c + d + e + x + g +___+ i + k + l
+c2an+           a + b + c + d + e + x + g ____+ i + k + l
+c2In+           a + b + c + d + e + x + g + _ + i + k + l
+c2An+           a + b + c + d + e + x + g ______i + k + l
+c2il+           a + b + c +___+ e + x + g + h + i + k + l
+c2al+           a + b + c ____+ e + x + g + h + i + k + l
+c2Il+           a + b + c + _ + e + x + g + h + i + k + l
+c2Al+           a + b + c ______e + x + g + h + i + k + l
+c2iN+           a + b + c + d + e + x + g + h + i +___+ l
+c2aN+           a + b + c + d + e + x + g + h + i ____+ l
+c2IN+           a + b + c + d + e + x + g + h + i + _ + l
+c2AN+           a + b + c + d + e + x + g + h + i ______l
+c2iL+           a +___+ c + d + e + x + g + h + i + k + l
+c2aL+           a ____+ c + d + e + x + g + h + i + k + l
+c2IL+           a + _ + c + d + e + x + g + h + i + k + l
+c2AL+           a ______c + d + e + x + g + h + i + k + l
+di+             a + b + c + d + e ++ g + h + i + k + l
+da+             a + b + c + d + e + g + h + i + k + l
+dI+             a + b + c + d + e +  + g + h + i + k + l
+dA+             a + b + c + d + e g + h + i + k + l
+din+            a + b + c + d + e + x ++ h + i + k + l
+dan+            a + b + c + d + e + x + h + i + k + l
+dIn+            a + b + c + d + e + x +  + h + i + k + l
+dAn+            a + b + c + d + e + x h + i + k + l
+dil+            a + b + c + d ++ x + g + h + i + k + l
+dal+            a + b + c + d + x + g + h + i + k + l
+dIl+            a + b + c + d +  + x + g + h + i + k + l
+dAl+            a + b + c + d x + g + h + i + k + l
+diN+            a + b + c + d + e + x + g ++ i + k + l
+daN+            a + b + c + d + e + x + g + i + k + l
+dIN+            a + b + c + d + e + x + g +  + i + k + l
+dAN+            a + b + c + d + e + x + g i + k + l
+diL+            a + b + c ++ e + x + g + h + i + k + l
+daL+            a + b + c + e + x + g + h + i + k + l
+dIL+            a + b + c +  + e + x + g + h + i + k + l
+dAL+            a + b + c e + x + g + h + i + k + l
+d1i+            a + b + c + d + e ++ g + h + i + k + l
+d1a+            a + b + c + d + e + g + h + i + k + l
+d1I+            a + b + c + d + e +  + g + h + i + k + l
+d1A+            a + b + c + d + e g + h + i + k + l
+d1in+           a + b + c + d + e + x ++ h + i + k + l
+d1an+           a + b + c + d + e + x + h + i + k + l
+d1In+           a + b + c + d + e + x +  + h + i + k + l
+d1An+           a + b + c + d + e + x h + i + k + l
+d1il+           a + b + c + d ++ x + g + h + i + k + l
+d1al+           a + b + c + d + x + g + h + i + k + l
+d1Il+           a + b + c + d +  + x + g + h + i + k + l
+d1Al+           a + b + c + d x + g + h + i + k + l
+d1iN+           a + b + c + d + e + x + g ++ i + k + l
+d1aN+           a + b + c + d + e + x + g + i + k + l
+d1IN+           a + b + c + d + e + x + g +  + i + k + l
+d1AN+           a + b + c + d + e + x + g i + k + l
+d1iL+           a + b + c ++ e + x + g + h + i + k + l
+d1aL+           a + b + c + e + x + g + h + i + k + l
+d1IL+           a + b + c +  + e + x + g + h + i + k + l
+d1AL+           a + b + c e + x + g + h + i + k + l
+d2i+            a + b + c + d + e ++ g + h + i + k + l
+d2a+            a + b + c + d + e + g + h + i + k + l
+d2I+            a + b + c + d + e +  + g + h + i + k + l
+d2A+            a + b + c + d + e g + h + i + k + l
+d2in+           a + b + c + d + e + x + g ++ i + k + l
+d2an+           a + b + c + d + e + x + g + i + k + l
+d2In+           a + b + c + d + e + x + g +  + i + k + l
+d2An+           a + b + c + d + e + x + g i + k + l
+d2il+           a + b + c ++ e + x + g + h + i + k + l
+d2al+           a + b + c + e + x + g + h + i + k + l
+d2Il+           a + b + c +  + e + x + g + h + i + k + l
+d2Al+           a + b + c e + x + g + h + i + k + l
+d2iN+           a + b + c + d + e + x + g + h + i ++ l
+d2aN+           a + b + c + d + e + x + g + h + i + l
+d2IN+           a + b + c + d + e + x + g + h + i +  + l
+d2AN+           a + b + c + d + e + x + g + h + i l
+d2iL+           a ++ c + d + e + x + g + h + i + k + l
+d2aL+           a + c + d + e + x + g + h + i + k + l
+d2IL+           a +  + c + d + e + x + g + h + i + k + l
+d2AL+           a c + d + e + x + g + h + i + k + l
+yi+             a + b + c + d + e + x + g + h + i + k + l       ' x '
+ya+             a + b + c + d + e + x + g + h + i + k + l       '+ x '
+yI+             a + b + c + d + e + x + g + h + i + k + l       'x'
+yA+             a + b + c + d + e + x + g + h + i + k + l       '+ x + '
+yin+            a + b + c + d + e + x + g + h + i + k + l       ' g '
+yan+            a + b + c + d + e + x + g + h + i + k + l       '+ g '
+yIn+            a + b + c + d + e + x + g + h + i + k + l       'g'
+yAn+            a + b + c + d + e + x + g + h + i + k + l       '+ g + '
+yil+            a + b + c + d + e + x + g + h + i + k + l       ' e '
+yal+            a + b + c + d + e + x + g + h + i + k + l       '+ e '
+yIl+            a + b + c + d + e + x + g + h + i + k + l       'e'
+yAl+            a + b + c + d + e + x + g + h + i + k + l       '+ e + '
+yiN+            a + b + c + d + e + x + g + h + i + k + l       ' h '
+yaN+            a + b + c + d + e + x + g + h + i + k + l       '+ h '
+yIN+            a + b + c + d + e + x + g + h + i + k + l       'h'
+yAN+            a + b + c + d + e + x + g + h + i + k + l       '+ h + '
+yiL+            a + b + c + d + e + x + g + h + i + k + l       ' d '
+yaL+            a + b + c + d + e + x + g + h + i + k + l       '+ d '
+yIL+            a + b + c + d + e + x + g + h + i + k + l       'd'
+yAL+            a + b + c + d + e + x + g + h + i + k + l       '+ d + '
+y1i+            a + b + c + d + e + x + g + h + i + k + l       ' x '
+y1a+            a + b + c + d + e + x + g + h + i + k + l       '+ x '
+y1I+            a + b + c + d + e + x + g + h + i + k + l       'x'
+y1A+            a + b + c + d + e + x + g + h + i + k + l       '+ x + '
+y1in+           a + b + c + d + e + x + g + h + i + k + l       ' g '
+y1an+           a + b + c + d + e + x + g + h + i + k + l       '+ g '
+y1In+           a + b + c + d + e + x + g + h + i + k + l       'g'
+y1An+           a + b + c + d + e + x + g + h + i + k + l       '+ g + '
+y1il+           a + b + c + d + e + x + g + h + i + k + l       ' e '
+y1al+           a + b + c + d + e + x + g + h + i + k + l       '+ e '
+y1Il+           a + b + c + d + e + x + g + h + i + k + l       'e'
+y1Al+           a + b + c + d + e + x + g + h + i + k + l       '+ e + '
+y1iN+           a + b + c + d + e + x + g + h + i + k + l       ' h '
+y1aN+           a + b + c + d + e + x + g + h + i + k + l       '+ h '
+y1IN+           a + b + c + d + e + x + g + h + i + k + l       'h'
+y1AN+           a + b + c + d + e + x + g + h + i + k + l       '+ h + '
+y1iL+           a + b + c + d + e + x + g + h + i + k + l       ' d '
+y1aL+           a + b + c + d + e + x + g + h + i + k + l       '+ d '
+y1IL+           a + b + c + d + e + x + g + h + i + k + l       'd'
+y1AL+           a + b + c + d + e + x + g + h + i + k + l       '+ d + '
+y2i+            a + b + c + d + e + x + g + h + i + k + l       ' x '
+y2a+            a + b + c + d + e + x + g + h + i + k + l       '+ x '
+y2I+            a + b + c + d + e + x + g + h + i + k + l       'x'
+y2A+            a + b + c + d + e + x + g + h + i + k + l       '+ x + '
+y2in+           a + b + c + d + e + x + g + h + i + k + l       ' h '
+y2an+           a + b + c + d + e + x + g + h + i + k + l       '+ h '
+y2In+           a + b + c + d + e + x + g + h + i + k + l       'h'
+y2An+           a + b + c + d + e + x + g + h + i + k + l       '+ h + '
+y2il+           a + b + c + d + e + x + g + h + i + k + l       ' d '
+y2al+           a + b + c + d + e + x + g + h + i + k + l       '+ d '
+y2Il+           a + b + c + d + e + x + g + h + i + k + l       'd'
+y2Al+           a + b + c + d + e + x + g + h + i + k + l       '+ d + '
+y2iN+           a + b + c + d + e + x + g + h + i + k + l       ' k '
+y2aN+           a + b + c + d + e + x + g + h + i + k + l       '+ k '
+y2IN+           a + b + c + d + e + x + g + h + i + k + l       'k'
+y2AN+           a + b + c + d + e + x + g + h + i + k + l       '+ k + '
+y2iL+           a + b + c + d + e + x + g + h + i + k + l       ' b '
+y2aL+           a + b + c + d + e + x + g + h + i + k + l       '+ b '
+y2IL+           a + b + c + d + e + x + g + h + i + k + l       'b'
+y2AL+           a + b + c + d + e + x + g + h + i + k + l       '+ b + '
+a - b - c - d - e - x - g - h - i - k - l
+ci-             a - b - c - d - e -___- g - h - i - k - l
+ca-             a - b - c - d - e ____- g - h - i - k - l
+cI-             a - b - c - d - e - _ - g - h - i - k - l
+cA-             a - b - c - d - e ______g - h - i - k - l
+cin-            a - b - c - d - e - x -___- h - i - k - l
+can-            a - b - c - d - e - x ____- h - i - k - l
+cIn-            a - b - c - d - e - x - _ - h - i - k - l
+cAn-            a - b - c - d - e - x ______h - i - k - l
+cil-            a - b - c - d -___- x - g - h - i - k - l
+cal-            a - b - c - d ____- x - g - h - i - k - l
+cIl-            a - b - c - d - _ - x - g - h - i - k - l
+cAl-            a - b - c - d ______x - g - h - i - k - l
+ciN-            a - b - c - d - e - x - g -___- i - k - l
+caN-            a - b - c - d - e - x - g ____- i - k - l
+cIN-            a - b - c - d - e - x - g - _ - i - k - l
+cAN-            a - b - c - d - e - x - g ______i - k - l
+ciL-            a - b - c -___- e - x - g - h - i - k - l
+caL-            a - b - c ____- e - x - g - h - i - k - l
+cIL-            a - b - c - _ - e - x - g - h - i - k - l
+cAL-            a - b - c ______e - x - g - h - i - k - l
+c1i-            a - b - c - d - e -___- g - h - i - k - l
+c1a-            a - b - c - d - e ____- g - h - i - k - l
+c1I-            a - b - c - d - e - _ - g - h - i - k - l
+c1A-            a - b - c - d - e ______g - h - i - k - l
+c1in-           a - b - c - d - e - x -___- h - i - k - l
+c1an-           a - b - c - d - e - x ____- h - i - k - l
+c1In-           a - b - c - d - e - x - _ - h - i - k - l
+c1An-           a - b - c - d - e - x ______h - i - k - l
+c1il-           a - b - c - d -___- x - g - h - i - k - l
+c1al-           a - b - c - d ____- x - g - h - i - k - l
+c1Il-           a - b - c - d - _ - x - g - h - i - k - l
+c1Al-           a - b - c - d ______x - g - h - i - k - l
+c1iN-           a - b - c - d - e - x - g -___- i - k - l
+c1aN-           a - b - c - d - e - x - g ____- i - k - l
+c1IN-           a - b - c - d - e - x - g - _ - i - k - l
+c1AN-           a - b - c - d - e - x - g ______i - k - l
+c1iL-           a - b - c -___- e - x - g - h - i - k - l
+c1aL-           a - b - c ____- e - x - g - h - i - k - l
+c1IL-           a - b - c - _ - e - x - g - h - i - k - l
+c1AL-           a - b - c ______e - x - g - h - i - k - l
+c2i-            a - b - c - d - e -___- g - h - i - k - l
+c2a-            a - b - c - d - e ____- g - h - i - k - l
+c2I-            a - b - c - d - e - _ - g - h - i - k - l
+c2A-            a - b - c - d - e ______g - h - i - k - l
+c2in-           a - b - c - d - e - x - g -___- i - k - l
+c2an-           a - b - c - d - e - x - g ____- i - k - l
+c2In-           a - b - c - d - e - x - g - _ - i - k - l
+c2An-           a - b - c - d - e - x - g ______i - k - l
+c2il-           a - b - c -___- e - x - g - h - i - k - l
+c2al-           a - b - c ____- e - x - g - h - i - k - l
+c2Il-           a - b - c - _ - e - x - g - h - i - k - l
+c2Al-           a - b - c ______e - x - g - h - i - k - l
+c2iN-           a - b - c - d - e - x - g - h - i -___- l
+c2aN-           a - b - c - d - e - x - g - h - i ____- l
+c2IN-           a - b - c - d - e - x - g - h - i - _ - l
+c2AN-           a - b - c - d - e - x - g - h - i ______l
+c2iL-           a -___- c - d - e - x - g - h - i - k - l
+c2aL-           a ____- c - d - e - x - g - h - i - k - l
+c2IL-           a - _ - c - d - e - x - g - h - i - k - l
+c2AL-           a ______c - d - e - x - g - h - i - k - l
+di-             a - b - c - d - e -- g - h - i - k - l
+da-             a - b - c - d - e - g - h - i - k - l
+dI-             a - b - c - d - e -  - g - h - i - k - l
+dA-             a - b - c - d - e g - h - i - k - l
+din-            a - b - c - d - e - x -- h - i - k - l
+dan-            a - b - c - d - e - x - h - i - k - l
+dIn-            a - b - c - d - e - x -  - h - i - k - l
+dAn-            a - b - c - d - e - x h - i - k - l
+dil-            a - b - c - d -- x - g - h - i - k - l
+dal-            a - b - c - d - x - g - h - i - k - l
+dIl-            a - b - c - d -  - x - g - h - i - k - l
+dAl-            a - b - c - d x - g - h - i - k - l
+diN-            a - b - c - d - e - x - g -- i - k - l
+daN-            a - b - c - d - e - x - g - i - k - l
+dIN-            a - b - c - d - e - x - g -  - i - k - l
+dAN-            a - b - c - d - e - x - g i - k - l
+diL-            a - b - c -- e - x - g - h - i - k - l
+daL-            a - b - c - e - x - g - h - i - k - l
+dIL-            a - b - c -  - e - x - g - h - i - k - l
+dAL-            a - b - c e - x - g - h - i - k - l
+d1i-            a - b - c - d - e -- g - h - i - k - l
+d1a-            a - b - c - d - e - g - h - i - k - l
+d1I-            a - b - c - d - e -  - g - h - i - k - l
+d1A-            a - b - c - d - e g - h - i - k - l
+d1in-           a - b - c - d - e - x -- h - i - k - l
+d1an-           a - b - c - d - e - x - h - i - k - l
+d1In-           a - b - c - d - e - x -  - h - i - k - l
+d1An-           a - b - c - d - e - x h - i - k - l
+d1il-           a - b - c - d -- x - g - h - i - k - l
+d1al-           a - b - c - d - x - g - h - i - k - l
+d1Il-           a - b - c - d -  - x - g - h - i - k - l
+d1Al-           a - b - c - d x - g - h - i - k - l
+d1iN-           a - b - c - d - e - x - g -- i - k - l
+d1aN-           a - b - c - d - e - x - g - i - k - l
+d1IN-           a - b - c - d - e - x - g -  - i - k - l
+d1AN-           a - b - c - d - e - x - g i - k - l
+d1iL-           a - b - c -- e - x - g - h - i - k - l
+d1aL-           a - b - c - e - x - g - h - i - k - l
+d1IL-           a - b - c -  - e - x - g - h - i - k - l
+d1AL-           a - b - c e - x - g - h - i - k - l
+d2i-            a - b - c - d - e -- g - h - i - k - l
+d2a-            a - b - c - d - e - g - h - i - k - l
+d2I-            a - b - c - d - e -  - g - h - i - k - l
+d2A-            a - b - c - d - e g - h - i - k - l
+d2in-           a - b - c - d - e - x - g -- i - k - l
+d2an-           a - b - c - d - e - x - g - i - k - l
+d2In-           a - b - c - d - e - x - g -  - i - k - l
+d2An-           a - b - c - d - e - x - g i - k - l
+d2il-           a - b - c -- e - x - g - h - i - k - l
+d2al-           a - b - c - e - x - g - h - i - k - l
+d2Il-           a - b - c -  - e - x - g - h - i - k - l
+d2Al-           a - b - c e - x - g - h - i - k - l
+d2iN-           a - b - c - d - e - x - g - h - i -- l
+d2aN-           a - b - c - d - e - x - g - h - i - l
+d2IN-           a - b - c - d - e - x - g - h - i -  - l
+d2AN-           a - b - c - d - e - x - g - h - i l
+d2iL-           a -- c - d - e - x - g - h - i - k - l
+d2aL-           a - c - d - e - x - g - h - i - k - l
+d2IL-           a -  - c - d - e - x - g - h - i - k - l
+d2AL-           a c - d - e - x - g - h - i - k - l
+yi-             a - b - c - d - e - x - g - h - i - k - l       ' x '
+ya-             a - b - c - d - e - x - g - h - i - k - l       '- x '
+yI-             a - b - c - d - e - x - g - h - i - k - l       'x'
+yA-             a - b - c - d - e - x - g - h - i - k - l       '- x - '
+yin-            a - b - c - d - e - x - g - h - i - k - l       ' g '
+yan-            a - b - c - d - e - x - g - h - i - k - l       '- g '
+yIn-            a - b - c - d - e - x - g - h - i - k - l       'g'
+yAn-            a - b - c - d - e - x - g - h - i - k - l       '- g - '
+yil-            a - b - c - d - e - x - g - h - i - k - l       ' e '
+yal-            a - b - c - d - e - x - g - h - i - k - l       '- e '
+yIl-            a - b - c - d - e - x - g - h - i - k - l       'e'
+yAl-            a - b - c - d - e - x - g - h - i - k - l       '- e - '
+yiN-            a - b - c - d - e - x - g - h - i - k - l       ' h '
+yaN-            a - b - c - d - e - x - g - h - i - k - l       '- h '
+yIN-            a - b - c - d - e - x - g - h - i - k - l       'h'
+yAN-            a - b - c - d - e - x - g - h - i - k - l       '- h - '
+yiL-            a - b - c - d - e - x - g - h - i - k - l       ' d '
+yaL-            a - b - c - d - e - x - g - h - i - k - l       '- d '
+yIL-            a - b - c - d - e - x - g - h - i - k - l       'd'
+yAL-            a - b - c - d - e - x - g - h - i - k - l       '- d - '
+y1i-            a - b - c - d - e - x - g - h - i - k - l       ' x '
+y1a-            a - b - c - d - e - x - g - h - i - k - l       '- x '
+y1I-            a - b - c - d - e - x - g - h - i - k - l       'x'
+y1A-            a - b - c - d - e - x - g - h - i - k - l       '- x - '
+y1in-           a - b - c - d - e - x - g - h - i - k - l       ' g '
+y1an-           a - b - c - d - e - x - g - h - i - k - l       '- g '
+y1In-           a - b - c - d - e - x - g - h - i - k - l       'g'
+y1An-           a - b - c - d - e - x - g - h - i - k - l       '- g - '
+y1il-           a - b - c - d - e - x - g - h - i - k - l       ' e '
+y1al-           a - b - c - d - e - x - g - h - i - k - l       '- e '
+y1Il-           a - b - c - d - e - x - g - h - i - k - l       'e'
+y1Al-           a - b - c - d - e - x - g - h - i - k - l       '- e - '
+y1iN-           a - b - c - d - e - x - g - h - i - k - l       ' h '
+y1aN-           a - b - c - d - e - x - g - h - i - k - l       '- h '
+y1IN-           a - b - c - d - e - x - g - h - i - k - l       'h'
+y1AN-           a - b - c - d - e - x - g - h - i - k - l       '- h - '
+y1iL-           a - b - c - d - e - x - g - h - i - k - l       ' d '
+y1aL-           a - b - c - d - e - x - g - h - i - k - l       '- d '
+y1IL-           a - b - c - d - e - x - g - h - i - k - l       'd'
+y1AL-           a - b - c - d - e - x - g - h - i - k - l       '- d - '
+y2i-            a - b - c - d - e - x - g - h - i - k - l       ' x '
+y2a-            a - b - c - d - e - x - g - h - i - k - l       '- x '
+y2I-            a - b - c - d - e - x - g - h - i - k - l       'x'
+y2A-            a - b - c - d - e - x - g - h - i - k - l       '- x - '
+y2in-           a - b - c - d - e - x - g - h - i - k - l       ' h '
+y2an-           a - b - c - d - e - x - g - h - i - k - l       '- h '
+y2In-           a - b - c - d - e - x - g - h - i - k - l       'h'
+y2An-           a - b - c - d - e - x - g - h - i - k - l       '- h - '
+y2il-           a - b - c - d - e - x - g - h - i - k - l       ' d '
+y2al-           a - b - c - d - e - x - g - h - i - k - l       '- d '
+y2Il-           a - b - c - d - e - x - g - h - i - k - l       'd'
+y2Al-           a - b - c - d - e - x - g - h - i - k - l       '- d - '
+y2iN-           a - b - c - d - e - x - g - h - i - k - l       ' k '
+y2aN-           a - b - c - d - e - x - g - h - i - k - l       '- k '
+y2IN-           a - b - c - d - e - x - g - h - i - k - l       'k'
+y2AN-           a - b - c - d - e - x - g - h - i - k - l       '- k - '
+y2iL-           a - b - c - d - e - x - g - h - i - k - l       ' b '
+y2aL-           a - b - c - d - e - x - g - h - i - k - l       '- b '
+y2IL-           a - b - c - d - e - x - g - h - i - k - l       'b'
+y2AL-           a - b - c - d - e - x - g - h - i - k - l       '- b - '
+a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l
+ci~             a ~ b ~ c ~ d ~ e ~___~ g ~ h ~ i ~ k ~ l
+ca~             a ~ b ~ c ~ d ~ e ____~ g ~ h ~ i ~ k ~ l
+cI~             a ~ b ~ c ~ d ~ e ~ _ ~ g ~ h ~ i ~ k ~ l
+cA~             a ~ b ~ c ~ d ~ e ______g ~ h ~ i ~ k ~ l
+cin~            a ~ b ~ c ~ d ~ e ~ x ~___~ h ~ i ~ k ~ l
+can~            a ~ b ~ c ~ d ~ e ~ x ____~ h ~ i ~ k ~ l
+cIn~            a ~ b ~ c ~ d ~ e ~ x ~ _ ~ h ~ i ~ k ~ l
+cAn~            a ~ b ~ c ~ d ~ e ~ x ______h ~ i ~ k ~ l
+cil~            a ~ b ~ c ~ d ~___~ x ~ g ~ h ~ i ~ k ~ l
+cal~            a ~ b ~ c ~ d ____~ x ~ g ~ h ~ i ~ k ~ l
+cIl~            a ~ b ~ c ~ d ~ _ ~ x ~ g ~ h ~ i ~ k ~ l
+cAl~            a ~ b ~ c ~ d ______x ~ g ~ h ~ i ~ k ~ l
+ciN~            a ~ b ~ c ~ d ~ e ~ x ~ g ~___~ i ~ k ~ l
+caN~            a ~ b ~ c ~ d ~ e ~ x ~ g ____~ i ~ k ~ l
+cIN~            a ~ b ~ c ~ d ~ e ~ x ~ g ~ _ ~ i ~ k ~ l
+cAN~            a ~ b ~ c ~ d ~ e ~ x ~ g ______i ~ k ~ l
+ciL~            a ~ b ~ c ~___~ e ~ x ~ g ~ h ~ i ~ k ~ l
+caL~            a ~ b ~ c ____~ e ~ x ~ g ~ h ~ i ~ k ~ l
+cIL~            a ~ b ~ c ~ _ ~ e ~ x ~ g ~ h ~ i ~ k ~ l
+cAL~            a ~ b ~ c ______e ~ x ~ g ~ h ~ i ~ k ~ l
+c1i~            a ~ b ~ c ~ d ~ e ~___~ g ~ h ~ i ~ k ~ l
+c1a~            a ~ b ~ c ~ d ~ e ____~ g ~ h ~ i ~ k ~ l
+c1I~            a ~ b ~ c ~ d ~ e ~ _ ~ g ~ h ~ i ~ k ~ l
+c1A~            a ~ b ~ c ~ d ~ e ______g ~ h ~ i ~ k ~ l
+c1in~           a ~ b ~ c ~ d ~ e ~ x ~___~ h ~ i ~ k ~ l
+c1an~           a ~ b ~ c ~ d ~ e ~ x ____~ h ~ i ~ k ~ l
+c1In~           a ~ b ~ c ~ d ~ e ~ x ~ _ ~ h ~ i ~ k ~ l
+c1An~           a ~ b ~ c ~ d ~ e ~ x ______h ~ i ~ k ~ l
+c1il~           a ~ b ~ c ~ d ~___~ x ~ g ~ h ~ i ~ k ~ l
+c1al~           a ~ b ~ c ~ d ____~ x ~ g ~ h ~ i ~ k ~ l
+c1Il~           a ~ b ~ c ~ d ~ _ ~ x ~ g ~ h ~ i ~ k ~ l
+c1Al~           a ~ b ~ c ~ d ______x ~ g ~ h ~ i ~ k ~ l
+c1iN~           a ~ b ~ c ~ d ~ e ~ x ~ g ~___~ i ~ k ~ l
+c1aN~           a ~ b ~ c ~ d ~ e ~ x ~ g ____~ i ~ k ~ l
+c1IN~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ _ ~ i ~ k ~ l
+c1AN~           a ~ b ~ c ~ d ~ e ~ x ~ g ______i ~ k ~ l
+c1iL~           a ~ b ~ c ~___~ e ~ x ~ g ~ h ~ i ~ k ~ l
+c1aL~           a ~ b ~ c ____~ e ~ x ~ g ~ h ~ i ~ k ~ l
+c1IL~           a ~ b ~ c ~ _ ~ e ~ x ~ g ~ h ~ i ~ k ~ l
+c1AL~           a ~ b ~ c ______e ~ x ~ g ~ h ~ i ~ k ~ l
+c2i~            a ~ b ~ c ~ d ~ e ~___~ g ~ h ~ i ~ k ~ l
+c2a~            a ~ b ~ c ~ d ~ e ____~ g ~ h ~ i ~ k ~ l
+c2I~            a ~ b ~ c ~ d ~ e ~ _ ~ g ~ h ~ i ~ k ~ l
+c2A~            a ~ b ~ c ~ d ~ e ______g ~ h ~ i ~ k ~ l
+c2in~           a ~ b ~ c ~ d ~ e ~ x ~ g ~___~ i ~ k ~ l
+c2an~           a ~ b ~ c ~ d ~ e ~ x ~ g ____~ i ~ k ~ l
+c2In~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ _ ~ i ~ k ~ l
+c2An~           a ~ b ~ c ~ d ~ e ~ x ~ g ______i ~ k ~ l
+c2il~           a ~ b ~ c ~___~ e ~ x ~ g ~ h ~ i ~ k ~ l
+c2al~           a ~ b ~ c ____~ e ~ x ~ g ~ h ~ i ~ k ~ l
+c2Il~           a ~ b ~ c ~ _ ~ e ~ x ~ g ~ h ~ i ~ k ~ l
+c2Al~           a ~ b ~ c ______e ~ x ~ g ~ h ~ i ~ k ~ l
+c2iN~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~___~ l
+c2aN~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ____~ l
+c2IN~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ _ ~ l
+c2AN~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ______l
+c2iL~           a ~___~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l
+c2aL~           a ____~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l
+c2IL~           a ~ _ ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l
+c2AL~           a ______c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l
+di~             a ~ b ~ c ~ d ~ e ~~ g ~ h ~ i ~ k ~ l
+da~             a ~ b ~ c ~ d ~ e ~ g ~ h ~ i ~ k ~ l
+dI~             a ~ b ~ c ~ d ~ e ~  ~ g ~ h ~ i ~ k ~ l
+dA~             a ~ b ~ c ~ d ~ e g ~ h ~ i ~ k ~ l
+din~            a ~ b ~ c ~ d ~ e ~ x ~~ h ~ i ~ k ~ l
+dan~            a ~ b ~ c ~ d ~ e ~ x ~ h ~ i ~ k ~ l
+dIn~            a ~ b ~ c ~ d ~ e ~ x ~  ~ h ~ i ~ k ~ l
+dAn~            a ~ b ~ c ~ d ~ e ~ x h ~ i ~ k ~ l
+dil~            a ~ b ~ c ~ d ~~ x ~ g ~ h ~ i ~ k ~ l
+dal~            a ~ b ~ c ~ d ~ x ~ g ~ h ~ i ~ k ~ l
+dIl~            a ~ b ~ c ~ d ~  ~ x ~ g ~ h ~ i ~ k ~ l
+dAl~            a ~ b ~ c ~ d x ~ g ~ h ~ i ~ k ~ l
+diN~            a ~ b ~ c ~ d ~ e ~ x ~ g ~~ i ~ k ~ l
+daN~            a ~ b ~ c ~ d ~ e ~ x ~ g ~ i ~ k ~ l
+dIN~            a ~ b ~ c ~ d ~ e ~ x ~ g ~  ~ i ~ k ~ l
+dAN~            a ~ b ~ c ~ d ~ e ~ x ~ g i ~ k ~ l
+diL~            a ~ b ~ c ~~ e ~ x ~ g ~ h ~ i ~ k ~ l
+daL~            a ~ b ~ c ~ e ~ x ~ g ~ h ~ i ~ k ~ l
+dIL~            a ~ b ~ c ~  ~ e ~ x ~ g ~ h ~ i ~ k ~ l
+dAL~            a ~ b ~ c e ~ x ~ g ~ h ~ i ~ k ~ l
+d1i~            a ~ b ~ c ~ d ~ e ~~ g ~ h ~ i ~ k ~ l
+d1a~            a ~ b ~ c ~ d ~ e ~ g ~ h ~ i ~ k ~ l
+d1I~            a ~ b ~ c ~ d ~ e ~  ~ g ~ h ~ i ~ k ~ l
+d1A~            a ~ b ~ c ~ d ~ e g ~ h ~ i ~ k ~ l
+d1in~           a ~ b ~ c ~ d ~ e ~ x ~~ h ~ i ~ k ~ l
+d1an~           a ~ b ~ c ~ d ~ e ~ x ~ h ~ i ~ k ~ l
+d1In~           a ~ b ~ c ~ d ~ e ~ x ~  ~ h ~ i ~ k ~ l
+d1An~           a ~ b ~ c ~ d ~ e ~ x h ~ i ~ k ~ l
+d1il~           a ~ b ~ c ~ d ~~ x ~ g ~ h ~ i ~ k ~ l
+d1al~           a ~ b ~ c ~ d ~ x ~ g ~ h ~ i ~ k ~ l
+d1Il~           a ~ b ~ c ~ d ~  ~ x ~ g ~ h ~ i ~ k ~ l
+d1Al~           a ~ b ~ c ~ d x ~ g ~ h ~ i ~ k ~ l
+d1iN~           a ~ b ~ c ~ d ~ e ~ x ~ g ~~ i ~ k ~ l
+d1aN~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ i ~ k ~ l
+d1IN~           a ~ b ~ c ~ d ~ e ~ x ~ g ~  ~ i ~ k ~ l
+d1AN~           a ~ b ~ c ~ d ~ e ~ x ~ g i ~ k ~ l
+d1iL~           a ~ b ~ c ~~ e ~ x ~ g ~ h ~ i ~ k ~ l
+d1aL~           a ~ b ~ c ~ e ~ x ~ g ~ h ~ i ~ k ~ l
+d1IL~           a ~ b ~ c ~  ~ e ~ x ~ g ~ h ~ i ~ k ~ l
+d1AL~           a ~ b ~ c e ~ x ~ g ~ h ~ i ~ k ~ l
+d2i~            a ~ b ~ c ~ d ~ e ~~ g ~ h ~ i ~ k ~ l
+d2a~            a ~ b ~ c ~ d ~ e ~ g ~ h ~ i ~ k ~ l
+d2I~            a ~ b ~ c ~ d ~ e ~  ~ g ~ h ~ i ~ k ~ l
+d2A~            a ~ b ~ c ~ d ~ e g ~ h ~ i ~ k ~ l
+d2in~           a ~ b ~ c ~ d ~ e ~ x ~ g ~~ i ~ k ~ l
+d2an~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ i ~ k ~ l
+d2In~           a ~ b ~ c ~ d ~ e ~ x ~ g ~  ~ i ~ k ~ l
+d2An~           a ~ b ~ c ~ d ~ e ~ x ~ g i ~ k ~ l
+d2il~           a ~ b ~ c ~~ e ~ x ~ g ~ h ~ i ~ k ~ l
+d2al~           a ~ b ~ c ~ e ~ x ~ g ~ h ~ i ~ k ~ l
+d2Il~           a ~ b ~ c ~  ~ e ~ x ~ g ~ h ~ i ~ k ~ l
+d2Al~           a ~ b ~ c e ~ x ~ g ~ h ~ i ~ k ~ l
+d2iN~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~~ l
+d2aN~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ l
+d2IN~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~  ~ l
+d2AN~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i l
+d2iL~           a ~~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l
+d2aL~           a ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l
+d2IL~           a ~  ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l
+d2AL~           a c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l
+yi~             a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       ' x '
+ya~             a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       '~ x '
+yI~             a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       'x'
+yA~             a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       '~ x ~ '
+yin~            a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       ' g '
+yan~            a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       '~ g '
+yIn~            a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       'g'
+yAn~            a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       '~ g ~ '
+yil~            a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       ' e '
+yal~            a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       '~ e '
+yIl~            a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       'e'
+yAl~            a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       '~ e ~ '
+yiN~            a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       ' h '
+yaN~            a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       '~ h '
+yIN~            a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       'h'
+yAN~            a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       '~ h ~ '
+yiL~            a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       ' d '
+yaL~            a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       '~ d '
+yIL~            a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       'd'
+yAL~            a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       '~ d ~ '
+y1i~            a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       ' x '
+y1a~            a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       '~ x '
+y1I~            a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       'x'
+y1A~            a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       '~ x ~ '
+y1in~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       ' g '
+y1an~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       '~ g '
+y1In~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       'g'
+y1An~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       '~ g ~ '
+y1il~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       ' e '
+y1al~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       '~ e '
+y1Il~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       'e'
+y1Al~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       '~ e ~ '
+y1iN~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       ' h '
+y1aN~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       '~ h '
+y1IN~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       'h'
+y1AN~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       '~ h ~ '
+y1iL~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       ' d '
+y1aL~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       '~ d '
+y1IL~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       'd'
+y1AL~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       '~ d ~ '
+y2i~            a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       ' x '
+y2a~            a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       '~ x '
+y2I~            a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       'x'
+y2A~            a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       '~ x ~ '
+y2in~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       ' h '
+y2an~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       '~ h '
+y2In~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       'h'
+y2An~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       '~ h ~ '
+y2il~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       ' d '
+y2al~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       '~ d '
+y2Il~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       'd'
+y2Al~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       '~ d ~ '
+y2iN~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       ' k '
+y2aN~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       '~ k '
+y2IN~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       'k'
+y2AN~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       '~ k ~ '
+y2iL~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       ' b '
+y2aL~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       '~ b '
+y2IL~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       'b'
+y2AL~           a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l       '~ b ~ '
+a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l
+ci_             a _ b _ c _ d _ e _____ g _ h _ i _ k _ l
+ca_             a _ b _ c _ d _ e _____ g _ h _ i _ k _ l
+cI_             a _ b _ c _ d _ e _ _ _ g _ h _ i _ k _ l
+cA_             a _ b _ c _ d _ e ______g _ h _ i _ k _ l
+cin_            a _ b _ c _ d _ e _ x _____ h _ i _ k _ l
+can_            a _ b _ c _ d _ e _ x _____ h _ i _ k _ l
+cIn_            a _ b _ c _ d _ e _ x _ _ _ h _ i _ k _ l
+cAn_            a _ b _ c _ d _ e _ x ______h _ i _ k _ l
+cil_            a _ b _ c _ d _____ x _ g _ h _ i _ k _ l
+cal_            a _ b _ c _ d _____ x _ g _ h _ i _ k _ l
+cIl_            a _ b _ c _ d _ _ _ x _ g _ h _ i _ k _ l
+cAl_            a _ b _ c _ d ______x _ g _ h _ i _ k _ l
+ciN_            a _ b _ c _ d _ e _ x _ g _____ i _ k _ l
+caN_            a _ b _ c _ d _ e _ x _ g _____ i _ k _ l
+cIN_            a _ b _ c _ d _ e _ x _ g _ _ _ i _ k _ l
+cAN_            a _ b _ c _ d _ e _ x _ g ______i _ k _ l
+ciL_            a _ b _ c _____ e _ x _ g _ h _ i _ k _ l
+caL_            a _ b _ c _____ e _ x _ g _ h _ i _ k _ l
+cIL_            a _ b _ c _ _ _ e _ x _ g _ h _ i _ k _ l
+cAL_            a _ b _ c ______e _ x _ g _ h _ i _ k _ l
+c1i_            a _ b _ c _ d _ e _____ g _ h _ i _ k _ l
+c1a_            a _ b _ c _ d _ e _____ g _ h _ i _ k _ l
+c1I_            a _ b _ c _ d _ e _ _ _ g _ h _ i _ k _ l
+c1A_            a _ b _ c _ d _ e ______g _ h _ i _ k _ l
+c1in_           a _ b _ c _ d _ e _ x _____ h _ i _ k _ l
+c1an_           a _ b _ c _ d _ e _ x _____ h _ i _ k _ l
+c1In_           a _ b _ c _ d _ e _ x _ _ _ h _ i _ k _ l
+c1An_           a _ b _ c _ d _ e _ x ______h _ i _ k _ l
+c1il_           a _ b _ c _ d _____ x _ g _ h _ i _ k _ l
+c1al_           a _ b _ c _ d _____ x _ g _ h _ i _ k _ l
+c1Il_           a _ b _ c _ d _ _ _ x _ g _ h _ i _ k _ l
+c1Al_           a _ b _ c _ d ______x _ g _ h _ i _ k _ l
+c1iN_           a _ b _ c _ d _ e _ x _ g _____ i _ k _ l
+c1aN_           a _ b _ c _ d _ e _ x _ g _____ i _ k _ l
+c1IN_           a _ b _ c _ d _ e _ x _ g _ _ _ i _ k _ l
+c1AN_           a _ b _ c _ d _ e _ x _ g ______i _ k _ l
+c1iL_           a _ b _ c _____ e _ x _ g _ h _ i _ k _ l
+c1aL_           a _ b _ c _____ e _ x _ g _ h _ i _ k _ l
+c1IL_           a _ b _ c _ _ _ e _ x _ g _ h _ i _ k _ l
+c1AL_           a _ b _ c ______e _ x _ g _ h _ i _ k _ l
+c2i_            a _ b _ c _ d _ e _____ g _ h _ i _ k _ l
+c2a_            a _ b _ c _ d _ e _____ g _ h _ i _ k _ l
+c2I_            a _ b _ c _ d _ e _ _ _ g _ h _ i _ k _ l
+c2A_            a _ b _ c _ d _ e ______g _ h _ i _ k _ l
+c2in_           a _ b _ c _ d _ e _ x _ g _____ i _ k _ l
+c2an_           a _ b _ c _ d _ e _ x _ g _____ i _ k _ l
+c2In_           a _ b _ c _ d _ e _ x _ g _ _ _ i _ k _ l
+c2An_           a _ b _ c _ d _ e _ x _ g ______i _ k _ l
+c2il_           a _ b _ c _____ e _ x _ g _ h _ i _ k _ l
+c2al_           a _ b _ c _____ e _ x _ g _ h _ i _ k _ l
+c2Il_           a _ b _ c _ _ _ e _ x _ g _ h _ i _ k _ l
+c2Al_           a _ b _ c ______e _ x _ g _ h _ i _ k _ l
+c2iN_           a _ b _ c _ d _ e _ x _ g _ h _ i _____ l
+c2aN_           a _ b _ c _ d _ e _ x _ g _ h _ i _____ l
+c2IN_           a _ b _ c _ d _ e _ x _ g _ h _ i _ _ _ l
+c2AN_           a _ b _ c _ d _ e _ x _ g _ h _ i ______l
+c2iL_           a _____ c _ d _ e _ x _ g _ h _ i _ k _ l
+c2aL_           a _____ c _ d _ e _ x _ g _ h _ i _ k _ l
+c2IL_           a _ _ _ c _ d _ e _ x _ g _ h _ i _ k _ l
+c2AL_           a ______c _ d _ e _ x _ g _ h _ i _ k _ l
+di_             a _ b _ c _ d _ e __ g _ h _ i _ k _ l
+da_             a _ b _ c _ d _ e _ g _ h _ i _ k _ l
+dI_             a _ b _ c _ d _ e _  _ g _ h _ i _ k _ l
+dA_             a _ b _ c _ d _ e g _ h _ i _ k _ l
+din_            a _ b _ c _ d _ e _ x __ h _ i _ k _ l
+dan_            a _ b _ c _ d _ e _ x _ h _ i _ k _ l
+dIn_            a _ b _ c _ d _ e _ x _  _ h _ i _ k _ l
+dAn_            a _ b _ c _ d _ e _ x h _ i _ k _ l
+dil_            a _ b _ c _ d __ x _ g _ h _ i _ k _ l
+dal_            a _ b _ c _ d _ x _ g _ h _ i _ k _ l
+dIl_            a _ b _ c _ d _  _ x _ g _ h _ i _ k _ l
+dAl_            a _ b _ c _ d x _ g _ h _ i _ k _ l
+diN_            a _ b _ c _ d _ e _ x _ g __ i _ k _ l
+daN_            a _ b _ c _ d _ e _ x _ g _ i _ k _ l
+dIN_            a _ b _ c _ d _ e _ x _ g _  _ i _ k _ l
+dAN_            a _ b _ c _ d _ e _ x _ g i _ k _ l
+diL_            a _ b _ c __ e _ x _ g _ h _ i _ k _ l
+daL_            a _ b _ c _ e _ x _ g _ h _ i _ k _ l
+dIL_            a _ b _ c _  _ e _ x _ g _ h _ i _ k _ l
+dAL_            a _ b _ c e _ x _ g _ h _ i _ k _ l
+d1i_            a _ b _ c _ d _ e __ g _ h _ i _ k _ l
+d1a_            a _ b _ c _ d _ e _ g _ h _ i _ k _ l
+d1I_            a _ b _ c _ d _ e _  _ g _ h _ i _ k _ l
+d1A_            a _ b _ c _ d _ e g _ h _ i _ k _ l
+d1in_           a _ b _ c _ d _ e _ x __ h _ i _ k _ l
+d1an_           a _ b _ c _ d _ e _ x _ h _ i _ k _ l
+d1In_           a _ b _ c _ d _ e _ x _  _ h _ i _ k _ l
+d1An_           a _ b _ c _ d _ e _ x h _ i _ k _ l
+d1il_           a _ b _ c _ d __ x _ g _ h _ i _ k _ l
+d1al_           a _ b _ c _ d _ x _ g _ h _ i _ k _ l
+d1Il_           a _ b _ c _ d _  _ x _ g _ h _ i _ k _ l
+d1Al_           a _ b _ c _ d x _ g _ h _ i _ k _ l
+d1iN_           a _ b _ c _ d _ e _ x _ g __ i _ k _ l
+d1aN_           a _ b _ c _ d _ e _ x _ g _ i _ k _ l
+d1IN_           a _ b _ c _ d _ e _ x _ g _  _ i _ k _ l
+d1AN_           a _ b _ c _ d _ e _ x _ g i _ k _ l
+d1iL_           a _ b _ c __ e _ x _ g _ h _ i _ k _ l
+d1aL_           a _ b _ c _ e _ x _ g _ h _ i _ k _ l
+d1IL_           a _ b _ c _  _ e _ x _ g _ h _ i _ k _ l
+d1AL_           a _ b _ c e _ x _ g _ h _ i _ k _ l
+d2i_            a _ b _ c _ d _ e __ g _ h _ i _ k _ l
+d2a_            a _ b _ c _ d _ e _ g _ h _ i _ k _ l
+d2I_            a _ b _ c _ d _ e _  _ g _ h _ i _ k _ l
+d2A_            a _ b _ c _ d _ e g _ h _ i _ k _ l
+d2in_           a _ b _ c _ d _ e _ x _ g __ i _ k _ l
+d2an_           a _ b _ c _ d _ e _ x _ g _ i _ k _ l
+d2In_           a _ b _ c _ d _ e _ x _ g _  _ i _ k _ l
+d2An_           a _ b _ c _ d _ e _ x _ g i _ k _ l
+d2il_           a _ b _ c __ e _ x _ g _ h _ i _ k _ l
+d2al_           a _ b _ c _ e _ x _ g _ h _ i _ k _ l
+d2Il_           a _ b _ c _  _ e _ x _ g _ h _ i _ k _ l
+d2Al_           a _ b _ c e _ x _ g _ h _ i _ k _ l
+d2iN_           a _ b _ c _ d _ e _ x _ g _ h _ i __ l
+d2aN_           a _ b _ c _ d _ e _ x _ g _ h _ i _ l
+d2IN_           a _ b _ c _ d _ e _ x _ g _ h _ i _  _ l
+d2AN_           a _ b _ c _ d _ e _ x _ g _ h _ i l
+d2iL_           a __ c _ d _ e _ x _ g _ h _ i _ k _ l
+d2aL_           a _ c _ d _ e _ x _ g _ h _ i _ k _ l
+d2IL_           a _  _ c _ d _ e _ x _ g _ h _ i _ k _ l
+d2AL_           a c _ d _ e _ x _ g _ h _ i _ k _ l
+yi_             a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       ' x '
+ya_             a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       '_ x '
+yI_             a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       'x'
+yA_             a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       '_ x _ '
+yin_            a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       ' g '
+yan_            a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       '_ g '
+yIn_            a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       'g'
+yAn_            a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       '_ g _ '
+yil_            a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       ' e '
+yal_            a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       '_ e '
+yIl_            a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       'e'
+yAl_            a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       '_ e _ '
+yiN_            a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       ' h '
+yaN_            a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       '_ h '
+yIN_            a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       'h'
+yAN_            a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       '_ h _ '
+yiL_            a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       ' d '
+yaL_            a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       '_ d '
+yIL_            a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       'd'
+yAL_            a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       '_ d _ '
+y1i_            a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       ' x '
+y1a_            a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       '_ x '
+y1I_            a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       'x'
+y1A_            a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       '_ x _ '
+y1in_           a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       ' g '
+y1an_           a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       '_ g '
+y1In_           a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       'g'
+y1An_           a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       '_ g _ '
+y1il_           a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       ' e '
+y1al_           a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       '_ e '
+y1Il_           a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       'e'
+y1Al_           a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       '_ e _ '
+y1iN_           a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       ' h '
+y1aN_           a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       '_ h '
+y1IN_           a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       'h'
+y1AN_           a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       '_ h _ '
+y1iL_           a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       ' d '
+y1aL_           a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       '_ d '
+y1IL_           a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       'd'
+y1AL_           a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       '_ d _ '
+y2i_            a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       ' x '
+y2a_            a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       '_ x '
+y2I_            a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       'x'
+y2A_            a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       '_ x _ '
+y2in_           a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       ' h '
+y2an_           a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       '_ h '
+y2In_           a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       'h'
+y2An_           a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       '_ h _ '
+y2il_           a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       ' d '
+y2al_           a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       '_ d '
+y2Il_           a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       'd'
+y2Al_           a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       '_ d _ '
+y2iN_           a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       ' k '
+y2aN_           a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       '_ k '
+y2IN_           a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       'k'
+y2AN_           a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       '_ k _ '
+y2iL_           a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       ' b '
+y2aL_           a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       '_ b '
+y2IL_           a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       'b'
+y2AL_           a _ b _ c _ d _ e _ x _ g _ h _ i _ k _ l       '_ b _ '
+a * b * c * d * e * x * g * h * i * k * l
+ci*             a * b * c * d * e *___* g * h * i * k * l
+ca*             a * b * c * d * e ____* g * h * i * k * l
+cI*             a * b * c * d * e * _ * g * h * i * k * l
+cA*             a * b * c * d * e ______g * h * i * k * l
+cin*            a * b * c * d * e * x *___* h * i * k * l
+can*            a * b * c * d * e * x ____* h * i * k * l
+cIn*            a * b * c * d * e * x * _ * h * i * k * l
+cAn*            a * b * c * d * e * x ______h * i * k * l
+cil*            a * b * c * d *___* x * g * h * i * k * l
+cal*            a * b * c * d ____* x * g * h * i * k * l
+cIl*            a * b * c * d * _ * x * g * h * i * k * l
+cAl*            a * b * c * d ______x * g * h * i * k * l
+ciN*            a * b * c * d * e * x * g *___* i * k * l
+caN*            a * b * c * d * e * x * g ____* i * k * l
+cIN*            a * b * c * d * e * x * g * _ * i * k * l
+cAN*            a * b * c * d * e * x * g ______i * k * l
+ciL*            a * b * c *___* e * x * g * h * i * k * l
+caL*            a * b * c ____* e * x * g * h * i * k * l
+cIL*            a * b * c * _ * e * x * g * h * i * k * l
+cAL*            a * b * c ______e * x * g * h * i * k * l
+c1i*            a * b * c * d * e *___* g * h * i * k * l
+c1a*            a * b * c * d * e ____* g * h * i * k * l
+c1I*            a * b * c * d * e * _ * g * h * i * k * l
+c1A*            a * b * c * d * e ______g * h * i * k * l
+c1in*           a * b * c * d * e * x *___* h * i * k * l
+c1an*           a * b * c * d * e * x ____* h * i * k * l
+c1In*           a * b * c * d * e * x * _ * h * i * k * l
+c1An*           a * b * c * d * e * x ______h * i * k * l
+c1il*           a * b * c * d *___* x * g * h * i * k * l
+c1al*           a * b * c * d ____* x * g * h * i * k * l
+c1Il*           a * b * c * d * _ * x * g * h * i * k * l
+c1Al*           a * b * c * d ______x * g * h * i * k * l
+c1iN*           a * b * c * d * e * x * g *___* i * k * l
+c1aN*           a * b * c * d * e * x * g ____* i * k * l
+c1IN*           a * b * c * d * e * x * g * _ * i * k * l
+c1AN*           a * b * c * d * e * x * g ______i * k * l
+c1iL*           a * b * c *___* e * x * g * h * i * k * l
+c1aL*           a * b * c ____* e * x * g * h * i * k * l
+c1IL*           a * b * c * _ * e * x * g * h * i * k * l
+c1AL*           a * b * c ______e * x * g * h * i * k * l
+c2i*            a * b * c * d * e *___* g * h * i * k * l
+c2a*            a * b * c * d * e ____* g * h * i * k * l
+c2I*            a * b * c * d * e * _ * g * h * i * k * l
+c2A*            a * b * c * d * e ______g * h * i * k * l
+c2in*           a * b * c * d * e * x * g *___* i * k * l
+c2an*           a * b * c * d * e * x * g ____* i * k * l
+c2In*           a * b * c * d * e * x * g * _ * i * k * l
+c2An*           a * b * c * d * e * x * g ______i * k * l
+c2il*           a * b * c *___* e * x * g * h * i * k * l
+c2al*           a * b * c ____* e * x * g * h * i * k * l
+c2Il*           a * b * c * _ * e * x * g * h * i * k * l
+c2Al*           a * b * c ______e * x * g * h * i * k * l
+c2iN*           a * b * c * d * e * x * g * h * i *___* l
+c2aN*           a * b * c * d * e * x * g * h * i ____* l
+c2IN*           a * b * c * d * e * x * g * h * i * _ * l
+c2AN*           a * b * c * d * e * x * g * h * i ______l
+c2iL*           a *___* c * d * e * x * g * h * i * k * l
+c2aL*           a ____* c * d * e * x * g * h * i * k * l
+c2IL*           a * _ * c * d * e * x * g * h * i * k * l
+c2AL*           a ______c * d * e * x * g * h * i * k * l
+di*             a * b * c * d * e ** g * h * i * k * l
+da*             a * b * c * d * e * g * h * i * k * l
+dI*             a * b * c * d * e *  * g * h * i * k * l
+dA*             a * b * c * d * e g * h * i * k * l
+din*            a * b * c * d * e * x ** h * i * k * l
+dan*            a * b * c * d * e * x * h * i * k * l
+dIn*            a * b * c * d * e * x *  * h * i * k * l
+dAn*            a * b * c * d * e * x h * i * k * l
+dil*            a * b * c * d ** x * g * h * i * k * l
+dal*            a * b * c * d * x * g * h * i * k * l
+dIl*            a * b * c * d *  * x * g * h * i * k * l
+dAl*            a * b * c * d x * g * h * i * k * l
+diN*            a * b * c * d * e * x * g ** i * k * l
+daN*            a * b * c * d * e * x * g * i * k * l
+dIN*            a * b * c * d * e * x * g *  * i * k * l
+dAN*            a * b * c * d * e * x * g i * k * l
+diL*            a * b * c ** e * x * g * h * i * k * l
+daL*            a * b * c * e * x * g * h * i * k * l
+dIL*            a * b * c *  * e * x * g * h * i * k * l
+dAL*            a * b * c e * x * g * h * i * k * l
+d1i*            a * b * c * d * e ** g * h * i * k * l
+d1a*            a * b * c * d * e * g * h * i * k * l
+d1I*            a * b * c * d * e *  * g * h * i * k * l
+d1A*            a * b * c * d * e g * h * i * k * l
+d1in*           a * b * c * d * e * x ** h * i * k * l
+d1an*           a * b * c * d * e * x * h * i * k * l
+d1In*           a * b * c * d * e * x *  * h * i * k * l
+d1An*           a * b * c * d * e * x h * i * k * l
+d1il*           a * b * c * d ** x * g * h * i * k * l
+d1al*           a * b * c * d * x * g * h * i * k * l
+d1Il*           a * b * c * d *  * x * g * h * i * k * l
+d1Al*           a * b * c * d x * g * h * i * k * l
+d1iN*           a * b * c * d * e * x * g ** i * k * l
+d1aN*           a * b * c * d * e * x * g * i * k * l
+d1IN*           a * b * c * d * e * x * g *  * i * k * l
+d1AN*           a * b * c * d * e * x * g i * k * l
+d1iL*           a * b * c ** e * x * g * h * i * k * l
+d1aL*           a * b * c * e * x * g * h * i * k * l
+d1IL*           a * b * c *  * e * x * g * h * i * k * l
+d1AL*           a * b * c e * x * g * h * i * k * l
+d2i*            a * b * c * d * e ** g * h * i * k * l
+d2a*            a * b * c * d * e * g * h * i * k * l
+d2I*            a * b * c * d * e *  * g * h * i * k * l
+d2A*            a * b * c * d * e g * h * i * k * l
+d2in*           a * b * c * d * e * x * g ** i * k * l
+d2an*           a * b * c * d * e * x * g * i * k * l
+d2In*           a * b * c * d * e * x * g *  * i * k * l
+d2An*           a * b * c * d * e * x * g i * k * l
+d2il*           a * b * c ** e * x * g * h * i * k * l
+d2al*           a * b * c * e * x * g * h * i * k * l
+d2Il*           a * b * c *  * e * x * g * h * i * k * l
+d2Al*           a * b * c e * x * g * h * i * k * l
+d2iN*           a * b * c * d * e * x * g * h * i ** l
+d2aN*           a * b * c * d * e * x * g * h * i * l
+d2IN*           a * b * c * d * e * x * g * h * i *  * l
+d2AN*           a * b * c * d * e * x * g * h * i l
+d2iL*           a ** c * d * e * x * g * h * i * k * l
+d2aL*           a * c * d * e * x * g * h * i * k * l
+d2IL*           a *  * c * d * e * x * g * h * i * k * l
+d2AL*           a c * d * e * x * g * h * i * k * l
+yi*             a * b * c * d * e * x * g * h * i * k * l       ' x '
+ya*             a * b * c * d * e * x * g * h * i * k * l       '* x '
+yI*             a * b * c * d * e * x * g * h * i * k * l       'x'
+yA*             a * b * c * d * e * x * g * h * i * k * l       '* x * '
+yin*            a * b * c * d * e * x * g * h * i * k * l       ' g '
+yan*            a * b * c * d * e * x * g * h * i * k * l       '* g '
+yIn*            a * b * c * d * e * x * g * h * i * k * l       'g'
+yAn*            a * b * c * d * e * x * g * h * i * k * l       '* g * '
+yil*            a * b * c * d * e * x * g * h * i * k * l       ' e '
+yal*            a * b * c * d * e * x * g * h * i * k * l       '* e '
+yIl*            a * b * c * d * e * x * g * h * i * k * l       'e'
+yAl*            a * b * c * d * e * x * g * h * i * k * l       '* e * '
+yiN*            a * b * c * d * e * x * g * h * i * k * l       ' h '
+yaN*            a * b * c * d * e * x * g * h * i * k * l       '* h '
+yIN*            a * b * c * d * e * x * g * h * i * k * l       'h'
+yAN*            a * b * c * d * e * x * g * h * i * k * l       '* h * '
+yiL*            a * b * c * d * e * x * g * h * i * k * l       ' d '
+yaL*            a * b * c * d * e * x * g * h * i * k * l       '* d '
+yIL*            a * b * c * d * e * x * g * h * i * k * l       'd'
+yAL*            a * b * c * d * e * x * g * h * i * k * l       '* d * '
+y1i*            a * b * c * d * e * x * g * h * i * k * l       ' x '
+y1a*            a * b * c * d * e * x * g * h * i * k * l       '* x '
+y1I*            a * b * c * d * e * x * g * h * i * k * l       'x'
+y1A*            a * b * c * d * e * x * g * h * i * k * l       '* x * '
+y1in*           a * b * c * d * e * x * g * h * i * k * l       ' g '
+y1an*           a * b * c * d * e * x * g * h * i * k * l       '* g '
+y1In*           a * b * c * d * e * x * g * h * i * k * l       'g'
+y1An*           a * b * c * d * e * x * g * h * i * k * l       '* g * '
+y1il*           a * b * c * d * e * x * g * h * i * k * l       ' e '
+y1al*           a * b * c * d * e * x * g * h * i * k * l       '* e '
+y1Il*           a * b * c * d * e * x * g * h * i * k * l       'e'
+y1Al*           a * b * c * d * e * x * g * h * i * k * l       '* e * '
+y1iN*           a * b * c * d * e * x * g * h * i * k * l       ' h '
+y1aN*           a * b * c * d * e * x * g * h * i * k * l       '* h '
+y1IN*           a * b * c * d * e * x * g * h * i * k * l       'h'
+y1AN*           a * b * c * d * e * x * g * h * i * k * l       '* h * '
+y1iL*           a * b * c * d * e * x * g * h * i * k * l       ' d '
+y1aL*           a * b * c * d * e * x * g * h * i * k * l       '* d '
+y1IL*           a * b * c * d * e * x * g * h * i * k * l       'd'
+y1AL*           a * b * c * d * e * x * g * h * i * k * l       '* d * '
+y2i*            a * b * c * d * e * x * g * h * i * k * l       ' x '
+y2a*            a * b * c * d * e * x * g * h * i * k * l       '* x '
+y2I*            a * b * c * d * e * x * g * h * i * k * l       'x'
+y2A*            a * b * c * d * e * x * g * h * i * k * l       '* x * '
+y2in*           a * b * c * d * e * x * g * h * i * k * l       ' h '
+y2an*           a * b * c * d * e * x * g * h * i * k * l       '* h '
+y2In*           a * b * c * d * e * x * g * h * i * k * l       'h'
+y2An*           a * b * c * d * e * x * g * h * i * k * l       '* h * '
+y2il*           a * b * c * d * e * x * g * h * i * k * l       ' d '
+y2al*           a * b * c * d * e * x * g * h * i * k * l       '* d '
+y2Il*           a * b * c * d * e * x * g * h * i * k * l       'd'
+y2Al*           a * b * c * d * e * x * g * h * i * k * l       '* d * '
+y2iN*           a * b * c * d * e * x * g * h * i * k * l       ' k '
+y2aN*           a * b * c * d * e * x * g * h * i * k * l       '* k '
+y2IN*           a * b * c * d * e * x * g * h * i * k * l       'k'
+y2AN*           a * b * c * d * e * x * g * h * i * k * l       '* k * '
+y2iL*           a * b * c * d * e * x * g * h * i * k * l       ' b '
+y2aL*           a * b * c * d * e * x * g * h * i * k * l       '* b '
+y2IL*           a * b * c * d * e * x * g * h * i * k * l       'b'
+y2AL*           a * b * c * d * e * x * g * h * i * k * l       '* b * '
+a / b / c / d / e / x / g / h / i / k / l
+ci/             a / b / c / d / e /___/ g / h / i / k / l
+ca/             a / b / c / d / e ____/ g / h / i / k / l
+cI/             a / b / c / d / e / _ / g / h / i / k / l
+cA/             a / b / c / d / e ______g / h / i / k / l
+cin/            a / b / c / d / e / x /___/ h / i / k / l
+can/            a / b / c / d / e / x ____/ h / i / k / l
+cIn/            a / b / c / d / e / x / _ / h / i / k / l
+cAn/            a / b / c / d / e / x ______h / i / k / l
+cil/            a / b / c / d /___/ x / g / h / i / k / l
+cal/            a / b / c / d ____/ x / g / h / i / k / l
+cIl/            a / b / c / d / _ / x / g / h / i / k / l
+cAl/            a / b / c / d ______x / g / h / i / k / l
+ciN/            a / b / c / d / e / x / g /___/ i / k / l
+caN/            a / b / c / d / e / x / g ____/ i / k / l
+cIN/            a / b / c / d / e / x / g / _ / i / k / l
+cAN/            a / b / c / d / e / x / g ______i / k / l
+ciL/            a / b / c /___/ e / x / g / h / i / k / l
+caL/            a / b / c ____/ e / x / g / h / i / k / l
+cIL/            a / b / c / _ / e / x / g / h / i / k / l
+cAL/            a / b / c ______e / x / g / h / i / k / l
+c1i/            a / b / c / d / e /___/ g / h / i / k / l
+c1a/            a / b / c / d / e ____/ g / h / i / k / l
+c1I/            a / b / c / d / e / _ / g / h / i / k / l
+c1A/            a / b / c / d / e ______g / h / i / k / l
+c1in/           a / b / c / d / e / x /___/ h / i / k / l
+c1an/           a / b / c / d / e / x ____/ h / i / k / l
+c1In/           a / b / c / d / e / x / _ / h / i / k / l
+c1An/           a / b / c / d / e / x ______h / i / k / l
+c1il/           a / b / c / d /___/ x / g / h / i / k / l
+c1al/           a / b / c / d ____/ x / g / h / i / k / l
+c1Il/           a / b / c / d / _ / x / g / h / i / k / l
+c1Al/           a / b / c / d ______x / g / h / i / k / l
+c1iN/           a / b / c / d / e / x / g /___/ i / k / l
+c1aN/           a / b / c / d / e / x / g ____/ i / k / l
+c1IN/           a / b / c / d / e / x / g / _ / i / k / l
+c1AN/           a / b / c / d / e / x / g ______i / k / l
+c1iL/           a / b / c /___/ e / x / g / h / i / k / l
+c1aL/           a / b / c ____/ e / x / g / h / i / k / l
+c1IL/           a / b / c / _ / e / x / g / h / i / k / l
+c1AL/           a / b / c ______e / x / g / h / i / k / l
+c2i/            a / b / c / d / e /___/ g / h / i / k / l
+c2a/            a / b / c / d / e ____/ g / h / i / k / l
+c2I/            a / b / c / d / e / _ / g / h / i / k / l
+c2A/            a / b / c / d / e ______g / h / i / k / l
+c2in/           a / b / c / d / e / x / g /___/ i / k / l
+c2an/           a / b / c / d / e / x / g ____/ i / k / l
+c2In/           a / b / c / d / e / x / g / _ / i / k / l
+c2An/           a / b / c / d / e / x / g ______i / k / l
+c2il/           a / b / c /___/ e / x / g / h / i / k / l
+c2al/           a / b / c ____/ e / x / g / h / i / k / l
+c2Il/           a / b / c / _ / e / x / g / h / i / k / l
+c2Al/           a / b / c ______e / x / g / h / i / k / l
+c2iN/           a / b / c / d / e / x / g / h / i /___/ l
+c2aN/           a / b / c / d / e / x / g / h / i ____/ l
+c2IN/           a / b / c / d / e / x / g / h / i / _ / l
+c2AN/           a / b / c / d / e / x / g / h / i ______l
+c2iL/           a /___/ c / d / e / x / g / h / i / k / l
+c2aL/           a ____/ c / d / e / x / g / h / i / k / l
+c2IL/           a / _ / c / d / e / x / g / h / i / k / l
+c2AL/           a ______c / d / e / x / g / h / i / k / l
+di/             a / b / c / d / e // g / h / i / k / l
+da/             a / b / c / d / e / g / h / i / k / l
+dI/             a / b / c / d / e /  / g / h / i / k / l
+dA/             a / b / c / d / e g / h / i / k / l
+din/            a / b / c / d / e / x // h / i / k / l
+dan/            a / b / c / d / e / x / h / i / k / l
+dIn/            a / b / c / d / e / x /  / h / i / k / l
+dAn/            a / b / c / d / e / x h / i / k / l
+dil/            a / b / c / d // x / g / h / i / k / l
+dal/            a / b / c / d / x / g / h / i / k / l
+dIl/            a / b / c / d /  / x / g / h / i / k / l
+dAl/            a / b / c / d x / g / h / i / k / l
+diN/            a / b / c / d / e / x / g // i / k / l
+daN/            a / b / c / d / e / x / g / i / k / l
+dIN/            a / b / c / d / e / x / g /  / i / k / l
+dAN/            a / b / c / d / e / x / g i / k / l
+diL/            a / b / c // e / x / g / h / i / k / l
+daL/            a / b / c / e / x / g / h / i / k / l
+dIL/            a / b / c /  / e / x / g / h / i / k / l
+dAL/            a / b / c e / x / g / h / i / k / l
+d1i/            a / b / c / d / e // g / h / i / k / l
+d1a/            a / b / c / d / e / g / h / i / k / l
+d1I/            a / b / c / d / e /  / g / h / i / k / l
+d1A/            a / b / c / d / e g / h / i / k / l
+d1in/           a / b / c / d / e / x // h / i / k / l
+d1an/           a / b / c / d / e / x / h / i / k / l
+d1In/           a / b / c / d / e / x /  / h / i / k / l
+d1An/           a / b / c / d / e / x h / i / k / l
+d1il/           a / b / c / d // x / g / h / i / k / l
+d1al/           a / b / c / d / x / g / h / i / k / l
+d1Il/           a / b / c / d /  / x / g / h / i / k / l
+d1Al/           a / b / c / d x / g / h / i / k / l
+d1iN/           a / b / c / d / e / x / g // i / k / l
+d1aN/           a / b / c / d / e / x / g / i / k / l
+d1IN/           a / b / c / d / e / x / g /  / i / k / l
+d1AN/           a / b / c / d / e / x / g i / k / l
+d1iL/           a / b / c // e / x / g / h / i / k / l
+d1aL/           a / b / c / e / x / g / h / i / k / l
+d1IL/           a / b / c /  / e / x / g / h / i / k / l
+d1AL/           a / b / c e / x / g / h / i / k / l
+d2i/            a / b / c / d / e // g / h / i / k / l
+d2a/            a / b / c / d / e / g / h / i / k / l
+d2I/            a / b / c / d / e /  / g / h / i / k / l
+d2A/            a / b / c / d / e g / h / i / k / l
+d2in/           a / b / c / d / e / x / g // i / k / l
+d2an/           a / b / c / d / e / x / g / i / k / l
+d2In/           a / b / c / d / e / x / g /  / i / k / l
+d2An/           a / b / c / d / e / x / g i / k / l
+d2il/           a / b / c // e / x / g / h / i / k / l
+d2al/           a / b / c / e / x / g / h / i / k / l
+d2Il/           a / b / c /  / e / x / g / h / i / k / l
+d2Al/           a / b / c e / x / g / h / i / k / l
+d2iN/           a / b / c / d / e / x / g / h / i // l
+d2aN/           a / b / c / d / e / x / g / h / i / l
+d2IN/           a / b / c / d / e / x / g / h / i /  / l
+d2AN/           a / b / c / d / e / x / g / h / i l
+d2iL/           a // c / d / e / x / g / h / i / k / l
+d2aL/           a / c / d / e / x / g / h / i / k / l
+d2IL/           a /  / c / d / e / x / g / h / i / k / l
+d2AL/           a c / d / e / x / g / h / i / k / l
+yi/             a / b / c / d / e / x / g / h / i / k / l       ' x '
+ya/             a / b / c / d / e / x / g / h / i / k / l       '/ x '
+yI/             a / b / c / d / e / x / g / h / i / k / l       'x'
+yA/             a / b / c / d / e / x / g / h / i / k / l       '/ x / '
+yin/            a / b / c / d / e / x / g / h / i / k / l       ' g '
+yan/            a / b / c / d / e / x / g / h / i / k / l       '/ g '
+yIn/            a / b / c / d / e / x / g / h / i / k / l       'g'
+yAn/            a / b / c / d / e / x / g / h / i / k / l       '/ g / '
+yil/            a / b / c / d / e / x / g / h / i / k / l       ' e '
+yal/            a / b / c / d / e / x / g / h / i / k / l       '/ e '
+yIl/            a / b / c / d / e / x / g / h / i / k / l       'e'
+yAl/            a / b / c / d / e / x / g / h / i / k / l       '/ e / '
+yiN/            a / b / c / d / e / x / g / h / i / k / l       ' h '
+yaN/            a / b / c / d / e / x / g / h / i / k / l       '/ h '
+yIN/            a / b / c / d / e / x / g / h / i / k / l       'h'
+yAN/            a / b / c / d / e / x / g / h / i / k / l       '/ h / '
+yiL/            a / b / c / d / e / x / g / h / i / k / l       ' d '
+yaL/            a / b / c / d / e / x / g / h / i / k / l       '/ d '
+yIL/            a / b / c / d / e / x / g / h / i / k / l       'd'
+yAL/            a / b / c / d / e / x / g / h / i / k / l       '/ d / '
+y1i/            a / b / c / d / e / x / g / h / i / k / l       ' x '
+y1a/            a / b / c / d / e / x / g / h / i / k / l       '/ x '
+y1I/            a / b / c / d / e / x / g / h / i / k / l       'x'
+y1A/            a / b / c / d / e / x / g / h / i / k / l       '/ x / '
+y1in/           a / b / c / d / e / x / g / h / i / k / l       ' g '
+y1an/           a / b / c / d / e / x / g / h / i / k / l       '/ g '
+y1In/           a / b / c / d / e / x / g / h / i / k / l       'g'
+y1An/           a / b / c / d / e / x / g / h / i / k / l       '/ g / '
+y1il/           a / b / c / d / e / x / g / h / i / k / l       ' e '
+y1al/           a / b / c / d / e / x / g / h / i / k / l       '/ e '
+y1Il/           a / b / c / d / e / x / g / h / i / k / l       'e'
+y1Al/           a / b / c / d / e / x / g / h / i / k / l       '/ e / '
+y1iN/           a / b / c / d / e / x / g / h / i / k / l       ' h '
+y1aN/           a / b / c / d / e / x / g / h / i / k / l       '/ h '
+y1IN/           a / b / c / d / e / x / g / h / i / k / l       'h'
+y1AN/           a / b / c / d / e / x / g / h / i / k / l       '/ h / '
+y1iL/           a / b / c / d / e / x / g / h / i / k / l       ' d '
+y1aL/           a / b / c / d / e / x / g / h / i / k / l       '/ d '
+y1IL/           a / b / c / d / e / x / g / h / i / k / l       'd'
+y1AL/           a / b / c / d / e / x / g / h / i / k / l       '/ d / '
+y2i/            a / b / c / d / e / x / g / h / i / k / l       ' x '
+y2a/            a / b / c / d / e / x / g / h / i / k / l       '/ x '
+y2I/            a / b / c / d / e / x / g / h / i / k / l       'x'
+y2A/            a / b / c / d / e / x / g / h / i / k / l       '/ x / '
+y2in/           a / b / c / d / e / x / g / h / i / k / l       ' h '
+y2an/           a / b / c / d / e / x / g / h / i / k / l       '/ h '
+y2In/           a / b / c / d / e / x / g / h / i / k / l       'h'
+y2An/           a / b / c / d / e / x / g / h / i / k / l       '/ h / '
+y2il/           a / b / c / d / e / x / g / h / i / k / l       ' d '
+y2al/           a / b / c / d / e / x / g / h / i / k / l       '/ d '
+y2Il/           a / b / c / d / e / x / g / h / i / k / l       'd'
+y2Al/           a / b / c / d / e / x / g / h / i / k / l       '/ d / '
+y2iN/           a / b / c / d / e / x / g / h / i / k / l       ' k '
+y2aN/           a / b / c / d / e / x / g / h / i / k / l       '/ k '
+y2IN/           a / b / c / d / e / x / g / h / i / k / l       'k'
+y2AN/           a / b / c / d / e / x / g / h / i / k / l       '/ k / '
+y2iL/           a / b / c / d / e / x / g / h / i / k / l       ' b '
+y2aL/           a / b / c / d / e / x / g / h / i / k / l       '/ b '
+y2IL/           a / b / c / d / e / x / g / h / i / k / l       'b'
+y2AL/           a / b / c / d / e / x / g / h / i / k / l       '/ b / '
+a | b | c | d | e | x | g | h | i | k | l
+ci|             a | b | c | d | e |___| g | h | i | k | l
+ca|             a | b | c | d | e ____| g | h | i | k | l
+cI|             a | b | c | d | e | _ | g | h | i | k | l
+cA|             a | b | c | d | e ______g | h | i | k | l
+cin|            a | b | c | d | e | x |___| h | i | k | l
+can|            a | b | c | d | e | x ____| h | i | k | l
+cIn|            a | b | c | d | e | x | _ | h | i | k | l
+cAn|            a | b | c | d | e | x ______h | i | k | l
+cil|            a | b | c | d |___| x | g | h | i | k | l
+cal|            a | b | c | d ____| x | g | h | i | k | l
+cIl|            a | b | c | d | _ | x | g | h | i | k | l
+cAl|            a | b | c | d ______x | g | h | i | k | l
+ciN|            a | b | c | d | e | x | g |___| i | k | l
+caN|            a | b | c | d | e | x | g ____| i | k | l
+cIN|            a | b | c | d | e | x | g | _ | i | k | l
+cAN|            a | b | c | d | e | x | g ______i | k | l
+ciL|            a | b | c |___| e | x | g | h | i | k | l
+caL|            a | b | c ____| e | x | g | h | i | k | l
+cIL|            a | b | c | _ | e | x | g | h | i | k | l
+cAL|            a | b | c ______e | x | g | h | i | k | l
+c1i|            a | b | c | d | e |___| g | h | i | k | l
+c1a|            a | b | c | d | e ____| g | h | i | k | l
+c1I|            a | b | c | d | e | _ | g | h | i | k | l
+c1A|            a | b | c | d | e ______g | h | i | k | l
+c1in|           a | b | c | d | e | x |___| h | i | k | l
+c1an|           a | b | c | d | e | x ____| h | i | k | l
+c1In|           a | b | c | d | e | x | _ | h | i | k | l
+c1An|           a | b | c | d | e | x ______h | i | k | l
+c1il|           a | b | c | d |___| x | g | h | i | k | l
+c1al|           a | b | c | d ____| x | g | h | i | k | l
+c1Il|           a | b | c | d | _ | x | g | h | i | k | l
+c1Al|           a | b | c | d ______x | g | h | i | k | l
+c1iN|           a | b | c | d | e | x | g |___| i | k | l
+c1aN|           a | b | c | d | e | x | g ____| i | k | l
+c1IN|           a | b | c | d | e | x | g | _ | i | k | l
+c1AN|           a | b | c | d | e | x | g ______i | k | l
+c1iL|           a | b | c |___| e | x | g | h | i | k | l
+c1aL|           a | b | c ____| e | x | g | h | i | k | l
+c1IL|           a | b | c | _ | e | x | g | h | i | k | l
+c1AL|           a | b | c ______e | x | g | h | i | k | l
+c2i|            a | b | c | d | e |___| g | h | i | k | l
+c2a|            a | b | c | d | e ____| g | h | i | k | l
+c2I|            a | b | c | d | e | _ | g | h | i | k | l
+c2A|            a | b | c | d | e ______g | h | i | k | l
+c2in|           a | b | c | d | e | x | g |___| i | k | l
+c2an|           a | b | c | d | e | x | g ____| i | k | l
+c2In|           a | b | c | d | e | x | g | _ | i | k | l
+c2An|           a | b | c | d | e | x | g ______i | k | l
+c2il|           a | b | c |___| e | x | g | h | i | k | l
+c2al|           a | b | c ____| e | x | g | h | i | k | l
+c2Il|           a | b | c | _ | e | x | g | h | i | k | l
+c2Al|           a | b | c ______e | x | g | h | i | k | l
+c2iN|           a | b | c | d | e | x | g | h | i |___| l
+c2aN|           a | b | c | d | e | x | g | h | i ____| l
+c2IN|           a | b | c | d | e | x | g | h | i | _ | l
+c2AN|           a | b | c | d | e | x | g | h | i ______l
+c2iL|           a |___| c | d | e | x | g | h | i | k | l
+c2aL|           a ____| c | d | e | x | g | h | i | k | l
+c2IL|           a | _ | c | d | e | x | g | h | i | k | l
+c2AL|           a ______c | d | e | x | g | h | i | k | l
+di|             a | b | c | d | e || g | h | i | k | l
+da|             a | b | c | d | e | g | h | i | k | l
+dI|             a | b | c | d | e |  | g | h | i | k | l
+dA|             a | b | c | d | e g | h | i | k | l
+din|            a | b | c | d | e | x || h | i | k | l
+dan|            a | b | c | d | e | x | h | i | k | l
+dIn|            a | b | c | d | e | x |  | h | i | k | l
+dAn|            a | b | c | d | e | x h | i | k | l
+dil|            a | b | c | d || x | g | h | i | k | l
+dal|            a | b | c | d | x | g | h | i | k | l
+dIl|            a | b | c | d |  | x | g | h | i | k | l
+dAl|            a | b | c | d x | g | h | i | k | l
+diN|            a | b | c | d | e | x | g || i | k | l
+daN|            a | b | c | d | e | x | g | i | k | l
+dIN|            a | b | c | d | e | x | g |  | i | k | l
+dAN|            a | b | c | d | e | x | g i | k | l
+diL|            a | b | c || e | x | g | h | i | k | l
+daL|            a | b | c | e | x | g | h | i | k | l
+dIL|            a | b | c |  | e | x | g | h | i | k | l
+dAL|            a | b | c e | x | g | h | i | k | l
+d1i|            a | b | c | d | e || g | h | i | k | l
+d1a|            a | b | c | d | e | g | h | i | k | l
+d1I|            a | b | c | d | e |  | g | h | i | k | l
+d1A|            a | b | c | d | e g | h | i | k | l
+d1in|           a | b | c | d | e | x || h | i | k | l
+d1an|           a | b | c | d | e | x | h | i | k | l
+d1In|           a | b | c | d | e | x |  | h | i | k | l
+d1An|           a | b | c | d | e | x h | i | k | l
+d1il|           a | b | c | d || x | g | h | i | k | l
+d1al|           a | b | c | d | x | g | h | i | k | l
+d1Il|           a | b | c | d |  | x | g | h | i | k | l
+d1Al|           a | b | c | d x | g | h | i | k | l
+d1iN|           a | b | c | d | e | x | g || i | k | l
+d1aN|           a | b | c | d | e | x | g | i | k | l
+d1IN|           a | b | c | d | e | x | g |  | i | k | l
+d1AN|           a | b | c | d | e | x | g i | k | l
+d1iL|           a | b | c || e | x | g | h | i | k | l
+d1aL|           a | b | c | e | x | g | h | i | k | l
+d1IL|           a | b | c |  | e | x | g | h | i | k | l
+d1AL|           a | b | c e | x | g | h | i | k | l
+d2i|            a | b | c | d | e || g | h | i | k | l
+d2a|            a | b | c | d | e | g | h | i | k | l
+d2I|            a | b | c | d | e |  | g | h | i | k | l
+d2A|            a | b | c | d | e g | h | i | k | l
+d2in|           a | b | c | d | e | x | g || i | k | l
+d2an|           a | b | c | d | e | x | g | i | k | l
+d2In|           a | b | c | d | e | x | g |  | i | k | l
+d2An|           a | b | c | d | e | x | g i | k | l
+d2il|           a | b | c || e | x | g | h | i | k | l
+d2al|           a | b | c | e | x | g | h | i | k | l
+d2Il|           a | b | c |  | e | x | g | h | i | k | l
+d2Al|           a | b | c e | x | g | h | i | k | l
+d2iN|           a | b | c | d | e | x | g | h | i || l
+d2aN|           a | b | c | d | e | x | g | h | i | l
+d2IN|           a | b | c | d | e | x | g | h | i |  | l
+d2AN|           a | b | c | d | e | x | g | h | i l
+d2iL|           a || c | d | e | x | g | h | i | k | l
+d2aL|           a | c | d | e | x | g | h | i | k | l
+d2IL|           a |  | c | d | e | x | g | h | i | k | l
+d2AL|           a c | d | e | x | g | h | i | k | l
+yi|             a | b | c | d | e | x | g | h | i | k | l       ' x '
+ya|             a | b | c | d | e | x | g | h | i | k | l       '| x '
+yI|             a | b | c | d | e | x | g | h | i | k | l       'x'
+yA|             a | b | c | d | e | x | g | h | i | k | l       '| x | '
+yin|            a | b | c | d | e | x | g | h | i | k | l       ' g '
+yan|            a | b | c | d | e | x | g | h | i | k | l       '| g '
+yIn|            a | b | c | d | e | x | g | h | i | k | l       'g'
+yAn|            a | b | c | d | e | x | g | h | i | k | l       '| g | '
+yil|            a | b | c | d | e | x | g | h | i | k | l       ' e '
+yal|            a | b | c | d | e | x | g | h | i | k | l       '| e '
+yIl|            a | b | c | d | e | x | g | h | i | k | l       'e'
+yAl|            a | b | c | d | e | x | g | h | i | k | l       '| e | '
+yiN|            a | b | c | d | e | x | g | h | i | k | l       ' h '
+yaN|            a | b | c | d | e | x | g | h | i | k | l       '| h '
+yIN|            a | b | c | d | e | x | g | h | i | k | l       'h'
+yAN|            a | b | c | d | e | x | g | h | i | k | l       '| h | '
+yiL|            a | b | c | d | e | x | g | h | i | k | l       ' d '
+yaL|            a | b | c | d | e | x | g | h | i | k | l       '| d '
+yIL|            a | b | c | d | e | x | g | h | i | k | l       'd'
+yAL|            a | b | c | d | e | x | g | h | i | k | l       '| d | '
+y1i|            a | b | c | d | e | x | g | h | i | k | l       ' x '
+y1a|            a | b | c | d | e | x | g | h | i | k | l       '| x '
+y1I|            a | b | c | d | e | x | g | h | i | k | l       'x'
+y1A|            a | b | c | d | e | x | g | h | i | k | l       '| x | '
+y1in|           a | b | c | d | e | x | g | h | i | k | l       ' g '
+y1an|           a | b | c | d | e | x | g | h | i | k | l       '| g '
+y1In|           a | b | c | d | e | x | g | h | i | k | l       'g'
+y1An|           a | b | c | d | e | x | g | h | i | k | l       '| g | '
+y1il|           a | b | c | d | e | x | g | h | i | k | l       ' e '
+y1al|           a | b | c | d | e | x | g | h | i | k | l       '| e '
+y1Il|           a | b | c | d | e | x | g | h | i | k | l       'e'
+y1Al|           a | b | c | d | e | x | g | h | i | k | l       '| e | '
+y1iN|           a | b | c | d | e | x | g | h | i | k | l       ' h '
+y1aN|           a | b | c | d | e | x | g | h | i | k | l       '| h '
+y1IN|           a | b | c | d | e | x | g | h | i | k | l       'h'
+y1AN|           a | b | c | d | e | x | g | h | i | k | l       '| h | '
+y1iL|           a | b | c | d | e | x | g | h | i | k | l       ' d '
+y1aL|           a | b | c | d | e | x | g | h | i | k | l       '| d '
+y1IL|           a | b | c | d | e | x | g | h | i | k | l       'd'
+y1AL|           a | b | c | d | e | x | g | h | i | k | l       '| d | '
+y2i|            a | b | c | d | e | x | g | h | i | k | l       ' x '
+y2a|            a | b | c | d | e | x | g | h | i | k | l       '| x '
+y2I|            a | b | c | d | e | x | g | h | i | k | l       'x'
+y2A|            a | b | c | d | e | x | g | h | i | k | l       '| x | '
+y2in|           a | b | c | d | e | x | g | h | i | k | l       ' h '
+y2an|           a | b | c | d | e | x | g | h | i | k | l       '| h '
+y2In|           a | b | c | d | e | x | g | h | i | k | l       'h'
+y2An|           a | b | c | d | e | x | g | h | i | k | l       '| h | '
+y2il|           a | b | c | d | e | x | g | h | i | k | l       ' d '
+y2al|           a | b | c | d | e | x | g | h | i | k | l       '| d '
+y2Il|           a | b | c | d | e | x | g | h | i | k | l       'd'
+y2Al|           a | b | c | d | e | x | g | h | i | k | l       '| d | '
+y2iN|           a | b | c | d | e | x | g | h | i | k | l       ' k '
+y2aN|           a | b | c | d | e | x | g | h | i | k | l       '| k '
+y2IN|           a | b | c | d | e | x | g | h | i | k | l       'k'
+y2AN|           a | b | c | d | e | x | g | h | i | k | l       '| k | '
+y2iL|           a | b | c | d | e | x | g | h | i | k | l       ' b '
+y2aL|           a | b | c | d | e | x | g | h | i | k | l       '| b '
+y2IL|           a | b | c | d | e | x | g | h | i | k | l       'b'
+y2AL|           a | b | c | d | e | x | g | h | i | k | l       '| b | '
+a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l
+ci\             a \ b \ c \ d \ e \___\ g \ h \ i \ k \ l
+ca\             a \ b \ c \ d \ e ____\ g \ h \ i \ k \ l
+cI\             a \ b \ c \ d \ e \ _ \ g \ h \ i \ k \ l
+cA\             a \ b \ c \ d \ e ______g \ h \ i \ k \ l
+cin\            a \ b \ c \ d \ e \ x \___\ h \ i \ k \ l
+can\            a \ b \ c \ d \ e \ x ____\ h \ i \ k \ l
+cIn\            a \ b \ c \ d \ e \ x \ _ \ h \ i \ k \ l
+cAn\            a \ b \ c \ d \ e \ x ______h \ i \ k \ l
+cil\            a \ b \ c \ d \___\ x \ g \ h \ i \ k \ l
+cal\            a \ b \ c \ d ____\ x \ g \ h \ i \ k \ l
+cIl\            a \ b \ c \ d \ _ \ x \ g \ h \ i \ k \ l
+cAl\            a \ b \ c \ d ______x \ g \ h \ i \ k \ l
+ciN\            a \ b \ c \ d \ e \ x \ g \___\ i \ k \ l
+caN\            a \ b \ c \ d \ e \ x \ g ____\ i \ k \ l
+cIN\            a \ b \ c \ d \ e \ x \ g \ _ \ i \ k \ l
+cAN\            a \ b \ c \ d \ e \ x \ g ______i \ k \ l
+ciL\            a \ b \ c \___\ e \ x \ g \ h \ i \ k \ l
+caL\            a \ b \ c ____\ e \ x \ g \ h \ i \ k \ l
+cIL\            a \ b \ c \ _ \ e \ x \ g \ h \ i \ k \ l
+cAL\            a \ b \ c ______e \ x \ g \ h \ i \ k \ l
+c1i\            a \ b \ c \ d \ e \___\ g \ h \ i \ k \ l
+c1a\            a \ b \ c \ d \ e ____\ g \ h \ i \ k \ l
+c1I\            a \ b \ c \ d \ e \ _ \ g \ h \ i \ k \ l
+c1A\            a \ b \ c \ d \ e ______g \ h \ i \ k \ l
+c1in\           a \ b \ c \ d \ e \ x \___\ h \ i \ k \ l
+c1an\           a \ b \ c \ d \ e \ x ____\ h \ i \ k \ l
+c1In\           a \ b \ c \ d \ e \ x \ _ \ h \ i \ k \ l
+c1An\           a \ b \ c \ d \ e \ x ______h \ i \ k \ l
+c1il\           a \ b \ c \ d \___\ x \ g \ h \ i \ k \ l
+c1al\           a \ b \ c \ d ____\ x \ g \ h \ i \ k \ l
+c1Il\           a \ b \ c \ d \ _ \ x \ g \ h \ i \ k \ l
+c1Al\           a \ b \ c \ d ______x \ g \ h \ i \ k \ l
+c1iN\           a \ b \ c \ d \ e \ x \ g \___\ i \ k \ l
+c1aN\           a \ b \ c \ d \ e \ x \ g ____\ i \ k \ l
+c1IN\           a \ b \ c \ d \ e \ x \ g \ _ \ i \ k \ l
+c1AN\           a \ b \ c \ d \ e \ x \ g ______i \ k \ l
+c1iL\           a \ b \ c \___\ e \ x \ g \ h \ i \ k \ l
+c1aL\           a \ b \ c ____\ e \ x \ g \ h \ i \ k \ l
+c1IL\           a \ b \ c \ _ \ e \ x \ g \ h \ i \ k \ l
+c1AL\           a \ b \ c ______e \ x \ g \ h \ i \ k \ l
+c2i\            a \ b \ c \ d \ e \___\ g \ h \ i \ k \ l
+c2a\            a \ b \ c \ d \ e ____\ g \ h \ i \ k \ l
+c2I\            a \ b \ c \ d \ e \ _ \ g \ h \ i \ k \ l
+c2A\            a \ b \ c \ d \ e ______g \ h \ i \ k \ l
+c2in\           a \ b \ c \ d \ e \ x \ g \___\ i \ k \ l
+c2an\           a \ b \ c \ d \ e \ x \ g ____\ i \ k \ l
+c2In\           a \ b \ c \ d \ e \ x \ g \ _ \ i \ k \ l
+c2An\           a \ b \ c \ d \ e \ x \ g ______i \ k \ l
+c2il\           a \ b \ c \___\ e \ x \ g \ h \ i \ k \ l
+c2al\           a \ b \ c ____\ e \ x \ g \ h \ i \ k \ l
+c2Il\           a \ b \ c \ _ \ e \ x \ g \ h \ i \ k \ l
+c2Al\           a \ b \ c ______e \ x \ g \ h \ i \ k \ l
+c2iN\           a \ b \ c \ d \ e \ x \ g \ h \ i \___\ l
+c2aN\           a \ b \ c \ d \ e \ x \ g \ h \ i ____\ l
+c2IN\           a \ b \ c \ d \ e \ x \ g \ h \ i \ _ \ l
+c2AN\           a \ b \ c \ d \ e \ x \ g \ h \ i ______l
+c2iL\           a \___\ c \ d \ e \ x \ g \ h \ i \ k \ l
+c2aL\           a ____\ c \ d \ e \ x \ g \ h \ i \ k \ l
+c2IL\           a \ _ \ c \ d \ e \ x \ g \ h \ i \ k \ l
+c2AL\           a ______c \ d \ e \ x \ g \ h \ i \ k \ l
+di\             a \ b \ c \ d \ e \\ g \ h \ i \ k \ l
+da\             a \ b \ c \ d \ e \ g \ h \ i \ k \ l
+dI\             a \ b \ c \ d \ e \  \ g \ h \ i \ k \ l
+dA\             a \ b \ c \ d \ e g \ h \ i \ k \ l
+din\            a \ b \ c \ d \ e \ x \\ h \ i \ k \ l
+dan\            a \ b \ c \ d \ e \ x \ h \ i \ k \ l
+dIn\            a \ b \ c \ d \ e \ x \  \ h \ i \ k \ l
+dAn\            a \ b \ c \ d \ e \ x h \ i \ k \ l
+dil\            a \ b \ c \ d \\ x \ g \ h \ i \ k \ l
+dal\            a \ b \ c \ d \ x \ g \ h \ i \ k \ l
+dIl\            a \ b \ c \ d \  \ x \ g \ h \ i \ k \ l
+dAl\            a \ b \ c \ d x \ g \ h \ i \ k \ l
+diN\            a \ b \ c \ d \ e \ x \ g \\ i \ k \ l
+daN\            a \ b \ c \ d \ e \ x \ g \ i \ k \ l
+dIN\            a \ b \ c \ d \ e \ x \ g \  \ i \ k \ l
+dAN\            a \ b \ c \ d \ e \ x \ g i \ k \ l
+diL\            a \ b \ c \\ e \ x \ g \ h \ i \ k \ l
+daL\            a \ b \ c \ e \ x \ g \ h \ i \ k \ l
+dIL\            a \ b \ c \  \ e \ x \ g \ h \ i \ k \ l
+dAL\            a \ b \ c e \ x \ g \ h \ i \ k \ l
+d1i\            a \ b \ c \ d \ e \\ g \ h \ i \ k \ l
+d1a\            a \ b \ c \ d \ e \ g \ h \ i \ k \ l
+d1I\            a \ b \ c \ d \ e \  \ g \ h \ i \ k \ l
+d1A\            a \ b \ c \ d \ e g \ h \ i \ k \ l
+d1in\           a \ b \ c \ d \ e \ x \\ h \ i \ k \ l
+d1an\           a \ b \ c \ d \ e \ x \ h \ i \ k \ l
+d1In\           a \ b \ c \ d \ e \ x \  \ h \ i \ k \ l
+d1An\           a \ b \ c \ d \ e \ x h \ i \ k \ l
+d1il\           a \ b \ c \ d \\ x \ g \ h \ i \ k \ l
+d1al\           a \ b \ c \ d \ x \ g \ h \ i \ k \ l
+d1Il\           a \ b \ c \ d \  \ x \ g \ h \ i \ k \ l
+d1Al\           a \ b \ c \ d x \ g \ h \ i \ k \ l
+d1iN\           a \ b \ c \ d \ e \ x \ g \\ i \ k \ l
+d1aN\           a \ b \ c \ d \ e \ x \ g \ i \ k \ l
+d1IN\           a \ b \ c \ d \ e \ x \ g \  \ i \ k \ l
+d1AN\           a \ b \ c \ d \ e \ x \ g i \ k \ l
+d1iL\           a \ b \ c \\ e \ x \ g \ h \ i \ k \ l
+d1aL\           a \ b \ c \ e \ x \ g \ h \ i \ k \ l
+d1IL\           a \ b \ c \  \ e \ x \ g \ h \ i \ k \ l
+d1AL\           a \ b \ c e \ x \ g \ h \ i \ k \ l
+d2i\            a \ b \ c \ d \ e \\ g \ h \ i \ k \ l
+d2a\            a \ b \ c \ d \ e \ g \ h \ i \ k \ l
+d2I\            a \ b \ c \ d \ e \  \ g \ h \ i \ k \ l
+d2A\            a \ b \ c \ d \ e g \ h \ i \ k \ l
+d2in\           a \ b \ c \ d \ e \ x \ g \\ i \ k \ l
+d2an\           a \ b \ c \ d \ e \ x \ g \ i \ k \ l
+d2In\           a \ b \ c \ d \ e \ x \ g \  \ i \ k \ l
+d2An\           a \ b \ c \ d \ e \ x \ g i \ k \ l
+d2il\           a \ b \ c \\ e \ x \ g \ h \ i \ k \ l
+d2al\           a \ b \ c \ e \ x \ g \ h \ i \ k \ l
+d2Il\           a \ b \ c \  \ e \ x \ g \ h \ i \ k \ l
+d2Al\           a \ b \ c e \ x \ g \ h \ i \ k \ l
+d2iN\           a \ b \ c \ d \ e \ x \ g \ h \ i \\ l
+d2aN\           a \ b \ c \ d \ e \ x \ g \ h \ i \ l
+d2IN\           a \ b \ c \ d \ e \ x \ g \ h \ i \  \ l
+d2AN\           a \ b \ c \ d \ e \ x \ g \ h \ i l
+d2iL\           a \\ c \ d \ e \ x \ g \ h \ i \ k \ l
+d2aL\           a \ c \ d \ e \ x \ g \ h \ i \ k \ l
+d2IL\           a \  \ c \ d \ e \ x \ g \ h \ i \ k \ l
+d2AL\           a c \ d \ e \ x \ g \ h \ i \ k \ l
+yi\             a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       ' x '
+ya\             a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       '\ x '
+yI\             a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       'x'
+yA\             a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       '\ x \ '
+yin\            a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       ' g '
+yan\            a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       '\ g '
+yIn\            a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       'g'
+yAn\            a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       '\ g \ '
+yil\            a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       ' e '
+yal\            a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       '\ e '
+yIl\            a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       'e'
+yAl\            a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       '\ e \ '
+yiN\            a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       ' h '
+yaN\            a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       '\ h '
+yIN\            a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       'h'
+yAN\            a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       '\ h \ '
+yiL\            a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       ' d '
+yaL\            a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       '\ d '
+yIL\            a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       'd'
+yAL\            a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       '\ d \ '
+y1i\            a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       ' x '
+y1a\            a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       '\ x '
+y1I\            a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       'x'
+y1A\            a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       '\ x \ '
+y1in\           a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       ' g '
+y1an\           a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       '\ g '
+y1In\           a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       'g'
+y1An\           a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       '\ g \ '
+y1il\           a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       ' e '
+y1al\           a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       '\ e '
+y1Il\           a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       'e'
+y1Al\           a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       '\ e \ '
+y1iN\           a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       ' h '
+y1aN\           a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       '\ h '
+y1IN\           a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       'h'
+y1AN\           a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       '\ h \ '
+y1iL\           a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       ' d '
+y1aL\           a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       '\ d '
+y1IL\           a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       'd'
+y1AL\           a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       '\ d \ '
+y2i\            a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       ' x '
+y2a\            a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       '\ x '
+y2I\            a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       'x'
+y2A\            a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       '\ x \ '
+y2in\           a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       ' h '
+y2an\           a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       '\ h '
+y2In\           a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       'h'
+y2An\           a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       '\ h \ '
+y2il\           a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       ' d '
+y2al\           a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       '\ d '
+y2Il\           a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       'd'
+y2Al\           a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       '\ d \ '
+y2iN\           a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       ' k '
+y2aN\           a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       '\ k '
+y2IN\           a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       'k'
+y2AN\           a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       '\ k \ '
+y2iL\           a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       ' b '
+y2aL\           a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       '\ b '
+y2IL\           a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       'b'
+y2AL\           a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l       '\ b \ '
+

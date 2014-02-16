@@ -60,5 +60,24 @@ for del in [ "'", '"', '`' ]
     normal +
 endfor
 
+normal +
+
+for del in [ ',', '.', ';', ':', '+', '-', '~', '_', '*', '/', '|', '\' ]
+    normal "lyy
+
+    for op in [ 'c', 'd', 'y' ]
+        for cnt in [ '', '1', '2' ]
+            for nlNL in [ '', 'n', 'l', 'N', 'L' ]
+                for iaIA in [ 'i', 'a', 'I', 'A' ]
+                    execute "normal \"lpfx"
+                    call s:execute(op, cnt . iaIA . nlNL . del)
+                endfor
+            endfor
+        endfor
+    endfor
+
+    normal +
+endfor
+
 write! test1.out
 quit!
