@@ -11,18 +11,18 @@ set cpo&vim
 " `matchers` is a list of functions that gets executed in order
 " it consists of optional position modifiers, followed by a match selector,
 " followed by optional selection modifiers
-function! targets#match(opening, closing, matchers)
-    call s:init(a:opening, a:closing)
+function! targets#match(delimiters, matchers)
+    call s:init(a:delimiters)
     call s:findMatch(a:matchers)
     call s:handleMatch()
     call s:cleanUp()
 endfunction
 
 " initialize script local variables for the current matching
-function! s:init(opening, closing)
+function! s:init(delimiters)
     let s:count = v:count1
-    let s:opening = escape(a:opening, '".~\')
-    let s:closing = escape(a:closing, '".~\')
+    let s:opening = escape(a:delimiters[0], '".~\')
+    let s:closing = escape(a:delimiters[1], '".~\')
     let [s:sl, s:sc, s:el, s:ec] = [0, 0, 0, 0]
     let s:oldpos = getpos('.')
     let s:failed = 0
