@@ -15,10 +15,8 @@ set cpo&vim
 " the given delimiters and matchers
 function! s:createTextObject(prefix, trigger, delimiters, matchers)
     let delimiters = substitute(a:delimiters, "'", "''", 'g')
-    " first silent to silence first call
     let lhs = '<silent>' . a:prefix . a:trigger
-    " second silent to silence calls repeated with `.`
-    let rhs = ":<C-U>silent call targets#match('" . delimiters . "', '" . a:matchers . "')<CR>"
+    let rhs = ":<C-U>call targets#match('" . delimiters . "', '" . a:matchers . "')<CR>"
     execute 'onoremap ' . lhs . ' ' . rhs
 
     " don't create xmaps beginning with `A` or `I`

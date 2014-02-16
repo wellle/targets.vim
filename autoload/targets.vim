@@ -15,6 +15,7 @@ function! targets#match(delimiters, matchers)
     call s:init(a:delimiters)
     call s:findMatch(a:matchers)
     call s:handleMatch()
+    call s:clearCommandLine()
     call s:cleanUp()
 endfunction
 
@@ -41,6 +42,10 @@ function! s:cleanUp()
     unlet s:sl s:sc s:el s:ec
     unlet s:oldpos
     unlet s:failed
+endfunction
+
+function! s:clearCommandLine()
+    call feedkeys(":\<C-C>", 'n')
 endfunction
 
 " try to find match and return 1 in case of success
@@ -106,7 +111,7 @@ endfunction
 function! s:triggerUndo()
     if exists("*undotree")
         let undoseq = undotree().seq_cur
-        call feedkeys(":call targets#undo(" . undoseq . ")\<CR>:\<C-C>", 'n')
+        call feedkeys(":call targets#undo(" . undoseq . ")\<CR>", 'n')
     endif
 endfunction
 
