@@ -41,5 +41,24 @@ for delset in [
     normal +
 endfor
 
+normal +
+
+for del in [ "'", '"', '`' ]
+    normal "lyy
+
+    for op in [ 'c', 'd', 'y' ]
+        for cnt in [ '', '1', '2' ]
+            for nlNL in [ '', 'n', 'l', 'N', 'L' ]
+                for iaI in [ 'i', 'a', 'I' ]
+                    execute "normal \"lpfx"
+                    call s:execute(op, cnt . iaI . nlNL . del)
+                endfor
+            endfor
+        endfor
+    endfor
+
+    normal +
+endfor
+
 write! test1.out
 quit!
