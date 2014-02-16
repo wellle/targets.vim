@@ -12,14 +12,14 @@ set cpo&vim
 " it consists of optional position modifiers, followed by a match selector,
 " followed by optional selection modifiers
 function! targets#match(opening, closing, matchers)
-    call targets#init(a:opening, a:closing)
-    call targets#findMatch(a:matchers)
-    call targets#handleMatch()
-    call targets#cleanUp()
+    call s:init(a:opening, a:closing)
+    call s:findMatch(a:matchers)
+    call s:handleMatch()
+    call s:cleanUp()
 endfunction
 
 " initialize script local variables for the current matching
-function! targets#init(opening, closing)
+function! s:init(opening, closing)
     let s:count = v:count1
     let s:opening = escape(a:opening, '".~\')
     let s:closing = escape(a:closing, '".~\')
@@ -29,7 +29,7 @@ function! targets#init(opening, closing)
 endfunction
 
 " clean up script variables after match
-function! targets#cleanUp()
+function! s:cleanUp()
     unlet s:count
     unlet s:opening
     unlet s:closing
@@ -39,9 +39,9 @@ function! targets#cleanUp()
 endfunction
 
 " try to find match and return 1 in case of success
-function! targets#findMatch(matchers)
+function! s:findMatch(matchers)
     for matcher in split(a:matchers)
-        let Matcher = function('targets#' . matcher)
+        let Matcher = function('s:' . matcher)
         call Matcher()
         if s:failed
             break
@@ -51,24 +51,24 @@ function! targets#findMatch(matchers)
 endfunction
 
 " handle the match by either selecting or aborting it
-function! targets#handleMatch()
+function! s:handleMatch()
     if s:failed || s:sl == 0 || s:el == 0
-        call targets#abortMatch()
+        call s:abortMatch()
     elseif s:sl < s:el
-        call targets#selectMatch()
+        call s:selectMatch()
     elseif s:sl > s:el
-        call targets#abortMatch()
+        call s:abortMatch()
     elseif s:sc == s:ec + 1
-        call targets#handleEmptyMatch()
+        call s:handleEmptyMatch()
     elseif s:sc > s:ec
-        call targets#abortMatch()
+        call s:abortMatch()
     else
-        call targets#selectMatch()
+        call s:selectMatch()
     endif
 endfunction
 
 " select a proper match
-function! targets#selectMatch()
+function! s:selectMatch()
     call cursor(s:sl, s:sc)
     silent! normal! v
     call cursor(s:el, s:ec)
@@ -77,9 +77,9 @@ endfunction
 " empty matches can't visually be selected
 " most operators would like to move to the end delimiter
 " for change or delete, insert temporary character that will be operated on
-function! targets#handleEmptyMatch()
+function! s:handleEmptyMatch()
     if v:operator !~# "^[cd]$"
-        return targets#abortMatch()
+        return s:abortMatch()
     endif
 
     " move cursor to delimiter after zero width match
@@ -89,16 +89,16 @@ function! targets#handleEmptyMatch()
 endfunction
 
 " abort when no match was found
-function! targets#abortMatch()
+function! s:abortMatch()
     call setpos('.', s:oldpos)
     " get into normal mode and beep
     call feedkeys("\<C-\>\<C-N>\<Esc>", 'n')
     " undo partial command
-    call targets#triggerUndo()
+    call s:triggerUndo()
 endfunction
 
 " feed keys to call undo after aborted operation and clear the command line
-function! targets#triggerUndo()
+function! s:triggerUndo()
     if exists("*undotree")
         let undoseq = undotree().seq_cur
         call feedkeys(":call targets#undo(" . undoseq . ")\<CR>:\<C-C>", 'n')
@@ -113,7 +113,7 @@ function! targets#undo(lastseq)
 endfunction
 
 " mark current matching run as failed
-function! targets#setFailed()
+function! s:setFailed()
     let s:failed = 1
 endfunction
 
@@ -127,7 +127,7 @@ endfunction
 " in   │ . │  . │ . │  .
 " line │ ' │  ' │ ' │  '
 " out  │ . │ .  │ . │ .
-function! targets#quote()
+function! s:quote()
     if getline('.')[col('.')-1] == s:opening
         let oldpos = getpos('.')
         let closing = 1
@@ -148,7 +148,7 @@ endfunction
 " in   │     ...
 " line │  '  '  '  '
 " out  │        1  2
-function! targets#next()
+function! s:next()
     for _ in range(s:count)
         call searchpos(s:opening, '', line('.'))
     endfor
@@ -159,7 +159,7 @@ endfunction
 " in   │     ...
 " line │  '  '  '  '
 " out  │ 2  1
-function! targets#last()
+function! s:last()
     " only the first delimiter can match at current position
     call searchpos(s:closing, 'bc', line('.'))
     for _ in range(s:count - 1)
@@ -173,7 +173,7 @@ endfunction
 " in   │ ....
 " line │ ( ) ( ) ( ( ) ) ( )
 " out  │     1   2 3     4
-function! targets#nextp()
+function! s:nextp()
     for _ in range(s:count)
         call searchpos(s:opening, '')
     endfor
@@ -184,7 +184,7 @@ endfunction
 " in   │               ....
 " line │ ( ) ( ) ( ( ) ) ( )
 " out  │   4   3     2 1
-function! targets#lastp()
+function! s:lastp()
     for _ in range(s:count)
         call searchpos(s:closing, 'b')
     endfor
@@ -197,14 +197,14 @@ endfunction
 " in   │ ..     │  .   │     ..
 " line │ a '  ' │ ' '  │ '  ' b
 " out  │   1  2 │  .   │ 2  1
-function! targets#seek()
+function! s:seek()
     let [line, _] = searchpos(s:opening, 'bcn', line('.'))
     if line == 0 " no match to the left
-        call targets#next()
+        call s:next()
     endif
     let [line, _] = searchpos(s:closing, 'n', line('.'))
     if line == 0 " no match to the right
-        call targets#last()
+        call s:last()
     endif
     unlet line
 endfunction
@@ -217,14 +217,14 @@ endfunction
 " cursor  │   ....
 " line    │ ' ' b ' '
 " matcher │   └───┘
-function! targets#select()
+function! s:select()
     let [s:sl, s:sc] = searchpos(s:opening, 'bc', line('.'))
     if s:sc == 0 " no match to the left
-        return targets#setFailed()
+        return s:setFailed()
     endif
     let [s:el, s:ec] = searchpos(s:closing, '', line('.'))
     if s:ec == 0 " no match to the right
-        return targets#setFailed()
+        return s:setFailed()
     endif
 endfunction
 
@@ -233,7 +233,7 @@ endfunction
 " line     │ ( ( a ) )
 " modifier │ │ └─1─┘ │
 "          │ └── 2 ──┘
-function! targets#selectp()
+function! s:selectp()
     " `normal! %` doesn't work with `<>`
     silent! execute 'normal! v'
     for _ in range(s:count)
@@ -247,12 +247,12 @@ function! targets#selectp()
     let [_, s:sl, s:sc, _] = getpos('.')
     silent! normal! v
     if s:sc == s:ec
-        return targets#setFailed()
+        return s:setFailed()
     endif
 endfunction
 
 " selects the current cursor position (useful to test modifiers)
-function! targets#position()
+function! s:position()
     let [_, s:sl, s:sc, _] = getpos('.')
     let [s:el, s:ec] = [s:sl, s:sc]
 endfunction
@@ -264,7 +264,7 @@ endfunction
 " in   │   ┌─────┐
 " line │ a .  b  . c
 " out  │    └───┘
-function! targets#drop()
+function! s:drop()
     call cursor(s:sl, s:sc)
     silent! execute "normal! 1 "
     let [_, s:sl, s:sc, _] = getpos('.')
@@ -277,7 +277,7 @@ endfunction
 " in   │   ┌─────┐
 " line │ a . b c . d
 " out  │   └────┘
-function! targets#dropr()
+function! s:dropr()
     let s:ec -= 1
 endfunction
 
@@ -286,12 +286,12 @@ endfunction
 " in   │   ┌─────┐   │   ┌──┐
 " line │ a . b c . d │ a .  . d
 " out  │     └─┘     │    └┘
-function! targets#shrink()
+function! s:shrink()
     call cursor(s:el, s:ec)
     let [s:el, s:ec] = searchpos('\S', 'b', line('.'))
     if s:ec <= s:sc
         " fall back to drop when there's only whitespace in between
-        return targets#drop()
+        return s:drop()
     endif
     call cursor(s:sl, s:sc)
     let [s:sl, s:sc] = searchpos('\S', '', line('.'))
@@ -302,7 +302,7 @@ endfunction
 " in   │   ┌───┐   │   ┌───┐  │  ┌───┐  │ ┌───┐
 " line │ a . b . c │ a . b .c │ a. c .c │ . a .c
 " out  │   └────┘  │  └────┘  │  └───┘  │└────┘
-function! targets#expand()
+function! s:expand()
     call cursor(s:el, s:ec)
     let [line, column] = searchpos('\S\|$', '', line('.'))
     if line > 0 && column-1 > s:ec
@@ -327,7 +327,7 @@ function! targets#expand()
 endfunction
 
 " doubles the count (used for `iN'`)
-function! targets#double()
+function! s:double()
     let s:count = s:count * 2
 endfunction
 
