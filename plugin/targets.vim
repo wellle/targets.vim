@@ -34,7 +34,7 @@ endfunction
 
 " creat a text object for a single delimiter
 function! s:createSimpleTextObject(prefix, delimiter, matchers)
-    call s:createTextObject(a:prefix, a:delimiter, a:delimiter . a:delimiter, a:matchers)
+    call s:createTextObject(a:prefix, a:delimiter, a:delimiter, a:matchers)
 endfunction
 
 " create multiple text objects for a pair of delimiters and optional

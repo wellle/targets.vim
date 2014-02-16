@@ -21,11 +21,16 @@ endfunction
 " initialize script local variables for the current matching
 function! s:init(delimiters)
     let s:count = v:count1
-    let s:opening = escape(a:delimiters[0], '".~\')
-    let s:closing = escape(a:delimiters[1], '".~\')
     let [s:sl, s:sc, s:el, s:ec] = [0, 0, 0, 0]
     let s:oldpos = getpos('.')
     let s:failed = 0
+
+    let s:opening = escape(a:delimiters[0], '".~\')
+    if len(a:delimiters) == 2
+        let s:closing = escape(a:delimiters[1], '".~\')
+    else
+        let s:closing = s:opening
+    endif
 endfunction
 
 " clean up script variables after match
