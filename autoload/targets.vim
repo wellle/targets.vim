@@ -45,7 +45,9 @@ function! s:cleanUp()
 endfunction
 
 function! s:clearCommandLine()
-    call feedkeys(":\<C-C>", 'n')
+    if v:operator != 'c'
+        call feedkeys(":\<C-C>", 'n')
+    endif
 endfunction
 
 " try to find match and return 1 in case of success
