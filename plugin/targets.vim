@@ -19,15 +19,15 @@ function! s:createTextObject(prefix, trigger, opening, closing, matchers)
     " first silent to silence first call
     let lhs = '<silent>' . a:prefix . a:trigger
     " second silent to silence calls repeated with `.`
-    let rhs = ":<C-U>silent call targets#match('" . opening . "', '" . closing . "', '" . a:matchers . "')"
-    execute 'onoremap ' . lhs . ' ' . rhs . '<CR>'
+    let rhs = ":<C-U>silent call targets#match('" . opening . "', '" . closing . "', '" . a:matchers . "')<CR>"
+    execute 'onoremap ' . lhs . ' ' . rhs
 
     " don't create xmaps beginning with `A` or `I`
     " conflict with `^VA` and `^VI` to append before or insert after visual
     " block selection. would like to have mapping only for visual, but not for
     " visual block mode. #6
     if a:prefix !~# "^[AI]"
-        execute 'xnoremap ' . lhs . ' ' . rhs . '<CR>'
+        execute 'xnoremap ' . lhs . ' ' . rhs
     endif
 
     unlet opening closing lhs rhs
