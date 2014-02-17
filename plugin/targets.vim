@@ -1,8 +1,8 @@
 " targets.vim Provides additional text objects
 " Author:  Christian Wellenbrock <christian.wellenbrock@gmail.com>
 " License: MIT license
-" Updated: 2014-02-03
-" Version: 0.0.1
+" Updated: 2014-02-17
+" Version: 0.0.2
 
 if exists("g:loaded_targets") || &cp || v:version < 700
   finish
@@ -15,19 +15,19 @@ set cpo&vim
 " the given delimiters and matchers
 function! s:createTextObject(prefix, trigger, delimiters, matchers)
     let delimiters = substitute(a:delimiters, "'", "''", 'g')
-    let lhs = '<silent>' . a:prefix . a:trigger
-    let rhs = ":<C-U>call targets#match('" . delimiters . "', '" . a:matchers . "')<CR>"
-    execute 'onoremap ' . lhs . ' ' . rhs
+    let mapping = a:prefix . a:trigger
+    let arguments = "'" . delimiters . "', '" . a:matchers . "'"
+    execute 'onoremap <silent>' . mapping . ' :<C-U>call targets#omap(' . arguments . ')<CR>'
 
     " don't create xmaps beginning with `A` or `I`
     " conflict with `^VA` and `^VI` to append before or insert after visual
     " block selection. would like to have mapping only for visual, but not for
     " visual block mode. #6
-    if a:prefix !~# "^[AI]"
-        execute 'xnoremap ' . lhs . ' ' . rhs
+    if a:prefix !~# '^[AI]'
+        execute 'xnoremap <silent>' . mapping . ' :<C-U>call targets#xmap(' . arguments . ')<CR>'
     endif
 
-    unlet delimiters lhs rhs
+    unlet delimiters mapping arguments
 endfunction
 
 " creat a text object for a single delimiter

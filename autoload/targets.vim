@@ -1,8 +1,8 @@
 " targets.vim Provides additional text objects
 " Author:  Christian Wellenbrock <christian.wellenbrock@gmail.com>
 " License: MIT license
-" Updated: 2014-02-03
-" Version: 0.0.1
+" Updated: 2014-02-17
+" Version: 0.0.2
 
 let s:save_cpoptions = &cpoptions
 set cpo&vim
@@ -11,11 +11,19 @@ set cpo&vim
 " `matchers` is a list of functions that gets executed in order
 " it consists of optional position modifiers, followed by a match selector,
 " followed by optional selection modifiers
-function! targets#match(delimiters, matchers)
+function! targets#omap(delimiters, matchers)
     call s:init(a:delimiters)
     call s:findMatch(a:matchers)
     call s:handleMatch()
     call s:clearCommandLine()
+    call s:cleanUp()
+endfunction
+
+" like targets#omap, but don't clear the command line
+function! targets#xmap(delimiters, matchers)
+    call s:init(a:delimiters)
+    call s:findMatch(a:matchers)
+    call s:handleMatch()
     call s:cleanUp()
 endfunction
 
