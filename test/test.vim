@@ -1,3 +1,9 @@
+" targets.vim Provides additional text objects
+" Author:  Christian Wellenbrock <christian.wellenbrock@gmail.com>
+" License: MIT license
+" Updated: 2014-02-17
+" Version: 0.0.2
+
 set runtimepath+=../
 set softtabstop=16 expandtab
 source ../plugin/targets.vim
