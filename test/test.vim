@@ -10,7 +10,10 @@ source ../plugin/targets.vim
 
 function! s:execute(operation, motions)
     if a:operation == 'c'
-        execute "normal " . a:operation . a:motions . "\<C-R>\"\<Esc>v`[r_"
+        execute "normal " . a:operation . a:motions . "_"
+    elseif a:operation == 'v'
+        execute "normal " . a:operation . a:motions
+        normal r_
     else
         execute "normal " . a:operation . a:motions
     endif
@@ -31,10 +34,14 @@ for delset in [
             \ ]
     normal "lyy
 
-    for op in [ 'c', 'd', 'y' ]
+    for op in [ 'c', 'd', 'y', 'v' ]
         for cnt in [ '', '1', '2' ]
             for nl in [ '', 'n', 'l' ]
                 for iaIA in [ 'i', 'a', 'I', 'A' ]
+                    if op == 'v' && iaIA =~# '^[AI]'
+                        continue " no xmaps beginning with `A` or `I`
+                    endif
+
                     for del in delset
                         execute "normal \"lpfx"
                         call s:execute(op, cnt . iaIA . nl . del)
@@ -52,10 +59,14 @@ normal +
 for del in [ "'", '"', '`' ]
     normal "lyy
 
-    for op in [ 'c', 'd', 'y' ]
+    for op in [ 'c', 'd', 'y', 'v' ]
         for cnt in [ '', '1', '2' ]
             for nlNL in [ '', 'n', 'l', 'N', 'L' ]
                 for iaI in [ 'i', 'a', 'I' ]
+                    if op == 'v' && iaI == 'I'
+                        continue " no xmaps beginning with `I`
+                    endif
+
                     execute "normal \"lpfx"
                     call s:execute(op, cnt . iaI . nlNL . del)
                 endfor
@@ -71,10 +82,14 @@ normal +
 for del in [ ',', '.', ';', ':', '+', '-', '~', '_', '*', '/', '|', '\' ]
     normal "lyy
 
-    for op in [ 'c', 'd', 'y' ]
+    for op in [ 'c', 'd', 'y', 'v' ]
         for cnt in [ '', '1', '2' ]
             for nlNL in [ '', 'n', 'l', 'N', 'L' ]
                 for iaIA in [ 'i', 'a', 'I', 'A' ]
+                    if op == 'v' && iaIA =~# '^[AI]'
+                        continue " no xmaps beginning with `A` or `I`
+                    endif
+
                     execute "normal \"lpfx"
                     call s:execute(op, cnt . iaIA . nlNL . del)
                 endfor
