@@ -7,7 +7,7 @@
 if exists("g:loaded_targets") || &cp || v:version < 700
   finish
 endif
-let g:loaded_targets = '0.0.1' " version number
+let g:loaded_targets = '0.0.2' " version number
 let s:save_cpoptions = &cpoptions
 set cpo&vim
 
