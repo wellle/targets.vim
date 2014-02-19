@@ -5,7 +5,7 @@
 " Version: 0.0.2
 
 if exists("g:loaded_targets") || &cp || v:version < 700
-  finish
+    finish
 endif
 let g:loaded_targets = '0.0.2' " version number
 let s:save_cpoptions = &cpoptions
