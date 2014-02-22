@@ -21,7 +21,12 @@ endfunction
 
 " like targets#omap, but don't clear the command line
 function! targets#xmap(delimiters, matchers)
-    call s:init(a:delimiters, v:count1)
+    call targets#xmapCount(a:delimiters, a:matchers, v:count1)
+endfunction
+
+" like targets#xmap, but inject count, triggered from targets#xmapExpr
+function! targets#xmapCount(delimiters, matchers, count)
+    call s:init(a:delimiters, a:count)
     call s:findMatch(a:matchers)
     call s:handleMatch()
     call s:cleanUp()
