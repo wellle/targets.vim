@@ -21,10 +21,13 @@ function! s:createTextObject(prefix, trigger, delimiters, matchers)
 
     " don't create xmaps beginning with `A` or `I`
     " conflict with `^VA` and `^VI` to append before or insert after visual
-    " block selection. would like to have mapping only for visual, but not for
-    " visual block mode. #6
+    " block selection. #6
+    " instead, save mapping to targets#mapArgs so we can execute these only
+    " for character wise visual mode in targets#uppercaseXmap #23
     if a:prefix !~# '^[AI]'
         execute 'xnoremap <silent>' . mapping . ' :<C-U>call targets#xmap(' . arguments . ')<CR>'
+    else
+        let g:targets#mapArgs[mapping] = arguments
     endif
 
     unlet delimiters mapping arguments
@@ -152,6 +155,10 @@ function! s:createSeparatorTextObjects()
         call s:createSimpleTextObject('AL', delimiter, 'double last select expand')
     endfor
 endfunction
+
+" dictionary mapping uppercase xmap like `An,` to argument strings for
+" targets#xmapCount. used by targets#uppercaseXmap
+let targets#mapArgs = {}
 
 " create the text objects (current total count: 429)
 call s:createPairTextObjects()
