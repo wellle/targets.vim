@@ -1,13 +1,13 @@
 " targets.vim Provides additional text objects
 " Author:  Christian Wellenbrock <christian.wellenbrock@gmail.com>
 " License: MIT license
-" Updated: 2014-02-17
-" Version: 0.0.2
+" Updated: 2014-02-22
+" Version: 0.0.3
 
 if exists("g:loaded_targets") || &cp || v:version < 700
-  finish
+    finish
 endif
-let g:loaded_targets = '0.0.1' " version number
+let g:loaded_targets = '0.0.3' " version number
 let s:save_cpoptions = &cpoptions
 set cpo&vim
 
@@ -21,10 +21,13 @@ function! s:createTextObject(prefix, trigger, delimiters, matchers)
 
     " don't create xmaps beginning with `A` or `I`
     " conflict with `^VA` and `^VI` to append before or insert after visual
-    " block selection. would like to have mapping only for visual, but not for
-    " visual block mode. #6
+    " block selection. #6
+    " instead, save mapping to targets#mapArgs so we can execute these only
+    " for character wise visual mode in targets#uppercaseXmap #23
     if a:prefix !~# '^[AI]'
         execute 'xnoremap <silent>' . mapping . ' :<C-U>call targets#xmap(' . arguments . ')<CR>'
+    else
+        let g:targets#mapArgs[mapping] = arguments
     endif
 
     unlet delimiters mapping arguments
@@ -116,10 +119,10 @@ endfunction
 " separator text objects expand to the right
 " cursor  |                   ........
 " line    │ a , bbbbb , ccccc , ddddd , eeeee , fffff , g
-" command │   ││└IL,┘│││└Il,┘│││└ I,┘│││└In,┘│││└IN,┘││
-"         │   │└─iL,─┤│├─il,─┤│├─ i,─┤│├─in,─┤│├─iN,─┤│
-"         │   ├──aL,─┘├┼─al,─┘├┼─ a,─┘├┼─an,─┘├┼─aN,─┘│
-"         │   └──AL,──┼┘      └┼─ A,──┼┘      └┼─AN,──┘
+" command │   ││└IL,┘│││└Il,┘│││└ I,┘│││└In,┘│││└IN,┘│ │
+"         │   │└─iL,─┤│├─il,─┤│├─ i,─┤│├─in,─┤│├─iN,─┤ │
+"         │   ├──aL,─┘├┼─al,─┘├┼─ a,─┘├┼─an,─┘├┼─aN,─┘ │
+"         │   └──AL,──┼┘      └┼─ A,──┼┘      └┼─AN,───┘
 "         │           └─ Al, ──┘      └─ An, ──┘
 " cursor  │ .........        │       ..........
 " line    │ a , bbbb , c , d │ a , b , cccc , d
@@ -153,10 +156,21 @@ function! s:createSeparatorTextObjects()
     endfor
 endfunction
 
+" add expression mappings for `A` and `I` in visual mode #23
+function! s:addExpressionMappings()
+    xnoremap <expr> <silent> A targets#uppercaseXmap('A')
+    xnoremap <expr> <silent> I targets#uppercaseXmap('I')
+endfunction
+
+" dictionary mapping uppercase xmap like `An,` to argument strings for
+" targets#xmapCount. used by targets#uppercaseXmap
+let targets#mapArgs = {}
+
 " create the text objects (current total count: 429)
 call s:createPairTextObjects()
 call s:createQuoteTextObjects()
 call s:createSeparatorTextObjects()
+call s:addExpressionMappings()
 
 let &cpoptions = s:save_cpoptions
 unlet s:save_cpoptions

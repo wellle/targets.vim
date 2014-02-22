@@ -1,3 +1,3 @@
 all:
 	vim -N -u NONE --noplugin -S test.vim
-	diff test1.out test1.ok && echo "test1 OK" || echo "test1 failed"
+	git diff --no-index test1.ok test1.out && echo "test1 OK" || echo "test1 failed"
