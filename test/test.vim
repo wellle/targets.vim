@@ -38,10 +38,6 @@ for delset in [
         for cnt in [ '', '1', '2' ]
             for nl in [ '', 'n', 'l' ]
                 for iaIA in [ 'i', 'a', 'I', 'A' ]
-                    if op == 'v' && iaIA =~# '^[AI]'
-                        continue " no xmaps beginning with `A` or `I`
-                    endif
-
                     for del in delset
                         execute "normal \"lpfx"
                         call s:execute(op, cnt . iaIA . nl . del)
@@ -63,10 +59,6 @@ for del in [ "'", '"', '`' ]
         for cnt in [ '', '1', '2' ]
             for nlNL in [ '', 'n', 'l', 'N', 'L' ]
                 for iaI in [ 'i', 'a', 'I' ]
-                    if op == 'v' && iaI == 'I'
-                        continue " no xmaps beginning with `I`
-                    endif
-
                     execute "normal \"lpfx"
                     call s:execute(op, cnt . iaI . nlNL . del)
                 endfor
@@ -86,10 +78,6 @@ for del in [ ',', '.', ';', ':', '+', '-', '~', '_', '*', '/', '|', '\' ]
         for cnt in [ '', '1', '2' ]
             for nlNL in [ '', 'n', 'l', 'N', 'L' ]
                 for iaIA in [ 'i', 'a', 'I', 'A' ]
-                    if op == 'v' && iaIA =~# '^[AI]'
-                        continue " no xmaps beginning with `A` or `I`
-                    endif
-
                     execute "normal \"lpfx"
                     call s:execute(op, cnt . iaIA . nlNL . del)
                 endfor
