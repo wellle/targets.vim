@@ -32,6 +32,30 @@ function! targets#xmapCount(delimiters, matchers, count)
     call s:cleanUp()
 endfunction
 
+" called on `vA` and `vI` to start visual mappings like `vAn,`
+" we use it like this to still allow to append after visually selected blocks
+function! targets#uppercaseXmap(trigger)
+    " only supported for character wise visual mode
+    if mode() !=# 'v'
+        return a:trigger
+    endif
+
+    " read characters like `n` and `,` for `vAn,`
+    let chars = nr2char(getchar())
+    if chars =~? '^[nl]'
+        let chars .= nr2char(getchar())
+    endif
+
+    " get associated arguments for targets#xmapCount
+    let arguments = get(g:targets#mapArgs, a:trigger . chars, '')
+    if arguments == ''
+        return '\<Esc>'
+    endif
+
+    " exit visual mode and call targets#xmapCount
+    return "\<Esc>:\<C-U>call targets#xmapCount(" . arguments . ", " . v:count1 . ")\<CR>"
+endfunction
+
 " initialize script local variables for the current matching
 function! s:init(delimiters, count)
     let s:count = a:count

@@ -156,6 +156,12 @@ function! s:createSeparatorTextObjects()
     endfor
 endfunction
 
+" add expression mappings for `A` and `I` in visual mode #23
+function! s:addExpressionMappings()
+    xnoremap <expr> <silent> A targets#uppercaseXmap('A')
+    xnoremap <expr> <silent> I targets#uppercaseXmap('I')
+endfunction
+
 " dictionary mapping uppercase xmap like `An,` to argument strings for
 " targets#xmapCount. used by targets#uppercaseXmap
 let targets#mapArgs = {}
@@ -164,6 +170,7 @@ let targets#mapArgs = {}
 call s:createPairTextObjects()
 call s:createQuoteTextObjects()
 call s:createSeparatorTextObjects()
+call s:addExpressionMappings()
 
 let &cpoptions = s:save_cpoptions
 unlet s:save_cpoptions
