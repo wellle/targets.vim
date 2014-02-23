@@ -193,26 +193,26 @@ function! s:quote()
     endif
 endfunction
 
-" find `count` next delimiter (single line)
+" find `count` next delimiter (multi line)
 " in   │     ...
 " line │  '  '  '  '
 " out  │        1  2
 function! s:next()
     for _ in range(s:count)
-        call searchpos(s:opening, '', line('.'))
+        call searchpos(s:opening, '')
     endfor
     let s:count = 1
 endfunction
 
-" find `count` last delimiter, move in front of it (single line)
+" find `count` last delimiter, move in front of it (multi line)
 " in   │     ...
 " line │  '  '  '  '
 " out  │ 2  1
 function! s:last()
     " only the first delimiter can match at current position
-    call searchpos(s:closing, 'bc', line('.'))
+    call searchpos(s:closing, 'bc')
     for _ in range(s:count - 1)
-        call searchpos(s:closing, 'b', line('.'))
+        call searchpos(s:closing, 'b')
     endfor
     let s:count = 1
     silent! normal! h

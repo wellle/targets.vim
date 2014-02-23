@@ -97,14 +97,14 @@ function! s:testMultiline()
     normal gg0
 
     " TODO: this test fails for `cI{`
-    execute "normal /command\<CR>"
-    execute "normal ci{foo\<Esc>"
+    execute "normal /comment 1\<CR>"
+    execute "normal cin{foo\<Esc>"
 
-    execute "normal /?\<CR>"
-    execute "normal ci;foo\<Esc>"
+    execute "normal /comment 2\<CR>"
+    execute "normal cin;foo\<Esc>"
 
-    execute "normal /line 2\<CR>"
-    execute "normal ci`foo\<Esc>"
+    execute "normal /comment 3\<CR>"
+    execute "normal cin`foo\<Esc>"
 
     write! test2.out
 endfunction

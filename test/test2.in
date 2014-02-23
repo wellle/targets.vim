@@ -1,12 +1,15 @@
+// comment 1
 function f() {
-    command
+    return 4;
 }
 
+// comment 2
 int a = 5;
 int b = a > 0
         ? 1
         : 2;
 
+// comment 3
 string x = `line 1
 line 2
 line 3`;
