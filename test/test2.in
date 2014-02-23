@@ -1,0 +1,13 @@
+function f() {
+    command
+}
+
+int a = 5;
+int b = a > 0
+        ? 1
+        : 2;
+
+string x = `line 1
+line 2
+line 3`;
+

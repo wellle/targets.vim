@@ -1,0 +1,9 @@
+function f() {
+foo
+}
+
+int a = 5;
+foo;
+
+string x = `foo`;
+

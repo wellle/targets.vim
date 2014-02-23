@@ -25,7 +25,7 @@ endfunction
 
 function! s:testBasic()
     edit test1.in
-    normal gg
+    normal gg0
 
     for delset in [
                 \ [ '(', ')', 'b' ],
@@ -92,6 +92,24 @@ function! s:testBasic()
     write! test1.out
 endfunction
 
+function! s:testMultiline()
+    edit! test2.in
+    normal gg0
+
+    " TODO: this test fails for `cI{`
+    execute "normal /command\<CR>"
+    execute "normal ci{foo\<Esc>"
+
+    execute "normal /?\<CR>"
+    execute "normal ci;foo\<Esc>"
+
+    execute "normal /line 2\<CR>"
+    execute "normal ci`foo\<Esc>"
+
+    write! test2.out
+endfunction
+
 call s:testBasic()
+call s:testMultiline()
 
 quit!
