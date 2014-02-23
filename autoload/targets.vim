@@ -261,17 +261,17 @@ endfunction
 " match selectors
 " ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
-" select pair of delimiters around cursor
+" select pair of delimiters around cursor (multi line)
 " select to the right if cursor is on a delimiter
 " cursor  │   ....
 " line    │ ' ' b ' '
 " matcher │   └───┘
 function! s:select()
-    let [s:sl, s:sc] = searchpos(s:opening, 'bc', line('.'))
+    let [s:sl, s:sc] = searchpos(s:opening, 'bc')
     if s:sc == 0 " no match to the left
         return s:setFailed()
     endif
-    let [s:el, s:ec] = searchpos(s:closing, '', line('.'))
+    let [s:el, s:ec] = searchpos(s:closing, '')
     if s:ec == 0 " no match to the right
         return s:setFailed()
     endif
