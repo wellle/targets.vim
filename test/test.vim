@@ -23,70 +23,75 @@ function! s:execute(operation, motions)
     execute "normal I" . a:operation . a:motions . "\<Tab>\<Esc>"
 endfunction
 
-edit test1.in
-normal gg
+function! s:testBasic()
+    edit test1.in
+    normal gg
 
-for delset in [
-            \ [ '(', ')', 'b' ],
-            \ [ '{', '}', 'B' ],
-            \ [ '[', ']', 'r' ],
-            \ [ '<', '>', 'a' ]
-            \ ]
-    normal "lyy
+    for delset in [
+                \ [ '(', ')', 'b' ],
+                \ [ '{', '}', 'B' ],
+                \ [ '[', ']', 'r' ],
+                \ [ '<', '>', 'a' ]
+                \ ]
+        normal "lyy
 
-    for op in [ 'c', 'd', 'y', 'v' ]
-        for cnt in [ '', '1', '2' ]
-            for nl in [ '', 'n', 'l' ]
-                for iaIA in [ 'i', 'a', 'I', 'A' ]
-                    for del in delset
-                        execute "normal \"lpfx"
-                        call s:execute(op, cnt . iaIA . nl . del)
+        for op in [ 'c', 'd', 'y', 'v' ]
+            for cnt in [ '', '1', '2' ]
+                for nl in [ '', 'n', 'l' ]
+                    for iaIA in [ 'i', 'a', 'I', 'A' ]
+                        for del in delset
+                            execute "normal \"lpfx"
+                            call s:execute(op, cnt . iaIA . nl . del)
+                        endfor
                     endfor
                 endfor
             endfor
         endfor
+
+        normal +
     endfor
 
     normal +
-endfor
 
-normal +
+    for del in [ "'", '"', '`' ]
+        normal "lyy
 
-for del in [ "'", '"', '`' ]
-    normal "lyy
-
-    for op in [ 'c', 'd', 'y', 'v' ]
-        for cnt in [ '', '1', '2' ]
-            for nlNL in [ '', 'n', 'l', 'N', 'L' ]
-                for iaI in [ 'i', 'a', 'I' ]
-                    execute "normal \"lpfx"
-                    call s:execute(op, cnt . iaI . nlNL . del)
+        for op in [ 'c', 'd', 'y', 'v' ]
+            for cnt in [ '', '1', '2' ]
+                for nlNL in [ '', 'n', 'l', 'N', 'L' ]
+                    for iaI in [ 'i', 'a', 'I' ]
+                        execute "normal \"lpfx"
+                        call s:execute(op, cnt . iaI . nlNL . del)
+                    endfor
                 endfor
             endfor
         endfor
+
+        normal +
     endfor
 
     normal +
-endfor
 
-normal +
+    for del in [ ',', '.', ';', ':', '+', '-', '~', '_', '*', '/', '|', '\' ]
+        normal "lyy
 
-for del in [ ',', '.', ';', ':', '+', '-', '~', '_', '*', '/', '|', '\' ]
-    normal "lyy
-
-    for op in [ 'c', 'd', 'y', 'v' ]
-        for cnt in [ '', '1', '2' ]
-            for nlNL in [ '', 'n', 'l', 'N', 'L' ]
-                for iaIA in [ 'i', 'a', 'I', 'A' ]
-                    execute "normal \"lpfx"
-                    call s:execute(op, cnt . iaIA . nlNL . del)
+        for op in [ 'c', 'd', 'y', 'v' ]
+            for cnt in [ '', '1', '2' ]
+                for nlNL in [ '', 'n', 'l', 'N', 'L' ]
+                    for iaIA in [ 'i', 'a', 'I', 'A' ]
+                        execute "normal \"lpfx"
+                        call s:execute(op, cnt . iaIA . nlNL . del)
+                    endfor
                 endfor
             endfor
         endfor
+
+        normal +
     endfor
 
-    normal +
-endfor
+    write! test1.out
+endfunction
 
-write! test1.out
+call s:testBasic()
+
 quit!
