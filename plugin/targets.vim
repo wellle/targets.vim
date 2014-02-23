@@ -15,8 +15,13 @@ set cpo&vim
 " the given delimiters and matchers
 function! s:createTextObject(prefix, trigger, delimiters, matchers)
     let delimiters = substitute(a:delimiters, "'", "''", 'g')
-    let mapping = a:prefix . a:trigger
-    let arguments = "'" . delimiters . "', '" . a:matchers . "'"
+
+    let rawMapping = a:prefix . a:trigger
+    let rawArguments = "'" . delimiters . "', '" . a:matchers . "'"
+
+    let mapping = substitute(rawMapping, '|', '\\\|', 'g')
+    let arguments = substitute(rawArguments, '|', '\\\|', 'g')
+
     execute 'onoremap <silent>' . mapping . ' :<C-U>call targets#omap(' . arguments . ')<CR>'
 
     " don't create xmaps beginning with `A` or `I`
@@ -27,7 +32,7 @@ function! s:createTextObject(prefix, trigger, delimiters, matchers)
     if a:prefix !~# '^[AI]'
         execute 'xnoremap <silent>' . mapping . ' :<C-U>call targets#xmap(' . arguments . ')<CR>'
     else
-        let g:targets#mapArgs[mapping] = arguments
+        let g:targets#mapArgs[rawMapping] = rawArguments
     endif
 
     unlet delimiters mapping arguments
@@ -132,7 +137,7 @@ endfunction
 "         │   └──A,───┘      │       └──A,───┘
 "         | nsth |
 function! s:createSeparatorTextObjects()
-    for delimiter in [ ',', '.', ';', ':', '+', '-', '~', '_', '*', '/', '\', '\|' ]
+    for delimiter in [ ',', '.', ';', ':', '+', '-', '~', '_', '*', '/', '\', '|' ]
         call s:createSimpleTextObject('I',  delimiter, 'seek select shrink')
         call s:createSimpleTextObject('i',  delimiter, 'seek select drop')
         call s:createSimpleTextObject('a',  delimiter, 'seek select dropr')
