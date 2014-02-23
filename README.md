@@ -160,10 +160,12 @@ Supported trigger characters:
 The following examples will use single quotes, but they all work for each
 mentioned separator character accordingly.
 
-Quote text objects work on the current line only. When the cursor is positioned
-on a quotation mark, the quote text objects count the numbers of quotation
-marks from the beginning of the line to choose the properly quoted text to the
-left or right of the cursor.
+
+Quote text objects work over multiple lines.
+
+When the cursor is positioned on a quotation mark, the quote text objects count
+the numbers of quotation marks from the beginning of the line to choose the
+properly quoted text to the left or right of the cursor.
 
 #### In Quote
 
@@ -249,7 +251,7 @@ Supported separators:
 The following examples will use commas, but they all work for each listed
 separator character accordingly.
 
-Separator text objects work on the current line only.
+Separator text objects work over multiple lines.
 
 #### In Separator
 
