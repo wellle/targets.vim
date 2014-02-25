@@ -136,8 +136,8 @@ function! s:handleEmptyMatch()
 
     " move cursor to delimiter after zero width match
     call cursor(s:sl, s:sc)
-    " insert single character and visually select it
-    silent! execute "normal! ix\<Esc>v"
+    " insert single space and visually select it
+    silent! execute "normal! i \<Esc>v"
 endfunction
 
 " abort when no match was found
