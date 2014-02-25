@@ -81,10 +81,9 @@ function! s:cleanUp()
     unlet s:failed
 endfunction
 
+" clear the commandline to hide targets function calls
 function! s:clearCommandLine()
-    if v:operator != 'c'
-        call feedkeys(":\<C-C>", 'n')
-    endif
+    execute "normal! \<C-L>"
 endfunction
 
 " try to find match and return 1 in case of success
