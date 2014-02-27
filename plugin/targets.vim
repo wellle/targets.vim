@@ -11,37 +11,6 @@ let g:loaded_targets = '0.0.4' " version number
 let s:save_cpoptions = &cpoptions
 set cpo&vim
 
-" load configuration options if present
-let s:custom_aiAI        = exists('g:targets_aiAI')
-let s:custom_nlNL        = exists('g:targets_nlNL')
-let s:custom_visual_aiAI = exists('g:targets_visual_aiAI')
-let s:custom_visual_nlNL = exists('g:targets_visual_nlNL')
-
-let s:a = (s:custom_aiAI ? g:targets_aiAI[0] : 'a')
-let s:i = (s:custom_aiAI ? g:targets_aiAI[1] : 'i')
-let s:A = (s:custom_aiAI ? g:targets_aiAI[2] : 'A')
-let s:I = (s:custom_aiAI ? g:targets_aiAI[3] : 'I')
-
-let s:n = (s:custom_nlNL ? g:targets_nlNL[0] : 'n')
-let s:l = (s:custom_nlNL ? g:targets_nlNL[1] : 'l')
-let s:N = (s:custom_nlNL ? g:targets_nlNL[2] : 'N')
-let s:L = (s:custom_nlNL ? g:targets_nlNL[3] : 'L')
-
-let s:visual_a = (s:custom_visual_aiAI ? g:targets_visual_aiAI[0] : 'a')
-let s:visual_i = (s:custom_visual_aiAI ? g:targets_visual_aiAI[1] : 'i')
-let s:visual_A = (s:custom_visual_aiAI ? g:targets_visual_aiAI[2] : 'A')
-let s:visual_I = (s:custom_visual_aiAI ? g:targets_visual_aiAI[3] : 'I')
-
-let s:pair_list = exists('g:targets_pairs')
-            \? split(g:targets_pairs)
-            \: ['()b', '{}B', '[]r', '<>a']
-let s:quote_list = exists('g:targets_quotes')
-            \? split(g:targets_quotes)
-            \: [ "'", '"', '`' ]
-let s:separator_list = exists('g:targets_separators')
-            \? split(g:targets_separators)
-            \: [ ',', '.', ';', ':', '+', '-', '~', '_', '*', '/', '\', '|' ]
-
 " create a text object by combining prefix and trigger to call Match with
 " the given delimiters and matchers
 function! s:createTextObject(prefix, trigger, delimiters, matchers)
@@ -209,9 +178,44 @@ function! s:addExpressionMappings()
     xnoremap <expr> <silent> I targets#uppercaseXmap('I')
 endfunction
 
+function! s:loadSettings()
+    " load configuration options if present
+    let s:custom_aiAI        = exists('g:targets_aiAI')
+    let s:custom_nlNL        = exists('g:targets_nlNL')
+    let s:custom_visual_aiAI = exists('g:targets_visual_aiAI')
+    let s:custom_visual_nlNL = exists('g:targets_visual_nlNL')
+
+    let s:a = (s:custom_aiAI ? g:targets_aiAI[0] : 'a')
+    let s:i = (s:custom_aiAI ? g:targets_aiAI[1] : 'i')
+    let s:A = (s:custom_aiAI ? g:targets_aiAI[2] : 'A')
+    let s:I = (s:custom_aiAI ? g:targets_aiAI[3] : 'I')
+
+    let s:n = (s:custom_nlNL ? g:targets_nlNL[0] : 'n')
+    let s:l = (s:custom_nlNL ? g:targets_nlNL[1] : 'l')
+    let s:N = (s:custom_nlNL ? g:targets_nlNL[2] : 'N')
+    let s:L = (s:custom_nlNL ? g:targets_nlNL[3] : 'L')
+
+    let s:visual_a = (s:custom_visual_aiAI ? g:targets_visual_aiAI[0] : 'a')
+    let s:visual_i = (s:custom_visual_aiAI ? g:targets_visual_aiAI[1] : 'i')
+    let s:visual_A = (s:custom_visual_aiAI ? g:targets_visual_aiAI[2] : 'A')
+    let s:visual_I = (s:custom_visual_aiAI ? g:targets_visual_aiAI[3] : 'I')
+
+    let s:pair_list = exists('g:targets_pairs')
+                \? split(g:targets_pairs)
+                \: ['()b', '{}B', '[]r', '<>a']
+    let s:quote_list = exists('g:targets_quotes')
+                \? split(g:targets_quotes)
+                \: [ "'", '"', '`' ]
+    let s:separator_list = exists('g:targets_separators')
+                \? split(g:targets_separators)
+                \: [ ',', '.', ';', ':', '+', '-', '~', '_', '*', '/', '\', '|' ]
+endfunction
+
 " dictionary mapping uppercase xmap like `An,` to argument strings for
 " targets#xmapCount. used by targets#uppercaseXmap
 let targets#mapArgs = {}
+
+call s:loadSettings()
 
 " create the text objects (current total count: 429)
 call s:createPairTextObjects()
