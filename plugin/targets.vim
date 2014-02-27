@@ -33,15 +33,10 @@ function! s:createTextObject(prefix, trigger, delimiters, matchers)
     " block selection. #6
     " instead, save mapping to targets#mapArgs so we can execute these only
     " for character wise visual mode in targets#uppercaseXmap #23
-    let first_prefix_char = {'a':s:visual_a, 'i':s:visual_i, 'A':s:visual_A, 'I':s:visual_I}
-    let modded_prefix     = first_prefix_char[a:prefix[0]] . a:prefix[1:]
-    let rawVMapping       = modded_prefix . a:trigger
-    let vmapping          = substitute(rawVMapping, '|', '\\\|', 'g')
-
-    if modded_prefix !~# '^[AI]'
-        execute 'xnoremap <silent>' . vmapping . ' :<C-U>call targets#xmap(' . arguments . ')<CR>'
+    if a:prefix !~# '^[AI]'
+        execute 'xnoremap <silent>' . mapping . ' :<C-U>call targets#xmap(' . arguments . ')<CR>'
     else
-        let g:targets#mapArgs[rawVMapping] = rawArguments
+        let g:targets#mapArgs[rawMapping] = rawArguments
     endif
 
     unlet delimiters mapping arguments
@@ -183,8 +178,6 @@ function! s:loadSettings()
     " load configuration options if present
     let s:custom_aiAI        = exists('g:targets_aiAI')
     let s:custom_nlNL        = exists('g:targets_nlNL')
-    let s:custom_visual_aiAI = exists('g:targets_visual_aiAI')
-    let s:custom_visual_nlNL = exists('g:targets_visual_nlNL')
 
     let s:a = (s:custom_aiAI ? g:targets_aiAI[0] : 'a')
     let s:i = (s:custom_aiAI ? g:targets_aiAI[1] : 'i')
@@ -195,11 +188,6 @@ function! s:loadSettings()
     let s:l = (s:custom_nlNL ? g:targets_nlNL[1] : 'l')
     let s:N = (s:custom_nlNL ? g:targets_nlNL[2] : 'N')
     let s:L = (s:custom_nlNL ? g:targets_nlNL[3] : 'L')
-
-    let s:visual_a = (s:custom_visual_aiAI ? g:targets_visual_aiAI[0] : 'a')
-    let s:visual_i = (s:custom_visual_aiAI ? g:targets_visual_aiAI[1] : 'i')
-    let s:visual_A = (s:custom_visual_aiAI ? g:targets_visual_aiAI[2] : 'A')
-    let s:visual_I = (s:custom_visual_aiAI ? g:targets_visual_aiAI[3] : 'I')
 
     let s:pair_list = exists('g:targets_pairs')
                 \? split(g:targets_pairs)

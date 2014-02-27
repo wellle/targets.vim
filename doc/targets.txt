@@ -52,7 +52,6 @@ default values.
 Available options:~
 
     |targets_aiAI|
-    |targets_visual_aiAI|
     |targets_nlNL|
     |targets_pairs|
     |targets_quotes|
@@ -64,14 +63,6 @@ Default: >
     let g:targets_aiAI = 'aiAI'
 <
 Controls the normal mode operator mode maps that get created for In Pair (i), A
-Pair (a), Inside Pair (I), and Around Pair (A). Required to be a 4 character
-long list.
-------------------------------------------------------------------------------
-                                                            *targets_visual_aiAI*
-Default: >
-    let g:targets_visual_aiAI = 'aiAI'
-<
-Controls the visual mode operator mode maps that get created for In Pair (i), A
 Pair (a), Inside Pair (I), and Around Pair (A). Required to be a 4 character
 long list.
 ------------------------------------------------------------------------------
