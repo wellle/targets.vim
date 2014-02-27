@@ -14,9 +14,10 @@ set cpo&vim
 " create a text object by combining prefix and trigger to call Match with
 " the given delimiters and matchers
 function! s:createTextObject(prefix, trigger, delimiters, matchers)
-    for s:item in split(a:prefix, '\zs') " if there's a blank in the prefix, it should be deactivated
-        if s:item == ' ' | return | endif
-    endfor
+    if match(a:prefix, ' ') >= 0  " if there's a blank in the prefix, it should be deactivated
+        return
+    endif
+
     let delimiters = substitute(a:delimiters, "'", "''", 'g')
 
     let rawMapping = a:prefix . a:trigger
