@@ -11,9 +11,43 @@ let g:loaded_targets = '0.0.4' " version number
 let s:save_cpoptions = &cpoptions
 set cpo&vim
 
+" load configuration options if present
+let s:custom_aiAI        = exists('g:targets_aiAI')
+let s:custom_nlNL        = exists('g:targets_nlNL')
+let s:custom_visual_aiAI = exists('g:targets_visual_aiAI')
+let s:custom_visual_nlNL = exists('g:targets_visual_nlNL')
+
+let s:a = (s:custom_aiAI ? g:targets_aiAI[0] : 'a')
+let s:i = (s:custom_aiAI ? g:targets_aiAI[1] : 'i')
+let s:A = (s:custom_aiAI ? g:targets_aiAI[2] : 'A')
+let s:I = (s:custom_aiAI ? g:targets_aiAI[3] : 'I')
+
+let s:n = (s:custom_nlNL ? g:targets_nlNL[0] : 'n')
+let s:l = (s:custom_nlNL ? g:targets_nlNL[1] : 'l')
+let s:N = (s:custom_nlNL ? g:targets_nlNL[2] : 'N')
+let s:L = (s:custom_nlNL ? g:targets_nlNL[3] : 'L')
+
+let s:visual_a = (s:custom_visual_aiAI ? g:targets_visual_aiAI[0] : 'a')
+let s:visual_i = (s:custom_visual_aiAI ? g:targets_visual_aiAI[1] : 'i')
+let s:visual_A = (s:custom_visual_aiAI ? g:targets_visual_aiAI[2] : 'A')
+let s:visual_I = (s:custom_visual_aiAI ? g:targets_visual_aiAI[3] : 'I')
+
+let s:pair_list = exists('g:targets_pairs')
+            \? split(g:targets_pairs)
+            \: ['()b', '{}B', '[]r', '<>a']
+let s:quote_list = exists('g:targets_quotes')
+            \? split(g:targets_quotes)
+            \: [ "'", '"', '`' ]
+let s:separator_list = exists('g:targets_separators')
+            \? split(g:targets_separators)
+            \: [ ',', '.', ';', ':', '+', '-', '~', '_', '*', '/', '\', '|' ]
+
 " create a text object by combining prefix and trigger to call Match with
 " the given delimiters and matchers
 function! s:createTextObject(prefix, trigger, delimiters, matchers)
+    for s:item in split(a:prefix, '\zs') " if there's a blank in the prefix, it should be deactivated
+        if s:item == ' ' | return | endif
+    endfor
     let delimiters = substitute(a:delimiters, "'", "''", 'g')
 
     let rawMapping = a:prefix . a:trigger
@@ -29,10 +63,15 @@ function! s:createTextObject(prefix, trigger, delimiters, matchers)
     " block selection. #6
     " instead, save mapping to targets#mapArgs so we can execute these only
     " for character wise visual mode in targets#uppercaseXmap #23
-    if a:prefix !~# '^[AI]'
-        execute 'xnoremap <silent>' . mapping . ' :<C-U>call targets#xmap(' . arguments . ')<CR>'
+    let first_prefix_char = {'a':s:visual_a, 'i':s:visual_i, 'A':s:visual_A, 'I':s:visual_I}
+    let modded_prefix     = first_prefix_char[a:prefix[0]] . a:prefix[1:]
+    let rawVMapping       = modded_prefix . a:trigger
+    let vmapping          = substitute(rawVMapping, '|', '\\\|', 'g')
+
+    if modded_prefix !~# '^[AI]'
+        execute 'xnoremap <silent>' . vmapping . ' :<C-U>call targets#xmap(' . arguments . ')<CR>'
     else
-        let g:targets#mapArgs[rawMapping] = rawArguments
+        let g:targets#mapArgs[rawVMapping] = rawArguments
     endif
 
     unlet delimiters mapping arguments
@@ -40,7 +79,10 @@ endfunction
 
 " creat a text object for a single delimiter
 function! s:createSimpleTextObject(prefix, delimiter, matchers)
-    call s:createTextObject(a:prefix, a:delimiter, a:delimiter, a:matchers)
+    call s:createTextObject(a:prefix, a:delimiter[0], a:delimiter[0], a:matchers)
+    if strlen(a:delimiter) > 1  " check for alias
+        call s:createTextObject(a:prefix, a:delimiter[1], a:delimiter[0], a:matchers)
+    endif
 endfunction
 
 " create multiple text objects for a pair of delimiters and optional
@@ -71,19 +113,19 @@ endfunction
 "         │   ├───────al)──────┘│├──────2a)──────┘│├───────an)──────┘│
 "         │   └───────Al)───────┘└──────2A)───────┘└───────An)───────┘
 function! s:createPairTextObjects()
-    for delimiters in [ '()b', '{}B', '[]r', '<>a' ] " aliases like surround
-        call s:createPairTextObject('I',  delimiters, 'seek selectp shrink')
-        call s:createPairTextObject('i',  delimiters, 'seek selectp drop')
-        call s:createPairTextObject('a',  delimiters, 'seek selectp')
-        call s:createPairTextObject('A',  delimiters, 'seek selectp expand')
-        call s:createPairTextObject('In', delimiters, 'nextp selectp shrink')
-        call s:createPairTextObject('in', delimiters, 'nextp selectp drop')
-        call s:createPairTextObject('an', delimiters, 'nextp selectp')
-        call s:createPairTextObject('An', delimiters, 'nextp selectp expand')
-        call s:createPairTextObject('Il', delimiters, 'lastp selectp shrink')
-        call s:createPairTextObject('il', delimiters, 'lastp selectp drop')
-        call s:createPairTextObject('al', delimiters, 'lastp selectp')
-        call s:createPairTextObject('Al', delimiters, 'lastp selectp expand')
+    for delimiters in s:pair_list " aliases like surround
+        call s:createPairTextObject(s:I,  delimiters, 'seek selectp shrink')
+        call s:createPairTextObject(s:i,  delimiters, 'seek selectp drop')
+        call s:createPairTextObject(s:a,  delimiters, 'seek selectp')
+        call s:createPairTextObject(s:A,  delimiters, 'seek selectp expand')
+        call s:createPairTextObject(s:I . s:n, delimiters, 'nextp selectp shrink')
+        call s:createPairTextObject(s:i . s:n, delimiters, 'nextp selectp drop')
+        call s:createPairTextObject(s:a . s:n, delimiters, 'nextp selectp')
+        call s:createPairTextObject(s:A . s:n, delimiters, 'nextp selectp expand')
+        call s:createPairTextObject(s:I . s:l, delimiters, 'lastp selectp shrink')
+        call s:createPairTextObject(s:i . s:l, delimiters, 'lastp selectp drop')
+        call s:createPairTextObject(s:a . s:l, delimiters, 'lastp selectp')
+        call s:createPairTextObject(s:A . s:l, delimiters, 'lastp selectp expand')
     endfor
 endfunction
 
@@ -102,22 +144,22 @@ endfunction
 "         │   │└─i'─┘ │     │     │└─i'─┘ │    │      │└─i'─┘ │
 "         │   └──a'───┘     │     └──a'───┘    │      └──a'───┘
 function! s:createQuoteTextObjects()
-    for delimiter in [ "'", '"', '`' ]
-        call s:createSimpleTextObject('I',  delimiter, 'quote seek select shrink')
-        call s:createSimpleTextObject('i',  delimiter, 'quote seek select drop')
-        call s:createSimpleTextObject('a',  delimiter, 'quote seek select expand')
-        call s:createSimpleTextObject('In', delimiter, 'quote next select shrink')
-        call s:createSimpleTextObject('in', delimiter, 'quote next select drop')
-        call s:createSimpleTextObject('an', delimiter, 'quote next select expand')
-        call s:createSimpleTextObject('Il', delimiter, 'quote last select shrink')
-        call s:createSimpleTextObject('il', delimiter, 'quote last select drop')
-        call s:createSimpleTextObject('al', delimiter, 'quote last select expand')
-        call s:createSimpleTextObject('IN', delimiter, 'quote double next select shrink')
-        call s:createSimpleTextObject('iN', delimiter, 'quote double next select drop')
-        call s:createSimpleTextObject('aN', delimiter, 'quote double next select expand')
-        call s:createSimpleTextObject('IL', delimiter, 'quote double last select shrink')
-        call s:createSimpleTextObject('iL', delimiter, 'quote double last select drop')
-        call s:createSimpleTextObject('aL', delimiter, 'quote double last select expand')
+    for delimiter in s:quote_list
+        call s:createSimpleTextObject(s:I,  delimiter, 'quote seek select shrink')
+        call s:createSimpleTextObject(s:i,  delimiter, 'quote seek select drop')
+        call s:createSimpleTextObject(s:a,  delimiter, 'quote seek select expand')
+        call s:createSimpleTextObject(s:I . s:n, delimiter, 'quote next select shrink')
+        call s:createSimpleTextObject(s:i . s:n, delimiter, 'quote next select drop')
+        call s:createSimpleTextObject(s:a . s:n, delimiter, 'quote next select expand')
+        call s:createSimpleTextObject(s:I . s:l, delimiter, 'quote last select shrink')
+        call s:createSimpleTextObject(s:i . s:l, delimiter, 'quote last select drop')
+        call s:createSimpleTextObject(s:a . s:l, delimiter, 'quote last select expand')
+        call s:createSimpleTextObject(s:I . s:N, delimiter, 'quote double next select shrink')
+        call s:createSimpleTextObject(s:i . s:N, delimiter, 'quote double next select drop')
+        call s:createSimpleTextObject(s:a . s:N, delimiter, 'quote double next select expand')
+        call s:createSimpleTextObject(s:I . s:L, delimiter, 'quote double last select shrink')
+        call s:createSimpleTextObject(s:i . s:L, delimiter, 'quote double last select drop')
+        call s:createSimpleTextObject(s:a . s:L, delimiter, 'quote double last select expand')
     endfor
 endfunction
 
@@ -137,27 +179,27 @@ endfunction
 "         │   └──A,───┘      │       └──A,───┘
 "         | nsth |
 function! s:createSeparatorTextObjects()
-    for delimiter in [ ',', '.', ';', ':', '+', '-', '~', '_', '*', '/', '\', '|' ]
-        call s:createSimpleTextObject('I',  delimiter, 'seek select shrink')
-        call s:createSimpleTextObject('i',  delimiter, 'seek select drop')
-        call s:createSimpleTextObject('a',  delimiter, 'seek select dropr')
-        call s:createSimpleTextObject('A',  delimiter, 'seek select expand')
-        call s:createSimpleTextObject('In', delimiter, 'next select shrink')
-        call s:createSimpleTextObject('in', delimiter, 'next select drop')
-        call s:createSimpleTextObject('an', delimiter, 'next select dropr')
-        call s:createSimpleTextObject('An', delimiter, 'next select expand')
-        call s:createSimpleTextObject('Il', delimiter, 'last select shrink')
-        call s:createSimpleTextObject('il', delimiter, 'last select drop')
-        call s:createSimpleTextObject('al', delimiter, 'last select dropr')
-        call s:createSimpleTextObject('Al', delimiter, 'last select expand')
-        call s:createSimpleTextObject('IN', delimiter, 'double next select shrink')
-        call s:createSimpleTextObject('iN', delimiter, 'double next select drop')
-        call s:createSimpleTextObject('aN', delimiter, 'double next select dropr')
-        call s:createSimpleTextObject('AN', delimiter, 'double next select expand')
-        call s:createSimpleTextObject('IL', delimiter, 'double last select shrink')
-        call s:createSimpleTextObject('iL', delimiter, 'double last select drop')
-        call s:createSimpleTextObject('aL', delimiter, 'double last select dropr')
-        call s:createSimpleTextObject('AL', delimiter, 'double last select expand')
+    for delimiter in s:separator_list
+        call s:createSimpleTextObject(s:I,  delimiter, 'seek select shrink')
+        call s:createSimpleTextObject(s:i,  delimiter, 'seek select drop')
+        call s:createSimpleTextObject(s:a,  delimiter, 'seek select dropr')
+        call s:createSimpleTextObject(s:A,  delimiter, 'seek select expand')
+        call s:createSimpleTextObject(s:I . s:n, delimiter, 'next select shrink')
+        call s:createSimpleTextObject(s:i . s:n, delimiter, 'next select drop')
+        call s:createSimpleTextObject(s:a . s:n, delimiter, 'next select dropr')
+        call s:createSimpleTextObject(s:A . s:n, delimiter, 'next select expand')
+        call s:createSimpleTextObject(s:I . s:l, delimiter, 'last select shrink')
+        call s:createSimpleTextObject(s:i . s:l, delimiter, 'last select drop')
+        call s:createSimpleTextObject(s:a . s:l, delimiter, 'last select dropr')
+        call s:createSimpleTextObject(s:A . s:l, delimiter, 'last select expand')
+        call s:createSimpleTextObject(s:I . s:N, delimiter, 'double next select shrink')
+        call s:createSimpleTextObject(s:i . s:N, delimiter, 'double next select drop')
+        call s:createSimpleTextObject(s:a . s:N, delimiter, 'double next select dropr')
+        call s:createSimpleTextObject(s:A . s:N, delimiter, 'double next select expand')
+        call s:createSimpleTextObject(s:I . s:L, delimiter, 'double last select shrink')
+        call s:createSimpleTextObject(s:i . s:L, delimiter, 'double last select drop')
+        call s:createSimpleTextObject(s:a . s:L, delimiter, 'double last select dropr')
+        call s:createSimpleTextObject(s:A . s:L, delimiter, 'double last select expand')
     endfor
 endfunction
 
