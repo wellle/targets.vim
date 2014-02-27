@@ -79,6 +79,7 @@ function! s:cleanUp()
     unlet s:sl s:sc s:el s:ec
     unlet s:oldpos
     unlet s:failed
+    unlet s:add_to_jumplist
 endfunction
 
 " clear the commandline to hide targets function calls
@@ -117,6 +118,25 @@ endfunction
 
 " select a proper match
 function! s:selectMatch()
+    let s:add_to_jumplist = 0
+    if exists('g:targets_jump_lines') && abs(s:sl - s:oldpos[1]) >= g:targets_jump_lines
+        let s:add_to_jumplist = 1
+    elseif exists('g:targets_jump_cols') && abs(s:sc - s:oldpos[2]) >= g:targets_jump_cols
+        let s:add_to_jumplist = 1
+    endif
+
+    " if we're inside a text object, don't add to jumplist
+    " s:sl, s:sc, s:el and s:ec vary based on whether we're using a, A, i or I motions
+    " TODO: may want to add variables to keep track of the position of the delimiting
+    " characters, regardless of whether the motion uses fancy whitespace
+    if s:oldpos[1] >= s:sl && s:oldpos[1] <= s:el && s:oldpos[2] >= s:sc && s:oldpos[2] <= s:ec
+        let s:add_to_jumplist = 0
+        echom "Im inside a text object"
+    endif
+    if (s:add_to_jumplist)
+        mark '
+    endif
+
     call cursor(s:sl, s:sc)
     silent! normal! v
     call cursor(s:el, s:ec)
