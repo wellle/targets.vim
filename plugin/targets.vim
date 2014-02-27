@@ -176,28 +176,28 @@ endfunction
 
 function! s:loadSettings()
     " load configuration options if present
-    let s:custom_aiAI        = exists('g:targets_aiAI')
-    let s:custom_nlNL        = exists('g:targets_nlNL')
+    if !exists('g:targets_aiAI')
+        let g:targets_aiAI = 'aiAI'
+    endif
+    if !exists('g:targets_nlNL')
+        let g:targets_nlNL = 'nlNL'
+    endif
+    if !exists('g:targets_pairs')
+        let g:targets_pairs = '()b {}B []r <>a'
+    endif
+    if !exists('g:targets_quotes')
+        let g:targets_quotes = '" '' `'
+    endif
+    if !exists('g:targets_separators')
+        let g:targets_separators = ', . ; : + - ~ _ * / \ |'
+    endif
 
-    let s:a = (s:custom_aiAI ? g:targets_aiAI[0] : 'a')
-    let s:i = (s:custom_aiAI ? g:targets_aiAI[1] : 'i')
-    let s:A = (s:custom_aiAI ? g:targets_aiAI[2] : 'A')
-    let s:I = (s:custom_aiAI ? g:targets_aiAI[3] : 'I')
+    let [s:a, s:i, s:A, s:I] = split(g:targets_aiAI, '\zs')
+    let [s:n, s:l, s:N, s:L] = split(g:targets_nlNL, '\zs')
 
-    let s:n = (s:custom_nlNL ? g:targets_nlNL[0] : 'n')
-    let s:l = (s:custom_nlNL ? g:targets_nlNL[1] : 'l')
-    let s:N = (s:custom_nlNL ? g:targets_nlNL[2] : 'N')
-    let s:L = (s:custom_nlNL ? g:targets_nlNL[3] : 'L')
-
-    let s:pair_list = exists('g:targets_pairs')
-                \? split(g:targets_pairs)
-                \: ['()b', '{}B', '[]r', '<>a']
-    let s:quote_list = exists('g:targets_quotes')
-                \? split(g:targets_quotes)
-                \: [ "'", '"', '`' ]
-    let s:separator_list = exists('g:targets_separators')
-                \? split(g:targets_separators)
-                \: [ ',', '.', ';', ':', '+', '-', '~', '_', '*', '/', '\', '|' ]
+    let s:pair_list = split(g:targets_pairs)
+    let s:quote_list = split(g:targets_quotes)
+    let s:separator_list = split(g:targets_separators)
 endfunction
 
 " dictionary mapping uppercase xmap like `An,` to argument strings for
