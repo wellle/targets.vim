@@ -44,6 +44,75 @@ Notice how the selection includes exactly one of the surrounding commas to
 leave a proper comma separated list behind.
 
 ==============================================================================
+OPTIONS                                                     *targets-options*
+
+Put these variables into your vimrc. The provided examples also indicate the
+default values.
+
+Available options:~
+
+    |targets_aiAI|
+    |targets_visual_aiAI|
+    |targets_nlNL|
+    |targets_pairs|
+    |targets_quotes|
+    |targets_separators|
+
+------------------------------------------------------------------------------
+                                                            *targets_aiAI*
+Default: >
+    let g:targets_aiAI = 'aiAI'
+<
+Controls the normal mode operator mode maps that get created for In Pair (i), A
+Pair (a), Inside Pair (I), and Around Pair (A). Required to be a 4 character
+long list.
+------------------------------------------------------------------------------
+                                                            *targets_visual_aiAI*
+Default: >
+    let g:targets_visual_aiAI = 'aiAI'
+<
+Controls the visual mode operator mode maps that get created for In Pair (i), A
+Pair (a), Inside Pair (I), and Around Pair (A). Required to be a 4 character
+long list.
+------------------------------------------------------------------------------
+                                                            *targets_nlNL*
+Default: >
+    let g:targets_nlNL = 'nlNL'
+<
+Controls the keys used in maps for seeking next and last text objects. For
+example, if you don't wish to use the N and L seeks, and instead wish for 'n'
+to always search for the next object and 'N' to search for the last, you could
+set:
+>
+    let g:targets_nlNL = 'nN  '
+<
+Note that two extra spaces are still required on the end, indicating you wish
+to disable the default functionality of N and L. Required to be a 4 character
+long list.
+------------------------------------------------------------------------------
+                                                            *targets_pairs*
+Default: >
+    let g:targets_pairs = '()b {}B []r <>a'
+<
+Defines the list of pair objects you wish to use, along with optional one
+letter aliases for them.
+------------------------------------------------------------------------------
+                                                            *targets_quotes*
+>
+    let g:targets_quotes = "\"'`"
+<
+Defines the list of quoting objects you wish to use. Note that you may have to
+escape some characters in the list.
+
+------------------------------------------------------------------------------
+                                                            *targets_separators*
+>
+    let g:targets_separators = ',.;:+-~_*/\|'
+<
+Defines the list of separator objects you wish to use.
+
+
+==============================================================================
 OVERVIEW                                                    *targets-overview*
 
 We distinguish between three kinds of text objects that behave slightly
