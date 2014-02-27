@@ -36,10 +36,10 @@ let s:pair_list = exists('g:targets_pairs')
             \? split(g:targets_pairs)
             \: ['()b', '{}B', '[]r', '<>a']
 let s:quote_list = exists('g:targets_quotes')
-            \? split(g:targets_quotes, '\zs')
+            \? split(g:targets_quotes)
             \: [ "'", '"', '`' ]
 let s:separator_list = exists('g:targets_separators')
-            \? split(g:targets_separators, '\zs')
+            \? split(g:targets_separators)
             \: [ ',', '.', ';', ':', '+', '-', '~', '_', '*', '/', '\', '|' ]
 
 " create a text object by combining prefix and trigger to call Match with
@@ -79,7 +79,10 @@ endfunction
 
 " creat a text object for a single delimiter
 function! s:createSimpleTextObject(prefix, delimiter, matchers)
-    call s:createTextObject(a:prefix, a:delimiter, a:delimiter, a:matchers)
+    call s:createTextObject(a:prefix, a:delimiter[0], a:delimiter[0], a:matchers)
+    if strlen(a:delimiter) > 1  " check for alias
+        call s:createTextObject(a:prefix, a:delimiter[1], a:delimiter[0], a:matchers)
+    endif
 endfunction
 
 " create multiple text objects for a pair of delimiters and optional

@@ -94,24 +94,33 @@ long list.
 Default: >
     let g:targets_pairs = '()b {}B []r <>a'
 <
-Defines the list of pair objects you wish to use, along with optional one
-letter aliases for them.
+Defines the space separated list of pair objects you wish to use, along with
+optional one letter aliases for them.
 ------------------------------------------------------------------------------
                                                             *targets_quotes*
->
-    let g:targets_quotes = "\"'`"
+Default: >
+    let g:targets_quotes = "\" ' ` "
 <
-Defines the list of quoting objects you wish to use. Note that you may have to
-escape some characters in the list.
-
+Defines the space separated list of quoting objects you wish to use. Note that
+you may have to escape some characters in the list. Quote objects can
+optionally be followed by a single one letter alias. For example, to set 'd'
+as an alias for double quotes, allowing such commands as 'cid' to be
+equivalent to 'ci"', you could define:
+>
+    let g:targets_quotes = "\"d ' ` "
+<
 ------------------------------------------------------------------------------
                                                             *targets_separators*
->
-    let g:targets_separators = ',.;:+-~_*/\|'
+Default: >
+    let g:targets_separators = ', . ; : + - ~ _ * / \ |'
 <
-Defines the list of separator objects you wish to use.
-
-
+Defines the space separated list of separator objects you wish to use. Like
+quote objects, separator objects can optionally be followed by a single one
+letter alias. To set 'c' as an alias for comma, allowing such commands as
+'dic' to be equivalent to 'di,', you could define:
+>
+    let g:targets_separators = ',c . ; : + - ~ _ * / \ |'
+<
 ==============================================================================
 OVERVIEW                                                    *targets-overview*
 
