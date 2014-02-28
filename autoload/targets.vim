@@ -292,7 +292,7 @@ function! s:selectp()
     " `normal! %` doesn't work with `<>`
     silent! execute 'normal! v'
     for _ in range(s:count)
-        silent! execute 'normal! a' . s:opening
+        silent! execute 'keepjumps normal! a' . s:opening
         " TODO: fail if selection didn't change
     endfor
 
