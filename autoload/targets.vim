@@ -117,6 +117,13 @@ endfunction
 
 " select a proper match
 function! s:selectMatch()
+    " if the match starts below the current line or ends above the current
+    " line (the cursor is not linewise inside the match)
+    if s:oldpos[1] < s:sl || s:oldpos[1] > s:el
+        call setpos('.', s:oldpos) " move cursor to old position
+        mark '                     " and add it to the jump list
+    endif
+
     call cursor(s:sl, s:sc)
     silent! normal! v
     call cursor(s:el, s:ec)
@@ -285,7 +292,7 @@ function! s:selectp()
     " `normal! %` doesn't work with `<>`
     silent! execute 'normal! v'
     for _ in range(s:count)
-        silent! execute 'normal! a' . s:opening
+        silent! execute 'keepjumps normal! a' . s:opening
         " TODO: fail if selection didn't change
     endfor
 
