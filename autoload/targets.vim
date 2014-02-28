@@ -134,6 +134,7 @@ function! s:selectMatch()
         echom "Im inside a text object"
     endif
     if (s:add_to_jumplist)
+        call setpos('.', s:oldpos)
         mark '
     endif
 
