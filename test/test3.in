@@ -1,0 +1,23 @@
+A
+a ( b ) c
+
+B ( a ) b
+a ( b ) C
+
+D ( a
+b ) c
+
+a ( b
+c ) E
+
+a ( b
+F ( ) c
+d ) e
+
+a ( b
+c ( ) G
+d ) e
+
+a ( b ) c
+H " this must be the last pair test
+

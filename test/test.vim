@@ -109,7 +109,20 @@ function! s:testMultiline()
     write! test2.out
 endfunction
 
+function s:testSeeking()
+    edit! test3.in
+    normal gg0
+
+    for c in split('ABCDEFGH', '\zs')
+        execute "normal /"   . c . "\<CR>"
+        execute "normal ci)" . c . "\<Esc>"
+    endfor
+
+    write! test3.out
+endfunction
+
 call s:testBasic()
 call s:testMultiline()
+call s:testSeeking()
 
 quit!
