@@ -1,8 +1,8 @@
 " targets.vim Provides additional text objects
 " Author:  Christian Wellenbrock <christian.wellenbrock@gmail.com>
 " License: MIT license
-" Updated: 2014-02-28
-" Version: 0.1.0
+" Updated: 2014-03-01
+" Version: 0.1.1
 
 let s:save_cpoptions = &cpoptions
 set cpo&vim
@@ -121,7 +121,7 @@ function! s:selectMatch()
     " line (the cursor is not linewise inside the match)
     if s:oldpos[1] < s:sl || s:oldpos[1] > s:el
         call setpos('.', s:oldpos) " move cursor to old position
-        mark '                     " and add it to the jump list
+        execute "normal! m'" |     " and add it to the jump list
     endif
 
     call cursor(s:sl, s:sc)
