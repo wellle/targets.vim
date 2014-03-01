@@ -121,7 +121,7 @@ function! s:selectMatch()
     " line (the cursor is not linewise inside the match)
     if s:oldpos[1] < s:sl || s:oldpos[1] > s:el
         call setpos('.', s:oldpos) " move cursor to old position
-        mark '                     " and add it to the jump list
+        execute "normal! m'" |     " and add it to the jump list
     endif
 
     call cursor(s:sl, s:sc)
