@@ -117,12 +117,9 @@ endfunction
 
 " select a proper match
 function! s:selectMatch()
-    " if the match starts below the current line or ends above the current
-    " line (the cursor is not linewise inside the match)
-    if s:oldpos[1] < s:sl || s:oldpos[1] > s:el
-        call setpos('.', s:oldpos) " move cursor to old position
-        execute "normal! m'" |     " and add it to the jump list
-    endif
+    " add old position to jump list
+    call setpos('.', s:oldpos)
+    normal! m'
 
     call cursor(s:sl, s:sc)
     silent! normal! v
