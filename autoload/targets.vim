@@ -303,6 +303,54 @@ function! s:selectp()
     endif
 endfunction
 
+" pair matcher (works across multiple lines, supports seeking)
+" cursor   │   .....
+" line     │ ( ( a ) )
+" modifier │ │ └─1─┘ │
+"          │ └── 2 ──┘
+function! s:seekp()
+    " try to select around cursor
+    silent! execute 'normal! v' . s:count . 'a' . s:opening
+    let [_, s:el, s:ec, _] = getpos('.')
+    silent! normal! o
+    let [_, s:sl, s:sc, _] = getpos('.')
+    silent! normal! v
+
+    if s:sc != s:ec || s:sl != s:el
+        " found target around cursor
+        let s:count = 1
+        return
+    endif
+
+    if s:count > 1
+        " don't seek when count was given
+        return s:setFailed()
+    endif
+    let s:count = 1
+
+    let [s:sl, s:sc] = searchpos(s:opening, 'W', line('.'))
+    if s:sc > 0 " found opening to the right in line
+        return s:seekp()
+    endif
+
+    let [s:sl, s:sc] = searchpos(s:closing, 'Wb', line('.'))
+    if s:sc > 0 " found closing to the left in line
+        return s:seekp()
+    endif
+
+    let [s:sl, s:sc] = searchpos(s:opening, 'W')
+    if s:sc > 0 " found opening to the right
+        return s:seekp()
+    endif
+
+    let [s:sl, s:sc] = searchpos(s:closing, 'Wb')
+    if s:sc > 0 " found closing to the left
+        return s:seekp()
+    endif
+
+    return s:setFailed() " no match found
+endfunction
+
 " selects the current cursor position (useful to test modifiers)
 function! s:position()
     let [_, s:sl, s:sc, _] = getpos('.')
