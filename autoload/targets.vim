@@ -185,7 +185,7 @@ function! s:quote()
         let closing = 1
         let line = 1
         while line != 0
-            let [line, _] = searchpos(s:opening, 'b', line('.'))
+            let [line, _] = searchpos(s:opening, 'bW', line('.'))
             let closing = !closing
         endwhile
         call setpos('.', oldpos)
@@ -202,7 +202,7 @@ endfunction
 " out  │        1  2
 function! s:next()
     for _ in range(s:count)
-        call searchpos(s:opening, '')
+        call searchpos(s:opening, 'W')
     endfor
     let s:count = 1
 endfunction
@@ -213,9 +213,9 @@ endfunction
 " out  │ 2  1
 function! s:last()
     " only the first delimiter can match at current position
-    call searchpos(s:closing, 'bc')
+    call searchpos(s:closing, 'bcW')
     for _ in range(s:count - 1)
-        call searchpos(s:closing, 'b')
+        call searchpos(s:closing, 'bW')
     endfor
     let s:count = 1
     silent! normal! h
@@ -227,7 +227,7 @@ endfunction
 " out  │     1   2 3     4
 function! s:nextp()
     for _ in range(s:count)
-        call searchpos(s:opening, '')
+        call searchpos(s:opening, 'W')
     endfor
     let s:count = 1
 endfunction
@@ -238,7 +238,7 @@ endfunction
 " out  │   4   3     2 1
 function! s:lastp()
     for _ in range(s:count)
-        call searchpos(s:closing, 'b')
+        call searchpos(s:closing, 'bW')
     endfor
     let s:count = 1
 endfunction
@@ -250,11 +250,11 @@ endfunction
 " line │ a '  ' │ ' '  │ '  ' b
 " out  │   1  2 │  .   │ 2  1
 function! s:seek()
-    let [line, _] = searchpos(s:opening, 'bcn', line('.'))
+    let [line, _] = searchpos(s:opening, 'bcnW', line('.'))
     if line == 0 " no match to the left
         call s:next()
     endif
-    let [line, _] = searchpos(s:closing, 'n', line('.'))
+    let [line, _] = searchpos(s:closing, 'nW', line('.'))
     if line == 0 " no match to the right
         call s:last()
     endif
@@ -270,11 +270,11 @@ endfunction
 " line    │ ' ' b ' '
 " matcher │   └───┘
 function! s:select()
-    let [s:sl, s:sc] = searchpos(s:opening, 'bc')
+    let [s:sl, s:sc] = searchpos(s:opening, 'bcW')
     if s:sc == 0 " no match to the left
         return s:setFailed()
     endif
-    let [s:el, s:ec] = searchpos(s:closing, '')
+    let [s:el, s:ec] = searchpos(s:closing, 'W')
     if s:ec == 0 " no match to the right
         return s:setFailed()
     endif
@@ -340,13 +340,13 @@ endfunction
 " out  │     └─┘     │    └┘
 function! s:shrink()
     call cursor(s:el, s:ec)
-    let [s:el, s:ec] = searchpos('\S', 'b', line('.'))
+    let [s:el, s:ec] = searchpos('\S', 'bW', line('.'))
     if s:ec <= s:sc
         " fall back to drop when there's only whitespace in between
         return s:drop()
     endif
     call cursor(s:sl, s:sc)
-    let [s:sl, s:sc] = searchpos('\S', '', line('.'))
+    let [s:sl, s:sc] = searchpos('\S', 'W', line('.'))
 endfunction
 
 " expand selection by some whitespace
@@ -356,7 +356,7 @@ endfunction
 " out  │   └────┘  │  └────┘  │  └───┘  │└────┘
 function! s:expand()
     call cursor(s:el, s:ec)
-    let [line, column] = searchpos('\S\|$', '', line('.'))
+    let [line, column] = searchpos('\S\|$', 'W', line('.'))
     if line > 0 && column-1 > s:ec
         " non whitespace or EOL after trailing whitespace found
         let s:el = line
@@ -365,7 +365,7 @@ function! s:expand()
         return
     endif
     call cursor(s:sl, s:sc)
-    let [line, column] = searchpos('\S', 'b', line('.'))
+    let [line, column] = searchpos('\S', 'bW', line('.'))
     if line > 0
         " non whitespace before leading whitespace found
         let s:sl = line
