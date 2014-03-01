@@ -153,7 +153,7 @@ endfunction
 function! s:triggerUndo()
     if exists("*undotree")
         let undoseq = undotree().seq_cur
-        call feedkeys(":call targets#undo(" . undoseq . ")\<CR>", 'n')
+        call feedkeys(":call targets#undo(" . undoseq . ")\<CR>\<C-L>", 'n')
     endif
 endfunction
 
