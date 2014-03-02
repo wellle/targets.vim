@@ -118,6 +118,11 @@ function s:testSeeking()
         execute "normal ci)" . c . "\<Esc>"
     endfor
 
+    for c in split('JKLMNO', '\zs')
+        execute "normal /"   . c . "\<CR>"
+        execute "normal ci'" . c . "\<Esc>"
+    endfor
+
     write! test3.out
 endfunction
 
