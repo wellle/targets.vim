@@ -311,7 +311,7 @@ endfunction
 " line     │ ( ( a ) )
 " modifier │ │ └─1─┘ │
 "          │ └── 2 ──┘
-function! s:seekp()
+function! s:seekselectp()
     " try to select around cursor
     silent! execute 'normal! v' . s:count . 'a' . s:opening
     let [_, s:el, s:ec, _] = getpos('.')
@@ -333,22 +333,22 @@ function! s:seekp()
 
     let [s:sl, s:sc] = searchpos(s:opening, 'W', line('.'))
     if s:sc > 0 " found opening to the right in line
-        return s:seekp()
+        return s:seekselectp()
     endif
 
     let [s:sl, s:sc] = searchpos(s:closing, 'Wb', line('.'))
     if s:sc > 0 " found closing to the left in line
-        return s:seekp()
+        return s:seekselectp()
     endif
 
     let [s:sl, s:sc] = searchpos(s:opening, 'W')
     if s:sc > 0 " found opening to the right
-        return s:seekp()
+        return s:seekselectp()
     endif
 
     let [s:sl, s:sc] = searchpos(s:closing, 'Wb')
     if s:sc > 0 " found closing to the left
-        return s:seekp()
+        return s:seekselectp()
     endif
 
     return s:setFailed() " no match found

@@ -79,10 +79,10 @@ endfunction
 "         │   └───────Al)───────┘└──────2A)───────┘└───────An)───────┘
 function! s:createPairTextObjects()
     for delimiters in s:pair_list " aliases like surround
-        call s:createPairTextObject(s:I,       delimiters, 'seekp shrink')
-        call s:createPairTextObject(s:i,       delimiters, 'seekp drop')
-        call s:createPairTextObject(s:a,       delimiters, 'seekp')
-        call s:createPairTextObject(s:A,       delimiters, 'seekp expand')
+        call s:createPairTextObject(s:I,       delimiters, 'seekselectp shrink')
+        call s:createPairTextObject(s:i,       delimiters, 'seekselectp drop')
+        call s:createPairTextObject(s:a,       delimiters, 'seekselectp')
+        call s:createPairTextObject(s:A,       delimiters, 'seekselectp expand')
         call s:createPairTextObject(s:I . s:n, delimiters, 'nextp selectp shrink')
         call s:createPairTextObject(s:i . s:n, delimiters, 'nextp selectp drop')
         call s:createPairTextObject(s:a . s:n, delimiters, 'nextp selectp')
