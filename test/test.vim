@@ -113,7 +113,7 @@ function s:testSeeking()
     edit! test3.in
     normal gg0
 
-    for c in split('ABCDEFGH', '\zs')
+    for c in split('ABCDEFGHI', '\zs')
         execute "normal /"   . c . "\<CR>"
         execute "normal ci)" . c . "\<Esc>"
     endfor
