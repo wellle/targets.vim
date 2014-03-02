@@ -226,8 +226,12 @@ endfunction
 " line │ ( ) ( ) ( ( ) ) ( )
 " out  │     1   2 3     4
 function! s:nextp()
+    " find `count` next opening
     for _ in range(s:count)
-        call searchpos(s:opening, 'W')
+        let [line, _] = searchpos(s:opening, 'W')
+        if line == 0 " not enough found
+            return s:setFailed()
+        endif
     endfor
     let s:count = 1
 endfunction
@@ -237,8 +241,12 @@ endfunction
 " line │ ( ) ( ) ( ( ) ) ( )
 " out  │   4   3     2 1
 function! s:lastp()
+    " find `count` last closing
     for _ in range(s:count)
-        call searchpos(s:closing, 'bW')
+        let [line, _] = searchpos(s:closing, 'bW')
+        if line == 0 " not enough found
+            return s:setFailed()
+        endif
     endfor
     let s:count = 1
 endfunction
@@ -280,26 +288,21 @@ function! s:select()
     endif
 endfunction
 
-" pair matcher (works across multiple lines)
+" pair matcher (works across multiple lines, no seeking)
 " cursor   │   .....
 " line     │ ( ( a ) )
 " modifier │ │ └─1─┘ │
 "          │ └── 2 ──┘
 function! s:selectp()
-    " `normal! %` doesn't work with `<>`
-    silent! execute 'normal! v'
-    for _ in range(s:count)
-        silent! execute 'keepjumps normal! a' . s:opening
-        " TODO: fail if selection didn't change
-    endfor
-
-    let s:count = 1
+    " try to select pair
+    silent! execute 'normal! va' . s:opening
     let [_, s:el, s:ec, _] = getpos('.')
     silent! normal! o
     let [_, s:sl, s:sc, _] = getpos('.')
     silent! normal! v
-    if s:sc == s:ec
-        return s:setFailed()
+
+    if s:sc == s:ec && s:sl == s:el
+        return s:setFailed() " no match found
     endif
 endfunction
 
