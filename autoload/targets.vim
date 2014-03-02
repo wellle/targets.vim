@@ -333,22 +333,22 @@ function! s:seekselectp()
 
     let [s:sl, s:sc] = searchpos(s:opening, 'W', line('.'))
     if s:sc > 0 " found opening to the right in line
-        return s:seekselectp()
+        return s:selectp()
     endif
 
     let [s:sl, s:sc] = searchpos(s:closing, 'Wb', line('.'))
     if s:sc > 0 " found closing to the left in line
-        return s:seekselectp()
+        return s:selectp()
     endif
 
     let [s:sl, s:sc] = searchpos(s:opening, 'W')
     if s:sc > 0 " found opening to the right
-        return s:seekselectp()
+        return s:selectp()
     endif
 
     let [s:sl, s:sc] = searchpos(s:closing, 'Wb')
     if s:sc > 0 " found closing to the left
-        return s:seekselectp()
+        return s:selectp()
     endif
 
     return s:setFailed() " no match found
