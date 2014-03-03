@@ -251,24 +251,6 @@ function! s:lastp()
     let s:count = 1
 endfunction
 
-" if there's no opening delimiter to the left, search to the right
-" if there's no closing delimiter to the right, search to the left
-" uses count for next or last
-" in   │ ..     │  .   │     ..
-" line │ a '  ' │ ' '  │ '  ' b
-" out  │   1  2 │  .   │ 2  1
-function! s:seek()
-    let [line, _] = searchpos(s:opening, 'bcnW', line('.'))
-    if line == 0 " no match to the left
-        call s:next()
-    endif
-    let [line, _] = searchpos(s:closing, 'nW', line('.'))
-    if line == 0 " no match to the right
-        call s:last()
-    endif
-    unlet line
-endfunction
-
 " match selectors
 " ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
