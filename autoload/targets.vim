@@ -1,8 +1,8 @@
 " targets.vim Provides additional text objects
 " Author:  Christian Wellenbrock <christian.wellenbrock@gmail.com>
 " License: MIT license
-" Updated: 2014-03-01
-" Version: 0.1.1
+" Updated: 2014-03-03
+" Version: 0.1.2
 
 let s:save_cpoptions = &cpoptions
 set cpo&vim
@@ -136,8 +136,8 @@ function! s:handleEmptyMatch()
 
     " move cursor to delimiter after zero width match
     call cursor(s:sl, s:sc)
-    " insert single character and visually select it
-    silent! execute "normal! ix\<Esc>v"
+    " insert single space and visually select it
+    silent! execute "normal! i \<Esc>v"
 endfunction
 
 " abort when no match was found
@@ -153,7 +153,7 @@ endfunction
 function! s:triggerUndo()
     if exists("*undotree")
         let undoseq = undotree().seq_cur
-        call feedkeys(":call targets#undo(" . undoseq . ")\<CR>", 'n')
+        call feedkeys(":call targets#undo(" . undoseq . ")\<CR>\<C-L>", 'n')
     endif
 endfunction
 
@@ -185,7 +185,7 @@ function! s:quote()
         let closing = 1
         let line = 1
         while line != 0
-            let [line, _] = searchpos(s:opening, 'b', line('.'))
+            let [line, _] = searchpos(s:opening, 'bW', line('.'))
             let closing = !closing
         endwhile
         call setpos('.', oldpos)
@@ -202,7 +202,7 @@ endfunction
 " out  │        1  2
 function! s:next()
     for _ in range(s:count)
-        call searchpos(s:opening, '')
+        call searchpos(s:opening, 'W')
     endfor
     let s:count = 1
 endfunction
@@ -213,9 +213,9 @@ endfunction
 " out  │ 2  1
 function! s:last()
     " only the first delimiter can match at current position
-    call searchpos(s:closing, 'bc')
+    call searchpos(s:closing, 'bcW')
     for _ in range(s:count - 1)
-        call searchpos(s:closing, 'b')
+        call searchpos(s:closing, 'bW')
     endfor
     let s:count = 1
     silent! normal! h
@@ -226,8 +226,12 @@ endfunction
 " line │ ( ) ( ) ( ( ) ) ( )
 " out  │     1   2 3     4
 function! s:nextp()
+    " find `count` next opening
     for _ in range(s:count)
-        call searchpos(s:opening, '')
+        let [line, _] = searchpos(s:opening, 'W')
+        if line == 0 " not enough found
+            return s:setFailed()
+        endif
     endfor
     let s:count = 1
 endfunction
@@ -237,70 +241,177 @@ endfunction
 " line │ ( ) ( ) ( ( ) ) ( )
 " out  │   4   3     2 1
 function! s:lastp()
+    " find `count` last closing
     for _ in range(s:count)
-        call searchpos(s:closing, 'b')
+        let [line, _] = searchpos(s:closing, 'bW')
+        if line == 0 " not enough found
+            return s:setFailed()
+        endif
     endfor
     let s:count = 1
-endfunction
-
-" if there's no opening delimiter to the left, search to the right
-" if there's no closing delimiter to the right, search to the left
-" uses count for next or last
-" in   │ ..     │  .   │     ..
-" line │ a '  ' │ ' '  │ '  ' b
-" out  │   1  2 │  .   │ 2  1
-function! s:seek()
-    let [line, _] = searchpos(s:opening, 'bcn', line('.'))
-    if line == 0 " no match to the left
-        call s:next()
-    endif
-    let [line, _] = searchpos(s:closing, 'n', line('.'))
-    if line == 0 " no match to the right
-        call s:last()
-    endif
-    unlet line
 endfunction
 
 " match selectors
 " ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
-" select pair of delimiters around cursor (multi line)
+" select pair of delimiters around cursor (multi line, no seeking)
 " select to the right if cursor is on a delimiter
 " cursor  │   ....
 " line    │ ' ' b ' '
 " matcher │   └───┘
 function! s:select()
-    let [s:sl, s:sc] = searchpos(s:opening, 'bc')
+    let [s:sl, s:sc] = searchpos(s:opening, 'bcW')
     if s:sc == 0 " no match to the left
         return s:setFailed()
     endif
-    let [s:el, s:ec] = searchpos(s:closing, '')
+    let [s:el, s:ec] = searchpos(s:closing, 'W')
     if s:ec == 0 " no match to the right
         return s:setFailed()
     endif
 endfunction
 
-" pair matcher (works across multiple lines)
+" select pair of delimiters around cursor (multi line, no seeking)
+function! s:seekselect()
+    let [rl, rc] = searchpos(s:opening, 'W', line('.'))
+    if rl > 0 " delim r found after cursor in line
+        let [s:sl, s:sc] = searchpos(s:opening, 'bW', line('.'))
+        if s:sl > 0 " delim found before r in line
+            let [s:el, s:ec] = [rl, rc]
+            return
+        endif
+        " no delim before cursor in line
+        let [s:el, s:ec] = searchpos(s:opening, 'W', line('.'))
+        if s:el > 0 " delim found after r in line
+            let [s:sl, s:sc] = [rl, rc]
+            return
+        endif
+        " no delim found after r in line
+        let [s:sl, s:sc] = searchpos(s:opening, 'bW')
+        if s:sl > 0 " delim found before r
+            let [s:el, s:ec] = [rl, rc]
+            return
+        endif
+        " no delim found before r
+        let [s:el, s:ec] = searchpos(s:opening, 'W')
+        if s:el > 0 " delim found after r
+            let [s:sl, s:sc] = [rl, rc]
+            return
+        endif
+        " no delim found after r
+        return s:setFailed()
+    endif
+
+    " no delim found after cursor in line
+    let [ll, lc] = searchpos(s:opening, 'bcW', line('.'))
+    if ll > 0 " delim l found before cursor in line
+        let [s:sl, s:sc] = searchpos(s:opening, 'bW', line('.'))
+        if s:sl > 0 " delim found before l in line
+            let [s:el, s:ec] = [ll, lc]
+            return
+        endif
+        " no delim found before l in line
+        let [s:el, s:ec] = searchpos(s:opening, 'W')
+        if s:el > 0 " delim found after l
+            let [s:sl, s:sc] = [ll, lc]
+            return
+        endif
+        " no delim found after l
+        let [s:sl, s:sc] = searchpos(s:opening, 'bW')
+        if s:sl > 0 " delim found before l
+            let [s:el, s:ec] = [ll, lc]
+            return
+        endif
+        " no delim found before l
+        return s:setFailed()
+    endif
+
+    " no delim found before cursor in line
+    let [rl, rc] = searchpos(s:opening, 'W')
+    if rl > 0 " delim r found after cursor
+        let [s:sl, s:sc] = searchpos(s:opening, 'bW')
+        if s:sl > 0 " delim found before r
+            let [s:el, s:ec] = [rl, rc]
+            return
+        endif
+        " no delim found before r
+        let [s:el, s:ec] = searchpos(s:opening, 'W')
+        if s:el > 0 " delim found after r
+            let [s:sl, s:sc] = [rl, rc]
+            return
+        endif
+        " no delim found after r
+        return s:setFailed()
+    endif
+
+    " no delim found after cursor
+    let [s:el, s:ec] = searchpos(s:opening, 'bW')
+    let [s:sl, s:sc] = searchpos(s:opening, 'bW')
+    if s:sl > 0 && s:el > 0 " match found before cursor
+        return
+    endif
+    return s:setFailed()
+endfunction
+
+" pair matcher (works across multiple lines, no seeking)
 " cursor   │   .....
 " line     │ ( ( a ) )
 " modifier │ │ └─1─┘ │
 "          │ └── 2 ──┘
 function! s:selectp()
-    " `normal! %` doesn't work with `<>`
-    silent! execute 'normal! v'
-    for _ in range(s:count)
-        silent! execute 'keepjumps normal! a' . s:opening
-        " TODO: fail if selection didn't change
-    endfor
-
-    let s:count = 1
+    " try to select pair
+    silent! execute 'normal! va' . s:opening
     let [_, s:el, s:ec, _] = getpos('.')
     silent! normal! o
     let [_, s:sl, s:sc, _] = getpos('.')
     silent! normal! v
-    if s:sc == s:ec
+
+    if s:sc == s:ec && s:sl == s:el
+        return s:setFailed() " no match found
+    endif
+endfunction
+
+" pair matcher (works across multiple lines, supports seeking)
+function! s:seekselectp()
+    " try to select around cursor
+    silent! execute 'normal! v' . s:count . 'a' . s:opening
+    let [_, s:el, s:ec, _] = getpos('.')
+    silent! normal! o
+    let [_, s:sl, s:sc, _] = getpos('.')
+    silent! normal! v
+
+    if s:sc != s:ec || s:sl != s:el
+        " found target around cursor
+        let s:count = 1
+        return
+    endif
+
+    if s:count > 1
+        " don't seek when count was given
         return s:setFailed()
     endif
+    let s:count = 1
+
+    let [s:sl, s:sc] = searchpos(s:opening, 'W', line('.'))
+    if s:sc > 0 " found opening to the right in line
+        return s:selectp()
+    endif
+
+    let [s:sl, s:sc] = searchpos(s:closing, 'Wb', line('.'))
+    if s:sc > 0 " found closing to the left in line
+        return s:selectp()
+    endif
+
+    let [s:sl, s:sc] = searchpos(s:opening, 'W')
+    if s:sc > 0 " found opening to the right
+        return s:selectp()
+    endif
+
+    let [s:sl, s:sc] = searchpos(s:closing, 'Wb')
+    if s:sc > 0 " found closing to the left
+        return s:selectp()
+    endif
+
+    return s:setFailed() " no match found
 endfunction
 
 " selects the current cursor position (useful to test modifiers)
@@ -340,13 +451,13 @@ endfunction
 " out  │     └─┘     │    └┘
 function! s:shrink()
     call cursor(s:el, s:ec)
-    let [s:el, s:ec] = searchpos('\S', 'b', line('.'))
+    let [s:el, s:ec] = searchpos('\S', 'bW', line('.'))
     if s:ec <= s:sc
         " fall back to drop when there's only whitespace in between
         return s:drop()
     endif
     call cursor(s:sl, s:sc)
-    let [s:sl, s:sc] = searchpos('\S', '', line('.'))
+    let [s:sl, s:sc] = searchpos('\S', 'W', line('.'))
 endfunction
 
 " expand selection by some whitespace
@@ -356,7 +467,7 @@ endfunction
 " out  │   └────┘  │  └────┘  │  └───┘  │└────┘
 function! s:expand()
     call cursor(s:el, s:ec)
-    let [line, column] = searchpos('\S\|$', '', line('.'))
+    let [line, column] = searchpos('\S\|$', 'W', line('.'))
     if line > 0 && column-1 > s:ec
         " non whitespace or EOL after trailing whitespace found
         let s:el = line
@@ -365,7 +476,7 @@ function! s:expand()
         return
     endif
     call cursor(s:sl, s:sc)
-    let [line, column] = searchpos('\S', 'b', line('.'))
+    let [line, column] = searchpos('\S', 'bW', line('.'))
     if line > 0
         " non whitespace before leading whitespace found
         let s:sl = line

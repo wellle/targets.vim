@@ -1,8 +1,8 @@
 " targets.vim Provides additional text objects
 " Author:  Christian Wellenbrock <christian.wellenbrock@gmail.com>
 " License: MIT license
-" Updated: 2014-03-01
-" Version: 0.1.1
+" Updated: 2014-03-03
+" Version: 0.1.2
 
 set runtimepath+=../
 set softtabstop=16 expandtab
@@ -109,7 +109,25 @@ function! s:testMultiline()
     write! test2.out
 endfunction
 
+function s:testSeeking()
+    edit! test3.in
+    normal gg0
+
+    for c in split('ABCDEFGHI', '\zs')
+        execute "normal /"   . c . "\<CR>"
+        execute "normal ci)" . c . "\<Esc>"
+    endfor
+
+    for c in split('JKLMNO', '\zs')
+        execute "normal /"   . c . "\<CR>"
+        execute "normal ci'" . c . "\<Esc>"
+    endfor
+
+    write! test3.out
+endfunction
+
 call s:testBasic()
 call s:testMultiline()
+call s:testSeeking()
 
 quit!

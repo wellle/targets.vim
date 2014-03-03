@@ -1,13 +1,13 @@
 " targets.vim Provides additional text objects
 " Author:  Christian Wellenbrock <christian.wellenbrock@gmail.com>
 " License: MIT license
-" Updated: 2014-03-01
-" Version: 0.1.1
+" Updated: 2014-03-03
+" Version: 0.1.2
 
 if exists("g:loaded_targets") || &cp || v:version < 700
     finish
 endif
-let g:loaded_targets = '0.1.1' " version number
+let g:loaded_targets = '0.1.2' " version number
 let s:save_cpoptions = &cpoptions
 set cpo&vim
 
@@ -79,10 +79,10 @@ endfunction
 "         │   └───────Al)───────┘└──────2A)───────┘└───────An)───────┘
 function! s:createPairTextObjects()
     for delimiters in s:pair_list " aliases like surround
-        call s:createPairTextObject(s:I,       delimiters, 'seek selectp shrink')
-        call s:createPairTextObject(s:i,       delimiters, 'seek selectp drop')
-        call s:createPairTextObject(s:a,       delimiters, 'seek selectp')
-        call s:createPairTextObject(s:A,       delimiters, 'seek selectp expand')
+        call s:createPairTextObject(s:I,       delimiters, 'seekselectp shrink')
+        call s:createPairTextObject(s:i,       delimiters, 'seekselectp drop')
+        call s:createPairTextObject(s:a,       delimiters, 'seekselectp')
+        call s:createPairTextObject(s:A,       delimiters, 'seekselectp expand')
         call s:createPairTextObject(s:I . s:n, delimiters, 'nextp selectp shrink')
         call s:createPairTextObject(s:i . s:n, delimiters, 'nextp selectp drop')
         call s:createPairTextObject(s:a . s:n, delimiters, 'nextp selectp')
@@ -110,9 +110,9 @@ endfunction
 "         │   └──a'───┘     │     └──a'───┘    │      └──a'───┘
 function! s:createQuoteTextObjects()
     for delimiter in s:quote_list
-        call s:createSimpleTextObject(s:I,       delimiter, 'quote seek select shrink')
-        call s:createSimpleTextObject(s:i,       delimiter, 'quote seek select drop')
-        call s:createSimpleTextObject(s:a,       delimiter, 'quote seek select expand')
+        call s:createSimpleTextObject(s:I,       delimiter, 'quote seekselect shrink')
+        call s:createSimpleTextObject(s:i,       delimiter, 'quote seekselect drop')
+        call s:createSimpleTextObject(s:a,       delimiter, 'quote seekselect expand')
         call s:createSimpleTextObject(s:I . s:n, delimiter, 'quote next select shrink')
         call s:createSimpleTextObject(s:i . s:n, delimiter, 'quote next select drop')
         call s:createSimpleTextObject(s:a . s:n, delimiter, 'quote next select expand')
@@ -145,10 +145,10 @@ endfunction
 "         | nsth |
 function! s:createSeparatorTextObjects()
     for delimiter in s:separator_list
-        call s:createSimpleTextObject(s:I,       delimiter, 'seek select shrink')
-        call s:createSimpleTextObject(s:i,       delimiter, 'seek select drop')
-        call s:createSimpleTextObject(s:a,       delimiter, 'seek select dropr')
-        call s:createSimpleTextObject(s:A,       delimiter, 'seek select expand')
+        call s:createSimpleTextObject(s:I,       delimiter, 'seekselect shrink')
+        call s:createSimpleTextObject(s:i,       delimiter, 'seekselect drop')
+        call s:createSimpleTextObject(s:a,       delimiter, 'seekselect dropr')
+        call s:createSimpleTextObject(s:A,       delimiter, 'seekselect expand')
         call s:createSimpleTextObject(s:I . s:n, delimiter, 'next select shrink')
         call s:createSimpleTextObject(s:i . s:n, delimiter, 'next select drop')
         call s:createSimpleTextObject(s:a . s:n, delimiter, 'next select dropr')
