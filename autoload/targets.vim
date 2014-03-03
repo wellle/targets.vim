@@ -272,7 +272,7 @@ endfunction
 " match selectors
 " ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
-" select pair of delimiters around cursor (multi line)
+" select pair of delimiters around cursor (multi line, no seeking)
 " select to the right if cursor is on a delimiter
 " cursor  │   ....
 " line    │ ' ' b ' '
@@ -286,6 +286,88 @@ function! s:select()
     if s:ec == 0 " no match to the right
         return s:setFailed()
     endif
+endfunction
+
+" select pair of delimiters around cursor (multi line, no seeking)
+function! s:seekselect()
+    let [rl, rc] = searchpos(s:opening, 'W', line('.'))
+    if rl > 0 " delim r found after cursor in line
+        let [s:sl, s:sc] = searchpos(s:opening, 'bW', line('.'))
+        if s:sl > 0 " delim found before r in line
+            let [s:el, s:ec] = [rl, rc]
+            return
+        endif
+        " no delim before cursor in line
+        let [s:el, s:ec] = searchpos(s:opening, 'W', line('.'))
+        if s:el > 0 " delim found after r in line
+            let [s:sl, s:sc] = [rl, rc]
+            return
+        endif
+        " no delim found after r in line
+        let [s:sl, s:sc] = searchpos(s:opening, 'bW')
+        if s:sl > 0 " delim found before r
+            let [s:el, s:ec] = [rl, rc]
+            return
+        endif
+        " no delim found before r
+        let [s:el, s:ec] = searchpos(s:opening, 'W')
+        if s:el > 0 " delim found after r
+            let [s:sl, s:sc] = [rl, rc]
+            return
+        endif
+        " no delim found after r
+        return s:setFailed()
+    endif
+
+    " no delim found after cursor in line
+    let [ll, lc] = searchpos(s:opening, 'bcW', line('.'))
+    if ll > 0 " delim l found before cursor in line
+        let [s:sl, s:sc] = searchpos(s:opening, 'bW', line('.'))
+        if s:sl > 0 " delim found before l in line
+            let [s:el, s:ec] = [ll, lc]
+            return
+        endif
+        " no delim found before l in line
+        let [s:el, s:ec] = searchpos(s:opening, 'W')
+        if s:el > 0 " delim found after l
+            let [s:sl, s:sc] = [ll, lc]
+            return
+        endif
+        " no delim found after l
+        let [s:sl, s:sc] = searchpos(s:opening, 'bW')
+        if s:sl > 0 " delim found before l
+            let [s:el, s:ec] = [ll, lc]
+            return
+        endif
+        " no delim found before l
+        return s:setFailed()
+    endif
+
+    " no delim found before cursor in line
+    let [rl, rc] = searchpos(s:opening, 'W')
+    if rl > 0 " delim r found after cursor
+        let [s:sl, s:sc] = searchpos(s:opening, 'bW')
+        if s:sl > 0 " delim found before r
+            let [s:el, s:ec] = [rl, rc]
+            return
+        endif
+        " no delim found before r
+        let [s:el, s:ec] = searchpos(s:opening, 'W')
+        if s:el > 0 " delim found after r
+            let [s:sl, s:sc] = [rl, rc]
+            return
+        endif
+        " no delim found after r
+        return s:setFailed()
+    endif
+
+    " no delim found after cursor
+    let [s:el, s:ec] = searchpos(s:opening, 'bW')
+    let [s:sl, s:sc] = searchpos(s:opening, 'bW')
+    if s:sl > 0 && s:el > 0 " match found before cursor
+        return
+    endif
+    return s:setFailed()
 endfunction
 
 " pair matcher (works across multiple lines, no seeking)
@@ -307,10 +389,6 @@ function! s:selectp()
 endfunction
 
 " pair matcher (works across multiple lines, supports seeking)
-" cursor   │   .....
-" line     │ ( ( a ) )
-" modifier │ │ └─1─┘ │
-"          │ └── 2 ──┘
 function! s:seekselectp()
     " try to select around cursor
     silent! execute 'normal! v' . s:count . 'a' . s:opening
