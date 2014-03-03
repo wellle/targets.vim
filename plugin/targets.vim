@@ -110,9 +110,9 @@ endfunction
 "         │   └──a'───┘     │     └──a'───┘    │      └──a'───┘
 function! s:createQuoteTextObjects()
     for delimiter in s:quote_list
-        call s:createSimpleTextObject(s:I,       delimiter, 'quote seek select shrink')
-        call s:createSimpleTextObject(s:i,       delimiter, 'quote seek select drop')
-        call s:createSimpleTextObject(s:a,       delimiter, 'quote seek select expand')
+        call s:createSimpleTextObject(s:I,       delimiter, 'quote seekselect shrink')
+        call s:createSimpleTextObject(s:i,       delimiter, 'quote seekselect drop')
+        call s:createSimpleTextObject(s:a,       delimiter, 'quote seekselect expand')
         call s:createSimpleTextObject(s:I . s:n, delimiter, 'quote next select shrink')
         call s:createSimpleTextObject(s:i . s:n, delimiter, 'quote next select drop')
         call s:createSimpleTextObject(s:a . s:n, delimiter, 'quote next select expand')
@@ -145,10 +145,10 @@ endfunction
 "         | nsth |
 function! s:createSeparatorTextObjects()
     for delimiter in s:separator_list
-        call s:createSimpleTextObject(s:I,       delimiter, 'seek select shrink')
-        call s:createSimpleTextObject(s:i,       delimiter, 'seek select drop')
-        call s:createSimpleTextObject(s:a,       delimiter, 'seek select dropr')
-        call s:createSimpleTextObject(s:A,       delimiter, 'seek select expand')
+        call s:createSimpleTextObject(s:I,       delimiter, 'seekselect shrink')
+        call s:createSimpleTextObject(s:i,       delimiter, 'seekselect drop')
+        call s:createSimpleTextObject(s:a,       delimiter, 'seekselect dropr')
+        call s:createSimpleTextObject(s:A,       delimiter, 'seekselect expand')
         call s:createSimpleTextObject(s:I . s:n, delimiter, 'next select shrink')
         call s:createSimpleTextObject(s:i . s:n, delimiter, 'next select drop')
         call s:createSimpleTextObject(s:a . s:n, delimiter, 'next select dropr')
