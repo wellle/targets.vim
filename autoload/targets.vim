@@ -83,7 +83,7 @@ endfunction
 
 " clear the commandline to hide targets function calls
 function! s:clearCommandLine()
-    execute "normal! \<C-L>"
+    echo
 endfunction
 
 " try to find match and return 1 in case of success
@@ -153,7 +153,7 @@ endfunction
 function! s:triggerUndo()
     if exists("*undotree")
         let undoseq = undotree().seq_cur
-        call feedkeys(":call targets#undo(" . undoseq . ")\<CR>\<C-L>", 'n')
+        call feedkeys(":call targets#undo(" . undoseq . ")\<CR>:echo\<CR>", 'n')
     endif
 endfunction
 
