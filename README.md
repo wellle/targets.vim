@@ -51,6 +51,7 @@ Supported trigger characters:
 - `{` `}` `B` (work on curly braces)
 - `[` `]` `r` (work on square brackets)
 - `<` `>` `a` (work on angle brackets)
+- `t` (work on tags)
 
 We borrowed the aliases `r` and `a` from the [`vim-surround` plugin][surround].
 
@@ -61,7 +62,7 @@ Pair text objects work over multiple lines.
 
 #### In Pair
 
-`i( i) ib i{ i} iB i[ i] ir i< i> ia`
+`i( i) ib i{ i} iB i[ i] ir i< i> ia it`
 
 - Select inside of pair characters.
 - This overrides Vim's default text object to allow seeking for the next pair
@@ -80,7 +81,7 @@ a ( b ( cccccccc ) d ) e
 
 #### A Pair
 
-`a( a) ab a{ a} aB a[ a] ar a< a> aa`
+`a( a) ab a{ a} aB a[ a] ar a< a> aa at`
 
 - Select a pair including pair characters.
 - Overrides Vim's default text object to allow seeking.
@@ -95,7 +96,7 @@ a ( b ( cccccccc ) d ) e
 
 #### Inside Pair
 
-`I( I) Ib I{ I} IB I[ I] Ir I< I> Ia`
+`I( I) Ib I{ I} IB I[ I] Ir I< I> Ia It`
 
 - Select contents of pair characters.
 - Like inside of parentheses, but exclude whitespace at both ends. Useful for
@@ -112,7 +113,7 @@ a ( b ( cccccccc ) d ) e
 
 #### Around Pair
 
-`A( A) Ab A{ A} AB A[ A] Ar A< A> Aa`
+`A( A) Ab A{ A} AB A[ A] Ar A< A> Aa At`
 
 - Select around pair characters.
 - Like a pair, but include whitespace at one side of the pair. Prefers to
