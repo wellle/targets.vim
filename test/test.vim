@@ -89,6 +89,19 @@ function! s:testBasic()
         normal +
     endfor
 
+    normal +"lyy
+
+    for op in [ 'c', 'd', 'y', 'v' ]
+        for cnt in [ '', '1', '2' ]
+            for nl in [ '', 'n', 'l' ]
+                for iaIA in [ 'i', 'a', 'I', 'A' ]
+                    execute "normal \"lpfx"
+                    call s:execute(op, cnt . iaIA . nl . 't')
+                endfor
+            endfor
+        endfor
+    endfor
+
     write! test1.out
 endfunction
 
