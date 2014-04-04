@@ -225,10 +225,16 @@ endfunction
 " in   │ ....
 " line │ ( ) ( ) ( ( ) ) ( )
 " out  │     1   2 3     4
-function! s:nextp()
+function! s:nextp(...)
+    if a:0 == 1
+        let opening = a:1
+    else
+        let opening = s:opening
+    endif
+
     " find `count` next opening
     for _ in range(s:count)
-        let [line, _] = searchpos(s:opening, 'W')
+        let [line, _] = searchpos(opening, 'W')
         if line == 0 " not enough found
             return s:setFailed()
         endif
@@ -240,10 +246,16 @@ endfunction
 " in   │               ....
 " line │ ( ) ( ) ( ( ) ) ( )
 " out  │   4   3     2 1
-function! s:lastp()
+function! s:lastp(...)
+    if a:0 == 1
+        let closing = a:1
+    else
+        let closing = s:closing
+    endif
+
     " find `count` last closing
     for _ in range(s:count)
-        let [line, _] = searchpos(s:closing, 'bW')
+        let [line, _] = searchpos(closing, 'bW')
         if line == 0 " not enough found
             return s:setFailed()
         endif
@@ -371,9 +383,15 @@ function! s:selectp()
 endfunction
 
 " pair matcher (works across multiple lines, supports seeking)
-function! s:seekselectp()
+function! s:seekselectp(...)
+    if a:0 == 3
+        let [ opening, closing, trigger ] = [ a:1, a:2, a:3 ]
+    else
+        let [ opening, closing, trigger ] = [ s:opening, s:closing, s:closing ]
+    endif
+
     " try to select around cursor
-    silent! execute 'normal! v' . s:count . 'a' . s:opening
+    silent! execute 'normal! v' . s:count . 'a' . trigger
     let [_, s:el, s:ec, _] = getpos('.')
     silent! normal! o
     let [_, s:sl, s:sc, _] = getpos('.')
@@ -391,22 +409,22 @@ function! s:seekselectp()
     endif
     let s:count = 1
 
-    let [s:sl, s:sc] = searchpos(s:opening, 'W', line('.'))
+    let [s:sl, s:sc] = searchpos(opening, 'W', line('.'))
     if s:sc > 0 " found opening to the right in line
         return s:selectp()
     endif
 
-    let [s:sl, s:sc] = searchpos(s:closing, 'Wb', line('.'))
+    let [s:sl, s:sc] = searchpos(closing, 'Wb', line('.'))
     if s:sc > 0 " found closing to the left in line
         return s:selectp()
     endif
 
-    let [s:sl, s:sc] = searchpos(s:opening, 'W')
+    let [s:sl, s:sc] = searchpos(opening, 'W')
     if s:sc > 0 " found opening to the right
         return s:selectp()
     endif
 
-    let [s:sl, s:sc] = searchpos(s:closing, 'Wb')
+    let [s:sl, s:sc] = searchpos(closing, 'Wb')
     if s:sc > 0 " found closing to the left
         return s:selectp()
     endif
