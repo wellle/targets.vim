@@ -94,6 +94,22 @@ function! s:createPairTextObjects()
     endfor
 endfunction
 
+" tag text objects work on tags (similar to pair text objects)
+function! s:createTagTextObjects()
+    call s:createSimpleTextObject(s:i,       't', 'seekselectt dropt')
+    call s:createSimpleTextObject(s:I,       't', 'seekselectt dropt shrink')
+    call s:createSimpleTextObject(s:a,       't', 'seekselectt')
+    call s:createSimpleTextObject(s:A,       't', 'seekselectt expand')
+    call s:createSimpleTextObject(s:I . s:n, 't', 'nextt selectp dropt shrink')
+    call s:createSimpleTextObject(s:i . s:n, 't', 'nextt selectp dropt')
+    call s:createSimpleTextObject(s:a . s:n, 't', 'nextt selectp')
+    call s:createSimpleTextObject(s:A . s:n, 't', 'nextt selectp shrink')
+    call s:createSimpleTextObject(s:I . s:l, 't', 'lastt selectp dropt shrink')
+    call s:createSimpleTextObject(s:i . s:l, 't', 'lastt selectp dropt')
+    call s:createSimpleTextObject(s:a . s:l, 't', 'lastt selectp')
+    call s:createSimpleTextObject(s:A . s:l, 't', 'lastt selectp shrink')
+endfunction
+
 " quote text objects expand into quote (by counting quote signs)
 " `aN'` is a shortcut for `2an'` to jump from within one quote into the
 " next one, instead of the quote in between
@@ -208,6 +224,7 @@ call s:loadSettings()
 
 " create the text objects (current total count: 429)
 call s:createPairTextObjects()
+call s:createTagTextObjects()
 call s:createQuoteTextObjects()
 call s:createSeparatorTextObjects()
 call s:addExpressionMappings()
