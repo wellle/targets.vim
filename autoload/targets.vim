@@ -263,6 +263,22 @@ function! s:lastp(...)
     let s:count = 1
 endfunction
 
+" find `count` next opening tag delimiter (multi line)
+" in   │ .........
+" line │ <a> </a> <b> </b> <c> <d> </d> </c> <e> </e>
+" out  │          1        2   3             4
+function! s:nextt()
+    return s:nextp('<\a')
+endfunction
+
+" find `count` last closing tag delimiter (multi line)
+" in   │                                    .........
+" line │ <a> </a> <b> </b> <c> <d> </d> </c> <e> </e>
+" out  │     4        3            2    1
+function! s:lastt()
+    return s:lastp('</\a')
+endfunction
+
 " match selectors
 " ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
@@ -432,6 +448,11 @@ function! s:seekselectp(...)
     return s:setFailed() " no match found
 endfunction
 
+" tag pair matcher (works across multiple lines, supports seeking)
+function! s:seekselectt()
+    return s:seekselectp('<\a', '</\a', 't')
+endfunction
+
 " selects the current cursor position (useful to test modifiers)
 function! s:position()
     let [_, s:sl, s:sc, _] = getpos('.')
@@ -460,6 +481,21 @@ endfunction
 " out  │   └────┘
 function! s:dropr()
     let s:ec -= 1
+endfunction
+
+" drop tag delimiters left and right
+" in   │   ┌──────────┐
+" line │ a <b>  c  </b> c
+" out  │      └───┘
+function! s:dropt()
+    call cursor(s:sl, s:sc)
+    call searchpos('>', 'W')
+    silent! execute "normal! 1 "
+    let [_, s:sl, s:sc, _] = getpos('.')
+    call cursor(s:el, s:ec)
+    call searchpos('<', 'bW')
+    silent! execute "normal! \<BS>"
+    let [_, s:el, s:ec, _] = getpos('.')
 endfunction
 
 " drop delimters and whitespace left and right
