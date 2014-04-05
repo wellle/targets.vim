@@ -1,8 +1,8 @@
 " targets.vim Provides additional text objects
 " Author:  Christian Wellenbrock <christian.wellenbrock@gmail.com>
 " License: MIT license
-" Updated: 2014-03-03
-" Version: 0.1.2
+" Updated: 2014-04-05
+" Version: 0.1.3
 
 set runtimepath+=../
 set softtabstop=16 expandtab
@@ -87,6 +87,19 @@ function! s:testBasic()
         endfor
 
         normal +
+    endfor
+
+    normal +"lyy
+
+    for op in [ 'c', 'd', 'y', 'v' ]
+        for cnt in [ '', '1', '2' ]
+            for nl in [ '', 'n', 'l' ]
+                for iaIA in [ 'i', 'a', 'I', 'A' ]
+                    execute "normal \"lpfx"
+                    call s:execute(op, cnt . iaIA . nl . 't')
+                endfor
+            endfor
+        endfor
     endfor
 
     write! test1.out

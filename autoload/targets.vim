@@ -1,8 +1,8 @@
 " targets.vim Provides additional text objects
 " Author:  Christian Wellenbrock <christian.wellenbrock@gmail.com>
 " License: MIT license
-" Updated: 2014-03-03
-" Version: 0.1.2
+" Updated: 2014-04-05
+" Version: 0.1.3
 
 let s:save_cpoptions = &cpoptions
 set cpo&vim
@@ -225,10 +225,16 @@ endfunction
 " in   │ ....
 " line │ ( ) ( ) ( ( ) ) ( )
 " out  │     1   2 3     4
-function! s:nextp()
+function! s:nextp(...)
+    if a:0 == 1
+        let opening = a:1
+    else
+        let opening = s:opening
+    endif
+
     " find `count` next opening
     for _ in range(s:count)
-        let [line, _] = searchpos(s:opening, 'W')
+        let [line, _] = searchpos(opening, 'W')
         if line == 0 " not enough found
             return s:setFailed()
         endif
@@ -240,15 +246,37 @@ endfunction
 " in   │               ....
 " line │ ( ) ( ) ( ( ) ) ( )
 " out  │   4   3     2 1
-function! s:lastp()
+function! s:lastp(...)
+    if a:0 == 1
+        let closing = a:1
+    else
+        let closing = s:closing
+    endif
+
     " find `count` last closing
     for _ in range(s:count)
-        let [line, _] = searchpos(s:closing, 'bW')
+        let [line, _] = searchpos(closing, 'bW')
         if line == 0 " not enough found
             return s:setFailed()
         endif
     endfor
     let s:count = 1
+endfunction
+
+" find `count` next opening tag delimiter (multi line)
+" in   │ .........
+" line │ <a> </a> <b> </b> <c> <d> </d> </c> <e> </e>
+" out  │          1        2   3             4
+function! s:nextt()
+    return s:nextp('<\a')
+endfunction
+
+" find `count` last closing tag delimiter (multi line)
+" in   │                                    .........
+" line │ <a> </a> <b> </b> <c> <d> </d> </c> <e> </e>
+" out  │     4        3            2    1
+function! s:lastt()
+    return s:lastp('</\a')
 endfunction
 
 " match selectors
@@ -371,9 +399,15 @@ function! s:selectp()
 endfunction
 
 " pair matcher (works across multiple lines, supports seeking)
-function! s:seekselectp()
+function! s:seekselectp(...)
+    if a:0 == 3
+        let [ opening, closing, trigger ] = [ a:1, a:2, a:3 ]
+    else
+        let [ opening, closing, trigger ] = [ s:opening, s:closing, s:closing ]
+    endif
+
     " try to select around cursor
-    silent! execute 'normal! v' . s:count . 'a' . s:opening
+    silent! execute 'normal! v' . s:count . 'a' . trigger
     let [_, s:el, s:ec, _] = getpos('.')
     silent! normal! o
     let [_, s:sl, s:sc, _] = getpos('.')
@@ -391,27 +425,32 @@ function! s:seekselectp()
     endif
     let s:count = 1
 
-    let [s:sl, s:sc] = searchpos(s:opening, 'W', line('.'))
+    let [s:sl, s:sc] = searchpos(opening, 'W', line('.'))
     if s:sc > 0 " found opening to the right in line
         return s:selectp()
     endif
 
-    let [s:sl, s:sc] = searchpos(s:closing, 'Wb', line('.'))
+    let [s:sl, s:sc] = searchpos(closing, 'Wb', line('.'))
     if s:sc > 0 " found closing to the left in line
         return s:selectp()
     endif
 
-    let [s:sl, s:sc] = searchpos(s:opening, 'W')
+    let [s:sl, s:sc] = searchpos(opening, 'W')
     if s:sc > 0 " found opening to the right
         return s:selectp()
     endif
 
-    let [s:sl, s:sc] = searchpos(s:closing, 'Wb')
+    let [s:sl, s:sc] = searchpos(closing, 'Wb')
     if s:sc > 0 " found closing to the left
         return s:selectp()
     endif
 
     return s:setFailed() " no match found
+endfunction
+
+" tag pair matcher (works across multiple lines, supports seeking)
+function! s:seekselectt()
+    return s:seekselectp('<\a', '</\a', 't')
 endfunction
 
 " selects the current cursor position (useful to test modifiers)
@@ -442,6 +481,21 @@ endfunction
 " out  │   └────┘
 function! s:dropr()
     let s:ec -= 1
+endfunction
+
+" drop tag delimiters left and right
+" in   │   ┌──────────┐
+" line │ a <b>  c  </b> c
+" out  │      └───┘
+function! s:dropt()
+    call cursor(s:sl, s:sc)
+    call searchpos('>', 'W')
+    silent! execute "normal! 1 "
+    let [_, s:sl, s:sc, _] = getpos('.')
+    call cursor(s:el, s:ec)
+    call searchpos('<', 'bW')
+    silent! execute "normal! \<BS>"
+    let [_, s:el, s:ec, _] = getpos('.')
 endfunction
 
 " drop delimters and whitespace left and right

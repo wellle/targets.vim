@@ -2,8 +2,8 @@
 
 Author:  Christian Wellenbrock <christian.wellenbrock@gmail.com>
 License: MIT license
-Updated: 2014-03-03
-Version: 0.1.2
+Updated: 2014-04-05
+Version: 0.1.3
 
                            ____
                            \___\_.::::::::::.____
@@ -63,6 +63,7 @@ Supported trigger characters:
     { } B     (work on curly braces)
     [ ] r     (work on square brackets)
     < > a     (work on angle brackets)
+        t     (work on tags)
 
 We borrowed the aliases `r` and `a` from the |surround| plugin by Tim Pope.
 The following examples will use parentheses, but they all work for each listed
@@ -70,7 +71,7 @@ trigger character accordingly.
 
 Pair text objects work over multiple lines.
 
-i( i) ib i{ i} iB                    *i(_t* *i)_t* *ib_t* *i{_t* *i}_t* *iB_t*
+i( i) ib i{ i} iB it          *it_t* *i(_t* *i)_t* *ib_t* *i{_t* *i}_t* *iB_t*
 i[ i] ir i< i> ia                    *i[_t* *i]_t* *ir_t* *i<_t* *i>_t* *ia_t*
     Select inside of pair characters. This overrides Vim's default text object
     to allow seeking for the next pair in the current line to the right or
@@ -84,7 +85,7 @@ i[ i] ir i< i> ia                    *i[_t* *i]_t* *ir_t* *i<_t* *i>_t* *ia_t*
            │   └── i) ──┘   │
            └───── 2i) ──────┘
 
-a( a) ab a{ a} aB                    *a(_t* *a)_t* *ab_t* *a{_t* *a}_t* *aB_t*
+a( a) ab a{ a} aB at          *at_t* *a(_t* *a)_t* *ab_t* *a{_t* *a}_t* *aB_t*
 a[ a] ar a< a> aa                    *a[_t* *a]_t* *ar_t* *a<_t* *a>_t* *aa_t*
     Select a pair. Overrides Vim's default text object to allow seeking.
     Supports |targets-pair-seek|. Accepts [count].
@@ -94,7 +95,7 @@ a[ a] ar a< a> aa                    *a[_t* *a]_t* *ar_t* *a<_t* *a>_t* *aa_t*
           │   └─── a) ───┘   │
           └────── 2a) ───────┘
 
-I( I) Ib I{ I} IB                                *I(* *I)* *Ib* *I{* *I}* *IB*
+I( I) Ib I{ I} IB It                        *It* *I(* *I)* *Ib* *I{* *I}* *IB*
 I[ I] Ir I< I> Ia                                *I[* *I]* *Ir* *I<* *I>* *Ia*
     Select contents of pair characters. Like inside of parentheses, but
     exclude whitespace at both ends. Useful for changing contents while
@@ -105,7 +106,7 @@ I[ I] Ir I< I> Ia                                *I[* *I]* *Ir* *I<* *I>* *Ia*
             │   └─ I) ─┘   │
             └──── 2I) ─────┘
 
-A( A) Ab A{ A} AB                                *A(* *A)* *Ab* *A{* *A}* *AB*
+A( A) Ab A{ A} AB At                        *At* *A(* *A)* *Ab* *A{* *A}* *AB*
 A[ A] Ar A< A> Aa                                *A[* *A]* *Ar* *A<* *A>* *Aa*
     Select around pair characters. Like a pair, but include whitespace at one
     side of the pair. Prefers to select trailing whitespace, falls back to
@@ -121,21 +122,21 @@ NEXT AND LAST PAIR                                    *targets-next-last-pair*
 
 Work directly on distant pairs without moving there separately.
 
-in( in) inb in{ in} inB                    *in(* *in)* *inb* *in{* *in}* *inB*
+in( in) inb in{ in} inB int          *int* *in(* *in)* *inb* *in{* *in}* *inB*
 in[ in] inr in< in> ina                    *in[* *in]* *inr* *in<* *in>* *ina*
-an( an) anb an{ an} anB                    *an(* *an)* *anb* *an{* *an}* *anB*
+an( an) anb an{ an} anB ant          *ant* *an(* *an)* *anb* *an{* *an}* *anB*
 an[ an] anr an< an> ana                    *an[* *an]* *anr* *an<* *an>* *ana*
-In( In) Inb In{ In} InB                    *In(* *In)* *Inb* *In{* *In}* *InB*
+In( In) Inb In{ In} InB Int          *Int* *In(* *In)* *Inb* *In{* *In}* *InB*
 In[ In] Inr In< In> Ina                    *In[* *In]* *Inr* *In<* *In>* *Ina*
-An( An) Anb An{ An} AnB                    *An(* *An)* *Anb* *An{* *An}* *AnB*
+An( An) Anb An{ An} AnB Ant          *Ant* *An(* *An)* *Anb* *An{* *An}* *AnB*
 An[ An] Anr An< An> Ana                    *An[* *An]* *Anr* *An<* *An>* *Ana*
-il( il) ilb il{ il} ilB                    *il(* *il)* *ilb* *il{* *il}* *ilB*
+il( il) ilb il{ il} ilB ilt          *ilt* *il(* *il)* *ilb* *il{* *il}* *ilB*
 il[ il] ilr il< il> ila                    *il[* *il]* *ilr* *il<* *il>* *ila*
-al( al) alb al{ al} alB                    *al(* *al)* *alb* *al{* *al}* *alB*
+al( al) alb al{ al} alB alt          *alt* *al(* *al)* *alb* *al{* *al}* *alB*
 al[ al] alr al< al> ala                    *al[* *al]* *alr* *al<* *al>* *ala*
-Il( Il) Ilb Il{ Il} IlB                    *Il(* *Il)* *Ilb* *Il{* *Il}* *IlB*
+Il( Il) Ilb Il{ Il} IlB Ilt          *Ilt* *Il(* *Il)* *Ilb* *Il{* *Il}* *IlB*
 Il[ Il] Ilr Il< Il> Ila                    *Il[* *Il]* *Ilr* *Il<* *Il>* *Ila*
-Al( Al) Alb Al{ Al} AlB                    *Al(* *Al)* *Alb* *Al{* *Al}* *AlB*
+Al( Al) Alb Al{ Al} AlB Alt          *Alt* *Al(* *Al)* *Alb* *Al{* *Al}* *AlB*
 Al[ Al] Alr Al< Al> Ala                    *Al[* *Al]* *Alr* *Al<* *Al>* *Ala*
     All the above pair text objects can be shifted to the next pair by
     including the letter `n`. The command `in)` selects inside of the next
