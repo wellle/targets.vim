@@ -12,7 +12,7 @@ set cpo&vim
 " it consists of optional position modifiers, followed by a match selector,
 " followed by optional selection modifiers
 function! targets#omap(delimiters, matchers)
-    call s:init(a:delimiters, v:count1)
+    call s:init(a:delimiters, a:matchers, v:count1)
     call s:findMatch(a:matchers)
     call s:handleMatch()
     call s:clearCommandLine()
@@ -26,7 +26,7 @@ endfunction
 
 " like targets#xmap, but inject count, triggered from targets#xmapExpr
 function! targets#xmapCount(delimiters, matchers, count)
-    call s:init(a:delimiters, a:count)
+    call s:init(a:delimiters, a:matchers, a:count)
     call s:findMatch(a:matchers)
     call s:handleMatch()
     call s:cleanUp()
@@ -57,8 +57,8 @@ function! targets#uppercaseXmap(trigger)
 endfunction
 
 " initialize script local variables for the current matching
-function! s:init(delimiters, count)
-    let s:count = a:count
+function! s:init(delimiters, matchers, count)
+    let [s:delimiters, s:matchers, s:count] = [a:delimiters, a:matchers,  a:count]
     let [s:sl, s:sc, s:el, s:ec] = [0, 0, 0, 0]
     let s:oldpos = getpos('.')
     let s:failed = 0
@@ -73,12 +73,11 @@ endfunction
 
 " clean up script variables after match
 function! s:cleanUp()
-    unlet s:count
-    unlet s:opening
-    unlet s:closing
+    unlet s:delimiters s:matchers s:count
     unlet s:sl s:sc s:el s:ec
     unlet s:oldpos
     unlet s:failed
+    unlet s:opening s:closing
 endfunction
 
 " clear the commandline to hide targets function calls
