@@ -29,6 +29,7 @@ function! targets#xmapCount(delimiters, matchers, count)
     call s:init(a:delimiters, a:matchers, a:count)
     call s:findMatch(a:matchers)
     call s:handleMatch()
+    call s:saveState()
     call s:cleanUp()
 endfunction
 
@@ -69,6 +70,12 @@ function! s:init(delimiters, matchers, count)
     else
         let s:closing = s:opening
     endif
+endfunction
+
+" remember last selection, delimiters and matchers
+function s:saveState()
+    let [s:lsl, s:lsc, s:lel, s:lec] = [s:sl, s:sc, s:el, s:ec]
+    let [s:ldelimiters, s:lmatchers] = [s:delimiters, s:matchers]
 endfunction
 
 " clean up script variables after match
