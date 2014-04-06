@@ -79,17 +79,17 @@ endfunction
 "         │   └───────Al)───────┘└──────2A)───────┘└───────An)───────┘
 function! s:createPairTextObjects()
     for delimiters in s:pair_list " aliases like surround
-        call s:createPairTextObject(s:I,       delimiters, 'seekselectp shrink')
         call s:createPairTextObject(s:i,       delimiters, 'seekselectp drop')
         call s:createPairTextObject(s:a,       delimiters, 'seekselectp')
+        call s:createPairTextObject(s:I,       delimiters, 'seekselectp shrink')
         call s:createPairTextObject(s:A,       delimiters, 'seekselectp expand')
-        call s:createPairTextObject(s:I . s:n, delimiters, 'nextp selectp shrink')
         call s:createPairTextObject(s:i . s:n, delimiters, 'nextp selectp drop')
         call s:createPairTextObject(s:a . s:n, delimiters, 'nextp selectp')
+        call s:createPairTextObject(s:I . s:n, delimiters, 'nextp selectp shrink')
         call s:createPairTextObject(s:A . s:n, delimiters, 'nextp selectp expand')
-        call s:createPairTextObject(s:I . s:l, delimiters, 'lastp selectp shrink')
         call s:createPairTextObject(s:i . s:l, delimiters, 'lastp selectp drop')
         call s:createPairTextObject(s:a . s:l, delimiters, 'lastp selectp')
+        call s:createPairTextObject(s:I . s:l, delimiters, 'lastp selectp shrink')
         call s:createPairTextObject(s:A . s:l, delimiters, 'lastp selectp expand')
     endfor
 endfunction
@@ -97,16 +97,16 @@ endfunction
 " tag text objects work on tags (similar to pair text objects)
 function! s:createTagTextObjects()
     call s:createSimpleTextObject(s:i,       't', 'seekselectt dropt')
-    call s:createSimpleTextObject(s:I,       't', 'seekselectt dropt shrink')
     call s:createSimpleTextObject(s:a,       't', 'seekselectt')
+    call s:createSimpleTextObject(s:I,       't', 'seekselectt dropt shrink')
     call s:createSimpleTextObject(s:A,       't', 'seekselectt expand')
-    call s:createSimpleTextObject(s:I . s:n, 't', 'nextt selectp dropt shrink')
     call s:createSimpleTextObject(s:i . s:n, 't', 'nextt selectp dropt')
     call s:createSimpleTextObject(s:a . s:n, 't', 'nextt selectp')
+    call s:createSimpleTextObject(s:I . s:n, 't', 'nextt selectp dropt shrink')
     call s:createSimpleTextObject(s:A . s:n, 't', 'nextt selectp shrink')
-    call s:createSimpleTextObject(s:I . s:l, 't', 'lastt selectp dropt shrink')
     call s:createSimpleTextObject(s:i . s:l, 't', 'lastt selectp dropt')
     call s:createSimpleTextObject(s:a . s:l, 't', 'lastt selectp')
+    call s:createSimpleTextObject(s:I . s:l, 't', 'lastt selectp dropt shrink')
     call s:createSimpleTextObject(s:A . s:l, 't', 'lastt selectp shrink')
 endfunction
 
@@ -126,21 +126,21 @@ endfunction
 "         │   └──a'───┘     │     └──a'───┘    │      └──a'───┘
 function! s:createQuoteTextObjects()
     for delimiter in s:quote_list
-        call s:createSimpleTextObject(s:I,       delimiter, 'quote seekselect shrink')
         call s:createSimpleTextObject(s:i,       delimiter, 'quote seekselect drop')
         call s:createSimpleTextObject(s:a,       delimiter, 'quote seekselect expand')
-        call s:createSimpleTextObject(s:I . s:n, delimiter, 'quote next select shrink')
+        call s:createSimpleTextObject(s:I,       delimiter, 'quote seekselect shrink')
         call s:createSimpleTextObject(s:i . s:n, delimiter, 'quote next select drop')
         call s:createSimpleTextObject(s:a . s:n, delimiter, 'quote next select expand')
-        call s:createSimpleTextObject(s:I . s:l, delimiter, 'quote last select shrink')
+        call s:createSimpleTextObject(s:I . s:n, delimiter, 'quote next select shrink')
         call s:createSimpleTextObject(s:i . s:l, delimiter, 'quote last select drop')
         call s:createSimpleTextObject(s:a . s:l, delimiter, 'quote last select expand')
-        call s:createSimpleTextObject(s:I . s:N, delimiter, 'quote double next select shrink')
+        call s:createSimpleTextObject(s:I . s:l, delimiter, 'quote last select shrink')
         call s:createSimpleTextObject(s:i . s:N, delimiter, 'quote double next select drop')
         call s:createSimpleTextObject(s:a . s:N, delimiter, 'quote double next select expand')
-        call s:createSimpleTextObject(s:I . s:L, delimiter, 'quote double last select shrink')
+        call s:createSimpleTextObject(s:I . s:N, delimiter, 'quote double next select shrink')
         call s:createSimpleTextObject(s:i . s:L, delimiter, 'quote double last select drop')
         call s:createSimpleTextObject(s:a . s:L, delimiter, 'quote double last select expand')
+        call s:createSimpleTextObject(s:I . s:L, delimiter, 'quote double last select shrink')
     endfor
 endfunction
 
@@ -161,25 +161,25 @@ endfunction
 "         | nsth |
 function! s:createSeparatorTextObjects()
     for delimiter in s:separator_list
-        call s:createSimpleTextObject(s:I,       delimiter, 'seekselect shrink')
         call s:createSimpleTextObject(s:i,       delimiter, 'seekselect drop')
         call s:createSimpleTextObject(s:a,       delimiter, 'seekselect dropr')
+        call s:createSimpleTextObject(s:I,       delimiter, 'seekselect shrink')
         call s:createSimpleTextObject(s:A,       delimiter, 'seekselect expand')
-        call s:createSimpleTextObject(s:I . s:n, delimiter, 'next select shrink')
         call s:createSimpleTextObject(s:i . s:n, delimiter, 'next select drop')
         call s:createSimpleTextObject(s:a . s:n, delimiter, 'next select dropr')
+        call s:createSimpleTextObject(s:I . s:n, delimiter, 'next select shrink')
         call s:createSimpleTextObject(s:A . s:n, delimiter, 'next select expand')
-        call s:createSimpleTextObject(s:I . s:l, delimiter, 'last select shrink')
         call s:createSimpleTextObject(s:i . s:l, delimiter, 'last select drop')
         call s:createSimpleTextObject(s:a . s:l, delimiter, 'last select dropr')
+        call s:createSimpleTextObject(s:I . s:l, delimiter, 'last select shrink')
         call s:createSimpleTextObject(s:A . s:l, delimiter, 'last select expand')
-        call s:createSimpleTextObject(s:I . s:N, delimiter, 'double next select shrink')
         call s:createSimpleTextObject(s:i . s:N, delimiter, 'double next select drop')
         call s:createSimpleTextObject(s:a . s:N, delimiter, 'double next select dropr')
+        call s:createSimpleTextObject(s:I . s:N, delimiter, 'double next select shrink')
         call s:createSimpleTextObject(s:A . s:N, delimiter, 'double next select expand')
-        call s:createSimpleTextObject(s:I . s:L, delimiter, 'double last select shrink')
         call s:createSimpleTextObject(s:i . s:L, delimiter, 'double last select drop')
         call s:createSimpleTextObject(s:a . s:L, delimiter, 'double last select dropr')
+        call s:createSimpleTextObject(s:I . s:L, delimiter, 'double last select shrink')
         call s:createSimpleTextObject(s:A . s:L, delimiter, 'double last select expand')
     endfor
 endfunction
