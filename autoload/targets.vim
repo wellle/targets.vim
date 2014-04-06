@@ -12,7 +12,7 @@ set cpo&vim
 " it consists of optional position modifiers, followed by a match selector,
 " followed by optional selection modifiers
 function! targets#omap(delimiters, matchers)
-    call s:init(a:delimiters, v:count1)
+    call s:init(a:delimiters, a:matchers, v:count1)
     call s:findMatch(a:matchers)
     call s:handleMatch()
     call s:clearCommandLine()
@@ -26,9 +26,10 @@ endfunction
 
 " like targets#xmap, but inject count, triggered from targets#xmapExpr
 function! targets#xmapCount(delimiters, matchers, count)
-    call s:init(a:delimiters, a:count)
+    call s:init(a:delimiters, a:matchers, a:count)
     call s:findMatch(a:matchers)
     call s:handleMatch()
+    call s:saveState()
     call s:cleanUp()
 endfunction
 
@@ -57,8 +58,8 @@ function! targets#uppercaseXmap(trigger)
 endfunction
 
 " initialize script local variables for the current matching
-function! s:init(delimiters, count)
-    let s:count = a:count
+function! s:init(delimiters, matchers, count)
+    let [s:delimiters, s:matchers, s:count] = [a:delimiters, a:matchers,  a:count]
     let [s:sl, s:sc, s:el, s:ec] = [0, 0, 0, 0]
     let s:oldpos = getpos('.')
     let s:failed = 0
@@ -71,14 +72,19 @@ function! s:init(delimiters, count)
     endif
 endfunction
 
+" remember last selection, delimiters and matchers
+function s:saveState()
+    let [s:lsl, s:lsc, s:lel, s:lec] = [s:sl, s:sc, s:el, s:ec]
+    let [s:ldelimiters, s:lmatchers] = [s:delimiters, s:matchers]
+endfunction
+
 " clean up script variables after match
 function! s:cleanUp()
-    unlet s:count
-    unlet s:opening
-    unlet s:closing
+    unlet s:delimiters s:matchers s:count
     unlet s:sl s:sc s:el s:ec
     unlet s:oldpos
     unlet s:failed
+    unlet s:opening s:closing
 endfunction
 
 " clear the commandline to hide targets function calls
@@ -185,7 +191,7 @@ function! s:quote()
         let closing = 1
         let line = 1
         while line != 0
-            let [line, _] = searchpos(s:opening, 'bW', line('.'))
+            let line = searchpos(s:opening, 'bW', line('.'))[0]
             let closing = !closing
         endwhile
         call setpos('.', oldpos)
@@ -234,7 +240,7 @@ function! s:nextp(...)
 
     " find `count` next opening
     for _ in range(s:count)
-        let [line, _] = searchpos(opening, 'W')
+        let line = searchpos(opening, 'W')[0]
         if line == 0 " not enough found
             return s:setFailed()
         endif
@@ -255,7 +261,7 @@ function! s:lastp(...)
 
     " find `count` last closing
     for _ in range(s:count)
-        let [line, _] = searchpos(closing, 'bW')
+        let line = searchpos(closing, 'bW')[0]
         if line == 0 " not enough found
             return s:setFailed()
         endif
@@ -388,9 +394,9 @@ endfunction
 function! s:selectp()
     " try to select pair
     silent! execute 'normal! va' . s:opening
-    let [_, s:el, s:ec, _] = getpos('.')
+    let [s:el, s:ec] = getpos('.')[1:2]
     silent! normal! o
-    let [_, s:sl, s:sc, _] = getpos('.')
+    let [s:sl, s:sc] = getpos('.')[1:2]
     silent! normal! v
 
     if s:sc == s:ec && s:sl == s:el
@@ -408,9 +414,9 @@ function! s:seekselectp(...)
 
     " try to select around cursor
     silent! execute 'normal! v' . s:count . 'a' . trigger
-    let [_, s:el, s:ec, _] = getpos('.')
+    let [s:el, s:ec] = getpos('.')[1:2]
     silent! normal! o
-    let [_, s:sl, s:sc, _] = getpos('.')
+    let [s:sl, s:sc] = getpos('.')[1:2]
     silent! normal! v
 
     if s:sc != s:ec || s:sl != s:el
@@ -455,7 +461,7 @@ endfunction
 
 " selects the current cursor position (useful to test modifiers)
 function! s:position()
-    let [_, s:sl, s:sc, _] = getpos('.')
+    let [s:sl, s:sc] = getpos('.')[1:2]
     let [s:el, s:ec] = [s:sl, s:sc]
 endfunction
 
@@ -469,10 +475,10 @@ endfunction
 function! s:drop()
     call cursor(s:sl, s:sc)
     silent! execute "normal! 1 "
-    let [_, s:sl, s:sc, _] = getpos('.')
+    let [s:sl, s:sc] = getpos('.')[1:2]
     call cursor(s:el, s:ec)
     silent! execute "normal! \<BS>"
-    let [_, s:el, s:ec, _] = getpos('.')
+    let [s:el, s:ec] = getpos('.')[1:2]
 endfunction
 
 " drop right delimiter
@@ -491,11 +497,11 @@ function! s:dropt()
     call cursor(s:sl, s:sc)
     call searchpos('>', 'W')
     silent! execute "normal! 1 "
-    let [_, s:sl, s:sc, _] = getpos('.')
+    let [s:sl, s:sc] = getpos('.')[1:2]
     call cursor(s:el, s:ec)
     call searchpos('<', 'bW')
     silent! execute "normal! \<BS>"
-    let [_, s:el, s:ec, _] = getpos('.')
+    let [s:el, s:ec] = getpos('.')[1:2]
 endfunction
 
 " drop delimters and whitespace left and right
@@ -541,6 +547,25 @@ function! s:expand()
     unlet line column
     " include all leading whitespace from BOL
     let s:sc = 1
+endfunction
+
+" grows selection on repeated invocations by increasing s:count
+function! s:grow()
+    if !exists('s:ldelimiters') " no previous invocation
+        return
+    endif
+    if [s:ldelimiters, s:lmatchers] != [s:delimiters, s:matchers] " different invocation
+        return
+    endif
+    if getpos("'<")[1:2] != [s:lsl, s:lsc] " selection start changed
+        return
+    endif
+    if getpos("'>")[1:2] != [s:lel, s:lec] " selection end changed
+        return
+    endif
+
+    " increase s:count to grow selection
+    let s:count = s:count + 1
 endfunction
 
 " doubles the count (used for `iN'`)

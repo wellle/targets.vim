@@ -31,7 +31,8 @@ function! s:testBasic()
                 \ [ '(', ')', 'b' ],
                 \ [ '{', '}', 'B' ],
                 \ [ '[', ']', 'r' ],
-                \ [ '<', '>', 'a' ]
+                \ [ '<', '>', 'a' ],
+                \ [ 't' ]
                 \ ]
         normal "lyy
 
@@ -89,19 +90,6 @@ function! s:testBasic()
         normal +
     endfor
 
-    normal +"lyy
-
-    for op in [ 'c', 'd', 'y', 'v' ]
-        for cnt in [ '', '1', '2' ]
-            for nl in [ '', 'n', 'l' ]
-                for iaIA in [ 'i', 'a', 'I', 'A' ]
-                    execute "normal \"lpfx"
-                    call s:execute(op, cnt . iaIA . nl . 't')
-                endfor
-            endfor
-        endfor
-    endfor
-
     write! test1.out
 endfunction
 
@@ -139,8 +127,36 @@ function s:testSeeking()
     write! test3.out
 endfunction
 
+function s:testVisual()
+    edit! test4.in
+    normal gg0
+
+    for delset in [
+                \ [ '(', ')', 'b' ],
+                \ [ '{', '}', 'B' ],
+                \ [ '[', ']', 'r' ],
+                \ [ '<', '>', 'a' ],
+                \ [ 't' ]
+                \ ]
+        normal "lyy
+
+        for ia in [ 'i', 'a' ]
+            for del in delset
+                normal "lpfx
+                execute "normal v" . ia . del . ia . del . "r_"
+            endfor
+        endfor
+
+        normal +
+    endfor
+
+
+    write! test4.out
+endfunction
+
 call s:testBasic()
 call s:testMultiline()
 call s:testSeeking()
+call s:testVisual()
 
 quit!

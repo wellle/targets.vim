@@ -2,6 +2,7 @@ a ( b ) ( c ) ( ( x ) ) ( e ) ( f ) g
 a { b } { c } { { x } } { e } { f } g
 a [ b ] [ c ] [ [ x ] ] [ e ] [ f ] g
 a < b > < c > < < x > > < e > < f > g
+a <a> b </a> <b> c </b> <c> <d> x </d> </c> <e> e </e> <f> f </f> g
 
 a ' b ' c ' d ' e ' x ' g ' h ' i ' k ' l
 a " b " c " d " e " x " g " h " i " k " l
@@ -19,6 +20,4 @@ a * b * c * d * e * x * g * h * i * k * l
 a / b / c / d / e / x / g / h / i / k / l
 a | b | c | d | e | x | g | h | i | k | l
 a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l
-
-a <a> b </a> <b> c </b> <c> <d> x </d> </c> <e> e </e> <f> f </f> g
 
