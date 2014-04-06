@@ -79,8 +79,8 @@ endfunction
 "         │   └───────Al)───────┘└──────2A)───────┘└───────An)───────┘
 function! s:createPairTextObjects()
     for delimiters in s:pair_list " aliases like surround
-        call s:createPairTextObject(s:i,       delimiters, 'seekselectp drop')
-        call s:createPairTextObject(s:a,       delimiters, 'seekselectp')
+        call s:createPairTextObject(s:i,       delimiters, 'grow seekselectp drop')
+        call s:createPairTextObject(s:a,       delimiters, 'grow seekselectp')
         call s:createPairTextObject(s:I,       delimiters, 'seekselectp shrink')
         call s:createPairTextObject(s:A,       delimiters, 'seekselectp expand')
         call s:createPairTextObject(s:i . s:n, delimiters, 'nextp selectp drop')
@@ -96,8 +96,8 @@ endfunction
 
 " tag text objects work on tags (similar to pair text objects)
 function! s:createTagTextObjects()
-    call s:createSimpleTextObject(s:i,       't', 'seekselectt dropt')
-    call s:createSimpleTextObject(s:a,       't', 'seekselectt')
+    call s:createSimpleTextObject(s:i,       't', 'grow seekselectt dropt')
+    call s:createSimpleTextObject(s:a,       't', 'grow seekselectt')
     call s:createSimpleTextObject(s:I,       't', 'seekselectt dropt shrink')
     call s:createSimpleTextObject(s:A,       't', 'seekselectt expand')
     call s:createSimpleTextObject(s:i . s:n, 't', 'nextt selectp dropt')

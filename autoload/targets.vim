@@ -549,6 +549,25 @@ function! s:expand()
     let s:sc = 1
 endfunction
 
+" grows selection on repeated invocations by increasing s:count
+function! s:grow()
+    if !exists('s:ldelimiters') " no previous invocation
+        return
+    endif
+    if [s:ldelimiters, s:lmatchers] != [s:delimiters, s:matchers] " different invocation
+        return
+    endif
+    if getpos("'<")[1:2] != [s:lsl, s:lsc] " selection start changed
+        return
+    endif
+    if getpos("'>")[1:2] != [s:lel, s:lec] " selection end changed
+        return
+    endif
+
+    " increase s:count to grow selection
+    let s:count = s:count + 1
+endfunction
+
 " doubles the count (used for `iN'`)
 function! s:double()
     let s:count = s:count * 2
