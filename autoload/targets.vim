@@ -185,7 +185,7 @@ function! s:quote()
         let closing = 1
         let line = 1
         while line != 0
-            let [line, _] = searchpos(s:opening, 'bW', line('.'))
+            let line = searchpos(s:opening, 'bW', line('.'))[0]
             let closing = !closing
         endwhile
         call setpos('.', oldpos)
@@ -234,7 +234,7 @@ function! s:nextp(...)
 
     " find `count` next opening
     for _ in range(s:count)
-        let [line, _] = searchpos(opening, 'W')
+        let line = searchpos(opening, 'W')[0]
         if line == 0 " not enough found
             return s:setFailed()
         endif
@@ -255,7 +255,7 @@ function! s:lastp(...)
 
     " find `count` last closing
     for _ in range(s:count)
-        let [line, _] = searchpos(closing, 'bW')
+        let line = searchpos(closing, 'bW')[0]
         if line == 0 " not enough found
             return s:setFailed()
         endif
@@ -388,9 +388,9 @@ endfunction
 function! s:selectp()
     " try to select pair
     silent! execute 'normal! va' . s:opening
-    let [_, s:el, s:ec, _] = getpos('.')
+    let [s:el, s:ec] = getpos('.')[1:2]
     silent! normal! o
-    let [_, s:sl, s:sc, _] = getpos('.')
+    let [s:sl, s:sc] = getpos('.')[1:2]
     silent! normal! v
 
     if s:sc == s:ec && s:sl == s:el
@@ -408,9 +408,9 @@ function! s:seekselectp(...)
 
     " try to select around cursor
     silent! execute 'normal! v' . s:count . 'a' . trigger
-    let [_, s:el, s:ec, _] = getpos('.')
+    let [s:el, s:ec] = getpos('.')[1:2]
     silent! normal! o
-    let [_, s:sl, s:sc, _] = getpos('.')
+    let [s:sl, s:sc] = getpos('.')[1:2]
     silent! normal! v
 
     if s:sc != s:ec || s:sl != s:el
@@ -455,7 +455,7 @@ endfunction
 
 " selects the current cursor position (useful to test modifiers)
 function! s:position()
-    let [_, s:sl, s:sc, _] = getpos('.')
+    let [s:sl, s:sc] = getpos('.')[1:2]
     let [s:el, s:ec] = [s:sl, s:sc]
 endfunction
 
@@ -469,10 +469,10 @@ endfunction
 function! s:drop()
     call cursor(s:sl, s:sc)
     silent! execute "normal! 1 "
-    let [_, s:sl, s:sc, _] = getpos('.')
+    let [s:sl, s:sc] = getpos('.')[1:2]
     call cursor(s:el, s:ec)
     silent! execute "normal! \<BS>"
-    let [_, s:el, s:ec, _] = getpos('.')
+    let [s:el, s:ec] = getpos('.')[1:2]
 endfunction
 
 " drop right delimiter
@@ -491,11 +491,11 @@ function! s:dropt()
     call cursor(s:sl, s:sc)
     call searchpos('>', 'W')
     silent! execute "normal! 1 "
-    let [_, s:sl, s:sc, _] = getpos('.')
+    let [s:sl, s:sc] = getpos('.')[1:2]
     call cursor(s:el, s:ec)
     call searchpos('<', 'bW')
     silent! execute "normal! \<BS>"
-    let [_, s:el, s:ec, _] = getpos('.')
+    let [s:el, s:ec] = getpos('.')[1:2]
 endfunction
 
 " drop delimters and whitespace left and right
