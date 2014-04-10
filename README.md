@@ -246,7 +246,7 @@ character can be operated on with these targets.
 Supported separators:
 
 ```
-, . ; : + - ~ _ * / | \ ~
+, . ; : + - = ~ _ * / | \ ~
 ```
 
 The following examples will use commas, but they all work for each listed
@@ -256,7 +256,7 @@ Separator text objects work over multiple lines.
 
 #### In Separator
 
-`i, i. i; i: i+ i- i~ i_ i* i/ i| i\`
+`i, i. i; i: i+ i- i= i~ i_ i* i/ i| i\`
 
 - Select inside separators. Similar to in quote.
 - Supports seeking.
@@ -269,7 +269,7 @@ a , b , cccccccc , d , e
 
 #### A Separator
 
-`a, a. a; a: a+ a- a~ a_ a* a/ a| a\`
+`a, a. a; a: a+ a- a= a~ a_ a* a/ a| a\`
 
 - Select an item in a list separated by the separator character.
 - Includes the leading separator, but excludes the trailing one. This leaves
@@ -285,7 +285,7 @@ a , b , cccccccc , d , e
 
 #### Inside Separator
 
-`I, I. I; I: I+ I- I~ I_ I* I/ I| I\`
+`I, I. I; I: I+ I- I= I~ I_ I* I/ I| I\`
 
 - Select contents between separators.
 - Like inside separators, but exclude whitespace at both ends. Useful for
@@ -300,7 +300,7 @@ a , b , cccccccc , d , e
 
 #### Around Separator
 
-`A, A. A; A: A+ A- A~ A_ A* A/ A| A\`
+`A, A. A; A: A+ A- A= A~ A_ A* A/ A| A\`
 
 - Select around a pair of separators.
 - Includes both separators and a surrounding whitespace, similar to `a'` and
@@ -441,7 +441,7 @@ let g:targets_quotes = '"d '' `'
 Default:
 
 ```vim
-let g:targets_separators = ', . ; : + - ~ _ * / \ |'
+let g:targets_separators = ', . ; : + - = ~ _ * / \ |'
 ```
 
 Defines the space separated list of separator objects you wish to use. Like
@@ -450,7 +450,7 @@ letter alias. To set 'c' as an alias for comma, allowing such commands as
 'dic' to be equivalent to 'di,', you could define:
 
 ```vim
-let g:targets_separators = ',c . ; : + - ~ _ * / \ |'
+let g:targets_separators = ',c . ; : + - = ~ _ * / \ |'
 ```
 
 ## Notes

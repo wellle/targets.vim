@@ -266,23 +266,23 @@ character can be operated on with these targets.
 
 Supported separators:
 
-    , . ; : + - ~ _ * / | \ ~
+    , . ; : + - = ~ _ * / | \ ~
 
 The following examples will use commas, but they all work for each listed
 separator character accordingly.
 
 Separator text objects work over multiple lines.
 
-i, i. i; i: i+ i-                             *i,* *i.* *i;* *i:* *i+* *i-*
-i~ i_ i* i/ i| i\                             *i~* *i_* *i/* *i|* *i\* *istar*
+i, i. i; i: i+ i- i=                        *i,* *i.* *i;* *i:* *i+* *i-* *i=*
+i~ i_ i* i/ i| i\                           *i~* *i_* *i/* *i|* *i\* *istar*
     Select inside separators. Supports |targets-separator-seek|.
 
               ...........
         a , b , cccccccc , d , e ~
                └── i, ──┘
 
-a, a. a; a: a+ a-                             *a,* *a.* *a;* *a:* *a+* *a-*
-a~ a_ a* a/ a| a\                             *a~* *a_* *a/* *a|* *a\* *astar*
+a, a. a; a: a+ a- a=                        *a,* *a.* *a;* *a:* *a+* *a-* *a=*
+a~ a_ a* a/ a| a\                           *a~* *a_* *a/* *a|* *a\* *astar*
     Select an item in a list separated by the separator character. This
     includes the leading separator, but excludes the trailing one. This leaves
     a proper list separated by the separator character after deletion. See
@@ -292,8 +292,8 @@ a~ a_ a* a/ a| a\                             *a~* *a_* *a/* *a|* *a\* *astar*
         a , b , cccccccc , d , e ~
               └─── a, ──┘
 
-I, I. I; I: I+ I-                             *I,* *I.* *I;* *I:* *I+* *I-*
-I~ I_ I* I/ I| I\                             *I~* *I_* *I/* *I|* *I\* *Istar*
+I, I. I; I: I+ I- I=                        *I,* *I.* *I;* *I:* *I+* *I-* *I=*
+I~ I_ I* I/ I| I\                           *I~* *I_* *I/* *I|* *I\* *Istar*
     Select contents between separators. Like inside separators, but exclude
     whitespace at both ends. Useful for changing contents while preserving
     spacing. Supports |targets-separator-seek|.
@@ -302,8 +302,8 @@ I~ I_ I* I/ I| I\                             *I~* *I_* *I/* *I|* *I\* *Istar*
         a , b , cccccccc , d , e ~
                 └─ I, ─┘
 
-A, A. A; A: A+ A-                             *A,* *A.* *A;* *A:* *A+* *A-*
-A~ A_ A* A/ A| A\                             *A~* *A_* *A/* *A|* *A\* *Astar*
+A, A. A; A: A+ A- A=                        *A,* *A.* *A;* *A:* *A+* *A-* *A=*
+A~ A_ A* A/ A| A\                           *A~* *A_* *A/* *A|* *A\* *Astar*
     Select around a pair of separators. This includes both separators and a
     surrounding whitespace, similar to `a'` and `A(`. Supports
     |targets-separator-seek|.
@@ -317,38 +317,38 @@ NEXT AND LAST SEPARATOR                          *targets-next-last-separator*
 
 Work directly on distant separators without moving there separately.
 
-in, in. in; in: in+ in-                 *in,* *in.* *in;* *in:* *in+* *in-*
-in~ in_ in* in/ in| in\                 *in~* *in_* *in/* *in|* *in\* *instar*
-an, an. an; an: an+ an-                 *an,* *an.* *an;* *an:* *an+* *an-*
-an~ an_ an* an/ an| an\                 *an~* *an_* *an/* *an|* *an\* *anstar*
-In, In. In; In: In+ In-                 *In,* *In.* *In;* *In:* *In+* *In-*
-In~ In_ In* In/ In| In\                 *In~* *In_* *In/* *In|* *In\* *Instar*
-An, An. An; An: An+ An-                 *An,* *An.* *An;* *An:* *An+* *An-*
-An~ An_ An* An/ An| An\                 *An~* *An_* *An/* *An|* *An\* *Anstar*
-il, il. il; il: il+ il-                 *il,* *il.* *il;* *il:* *il+* *il-*
-il~ il_ il* il/ il| il\                 *il~* *il_* *il/* *il|* *il\* *ilstar*
-al, al. al; al: al+ al-                 *al,* *al.* *al;* *al:* *al+* *al-*
-al~ al_ al* al/ al| al\                 *al~* *al_* *al/* *al|* *al\* *alstar*
-Il, Il. Il; Il: Il+ Il-                 *Il,* *Il.* *Il;* *Il:* *Il+* *Il-*
-Il~ Il_ Il* Il/ Il| Il\                 *Il~* *Il_* *Il/* *Il|* *Il\* *Ilstar*
-Al, Al. Al; Al: Al+ Al-                 *Al,* *Al.* *Al;* *Al:* *Al+* *Al-*
-Al~ Al_ Al* Al/ Al| Al\                 *Al~* *Al_* *Al/* *Al|* *Al\* *Alstar*
-iN, iN. iN; iN: iN+ iN-                 *iN,* *iN.* *iN;* *iN:* *iN+* *iN-*
-iN~ iN_ iN* iN/ iN| iN\                 *iN~* *iN_* *iN/* *iN|* *iN\* *iNstar*
-aN, aN. aN; aN: aN+ aN-                 *aN,* *aN.* *aN;* *aN:* *aN+* *aN-*
-aN~ aN_ aN* aN/ aN| aN\                 *aN~* *aN_* *aN/* *aN|* *aN\* *aNstar*
-IN, IN. IN; IN: IN+ IN-                 *IN,* *IN.* *IN;* *IN:* *IN+* *IN-*
-IN~ IN_ IN* IN/ IN| IN\                 *IN~* *IN_* *IN/* *IN|* *IN\* *INstar*
-AN, AN. AN; AN: AN+ AN-                 *AN,* *AN.* *AN;* *AN:* *AN+* *AN-*
-AN~ AN_ AN* AN/ AN| AN\                 *AN~* *AN_* *AN/* *AN|* *AN\* *ANstar*
-iL, iL. iL; iL: iL+ iL-                 *iL,* *iL.* *iL;* *iL:* *iL+* *iL-*
-iL~ iL_ iL* iL/ iL| iL\                 *iL~* *iL_* *iL/* *iL|* *iL\* *iLstar*
-aL, aL. aL; aL: aL+ aL-                 *aL,* *aL.* *aL;* *aL:* *aL+* *aL-*
-aL~ aL_ aL* aL/ aL| aL\                 *aL~* *aL_* *aL/* *aL|* *aL\* *aLstar*
-IL, IL. IL; IL: IL+ IL-                 *IL,* *IL.* *IL;* *IL:* *IL+* *IL-*
-IL~ IL_ IL* IL/ IL| IL\                 *IL~* *IL_* *IL/* *IL|* *IL\* *ILstar*
-AL, AL. AL; AL: AL+ AL-                 *AL,* *AL.* *AL;* *AL:* *AL+* *AL-*
-AL~ AL_ AL* AL/ AL| AL\                 *AL~* *AL_* *AL/* *AL|* *AL\* *ALstar*
+in, in. in; in: in+ in- in=          *in,* *in.* *in;* *in:* *in+* *in-* *in=*
+in~ in_ in* in/ in| in\              *in~* *in_* *in/* *in|* *in\* *instar*
+an, an. an; an: an+ an- an=          *an,* *an.* *an;* *an:* *an+* *an-* *an=*
+an~ an_ an* an/ an| an\              *an~* *an_* *an/* *an|* *an\* *anstar*
+In, In. In; In: In+ In- In=          *In,* *In.* *In;* *In:* *In+* *In-* *In=*
+In~ In_ In* In/ In| In\              *In~* *In_* *In/* *In|* *In\* *Instar*
+An, An. An; An: An+ An- An=          *An,* *An.* *An;* *An:* *An+* *An-* *An=*
+An~ An_ An* An/ An| An\              *An~* *An_* *An/* *An|* *An\* *Anstar*
+il, il. il; il: il+ il- il=          *il,* *il.* *il;* *il:* *il+* *il-* *il=*
+il~ il_ il* il/ il| il\              *il~* *il_* *il/* *il|* *il\* *ilstar*
+al, al. al; al: al+ al- al=          *al,* *al.* *al;* *al:* *al+* *al-* *al=*
+al~ al_ al* al/ al| al\              *al~* *al_* *al/* *al|* *al\* *alstar*
+Il, Il. Il; Il: Il+ Il- Il=          *Il,* *Il.* *Il;* *Il:* *Il+* *Il-* *Il=*
+Il~ Il_ Il* Il/ Il| Il\              *Il~* *Il_* *Il/* *Il|* *Il\* *Ilstar*
+Al, Al. Al; Al: Al+ Al- Al=          *Al,* *Al.* *Al;* *Al:* *Al+* *Al-* *Al=*
+Al~ Al_ Al* Al/ Al| Al\              *Al~* *Al_* *Al/* *Al|* *Al\* *Alstar*
+iN, iN. iN; iN: iN+ iN- iN=          *iN,* *iN.* *iN;* *iN:* *iN+* *iN-* *iN=*
+iN~ iN_ iN* iN/ iN| iN\              *iN~* *iN_* *iN/* *iN|* *iN\* *iNstar*
+aN, aN. aN; aN: aN+ aN- aN=          *aN,* *aN.* *aN;* *aN:* *aN+* *aN-* *aN=*
+aN~ aN_ aN* aN/ aN| aN\              *aN~* *aN_* *aN/* *aN|* *aN\* *aNstar*
+IN, IN. IN; IN: IN+ IN- IN=          *IN,* *IN.* *IN;* *IN:* *IN+* *IN-* *IN=*
+IN~ IN_ IN* IN/ IN| IN\              *IN~* *IN_* *IN/* *IN|* *IN\* *INstar*
+AN, AN. AN; AN: AN+ AN- AN=          *AN,* *AN.* *AN;* *AN:* *AN+* *AN-* *AN=*
+AN~ AN_ AN* AN/ AN| AN\              *AN~* *AN_* *AN/* *AN|* *AN\* *ANstar*
+iL, iL. iL; iL: iL+ iL- iL=          *iL,* *iL.* *iL;* *iL:* *iL+* *iL-* *iL=*
+iL~ iL_ iL* iL/ iL| iL\              *iL~* *iL_* *iL/* *iL|* *iL\* *iLstar*
+aL, aL. aL; aL: aL+ aL- aL=          *aL,* *aL.* *aL;* *aL:* *aL+* *aL-* *aL=*
+aL~ aL_ aL* aL/ aL| aL\              *aL~* *aL_* *aL/* *aL|* *aL\* *aLstar*
+IL, IL. IL; IL: IL+ IL- IL=          *IL,* *IL.* *IL;* *IL:* *IL+* *IL-* *IL=*
+IL~ IL_ IL* IL/ IL| IL\              *IL~* *IL_* *IL/* *IL|* *IL\* *ILstar*
+AL, AL. AL; AL: AL+ AL- AL=          *AL,* *AL.* *AL;* *AL:* *AL+* *AL-* *AL=*
+AL~ AL_ AL* AL/ AL| AL\              *AL~* *AL_* *AL/* *AL|* *AL\* *ALstar*
     All the above separator text objects can be shifted to the next separator
     by including the letter `n`. The command `in,` selects inside of the next
     commas. Use the letter `l` instead to work on the previous (last)
@@ -437,14 +437,14 @@ equivalent to 'ci"', you could define:
 
                                                         *g:targets_separators*
 Default:
-    let g:targets_separators = ', . ; : + - ~ _ * / \ |' ~
+    let g:targets_separators = ', . ; : + - = ~ _ * / \ |' ~
 
 Defines the space separated list of separator objects you wish to use. Like
 quote objects, separator objects can optionally be followed by a single one
 letter alias. To set 'c' as an alias for comma, allowing such commands as
 'dic' to be equivalent to 'di,', you could define:
 
-    let g:targets_separators = ',c . ; : + - ~ _ * / \ |' ~
+    let g:targets_separators = ',c . ; : + - = ~ _ * / \ |' ~
 
 ==============================================================================
 NOTES                                                          *targets-notes*
