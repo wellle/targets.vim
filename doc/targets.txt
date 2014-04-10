@@ -398,7 +398,7 @@ Default:
 
 Controls the normal mode operator mode maps that get created for In Pair (i),
 A Pair (a), Inside Pair (I), and Around Pair (A). Required to be a 4 character
-long list.
+long list. Use a space to deactivate a mode.
 
                                                               *g:targets_nlNL*
 Default:
