@@ -1,13 +1,13 @@
 " targets.vim Provides additional text objects
 " Author:  Christian Wellenbrock <christian.wellenbrock@gmail.com>
 " License: MIT license
-" Updated: 2014-04-05
-" Version: 0.1.3
+" Updated: 2014-04-11
+" Version: 0.1.4
 
 if exists("g:loaded_targets") || &cp || v:version < 700
     finish
 endif
-let g:loaded_targets = '0.1.3' " version number
+let g:loaded_targets = '0.1.4' " version number
 let s:save_cpoptions = &cpoptions
 set cpo&vim
 
@@ -184,10 +184,15 @@ function! s:createSeparatorTextObjects()
     endfor
 endfunction
 
-" add expression mappings for `A` and `I` in visual mode #23
+" add expression mappings for `A` and `I` in visual mode #23 unless
+" deactivated #49
 function! s:addExpressionMappings()
-    xnoremap <expr> <silent> A targets#uppercaseXmap('A')
-    xnoremap <expr> <silent> I targets#uppercaseXmap('I')
+    if s:A !=# ' '
+        xnoremap <expr> <silent> A targets#uppercaseXmap('A')
+    endif
+    if s:I !=# ' '
+        xnoremap <expr> <silent> I targets#uppercaseXmap('I')
+    endif
 endfunction
 
 function! s:loadSettings()

@@ -382,9 +382,9 @@ Default:
 let g:targets_aiAI = 'aiAI'
 ```
 
-Controls the normal mode operator mode maps that get created for In Pair (i),
-A Pair (a), Inside Pair (I), and Around Pair (A). Required to be a 4 character
-long list.
+Controls the normal mode operator mode maps that get created for In Pair (`i`),
+A Pair (`a`), Inside Pair (`I`), and Around Pair (`A`). Required to be a 4
+character long list. Use a space to deactivate a mode.
 
 ### g:targets_nlNL
 
@@ -395,17 +395,17 @@ let g:targets_nlNL = 'nlNL'
 ```
 
 Controls the keys used in maps for seeking next and last text objects. For
-example, if you don't wish to use the N and L seeks, and instead wish for 'n'
-to always search for the next object and 'N' to search for the last, you could
-set:
+example, if you don't wish to use the `N` and `L` seeks, and instead wish for
+`n` to always search for the next object and `N` to search for the last, you
+could set:
 
 ```vim
 let g:targets_nlNL = 'nN  '
 ```
 
 Note that two extra spaces are still required on the end, indicating you wish
-to disable the default functionality of N and L. Required to be a 4 character
-long list.
+to disable the default functionality of `N` and `L`. Required to be a 4
+character long list.
 
 ### g:targets_pairs
 
@@ -428,9 +428,9 @@ let g:targets_quotes = '" '' `'
 
 Defines the space separated list of quoting objects you wish to use. Note that
 you have to escape the single quote by doubling it. Quote objects can
-optionally be followed by a single one letter alias. For example, to set 'd'
-as an alias for double quotes, allowing such commands as 'cid' to be
-equivalent to 'ci"', you could define:
+optionally be followed by a single one letter alias. For example, to set `d`
+as an alias for double quotes, allowing such commands as `cid` to be
+equivalent to `ci"`, you could define:
 
 ```vim
 let g:targets_quotes = '"d '' `'
@@ -446,8 +446,8 @@ let g:targets_separators = ', . ; : + - = ~ _ * / \ |'
 
 Defines the space separated list of separator objects you wish to use. Like
 quote objects, separator objects can optionally be followed by a single one
-letter alias. To set 'c' as an alias for comma, allowing such commands as
-'dic' to be equivalent to 'di,', you could define:
+letter alias. To set `c` as an alias for comma, allowing such commands as
+`dic` to be equivalent to `di,`, you could define:
 
 ```vim
 let g:targets_separators = ',c . ; : + - = ~ _ * / \ |'
