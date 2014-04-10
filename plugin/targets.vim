@@ -184,10 +184,15 @@ function! s:createSeparatorTextObjects()
     endfor
 endfunction
 
-" add expression mappings for `A` and `I` in visual mode #23
+" add expression mappings for `A` and `I` in visual mode #23 unless
+" deactivated #49
 function! s:addExpressionMappings()
-    xnoremap <expr> <silent> A targets#uppercaseXmap('A')
-    xnoremap <expr> <silent> I targets#uppercaseXmap('I')
+    if s:A !=# ' '
+        xnoremap <expr> <silent> A targets#uppercaseXmap('A')
+    endif
+    if s:I !=# ' '
+        xnoremap <expr> <silent> I targets#uppercaseXmap('I')
+    endif
 endfunction
 
 function! s:loadSettings()
