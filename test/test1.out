@@ -3866,6 +3866,247 @@ v2iL-           a -___- c - d - e - x - g - h - i - k - l
 v2aL-           a ____- c - d - e - x - g - h - i - k - l
 v2IL-           a - _ - c - d - e - x - g - h - i - k - l
 v2AL-           a ______c - d - e - x - g - h - i - k - l
+a = b = c = d = e = x = g = h = i = k = l
+ci=             a = b = c = d = e =_= g = h = i = k = l
+ca=             a = b = c = d = e _= g = h = i = k = l
+cI=             a = b = c = d = e = _ = g = h = i = k = l
+cA=             a = b = c = d = e _g = h = i = k = l
+cin=            a = b = c = d = e = x =_= h = i = k = l
+can=            a = b = c = d = e = x _= h = i = k = l
+cIn=            a = b = c = d = e = x = _ = h = i = k = l
+cAn=            a = b = c = d = e = x _h = i = k = l
+cil=            a = b = c = d =_= x = g = h = i = k = l
+cal=            a = b = c = d _= x = g = h = i = k = l
+cIl=            a = b = c = d = _ = x = g = h = i = k = l
+cAl=            a = b = c = d _x = g = h = i = k = l
+ciN=            a = b = c = d = e = x = g =_= i = k = l
+caN=            a = b = c = d = e = x = g _= i = k = l
+cIN=            a = b = c = d = e = x = g = _ = i = k = l
+cAN=            a = b = c = d = e = x = g _i = k = l
+ciL=            a = b = c =_= e = x = g = h = i = k = l
+caL=            a = b = c _= e = x = g = h = i = k = l
+cIL=            a = b = c = _ = e = x = g = h = i = k = l
+cAL=            a = b = c _e = x = g = h = i = k = l
+c1i=            a = b = c = d = e =_= g = h = i = k = l
+c1a=            a = b = c = d = e _= g = h = i = k = l
+c1I=            a = b = c = d = e = _ = g = h = i = k = l
+c1A=            a = b = c = d = e _g = h = i = k = l
+c1in=           a = b = c = d = e = x =_= h = i = k = l
+c1an=           a = b = c = d = e = x _= h = i = k = l
+c1In=           a = b = c = d = e = x = _ = h = i = k = l
+c1An=           a = b = c = d = e = x _h = i = k = l
+c1il=           a = b = c = d =_= x = g = h = i = k = l
+c1al=           a = b = c = d _= x = g = h = i = k = l
+c1Il=           a = b = c = d = _ = x = g = h = i = k = l
+c1Al=           a = b = c = d _x = g = h = i = k = l
+c1iN=           a = b = c = d = e = x = g =_= i = k = l
+c1aN=           a = b = c = d = e = x = g _= i = k = l
+c1IN=           a = b = c = d = e = x = g = _ = i = k = l
+c1AN=           a = b = c = d = e = x = g _i = k = l
+c1iL=           a = b = c =_= e = x = g = h = i = k = l
+c1aL=           a = b = c _= e = x = g = h = i = k = l
+c1IL=           a = b = c = _ = e = x = g = h = i = k = l
+c1AL=           a = b = c _e = x = g = h = i = k = l
+c2i=            a = b = c = d = e =_= g = h = i = k = l
+c2a=            a = b = c = d = e _= g = h = i = k = l
+c2I=            a = b = c = d = e = _ = g = h = i = k = l
+c2A=            a = b = c = d = e _g = h = i = k = l
+c2in=           a = b = c = d = e = x = g =_= i = k = l
+c2an=           a = b = c = d = e = x = g _= i = k = l
+c2In=           a = b = c = d = e = x = g = _ = i = k = l
+c2An=           a = b = c = d = e = x = g _i = k = l
+c2il=           a = b = c =_= e = x = g = h = i = k = l
+c2al=           a = b = c _= e = x = g = h = i = k = l
+c2Il=           a = b = c = _ = e = x = g = h = i = k = l
+c2Al=           a = b = c _e = x = g = h = i = k = l
+c2iN=           a = b = c = d = e = x = g = h = i =_= l
+c2aN=           a = b = c = d = e = x = g = h = i _= l
+c2IN=           a = b = c = d = e = x = g = h = i = _ = l
+c2AN=           a = b = c = d = e = x = g = h = i _l
+c2iL=           a =_= c = d = e = x = g = h = i = k = l
+c2aL=           a _= c = d = e = x = g = h = i = k = l
+c2IL=           a = _ = c = d = e = x = g = h = i = k = l
+c2AL=           a _c = d = e = x = g = h = i = k = l
+di=             a = b = c = d = e == g = h = i = k = l
+da=             a = b = c = d = e = g = h = i = k = l
+dI=             a = b = c = d = e =  = g = h = i = k = l
+dA=             a = b = c = d = e g = h = i = k = l
+din=            a = b = c = d = e = x == h = i = k = l
+dan=            a = b = c = d = e = x = h = i = k = l
+dIn=            a = b = c = d = e = x =  = h = i = k = l
+dAn=            a = b = c = d = e = x h = i = k = l
+dil=            a = b = c = d == x = g = h = i = k = l
+dal=            a = b = c = d = x = g = h = i = k = l
+dIl=            a = b = c = d =  = x = g = h = i = k = l
+dAl=            a = b = c = d x = g = h = i = k = l
+diN=            a = b = c = d = e = x = g == i = k = l
+daN=            a = b = c = d = e = x = g = i = k = l
+dIN=            a = b = c = d = e = x = g =  = i = k = l
+dAN=            a = b = c = d = e = x = g i = k = l
+diL=            a = b = c == e = x = g = h = i = k = l
+daL=            a = b = c = e = x = g = h = i = k = l
+dIL=            a = b = c =  = e = x = g = h = i = k = l
+dAL=            a = b = c e = x = g = h = i = k = l
+d1i=            a = b = c = d = e == g = h = i = k = l
+d1a=            a = b = c = d = e = g = h = i = k = l
+d1I=            a = b = c = d = e =  = g = h = i = k = l
+d1A=            a = b = c = d = e g = h = i = k = l
+d1in=           a = b = c = d = e = x == h = i = k = l
+d1an=           a = b = c = d = e = x = h = i = k = l
+d1In=           a = b = c = d = e = x =  = h = i = k = l
+d1An=           a = b = c = d = e = x h = i = k = l
+d1il=           a = b = c = d == x = g = h = i = k = l
+d1al=           a = b = c = d = x = g = h = i = k = l
+d1Il=           a = b = c = d =  = x = g = h = i = k = l
+d1Al=           a = b = c = d x = g = h = i = k = l
+d1iN=           a = b = c = d = e = x = g == i = k = l
+d1aN=           a = b = c = d = e = x = g = i = k = l
+d1IN=           a = b = c = d = e = x = g =  = i = k = l
+d1AN=           a = b = c = d = e = x = g i = k = l
+d1iL=           a = b = c == e = x = g = h = i = k = l
+d1aL=           a = b = c = e = x = g = h = i = k = l
+d1IL=           a = b = c =  = e = x = g = h = i = k = l
+d1AL=           a = b = c e = x = g = h = i = k = l
+d2i=            a = b = c = d = e == g = h = i = k = l
+d2a=            a = b = c = d = e = g = h = i = k = l
+d2I=            a = b = c = d = e =  = g = h = i = k = l
+d2A=            a = b = c = d = e g = h = i = k = l
+d2in=           a = b = c = d = e = x = g == i = k = l
+d2an=           a = b = c = d = e = x = g = i = k = l
+d2In=           a = b = c = d = e = x = g =  = i = k = l
+d2An=           a = b = c = d = e = x = g i = k = l
+d2il=           a = b = c == e = x = g = h = i = k = l
+d2al=           a = b = c = e = x = g = h = i = k = l
+d2Il=           a = b = c =  = e = x = g = h = i = k = l
+d2Al=           a = b = c e = x = g = h = i = k = l
+d2iN=           a = b = c = d = e = x = g = h = i == l
+d2aN=           a = b = c = d = e = x = g = h = i = l
+d2IN=           a = b = c = d = e = x = g = h = i =  = l
+d2AN=           a = b = c = d = e = x = g = h = i l
+d2iL=           a == c = d = e = x = g = h = i = k = l
+d2aL=           a = c = d = e = x = g = h = i = k = l
+d2IL=           a =  = c = d = e = x = g = h = i = k = l
+d2AL=           a c = d = e = x = g = h = i = k = l
+yi=             a = b = c = d = e = x = g = h = i = k = l       ' x '
+ya=             a = b = c = d = e = x = g = h = i = k = l       '= x '
+yI=             a = b = c = d = e = x = g = h = i = k = l       'x'
+yA=             a = b = c = d = e = x = g = h = i = k = l       '= x = '
+yin=            a = b = c = d = e = x = g = h = i = k = l       ' g '
+yan=            a = b = c = d = e = x = g = h = i = k = l       '= g '
+yIn=            a = b = c = d = e = x = g = h = i = k = l       'g'
+yAn=            a = b = c = d = e = x = g = h = i = k = l       '= g = '
+yil=            a = b = c = d = e = x = g = h = i = k = l       ' e '
+yal=            a = b = c = d = e = x = g = h = i = k = l       '= e '
+yIl=            a = b = c = d = e = x = g = h = i = k = l       'e'
+yAl=            a = b = c = d = e = x = g = h = i = k = l       '= e = '
+yiN=            a = b = c = d = e = x = g = h = i = k = l       ' h '
+yaN=            a = b = c = d = e = x = g = h = i = k = l       '= h '
+yIN=            a = b = c = d = e = x = g = h = i = k = l       'h'
+yAN=            a = b = c = d = e = x = g = h = i = k = l       '= h = '
+yiL=            a = b = c = d = e = x = g = h = i = k = l       ' d '
+yaL=            a = b = c = d = e = x = g = h = i = k = l       '= d '
+yIL=            a = b = c = d = e = x = g = h = i = k = l       'd'
+yAL=            a = b = c = d = e = x = g = h = i = k = l       '= d = '
+y1i=            a = b = c = d = e = x = g = h = i = k = l       ' x '
+y1a=            a = b = c = d = e = x = g = h = i = k = l       '= x '
+y1I=            a = b = c = d = e = x = g = h = i = k = l       'x'
+y1A=            a = b = c = d = e = x = g = h = i = k = l       '= x = '
+y1in=           a = b = c = d = e = x = g = h = i = k = l       ' g '
+y1an=           a = b = c = d = e = x = g = h = i = k = l       '= g '
+y1In=           a = b = c = d = e = x = g = h = i = k = l       'g'
+y1An=           a = b = c = d = e = x = g = h = i = k = l       '= g = '
+y1il=           a = b = c = d = e = x = g = h = i = k = l       ' e '
+y1al=           a = b = c = d = e = x = g = h = i = k = l       '= e '
+y1Il=           a = b = c = d = e = x = g = h = i = k = l       'e'
+y1Al=           a = b = c = d = e = x = g = h = i = k = l       '= e = '
+y1iN=           a = b = c = d = e = x = g = h = i = k = l       ' h '
+y1aN=           a = b = c = d = e = x = g = h = i = k = l       '= h '
+y1IN=           a = b = c = d = e = x = g = h = i = k = l       'h'
+y1AN=           a = b = c = d = e = x = g = h = i = k = l       '= h = '
+y1iL=           a = b = c = d = e = x = g = h = i = k = l       ' d '
+y1aL=           a = b = c = d = e = x = g = h = i = k = l       '= d '
+y1IL=           a = b = c = d = e = x = g = h = i = k = l       'd'
+y1AL=           a = b = c = d = e = x = g = h = i = k = l       '= d = '
+y2i=            a = b = c = d = e = x = g = h = i = k = l       ' x '
+y2a=            a = b = c = d = e = x = g = h = i = k = l       '= x '
+y2I=            a = b = c = d = e = x = g = h = i = k = l       'x'
+y2A=            a = b = c = d = e = x = g = h = i = k = l       '= x = '
+y2in=           a = b = c = d = e = x = g = h = i = k = l       ' h '
+y2an=           a = b = c = d = e = x = g = h = i = k = l       '= h '
+y2In=           a = b = c = d = e = x = g = h = i = k = l       'h'
+y2An=           a = b = c = d = e = x = g = h = i = k = l       '= h = '
+y2il=           a = b = c = d = e = x = g = h = i = k = l       ' d '
+y2al=           a = b = c = d = e = x = g = h = i = k = l       '= d '
+y2Il=           a = b = c = d = e = x = g = h = i = k = l       'd'
+y2Al=           a = b = c = d = e = x = g = h = i = k = l       '= d = '
+y2iN=           a = b = c = d = e = x = g = h = i = k = l       ' k '
+y2aN=           a = b = c = d = e = x = g = h = i = k = l       '= k '
+y2IN=           a = b = c = d = e = x = g = h = i = k = l       'k'
+y2AN=           a = b = c = d = e = x = g = h = i = k = l       '= k = '
+y2iL=           a = b = c = d = e = x = g = h = i = k = l       ' b '
+y2aL=           a = b = c = d = e = x = g = h = i = k = l       '= b '
+y2IL=           a = b = c = d = e = x = g = h = i = k = l       'b'
+y2AL=           a = b = c = d = e = x = g = h = i = k = l       '= b = '
+vi=             a = b = c = d = e =___= g = h = i = k = l
+va=             a = b = c = d = e ____= g = h = i = k = l
+vI=             a = b = c = d = e = _ = g = h = i = k = l
+vA=             a = b = c = d = e ______g = h = i = k = l
+vin=            a = b = c = d = e = x =___= h = i = k = l
+van=            a = b = c = d = e = x ____= h = i = k = l
+vIn=            a = b = c = d = e = x = _ = h = i = k = l
+vAn=            a = b = c = d = e = x ______h = i = k = l
+vil=            a = b = c = d =___= x = g = h = i = k = l
+val=            a = b = c = d ____= x = g = h = i = k = l
+vIl=            a = b = c = d = _ = x = g = h = i = k = l
+vAl=            a = b = c = d ______x = g = h = i = k = l
+viN=            a = b = c = d = e = x = g =___= i = k = l
+vaN=            a = b = c = d = e = x = g ____= i = k = l
+vIN=            a = b = c = d = e = x = g = _ = i = k = l
+vAN=            a = b = c = d = e = x = g ______i = k = l
+viL=            a = b = c =___= e = x = g = h = i = k = l
+vaL=            a = b = c ____= e = x = g = h = i = k = l
+vIL=            a = b = c = _ = e = x = g = h = i = k = l
+vAL=            a = b = c ______e = x = g = h = i = k = l
+v1i=            a = b = c = d = e =___= g = h = i = k = l
+v1a=            a = b = c = d = e ____= g = h = i = k = l
+v1I=            a = b = c = d = e = _ = g = h = i = k = l
+v1A=            a = b = c = d = e ______g = h = i = k = l
+v1in=           a = b = c = d = e = x =___= h = i = k = l
+v1an=           a = b = c = d = e = x ____= h = i = k = l
+v1In=           a = b = c = d = e = x = _ = h = i = k = l
+v1An=           a = b = c = d = e = x ______h = i = k = l
+v1il=           a = b = c = d =___= x = g = h = i = k = l
+v1al=           a = b = c = d ____= x = g = h = i = k = l
+v1Il=           a = b = c = d = _ = x = g = h = i = k = l
+v1Al=           a = b = c = d ______x = g = h = i = k = l
+v1iN=           a = b = c = d = e = x = g =___= i = k = l
+v1aN=           a = b = c = d = e = x = g ____= i = k = l
+v1IN=           a = b = c = d = e = x = g = _ = i = k = l
+v1AN=           a = b = c = d = e = x = g ______i = k = l
+v1iL=           a = b = c =___= e = x = g = h = i = k = l
+v1aL=           a = b = c ____= e = x = g = h = i = k = l
+v1IL=           a = b = c = _ = e = x = g = h = i = k = l
+v1AL=           a = b = c ______e = x = g = h = i = k = l
+v2i=            a = b = c = d = e =___= g = h = i = k = l
+v2a=            a = b = c = d = e ____= g = h = i = k = l
+v2I=            a = b = c = d = e = _ = g = h = i = k = l
+v2A=            a = b = c = d = e ______g = h = i = k = l
+v2in=           a = b = c = d = e = x = g =___= i = k = l
+v2an=           a = b = c = d = e = x = g ____= i = k = l
+v2In=           a = b = c = d = e = x = g = _ = i = k = l
+v2An=           a = b = c = d = e = x = g ______i = k = l
+v2il=           a = b = c =___= e = x = g = h = i = k = l
+v2al=           a = b = c ____= e = x = g = h = i = k = l
+v2Il=           a = b = c = _ = e = x = g = h = i = k = l
+v2Al=           a = b = c ______e = x = g = h = i = k = l
+v2iN=           a = b = c = d = e = x = g = h = i =___= l
+v2aN=           a = b = c = d = e = x = g = h = i ____= l
+v2IN=           a = b = c = d = e = x = g = h = i = _ = l
+v2AN=           a = b = c = d = e = x = g = h = i ______l
+v2iL=           a =___= c = d = e = x = g = h = i = k = l
+v2aL=           a ____= c = d = e = x = g = h = i = k = l
+v2IL=           a = _ = c = d = e = x = g = h = i = k = l
+v2AL=           a ______c = d = e = x = g = h = i = k = l
 a ~ b ~ c ~ d ~ e ~ x ~ g ~ h ~ i ~ k ~ l
 ci~             a ~ b ~ c ~ d ~ e ~_~ g ~ h ~ i ~ k ~ l
 ca~             a ~ b ~ c ~ d ~ e _~ g ~ h ~ i ~ k ~ l

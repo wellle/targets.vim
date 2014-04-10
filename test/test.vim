@@ -73,7 +73,7 @@ function! s:testBasic()
 
     normal +
 
-    for del in [ ',', '.', ';', ':', '+', '-', '~', '_', '*', '/', '|', '\' ]
+    for del in [ ',', '.', ';', ':', '+', '-', '=', '~', '_', '*', '/', '|', '\' ]
         normal "lyy
 
         for op in [ 'c', 'd', 'y', 'v' ]
