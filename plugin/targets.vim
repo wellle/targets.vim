@@ -210,7 +210,7 @@ function! s:loadSettings()
         let g:targets_quotes = '" '' `'
     endif
     if !exists('g:targets_separators')
-        let g:targets_separators = ', . ; : + - = ~ _ * / \ |'
+        let g:targets_separators = ', . ; : + - = ~ _ * / \ | &'
     endif
 
     let [s:a, s:i, s:A, s:I] = split(g:targets_aiAI, '\zs')
