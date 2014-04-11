@@ -186,20 +186,22 @@ endfunction
 " line │ ' │  ' │ ' │  '
 " out  │ . │ .  │ . │ .
 function! s:quote()
-    if getline('.')[col('.')-1] == s:opening
-        let oldpos = getpos('.')
-        let closing = 1
-        let line = 1
-        while line != 0
-            let line = searchpos(s:opening, 'bW', line('.'))[0]
-            let closing = !closing
-        endwhile
-        call setpos('.', oldpos)
-        if closing " cursor is on closing delimiter
-            silent! normal! h
-        endif
-        unlet oldpos closing line
+    if getline('.')[col('.')-1] != s:delimiters[0]
+        return
     endif
+
+    let oldpos = getpos('.')
+    let closing = 1
+    let line = 1
+    while line != 0
+        let line = searchpos(s:opening, 'bW', line('.'))[0]
+        let closing = !closing
+    endwhile
+    call setpos('.', oldpos)
+    if closing " cursor is on closing delimiter
+        silent! normal! h
+    endif
+    unlet oldpos closing line
 endfunction
 
 " find `count` next delimiter (multi line)
