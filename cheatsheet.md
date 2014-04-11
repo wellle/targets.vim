@@ -69,30 +69,30 @@ a ' bbbbbbb ' ccccccc ' dddddd ' eeeeeee ' fffffff ' g
 Available mappings
 
 ```
- i,  i.  i;  i:  i+  i-  i~  i_  i*  i/  i|  i\
- a,  a.  a;  a:  a+  a-  a~  a_  a*  a/  a|  a\
- I,  I.  I;  I:  I+  I-  I~  I_  I*  I/  I|  I\
- A,  A.  A;  A:  A+  A-  A~  A_  A*  A/  A|  A\
+ i,  i.  i;  i:  i+  i-  i=  i~  i_  i*  i/  i|  i\  i&
+ a,  a.  a;  a:  a+  a-  a=  a~  a_  a*  a/  a|  a\  a&
+ I,  I.  I;  I:  I+  I-  I=  I~  I_  I*  I/  I|  I\  I&
+ A,  A.  A;  A:  A+  A-  A=  A~  A_  A*  A/  A|  A\  A&
 
-in, in. in; in: in+ in- in~ in_ in* in/ in| in\
-an, an. an; an: an+ an- an~ an_ an* an/ an| an\
-In, In. In; In: In+ In- In~ In_ In* In/ In| In\
-An, An. An; An: An+ An- An~ An_ An* An/ An| An\
+in, in. in; in: in+ in- in= in~ in_ in* in/ in| in\ in&
+an, an. an; an: an+ an- an= an~ an_ an* an/ an| an\ an&
+In, In. In; In: In+ In- In= In~ In_ In* In/ In| In\ In&
+An, An. An; An: An+ An- An= An~ An_ An* An/ An| An\ An&
 
-il, il. il; il: il+ il- il~ il_ il* il/ il| il\
-al, al. al; al: al+ al- al~ al_ al* al/ al| al\
-Il, Il. Il; Il: Il+ Il- Il~ Il_ Il* Il/ Il| Il\
-Al, Al. Al; Al: Al+ Al- Al~ Al_ Al* Al/ Al| Al\
+il, il. il; il: il+ il- il= il~ il_ il* il/ il| il\ il&
+al, al. al; al: al+ al- al= al~ al_ al* al/ al| al\ al&
+Il, Il. Il; Il: Il+ Il- Il= Il~ Il_ Il* Il/ Il| Il\ Il&
+Al, Al. Al; Al: Al+ Al- Al= Al~ Al_ Al* Al/ Al| Al\ Al&
 
-iN, iN. iN; iN: iN+ iN- iN~ iN_ iN* iN/ iN| iN\
-aN, aN. aN; aN: aN+ aN- aN~ aN_ aN* aN/ aN| aN\
-IN, IN. IN; IN: IN+ IN- IN~ IN_ IN* IN/ IN| IN\
-AN, AN. AN; AN: AN+ AN- AN~ AN_ AN* AN/ AN| AN\
+iN, iN. iN; iN: iN+ iN- iN= iN~ iN_ iN* iN/ iN| iN\ iN&
+aN, aN. aN; aN: aN+ aN- aN= aN~ aN_ aN* aN/ aN| aN\ aN&
+IN, IN. IN; IN: IN+ IN- IN= IN~ IN_ IN* IN/ IN| IN\ IN&
+AN, AN. AN; AN: AN+ AN- AN= AN~ AN_ AN* AN/ AN| AN\ AN&
 
-iL, iL. iL; iL: iL+ iL- iL~ iL_ iL* iL/ iL| iL\
-aL, aL. aL; aL: aL+ aL- aL~ aL_ aL* aL/ aL| aL\
-IL, IL. IL; IL: IL+ IL- IL~ IL_ IL* IL/ IL| IL\
-AL, AL. AL; AL: AL+ AL- AL~ AL_ AL* AL/ AL| AL\
+iL, iL. iL; iL: iL+ iL- iL= iL~ iL_ iL* iL/ iL| iL\ iL&
+aL, aL. aL; aL: aL+ aL- aL= aL~ aL_ aL* aL/ aL| aL\ aL&
+IL, IL. IL; IL: IL+ IL- IL= IL~ IL_ IL* IL/ IL| IL\ IL&
+AL, AL. AL; AL: AL+ AL- AL= AL~ AL_ AL* AL/ AL| AL\ AL&
 ```
 
 Chart for a list of separators
