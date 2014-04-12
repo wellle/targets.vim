@@ -293,7 +293,7 @@ a~ a_ a* a/ a| a\ a&                     *a~* *a_* *a/* *a|* *a\* *a&* *astar*
               └─── a, ──┘
 
 I, I. I; I: I+ I- I=                     *I,* *I.* *I;* *I:* *I+* *I-* *I=*
-I~ I_ I* I/ I| I\ A&                     *I~* *I_* *I/* *I|* *I\* *A&* *Istar*
+I~ I_ I* I/ I| I\ I&                     *I~* *I_* *I/* *I|* *I\* *I&* *Istar*
     Select contents between separators. Like inside separators, but exclude
     whitespace at both ends. Useful for changing contents while preserving
     spacing. Supports |targets-separator-seek|.
