@@ -188,13 +188,12 @@ a ' bbbbbbbb ' c ' d
 
 - Select a quote.
 - This overrides Vim's default text object to support seeking.
-- Includes surrounding whitespace in one direction, exactly like Vim's built in
-  quote text objects.
+- Unlike Vim's quote text objects, this incudes no surrounding whitespace.
 
 ```
   ............
 a ' bbbbbbbb ' c ' d
-  └─── a' ────┘
+  └─── a' ───┘
 ```
 
 #### Inside Quote
@@ -210,6 +209,21 @@ a ' bbbbbbbb ' c ' d
   ............
 a ' bbbbbbbb ' c ' d
     └─ I' ─┘
+```
+
+#### Around Quote
+
+``A' A" A` ``
+
+- Select around a quote.
+- Like a quote, but include whitespace in one direction. Prefers to select
+  trailing whitespace, falls back to select leading whitespace.
+- Supports seeking.
+
+```
+  ............
+a ' bbbbbbbb ' c ' d
+  └─── A' ────┘
 ```
 
 ### Next and Last Quote
@@ -246,7 +260,7 @@ character can be operated on with these targets.
 Supported separators:
 
 ```
-, . ; : + - = ~ _ * # / | \ & $ ~
+, . ; : + - = ~ _ * # / | \ & $
 ```
 
 The following examples will use commas, but they all work for each listed

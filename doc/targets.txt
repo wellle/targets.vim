@@ -203,12 +203,12 @@ i' i" i`                                              *i`_t* *i'_t* *iquote_t*
 
 a' a" a`                                              *a`_t* *a'_t* *aquote_t*
     Select a quote. This overrides Vim's default text object to support
-    |targets-quote-seek|. Includes surrounding whitespace in one direction,
-    exactly like Vim's built in quote text objects.
+    |targets-quote-seek|. Unlike Vim's quote text objects, this incudes no
+    surrounding whitespace.
 
           ............
         a ' bbbbbbbb ' c ' d ~
-          └─── a' ────┘
+          └─── a' ───┘
 
 I' I" I`                                                    *I`* *I'* *Iquote*
     Select contents of a quote. Like inside quote, but exclude whitespace at
@@ -218,6 +218,15 @@ I' I" I`                                                    *I`* *I'* *Iquote*
           ............
         a ' bbbbbbbb ' c ' d ~
             └─ I' ─┘
+
+A' A" A`                                                    *A`* *A'* *Aquote*
+    Select around a quote. Like a quote, but include whitespace in one
+    direction. Prefers to select trailing whitespace, falls back to select
+    leading whitespace.  Supports |targets-quote-seek|.
+
+          ............
+        a ' bbbbbbbb ' c ' d ~
+          └─── A' ────┘
 
 ------------------------------------------------------------------------------
 NEXT AND LAST QUOTE                                  *targets-next-last-quote*
