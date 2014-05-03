@@ -1,8 +1,8 @@
 " targets.vim Provides additional text objects
 " Author:  Christian Wellenbrock <christian.wellenbrock@gmail.com>
 " License: MIT license
-" Updated: 2014-04-11
-" Version: 0.1.4
+" Updated: 2014-05-03
+" Version: 0.1.5
 
 let s:save_cpoptions = &cpoptions
 set cpo&vim
@@ -64,9 +64,9 @@ function! s:init(delimiters, matchers, count)
     let s:oldpos = getpos('.')
     let s:failed = 0
 
-    let s:opening = escape(a:delimiters[0], '".~\')
+    let s:opening = escape(a:delimiters[0], '".~\$')
     if len(a:delimiters) == 2
-        let s:closing = escape(a:delimiters[1], '".~\')
+        let s:closing = escape(a:delimiters[1], '".~\$')
     else
         let s:closing = s:opening
     endif

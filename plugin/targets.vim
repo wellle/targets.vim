@@ -1,13 +1,13 @@
 " targets.vim Provides additional text objects
 " Author:  Christian Wellenbrock <christian.wellenbrock@gmail.com>
 " License: MIT license
-" Updated: 2014-04-11
-" Version: 0.1.4
+" Updated: 2014-05-03
+" Version: 0.1.5
 
 if exists("g:loaded_targets") || &cp || v:version < 700
     finish
 endif
-let g:loaded_targets = '0.1.4' " version number
+let g:loaded_targets = '0.1.5' " version number
 let s:save_cpoptions = &cpoptions
 set cpo&vim
 
@@ -210,7 +210,7 @@ function! s:loadSettings()
         let g:targets_quotes = '" '' `'
     endif
     if !exists('g:targets_separators')
-        let g:targets_separators = ', . ; : + - = ~ _ * / \ | &'
+        let g:targets_separators = ', . ; : + - = ~ _ * # / \ | & $'
     endif
 
     let [s:a, s:i, s:A, s:I] = split(g:targets_aiAI, '\zs')

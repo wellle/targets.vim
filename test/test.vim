@@ -1,8 +1,8 @@
 " targets.vim Provides additional text objects
 " Author:  Christian Wellenbrock <christian.wellenbrock@gmail.com>
 " License: MIT license
-" Updated: 2014-04-11
-" Version: 0.1.4
+" Updated: 2014-05-03
+" Version: 0.1.5
 
 set runtimepath+=../
 set softtabstop=16 expandtab
@@ -73,7 +73,7 @@ function! s:testBasic()
 
     normal +
 
-    for del in [ ',', '.', ';', ':', '+', '-', '=', '~', '_', '*', '/', '|', '\', '&' ]
+    for del in [ ',', '.', ';', ':', '+', '-', '=', '~', '_', '*', '#', '/', '|', '\', '&', '$' ]
         normal "lyy
 
         for op in [ 'c', 'd', 'y', 'v' ]
