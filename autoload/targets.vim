@@ -64,9 +64,9 @@ function! s:init(delimiters, matchers, count)
     let s:oldpos = getpos('.')
     let s:failed = 0
 
-    let s:opening = escape(a:delimiters[0], '".~\')
+    let s:opening = escape(a:delimiters[0], '".~\$')
     if len(a:delimiters) == 2
-        let s:closing = escape(a:delimiters[1], '".~\')
+        let s:closing = escape(a:delimiters[1], '".~\$')
     else
         let s:closing = s:opening
     endif
