@@ -103,11 +103,11 @@ function! s:createTagTextObjects()
     call s:createSimpleTextObject(s:i . s:n, 't', 'nextt selectp dropt')
     call s:createSimpleTextObject(s:a . s:n, 't', 'nextt selectp')
     call s:createSimpleTextObject(s:I . s:n, 't', 'nextt selectp dropt shrink')
-    call s:createSimpleTextObject(s:A . s:n, 't', 'nextt selectp shrink')
+    call s:createSimpleTextObject(s:A . s:n, 't', 'nextt selectp expand')
     call s:createSimpleTextObject(s:i . s:l, 't', 'lastt selectp dropt')
     call s:createSimpleTextObject(s:a . s:l, 't', 'lastt selectp')
     call s:createSimpleTextObject(s:I . s:l, 't', 'lastt selectp dropt shrink')
-    call s:createSimpleTextObject(s:A . s:l, 't', 'lastt selectp shrink')
+    call s:createSimpleTextObject(s:A . s:l, 't', 'lastt selectp expand')
 endfunction
 
 " quote text objects expand into quote (by counting quote signs)
