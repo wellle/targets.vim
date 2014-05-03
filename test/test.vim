@@ -38,8 +38,8 @@ function! s:testBasic()
 
         for op in [ 'c', 'd', 'y', 'v' ]
             for cnt in [ '', '1', '2' ]
-                for nl in [ '', 'n', 'l' ]
-                    for iaIA in [ 'i', 'a', 'I', 'A' ]
+                for nl in [ 'l', '', 'n' ]
+                    for iaIA in [ 'I', 'i', 'a', 'A' ]
                         for del in delset
                             execute "normal \"lpfx"
                             call s:execute(op, cnt . iaIA . nl . del)
@@ -59,10 +59,10 @@ function! s:testBasic()
 
         for op in [ 'c', 'd', 'y', 'v' ]
             for cnt in [ '', '1', '2' ]
-                for nlNL in [ '', 'n', 'l', 'N', 'L' ]
-                    for iaI in [ 'i', 'a', 'I' ]
+                for LlnN in [ 'L', 'l', '', 'n', 'N' ]
+                    for iaIA in [ 'I', 'i', 'a', 'A' ]
                         execute "normal \"lpfx"
-                        call s:execute(op, cnt . iaI . nlNL . del)
+                        call s:execute(op, cnt . iaIA . LlnN . del)
                     endfor
                 endfor
             endfor
@@ -78,10 +78,10 @@ function! s:testBasic()
 
         for op in [ 'c', 'd', 'y', 'v' ]
             for cnt in [ '', '1', '2' ]
-                for nlNL in [ '', 'n', 'l', 'N', 'L' ]
-                    for iaIA in [ 'i', 'a', 'I', 'A' ]
+                for LlnN in [ 'L', 'l', '', 'n', 'N' ]
+                    for iaIA in [ 'I', 'i', 'a', 'A' ]
                         execute "normal \"lpfx"
-                        call s:execute(op, cnt . iaIA . nlNL . del)
+                        call s:execute(op, cnt . iaIA . LlnN . del)
                     endfor
                 endfor
             endfor
