@@ -349,7 +349,7 @@ Work directly on distant separators without moving there separately.
                             *iL_* *iL/* *iL|* *iL\* *iL&* *iL$* *iL#* *iLstar*
                             *aL_* *aL/* *aL|* *aL\* *aL&* *aL$* *aL#* *aLstar*
                             *IL_* *IL/* *IL|* *IL\* *IL&* *IL$* *IL#* *ILstar*
-                            *AL_* *AL/* *AL|* *AL\* *AL$* *AL$* *AL#* *ALstar*
+                            *AL_* *AL/* *AL|* *AL\* *AL&* *AL$* *AL#* *ALstar*
 
 in, in. in; in: in+ in- in= in~ in_ in/ in| in\ in& in$ in# in*
 an, an. an; an: an+ an- an= an~ an_ an/ an| an\ an& an$ an# an*
