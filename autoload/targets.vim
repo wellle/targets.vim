@@ -49,7 +49,7 @@ function! targets#uppercaseXmap(trigger)
 
     " get associated arguments for targets#xmapCount
     let arguments = get(g:targets#mapArgs, a:trigger . chars, '')
-    if arguments == ''
+    if arguments ==# ''
         return '\<Esc>'
     endif
 
@@ -211,7 +211,7 @@ endfunction
 " line │ ' │  ' │ ' │  '
 " out  │ . │ .  │ . │ .
 function! s:quote()
-    if getline('.')[col('.')-1] != s:delimiters[0]
+    if s:getchar() !=# s:delimiters[0]
         return
     endif
 
@@ -610,6 +610,11 @@ endfunction
 " doubles the count (used for `iN'`)
 function! s:double()
     let s:count = s:count * 2
+endfunction
+
+" TODO: comment
+function! s:getchar()
+    return getline('.')[col('.')-1]
 endfunction
 
 let &cpoptions = s:save_cpoptions
