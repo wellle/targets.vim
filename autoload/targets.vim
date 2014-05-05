@@ -219,7 +219,7 @@ function! s:quote()
     let closing = 1
     let line = 1
     while line != 0
-        let line = searchpos(s:opening, 'bW', line('.'))[0]
+        let line = searchpos(s:opening, 'b', line('.'))[0]
         let closing = !closing
     endwhile
     call setpos('.', oldpos)
@@ -333,15 +333,15 @@ endfunction
 
 " select pair of delimiters around cursor (multi line, no seeking)
 function! s:seekselect()
-    let [rl, rc] = searchpos(s:opening, 'W', line('.'))
+    let [rl, rc] = searchpos(s:opening, '', line('.'))
     if rl > 0 " delim r found after cursor in line
-        let [s:sl, s:sc] = searchpos(s:opening, 'bW', line('.'))
+        let [s:sl, s:sc] = searchpos(s:opening, 'b', line('.'))
         if s:sl > 0 " delim found before r in line
             let [s:el, s:ec] = [rl, rc]
             return
         endif
         " no delim before cursor in line
-        let [s:el, s:ec] = searchpos(s:opening, 'W', line('.'))
+        let [s:el, s:ec] = searchpos(s:opening, '', line('.'))
         if s:el > 0 " delim found after r in line
             let [s:sl, s:sc] = [rl, rc]
             return
@@ -363,9 +363,9 @@ function! s:seekselect()
     endif
 
     " no delim found after cursor in line
-    let [ll, lc] = searchpos(s:opening, 'bcW', line('.'))
+    let [ll, lc] = searchpos(s:opening, 'bc', line('.'))
     if ll > 0 " delim l found before cursor in line
-        let [s:sl, s:sc] = searchpos(s:opening, 'bW', line('.'))
+        let [s:sl, s:sc] = searchpos(s:opening, 'b', line('.'))
         if s:sl > 0 " delim found before l in line
             let [s:el, s:ec] = [ll, lc]
             return
@@ -458,12 +458,12 @@ function! s:seekselectp(...)
     endif
     let s:count = 1
 
-    let [s:sl, s:sc] = searchpos(opening, 'W', line('.'))
+    let [s:sl, s:sc] = searchpos(opening, '', line('.'))
     if s:sc > 0 " found opening to the right in line
         return s:selectp()
     endif
 
-    let [s:sl, s:sc] = searchpos(closing, 'Wb', line('.'))
+    let [s:sl, s:sc] = searchpos(closing, 'b', line('.'))
     if s:sc > 0 " found closing to the left in line
         return s:selectp()
     endif
@@ -550,13 +550,13 @@ endfunction
 " out  │     └─┘     │    └┘
 function! s:shrink()
     call cursor(s:el, s:ec)
-    let [s:el, s:ec] = searchpos('\S', 'bW', s:sl)
+    let [s:el, s:ec] = searchpos('\S', 'b', s:sl)
     if s:ec <= s:sc && s:el <= s:sl
         " fall back to drop when there's only whitespace in between
         return s:drop()
     endif
     call cursor(s:sl, s:sc)
-    let [s:sl, s:sc] = searchpos('\S', 'W', s:el)
+    let [s:sl, s:sc] = searchpos('\S', '', s:el)
 endfunction
 
 " expand selection by some whitespace
@@ -566,7 +566,7 @@ endfunction
 " out  │   └────┘  │  └────┘  │  └───┘  │└────┘
 function! s:expand()
     call cursor(s:el, s:ec)
-    let [line, column] = searchpos('\S\|$', 'W', line('.'))
+    let [line, column] = searchpos('\S\|$', '', line('.'))
     if line > 0 && column-1 > s:ec
         " non whitespace or EOL after trailing whitespace found
         let s:el = line
@@ -575,7 +575,7 @@ function! s:expand()
         return
     endif
     call cursor(s:sl, s:sc)
-    let [line, column] = searchpos('\S', 'bW', line('.'))
+    let [line, column] = searchpos('\S', 'b', line('.'))
     if line > 0
         " non whitespace before leading whitespace found
         let s:sl = line
