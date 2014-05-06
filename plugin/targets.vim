@@ -161,8 +161,10 @@ endfunction
 "         | nsth |
 function! s:createSeparatorTextObjects()
     for delimiter in s:separator_list
+        let [ delimiter, dropr ] = s:parseDelimiter(delimiter)
+
         call s:createSimpleTextObject(s:i,       delimiter, 'seekselect drop')
-        call s:createSimpleTextObject(s:a,       delimiter, 'seekselect dropr')
+        call s:createSimpleTextObject(s:a,       delimiter, 'seekselect' . dropr)
         call s:createSimpleTextObject(s:I,       delimiter, 'seekselect shrink')
         call s:createSimpleTextObject(s:A,       delimiter, 'seekselect expand')
         call s:createSimpleTextObject(s:i . s:n, delimiter, 'next select drop')
@@ -182,6 +184,14 @@ function! s:createSeparatorTextObjects()
         call s:createSimpleTextObject(s:I . s:L, delimiter, 'double last select shrink')
         call s:createSimpleTextObject(s:A . s:L, delimiter, 'double last select expand')
     endfor
+endfunction
+
+function! s:parseDelimiter(delimiter)
+    if len(a:delimiter) >= 2 && a:delimiter[0] == a:delimiter[1] " delimiter is doubled
+        return [ a:delimiter[1:], '' ] " remove first double, don't drop right separator
+    endif
+
+    return [ a:delimiter, ' dropr' ] " drop right delimiter (default)
 endfunction
 
 " add expression mappings for `A` and `I` in visual mode #23 unless
