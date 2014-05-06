@@ -49,11 +49,9 @@ Supported trigger characters:
 
 - `(` `)` `b` (work on parentheses)
 - `{` `}` `B` (work on curly braces)
-- `[` `]` `r` (work on square brackets)
-- `<` `>` `a` (work on angle brackets)
+- `[` `]` (work on square brackets)
+- `<` `>` (work on angle brackets)
 - `t` (work on tags)
-
-We borrowed the aliases `r` and `a` from the [`vim-surround` plugin][surround].
 
 The following examples will use parentheses, but they all work for each listed
 trigger character accordingly.
@@ -498,7 +496,6 @@ next word or paragraph.
 [textobjects]: http://vimdoc.sourceforge.net/htmldoc/motion.html#text-objects
 [operator]: http://vimdoc.sourceforge.net/htmldoc/motion.html#operator
 [repeat]: http://vimdoc.sourceforge.net/htmldoc/repeat.html#single-repeat
-[surround]: https://github.com/tpope/vim-surround
 [neobundle]: https://github.com/Shougo/neobundle.vim
 [vundle]: https://github.com/gmarik/vundle
 [pathogen]: https://github.com/tpope/vim-pathogen
