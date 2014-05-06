@@ -2,8 +2,8 @@
 
 Author:  Christian Wellenbrock <christian.wellenbrock@gmail.com>
 License: MIT license
-Updated: 2014-05-03
-Version: 0.1.5
+Updated: 2014-05-06
+Version: 0.1.6
 
                            ____
                            \___\_.::::::::::.____
@@ -425,7 +425,7 @@ Default:
 
 Controls the keys used in maps for seeking next and last text objects. For
 example, if you don't wish to use the N and L seeks, and instead wish for 'n'
-to always search for the next object and 'N' to search for the last, you could
+to always search for the next object and `N` to search for the last, you could
 set:
 
     let g:targets_nlNL = 'nN  ' ~
@@ -447,9 +447,9 @@ Default:
 
 Defines the space separated list of quoting objects you wish to use. Note that
 you have to escape the single quote by doubling it. Quote objects can
-optionally be followed by a single one letter alias. For example, to set 'd'
-as an alias for double quotes, allowing such commands as 'cid' to be
-equivalent to 'ci"', you could define:
+optionally be followed by a single one letter alias. For example, to set `d`
+as an alias for double quotes, allowing such commands as `cid` to be
+equivalent to `ci"`, you could define:
 
     let g:targets_quotes = '"d '' `' ~
 
@@ -460,10 +460,16 @@ Default:
 
 Defines the space separated list of separator objects you wish to use. Like
 quote objects, separator objects can optionally be followed by a single one
-letter alias. To set 'c' as an alias for comma, allowing such commands as
-'dic' to be equivalent to 'di,', you could define:
+letter alias. To set `c` as an alias for comma, allowing such commands as
+`dic` to be equivalent to `di,`, you could define:
 
     let g:targets_separators = ',c . ; : + - = ~ _ * # / | \ & $' ~
+
+You can also double a separator to make it possible to select both separators.
+With the following setting, `da$` would delete both the leading and the
+trailing `$` without any surrounding whitespace:
+
+    let g:targets_separators = ', . ; : + - = ~ _ * # / | \ & $$' ~
 
 ==============================================================================
 NOTES                                                          *targets-notes*
