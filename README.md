@@ -453,6 +453,14 @@ letter alias. To set `c` as an alias for comma, allowing such commands as
 let g:targets_separators = ',c . ; : + - = ~ _ * # / | \ & $'
 ```
 
+You can also double a separator to make it possible to select both separators.
+With the following setting, `da$` would delete both the leading and the
+trailing `$` without any surrounding whitespace:
+
+```vim
+let g:targets_separators = ', . ; : + - = ~ _ * # / | \ & $$'
+```
+
 ## Notes
 
 - [Repeating an operator-pending mapping forgets its last count.][repeatcount]
