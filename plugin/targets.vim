@@ -1,13 +1,13 @@
 " targets.vim Provides additional text objects
 " Author:  Christian Wellenbrock <christian.wellenbrock@gmail.com>
 " License: MIT license
-" Updated: 2014-05-06
-" Version: 0.1.6
+" Updated: 2014-05-13
+" Version: 0.2.0
 
 if exists("g:loaded_targets") || &cp || v:version < 700
     finish
 endif
-let g:loaded_targets = '0.1.6' " version number
+let g:loaded_targets = '0.2.0' " version number
 let s:save_cpoptions = &cpoptions
 set cpo&vim
 
@@ -103,11 +103,11 @@ function! s:createTagTextObjects()
     call s:createSimpleTextObject(s:i . s:n, 't', 'nextt selectp dropt')
     call s:createSimpleTextObject(s:a . s:n, 't', 'nextt selectp')
     call s:createSimpleTextObject(s:I . s:n, 't', 'nextt selectp dropt shrink')
-    call s:createSimpleTextObject(s:A . s:n, 't', 'nextt selectp shrink')
+    call s:createSimpleTextObject(s:A . s:n, 't', 'nextt selectp expand')
     call s:createSimpleTextObject(s:i . s:l, 't', 'lastt selectp dropt')
     call s:createSimpleTextObject(s:a . s:l, 't', 'lastt selectp')
     call s:createSimpleTextObject(s:I . s:l, 't', 'lastt selectp dropt shrink')
-    call s:createSimpleTextObject(s:A . s:l, 't', 'lastt selectp shrink')
+    call s:createSimpleTextObject(s:A . s:l, 't', 'lastt selectp expand')
 endfunction
 
 " quote text objects expand into quote (by counting quote signs)
@@ -115,32 +115,40 @@ endfunction
 " next one, instead of the quote in between
 " cursor  │                   ........
 " line    │ a ' bbbbb ' ccccc ' dddd ' eeeee ' fffff ' g
-" command │   ││└IL'┘│││└Il'┘│││└I'┘│││└In'┘│││└IN'┘│ │
-"         │   │└─iL'─┘│├─il'─┘│├─i'─┘│├─in'─┘│├─iN'─┘ │
-"         │   └──aL'──┼┘      └┼─a'──┼┘      └┼─aN'───┘
-"         │           └──al'───┘     └──an'───┘
+" command │   ││└IL'┘│││└Il'┘│││└I'┘│││└In'┘│││└IN'┘│││
+"         │   │└─iL'─┘│├─il'─┘│├─i'─┘│├─in'─┘│├─iN'─┘││
+"         │   ├──aL'──┤│      ├┼─a'──┤│      ├┼─aN'──┘│
+"         │   └──AL'──┼┘      ├┼─A'──┼┘      ├┼─AN'───┘
+"         │           ├──al'──┘│     ├──an'──┘│
+"         │           └──Al'───┘     └──An'───┘
 " cursor  │ ..........      │      ......      │      ..........
 " line    │ a ' bbbb ' c '' │ ' a ' bbbb ' c ' │ '' b ' cccc ' d
-" command │   ││└I'┘│ │     │     ││└I'┘│ │    │      ││└I'┘│ │
-"         │   │└─i'─┘ │     │     │└─i'─┘ │    │      │└─i'─┘ │
-"         │   └──a'───┘     │     └──a'───┘    │      └──a'───┘
+" command │   ││└I'┘│││     │     ││└I'┘│││    │      ││└I'┘│││
+"         │   │└─i'─┘││     │     │└─i'─┘││    │      │└─i'─┘││
+"         │   ├──a'──┘│     │     ├──a'──┘│    │      ├──a'──┘│
+"         │   └──A'───┘     │     └──A'───┘    │      └──A'───┘
 function! s:createQuoteTextObjects()
     for delimiter in s:quote_list
         call s:createSimpleTextObject(s:i,       delimiter, 'quote seekselect drop')
-        call s:createSimpleTextObject(s:a,       delimiter, 'quote seekselect expand')
+        call s:createSimpleTextObject(s:a,       delimiter, 'quote seekselect')
         call s:createSimpleTextObject(s:I,       delimiter, 'quote seekselect shrink')
+        call s:createSimpleTextObject(s:A,       delimiter, 'quote seekselect expand')
         call s:createSimpleTextObject(s:i . s:n, delimiter, 'quote next select drop')
-        call s:createSimpleTextObject(s:a . s:n, delimiter, 'quote next select expand')
+        call s:createSimpleTextObject(s:a . s:n, delimiter, 'quote next select')
         call s:createSimpleTextObject(s:I . s:n, delimiter, 'quote next select shrink')
+        call s:createSimpleTextObject(s:A . s:n, delimiter, 'quote next select expand')
         call s:createSimpleTextObject(s:i . s:l, delimiter, 'quote last select drop')
-        call s:createSimpleTextObject(s:a . s:l, delimiter, 'quote last select expand')
+        call s:createSimpleTextObject(s:a . s:l, delimiter, 'quote last select')
         call s:createSimpleTextObject(s:I . s:l, delimiter, 'quote last select shrink')
+        call s:createSimpleTextObject(s:A . s:l, delimiter, 'quote last select expand')
         call s:createSimpleTextObject(s:i . s:N, delimiter, 'quote double next select drop')
-        call s:createSimpleTextObject(s:a . s:N, delimiter, 'quote double next select expand')
+        call s:createSimpleTextObject(s:a . s:N, delimiter, 'quote double next select')
         call s:createSimpleTextObject(s:I . s:N, delimiter, 'quote double next select shrink')
+        call s:createSimpleTextObject(s:A . s:N, delimiter, 'quote double next select expand')
         call s:createSimpleTextObject(s:i . s:L, delimiter, 'quote double last select drop')
-        call s:createSimpleTextObject(s:a . s:L, delimiter, 'quote double last select expand')
+        call s:createSimpleTextObject(s:a . s:L, delimiter, 'quote double last select')
         call s:createSimpleTextObject(s:I . s:L, delimiter, 'quote double last select shrink')
+        call s:createSimpleTextObject(s:A . s:L, delimiter, 'quote double last select expand')
     endfor
 endfunction
 
@@ -237,7 +245,7 @@ let targets#mapArgs = {}
 
 call s:loadSettings()
 
-" create the text objects (current total count: 429)
+" create the text objects (current total count: 536)
 call s:createPairTextObjects()
 call s:createTagTextObjects()
 call s:createQuoteTextObjects()

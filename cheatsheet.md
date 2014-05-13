@@ -51,6 +51,7 @@ Available mappings
  i'  i"  i`    in' in" in`    il' il" il`    iL' iL" iL`
  a'  a"  a`    an' an" an`    al' al" al`    aL' aL" aL`
  I'  I"  I`    In' In" In`    Il' Il" Il`    IL' IL" IL`
+ A'  A"  A`    An' An" An`    Al' Al" Al`    AL' AL" AL`
 ```
 
 Chart for a list of quotes
@@ -58,10 +59,12 @@ Chart for a list of quotes
 ```
                       ..........
 a ' bbbbbbb ' ccccccc ' dddddd ' eeeeeee ' fffffff ' g
-  ││└ IL' ┘│││└ Il' ┘│││└ I' ┘│││└ In' ┘│││└ IN' ┘│ │
-  │└─ iL' ─┘│├─ il' ─┘│├─ i' ─┘│├─ in' ─┘│├─ iN' ─┘ │
-  └── aL' ──┼┘        └┼─ a' ──┼┘        └┼─ aN' ───┘
-            └── al' ───┘       └── an' ───┘
+  ││└ IL' ┘│││└ Il' ┘│││└ I' ┘│││└ In' ┘│││└ IN' ┘│││
+  │└─ iL' ─┘│├─ il' ─┘│├─ i' ─┘│├─ in' ─┘│├─ iN' ─┘││
+  ├── aL' ──┤│        ├┼─ a' ──┤│        ├┼─ aN' ──┘│
+  └── AL' ──┼┘        ├┼─ A' ──┼┘        ├┼─ AN' ───┘
+            ├── al' ──┘│       ├── an' ──┘│
+            └── Al' ───┘       └── An' ───┘
 ```
 
 ## Separator mappings
