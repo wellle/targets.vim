@@ -1,13 +1,13 @@
 " targets.vim Provides additional text objects
 " Author:  Christian Wellenbrock <christian.wellenbrock@gmail.com>
 " License: MIT license
-" Updated: 2014-05-13
-" Version: 0.2.0
+" Updated: 2014-05-21
+" Version: 0.2.1
 
 if exists("g:loaded_targets") || &cp || v:version < 700
     finish
 endif
-let g:loaded_targets = '0.2.0' " version number
+let g:loaded_targets = '0.2.1' " version number
 let s:save_cpoptions = &cpoptions
 set cpo&vim
 
@@ -176,19 +176,19 @@ function! s:createSeparatorTextObjects()
         call s:createSimpleTextObject(s:I,       delimiter, 'seekselect shrink')
         call s:createSimpleTextObject(s:A,       delimiter, 'seekselect expand')
         call s:createSimpleTextObject(s:i . s:n, delimiter, 'next select drop')
-        call s:createSimpleTextObject(s:a . s:n, delimiter, 'next select dropr')
+        call s:createSimpleTextObject(s:a . s:n, delimiter, 'next select' . dropr)
         call s:createSimpleTextObject(s:I . s:n, delimiter, 'next select shrink')
         call s:createSimpleTextObject(s:A . s:n, delimiter, 'next select expand')
         call s:createSimpleTextObject(s:i . s:l, delimiter, 'last select drop')
-        call s:createSimpleTextObject(s:a . s:l, delimiter, 'last select dropr')
+        call s:createSimpleTextObject(s:a . s:l, delimiter, 'last select' . dropr)
         call s:createSimpleTextObject(s:I . s:l, delimiter, 'last select shrink')
         call s:createSimpleTextObject(s:A . s:l, delimiter, 'last select expand')
         call s:createSimpleTextObject(s:i . s:N, delimiter, 'double next select drop')
-        call s:createSimpleTextObject(s:a . s:N, delimiter, 'double next select dropr')
+        call s:createSimpleTextObject(s:a . s:N, delimiter, 'double next select' . dropr)
         call s:createSimpleTextObject(s:I . s:N, delimiter, 'double next select shrink')
         call s:createSimpleTextObject(s:A . s:N, delimiter, 'double next select expand')
         call s:createSimpleTextObject(s:i . s:L, delimiter, 'double last select drop')
-        call s:createSimpleTextObject(s:a . s:L, delimiter, 'double last select dropr')
+        call s:createSimpleTextObject(s:a . s:L, delimiter, 'double last select' . dropr)
         call s:createSimpleTextObject(s:I . s:L, delimiter, 'double last select shrink')
         call s:createSimpleTextObject(s:A . s:L, delimiter, 'double last select expand')
     endfor
