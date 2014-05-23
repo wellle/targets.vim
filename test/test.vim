@@ -106,6 +106,8 @@ function! s:testMultiline()
 
     execute "normal /comment 3\<CR>"
     execute "normal cin`foo\<Esc>"
+    execute "normal /comment 4\<CR>"
+    execute "normal cI{foo\<Esc>"
 
     write! test2.out
 endfunction
