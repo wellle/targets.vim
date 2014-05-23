@@ -73,7 +73,7 @@ function! s:init(delimiters, matchers, count)
 endfunction
 
 " remember last selection, delimiters and matchers
-function s:saveState()
+function! s:saveState()
     let [s:lsl, s:lsc, s:lel, s:lec] = [s:sl, s:sc, s:el, s:ec]
     let [s:ldelimiters, s:lmatchers] = [s:delimiters, s:matchers]
 endfunction
