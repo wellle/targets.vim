@@ -10,7 +10,7 @@ foo;
 // comment 3
 string x = `foo`;
 
-// foocomment 4
+// comment 4
 function f() {
-    return 4;
+    foo
 }
