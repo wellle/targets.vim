@@ -73,7 +73,7 @@ function! s:init(delimiters, matchers, count)
 endfunction
 
 " remember last selection, delimiters and matchers
-function s:saveState()
+function! s:saveState()
     let [s:lsl, s:lsc, s:lel, s:lec] = [s:sl, s:sc, s:el, s:ec]
     let [s:ldelimiters, s:lmatchers] = [s:delimiters, s:matchers]
 endfunction
@@ -513,13 +513,13 @@ endfunction
 " out  │     └─┘     │    └┘
 function! s:shrink()
     call cursor(s:el, s:ec)
-    let [s:el, s:ec] = searchpos('\S', 'bW', line('.'))
-    if s:ec <= s:sc
+    let [s:el, s:ec] = searchpos('\S', 'bW', s:sl)
+    if s:ec <= s:sc && s:el <= s:sl
         " fall back to drop when there's only whitespace in between
         return s:drop()
     endif
     call cursor(s:sl, s:sc)
-    let [s:sl, s:sc] = searchpos('\S', 'W', line('.'))
+    let [s:sl, s:sc] = searchpos('\S', 'W', s:el)
 endfunction
 
 " expand selection by some whitespace

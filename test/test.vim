@@ -97,7 +97,6 @@ function! s:testMultiline()
     edit! test2.in
     normal gg0
 
-    " TODO: this test fails for `cI{`
     execute "normal /comment 1\<CR>"
     execute "normal cin{foo\<Esc>"
 
@@ -106,6 +105,8 @@ function! s:testMultiline()
 
     execute "normal /comment 3\<CR>"
     execute "normal cin`foo\<Esc>"
+    execute "normal /comment 4\<CR>"
+    execute "normal cI{foo\<Esc>"
 
     write! test2.out
 endfunction
