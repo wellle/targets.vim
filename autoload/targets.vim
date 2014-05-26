@@ -231,10 +231,7 @@ endfunction
 " line │  '  '  '  '
 " out  │        1  2
 function! s:next()
-    for _ in range(s:count)
-        call searchpos(s:opening, 'W')
-    endfor
-    let s:count = 1
+    return s:search(s:opening, 'W')
 endfunction
 
 " find `count` last delimiter, move in front of it (multi line)
@@ -242,12 +239,10 @@ endfunction
 " line │  '  '  '  '
 " out  │ 2  1
 function! s:last()
-    " only the first delimiter can match at current position
-    call searchpos(s:closing, 'bcW')
-    for _ in range(s:count - 1)
-        call searchpos(s:closing, 'bW')
-    endfor
-    let s:count = 1
+    if s:search(s:closing, 'bcW', 'bW') > 0
+        return 1
+    endif
+
     silent! normal! h
 endfunction
 
@@ -255,21 +250,8 @@ endfunction
 " in   │ ....
 " line │ ( ) ( ) ( ( ) ) ( )
 " out  │     1   2 3     4
-function! s:nextp(...)
-    if a:0 == 1
-        let opening = a:1
-    else
-        let opening = s:opening
-    endif
-
-    " find `count` next opening
-    for _ in range(s:count)
-        let line = searchpos(opening, 'W')[0]
-        if line == 0 " not enough found
-            return 1 " fail
-        endif
-    endfor
-    let s:count = 1
+function! s:nextp()
+    return s:search(s:opening, 'W')
 endfunction
 
 " find `count` last closing delimiter (multi line)
@@ -277,20 +259,7 @@ endfunction
 " line │ ( ) ( ) ( ( ) ) ( )
 " out  │   4   3     2 1
 function! s:lastp(...)
-    if a:0 == 1
-        let closing = a:1
-    else
-        let closing = s:closing
-    endif
-
-    " find `count` last closing
-    for _ in range(s:count)
-        let line = searchpos(closing, 'bW')[0]
-        if line == 0 " not enough found
-            return 1 " fail
-        endif
-    endfor
-    let s:count = 1
+    return s:search(s:closing, 'bW')
 endfunction
 
 " find `count` next opening tag delimiter (multi line)
@@ -298,7 +267,7 @@ endfunction
 " line │ <a> </a> <b> </b> <c> <d> </d> </c> <e> </e>
 " out  │          1        2   3             4
 function! s:nextt()
-    return s:nextp('<\a')
+    return s:search('<\a', 'W')
 endfunction
 
 " find `count` last closing tag delimiter (multi line)
@@ -306,7 +275,7 @@ endfunction
 " line │ <a> </a> <b> </b> <c> <d> </d> </c> <e> </e>
 " out  │     4        3            2    1
 function! s:lastt()
-    return s:lastp('</\a')
+    return s:search('</\a', 'bW')
 endfunction
 
 " match selectors
@@ -575,7 +544,7 @@ function! s:seekselecta()
 endfunction
 
 function! s:nextselecta()
-    if s:nextp('[,({[]') > 0 " no start found
+    if s:search('[,({[]', 'W') > 0 " no start found
         return 1 " fail
     endif
 
@@ -589,7 +558,7 @@ function! s:nextselecta()
     endif
 
     call setpos('.', s:oldpos)
-    if s:nextp('[({[]') > 0 " no start found
+    if s:search('[({[]', 'W') > 0 " no start found
         return 1 " fail
     endif
 
@@ -610,15 +579,15 @@ endfunction
 "   (effectively skipping top level commas)
 function! s:nexta(...)
     if a:0 == 1
-        return s:nextp(a:1)
+        return s:search(a:1, 'W')
     else
-        return s:nextp('[,({[]')
+        return s:search('[,({[]', 'W')
     endif
 endfunction
 
 function! s:lasta()
     silent! normal! `>
-    if s:lastp('[,)}\]]') > 0
+    if s:search('[,)}\]]', 'bW') > 0
         return 1
     endif
     silent! execute "normal! \<BS>"
@@ -753,6 +722,29 @@ endfunction
 " TODO: comment
 function! s:getchar()
     return getline('.')[col('.')-1]
+endfunction
+
+" TODO: comment
+function! s:search(...)
+    if a:0 == 3
+        let [pattern, flags1, flags2] = [a:1, a:2, a:3]
+    elseif a:0 == 2
+        let [pattern, flags1, flags2] = [a:1, a:2, a:2]
+    else
+        return 1
+    endif
+
+    if searchpos(pattern, flags1)[0] == 0
+        return 1
+    endif
+
+    for _ in range(s:count - 1)
+        let line = searchpos(pattern, flags2)[0]
+        if line == 0 " not enough found
+            return 1 " fail
+        endif
+    endfor
+    let s:count = 1
 endfunction
 
 let &cpoptions = s:save_cpoptions
