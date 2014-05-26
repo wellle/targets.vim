@@ -110,6 +110,16 @@ function! s:createTagTextObjects()
     call s:createSimpleTextObject(s:A . s:l, 't', 'lastt selectp expand')
 endfunction
 
+" TODO: create more argument mappings
+" TODO: implement growing?
+" TODO: no seeking?
+" TODO: skip top level commas () , ()
+function! s:createArgTextObjects()
+    call s:createSimpleTextObject(s:a      , 'a', 'seekselecta')
+    call s:createSimpleTextObject(s:a . s:n, 'a', 'nextselecta')
+    call s:createSimpleTextObject(s:a . s:l, 'a', 'lasta selecta')
+endfunction
+
 " quote text objects expand into quote (by counting quote signs)
 " `aN'` is a shortcut for `2an'` to jump from within one quote into the
 " next one, instead of the quote in between
@@ -250,6 +260,7 @@ call s:createPairTextObjects()
 call s:createTagTextObjects()
 call s:createQuoteTextObjects()
 call s:createSeparatorTextObjects()
+call s:createArgTextObjects()
 call s:addExpressionMappings()
 
 let &cpoptions = s:save_cpoptions

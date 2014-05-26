@@ -7,14 +7,16 @@
 let s:save_cpoptions = &cpoptions
 set cpo&vim
 
+function! targets#test()
+endfunction
+
 " visually select some text for the given delimiters and matchers
 " `matchers` is a list of functions that gets executed in order
 " it consists of optional position modifiers, followed by a match selector,
 " followed by optional selection modifiers
 function! targets#omap(delimiters, matchers)
     call s:init(a:delimiters, a:matchers, v:count1)
-    call s:findMatch(a:matchers)
-    call s:handleMatch()
+    call s:handleMatch(a:matchers)
     call s:clearCommandLine()
     call s:cleanUp()
 endfunction
@@ -27,8 +29,7 @@ endfunction
 " like targets#xmap, but inject count, triggered from targets#xmapExpr
 function! targets#xmapCount(delimiters, matchers, count)
     call s:init(a:delimiters, a:matchers, a:count)
-    call s:findMatch(a:matchers)
-    call s:handleMatch()
+    call s:handleMatch(a:matchers)
     call s:saveState()
     call s:cleanUp()
 endfunction
@@ -63,7 +64,6 @@ function! s:init(delimiters, matchers, count)
     let [s:sl, s:sc, s:el, s:ec] = [0, 0, 0, 0]
     let [s:sLinewise, s:eLinewise] = [0, 0]
     let s:oldpos = getpos('.')
-    let s:failed = 0
 
     let s:opening = escape(a:delimiters[0], '".~\$')
     if len(a:delimiters) == 2
@@ -90,7 +90,6 @@ function! s:cleanUp()
     unlet s:delimiters s:matchers s:count
     unlet s:sl s:sc s:el s:ec
     unlet s:oldpos
-    unlet s:failed
     unlet s:opening s:closing
 endfunction
 
@@ -103,17 +102,20 @@ endfunction
 function! s:findMatch(matchers)
     for matcher in split(a:matchers)
         let Matcher = function('s:' . matcher)
-        call Matcher()
-        if s:failed
-            break
+        if Matcher() > 0
+            return 1 " fail
         endif
     endfor
     unlet! Matcher
 endfunction
 
 " handle the match by either selecting or aborting it
-function! s:handleMatch()
-    if s:failed || s:sl == 0 || s:el == 0
+function! s:handleMatch(matchers)
+    let view = winsaveview()
+    let error = s:findMatch(a:matchers)
+    call winrestview(view)
+
+    if error || s:sl == 0 || s:el == 0
         call s:abortMatch()
     elseif s:sl < s:el
         call s:selectMatch()
@@ -195,11 +197,6 @@ function! targets#undo(lastseq)
     endif
 endfunction
 
-" mark current matching run as failed
-function! s:setFailed()
-    let s:failed = 1
-endfunction
-
 " position modifiers
 " ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
@@ -269,7 +266,7 @@ function! s:nextp(...)
     for _ in range(s:count)
         let line = searchpos(opening, 'W')[0]
         if line == 0 " not enough found
-            return s:setFailed()
+            return 1 " fail
         endif
     endfor
     let s:count = 1
@@ -290,7 +287,7 @@ function! s:lastp(...)
     for _ in range(s:count)
         let line = searchpos(closing, 'bW')[0]
         if line == 0 " not enough found
-            return s:setFailed()
+            return 1 " fail
         endif
     endfor
     let s:count = 1
@@ -323,11 +320,11 @@ endfunction
 function! s:select()
     let [s:sl, s:sc] = searchpos(s:opening, 'bcW')
     if s:sc == 0 " no match to the left
-        return s:setFailed()
+        return 1 " fail
     endif
     let [s:el, s:ec] = searchpos(s:closing, 'W')
     if s:ec == 0 " no match to the right
-        return s:setFailed()
+        return 1 " fail
     endif
 endfunction
 
@@ -359,7 +356,7 @@ function! s:seekselect()
             return
         endif
         " no delim found after r
-        return s:setFailed()
+        return 1 " fail
     endif
 
     " no delim found after cursor in line
@@ -383,7 +380,7 @@ function! s:seekselect()
             return
         endif
         " no delim found before l
-        return s:setFailed()
+        return 1 " fail
     endif
 
     " no delim found before cursor in line
@@ -401,7 +398,7 @@ function! s:seekselect()
             return
         endif
         " no delim found after r
-        return s:setFailed()
+        return 1 " fail
     endif
 
     " no delim found after cursor
@@ -410,7 +407,7 @@ function! s:seekselect()
     if s:sl > 0 && s:el > 0 " match found before cursor
         return
     endif
-    return s:setFailed()
+    return 1 " fail
 endfunction
 
 " pair matcher (works across multiple lines, no seeking)
@@ -427,7 +424,7 @@ function! s:selectp()
     silent! normal! v
 
     if s:sc == s:ec && s:sl == s:el
-        return s:setFailed() " no match found
+        return 1 " no match found, fail
     endif
 endfunction
 
@@ -454,7 +451,7 @@ function! s:seekselectp(...)
 
     if s:count > 1
         " don't seek when count was given
-        return s:setFailed()
+        return 1 " fail
     endif
     let s:count = 1
 
@@ -478,12 +475,153 @@ function! s:seekselectp(...)
         return s:selectp()
     endif
 
-    return s:setFailed() " no match found
+    return 1 " fail " no match found
 endfunction
 
 " tag pair matcher (works across multiple lines, supports seeking)
 function! s:seekselectt()
     return s:seekselectp('<\a', '</\a', 't')
+endfunction
+
+" TODO: comment, reorder selecta functions
+" foo(a, b(x), c)
+
+" TODO: grow
+" TODO: skip quotes?
+" TODO: can't select argument from d: x(a(b)c)d
+function! s:selecta()
+    let [opening, closing] = ['[({[]', '[]})]']
+    let oldpos = getpos('.')
+    let char = s:getchar()
+
+    if char =~# closing " started on closing
+        let [s:el, s:ec] = oldpos[1:2] " use old position as end
+    else " find end to the right
+        let [s:el, s:ec] = s:findArg('W', opening, closing)
+        if s:el == 0 " no opening found
+            return 1 " fail
+        endif
+
+        if char =~# opening || char ==# ',' " started on opening or separator
+            let [s:sl, s:sc] = oldpos[1:2] " use old position as start
+            return
+        endif
+
+        call setpos('.', oldpos) " return to old position
+    endif
+
+    " find start to the left
+    let [s:sl, s:sc] = s:findArg('bW', closing, opening)
+    if s:sl == 0
+        return
+    endif
+endfunction
+
+function! s:findArg(flags, skip, finish)
+    let tl = 0
+    while 1
+        let [rl, rc] = searchpos('[]{(,)}[]', a:flags)
+        if rl == 0
+            return [0, 0]
+        endif
+
+        let char = s:getchar()
+        if char ==# ','
+            if tl == 0
+                let [tl, tc] = [rl, rc]
+            endif
+        elseif char =~# a:finish
+            if tl > 0
+                return [tl, tc]
+            endif
+            return [rl, rc]
+        elseif char =~# a:skip
+            silent! normal! %
+        else
+            return [0, 0]
+        endif
+    endwhile
+endfunction
+
+" TODO: support counts to select bigger arguments of outer functions
+" TODO: select last argument if found in line, but no next in line
+function! s:seekselecta()
+    if s:selecta() == 0
+        return
+    endif
+
+    call setpos('.', s:oldpos)
+    if s:nexta() == 0
+        let char = s:getchar()
+        if s:selecta() == 0
+            return
+        endif
+        if char ==# ','
+            call setpos('.', s:oldpos)
+            if s:nexta('[({[]') == 0
+                if s:selecta() == 0
+                    return
+                endif
+            endif
+        endif
+    endif
+
+    call setpos('.', s:oldpos)
+    if s:lasta() == 0
+        if s:selecta() == 0
+            return
+        endif
+    endif
+endfunction
+
+function! s:nextselecta()
+    if s:nextp('[,({[]') > 0 " no start found
+        return 1 " fail
+    endif
+
+    let char = s:getchar()
+    if s:selecta() == 0 " argument found
+        return
+    endif
+
+    if char !=# ',' " start wasn't on comma
+        return 1 " fail
+    endif
+
+    call setpos('.', s:oldpos)
+    if s:nextp('[({[]') > 0 " no start found
+        return 1 " fail
+    endif
+
+    if s:selecta() == 0 " argument found
+        return
+    endif
+
+    return 1 " no argument found
+endif
+
+endfunction
+
+" TODO: comment
+" TODO: test again when selecting only one separator
+" TODO: combine with selecta to nextselecta that behaves like in seekselecta:
+"   search for , or opening, try selecta
+"   if selecta failed from , search for opening and try selecta again
+"   (effectively skipping top level commas)
+function! s:nexta(...)
+    if a:0 == 1
+        return s:nextp(a:1)
+    else
+        return s:nextp('[,({[]')
+    endif
+endfunction
+
+function! s:lasta()
+    silent! normal! `>
+    if s:lastp('[,)}\]]') > 0
+        return 1
+    endif
+    silent! execute "normal! \<BS>"
 endfunction
 
 " selects the current cursor position (useful to test modifiers)
