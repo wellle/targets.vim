@@ -98,12 +98,12 @@ function! s:clearCommandLine()
     echo
 endfunction
 
-" try to find match and return 1 in case of success
+" try to find match
 function! s:findMatch(matchers)
     for matcher in split(a:matchers)
         let Matcher = function('s:' . matcher)
         if Matcher() > 0
-            return 1 " fail
+            return s:fail('findMatch')
         endif
     endfor
     unlet! Matcher
@@ -240,7 +240,7 @@ endfunction
 " out  │ 2  1
 function! s:last()
     if s:search(s:closing, 'bcW', 'bW') > 0
-        return 1
+        return s:fail('last')
     endif
 
     silent! normal! h
@@ -289,11 +289,11 @@ endfunction
 function! s:select()
     let [s:sl, s:sc] = searchpos(s:opening, 'bcW')
     if s:sc == 0 " no match to the left
-        return 1 " fail
+        return s:fail('select opening')
     endif
     let [s:el, s:ec] = searchpos(s:closing, 'W')
     if s:ec == 0 " no match to the right
-        return 1 " fail
+        return s:fail('select closing')
     endif
 endfunction
 
@@ -325,7 +325,7 @@ function! s:seekselect()
             return
         endif
         " no delim found after r
-        return 1 " fail
+        return s:fail('seekselect 1')
     endif
 
     " no delim found after cursor in line
@@ -349,7 +349,7 @@ function! s:seekselect()
             return
         endif
         " no delim found before l
-        return 1 " fail
+        return s:fail('seekselect 2')
     endif
 
     " no delim found before cursor in line
@@ -367,7 +367,7 @@ function! s:seekselect()
             return
         endif
         " no delim found after r
-        return 1 " fail
+        return s:fail('seekselect 3')
     endif
 
     " no delim found after cursor
@@ -376,7 +376,7 @@ function! s:seekselect()
     if s:sl > 0 && s:el > 0 " match found before cursor
         return
     endif
-    return 1 " fail
+    return s:fail('seekselect 4')
 endfunction
 
 " pair matcher (works across multiple lines, no seeking)
@@ -393,7 +393,7 @@ function! s:selectp()
     silent! normal! v
 
     if s:sc == s:ec && s:sl == s:el
-        return 1 " no match found, fail
+        return s:fail('selectp')
     endif
 endfunction
 
@@ -419,8 +419,7 @@ function! s:seekselectp(...)
     endif
 
     if s:count > 1
-        " don't seek when count was given
-        return 1 " fail
+        return s:fail('seekselectp count')
     endif
     let s:count = 1
 
@@ -444,7 +443,7 @@ function! s:seekselectp(...)
         return s:selectp()
     endif
 
-    return 1 " fail " no match found
+    return s:fail('seekselect')
 endfunction
 
 " tag pair matcher (works across multiple lines, supports seeking)
@@ -468,7 +467,7 @@ function! s:selecta()
     else " find end to the right
         let [s:el, s:ec] = s:findArg('W', opening, closing)
         if s:el == 0 " no opening found
-            return 1 " fail
+            return s:fail('selecta')
         endif
 
         if char =~# opening || char ==# ',' " started on opening or separator
@@ -544,8 +543,17 @@ function! s:seekselecta()
 endfunction
 
 function! s:nextselecta()
-    if s:search('[,({[]', 'W') > 0 " no start found
-        return 1 " fail
+    return s:searchselecta('({[', 'W')
+endfunction
+
+function! s:lastselecta()
+    return s:searchselecta(']})', 'bW')
+endfunction
+
+function! s:searchselecta(pattern, flags)
+    let pattern1 = '[,' . a:pattern . ']' " with comma
+    if s:search(pattern1, a:flags) > 0 " no start found
+        return s:fail('searchselecta 1')
     endif
 
     let char = s:getchar()
@@ -554,19 +562,20 @@ function! s:nextselecta()
     endif
 
     if char !=# ',' " start wasn't on comma
-        return 1 " fail
+        return s:fail('searchselecta 2')
     endif
 
     call setpos('.', s:oldpos)
-    if s:search('[({[]', 'W') > 0 " no start found
-        return 1 " fail
+    let pattern2 = '[' . a:pattern . ']' " without comma
+    if s:search(pattern2, a:flags) > 0 " no start found
+        return s:fail('searchselecta 3')
     endif
 
     if s:selecta() == 0 " argument found
         return
     endif
 
-    return 1 " no argument found
+    return s:fail('searchselecta 4')
 endif
 
 endfunction
@@ -588,7 +597,7 @@ endfunction
 function! s:lasta()
     silent! normal! `>
     if s:search('[,)}\]]', 'bW') > 0
-        return 1
+        return s:fail('lasta')
     endif
     silent! execute "normal! \<BS>"
 endfunction
@@ -731,20 +740,25 @@ function! s:search(...)
     elseif a:0 == 2
         let [pattern, flags1, flags2] = [a:1, a:2, a:2]
     else
-        return 1
+        return s:fail('search arguments')
     endif
 
     if searchpos(pattern, flags1)[0] == 0
-        return 1
+        return s:fail('search first')
     endif
 
     for _ in range(s:count - 1)
         let line = searchpos(pattern, flags2)[0]
         if line == 0 " not enough found
-            return 1 " fail
+            return s:fail('search next')
         endif
     endfor
     let s:count = 1
+endfunction
+
+function! s:fail(message)
+    " echom 'failed' a:message
+    return 1
 endfunction
 
 let &cpoptions = s:save_cpoptions
