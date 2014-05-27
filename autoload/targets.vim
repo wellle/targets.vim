@@ -16,7 +16,7 @@ endfunction
 " followed by optional selection modifiers
 function! targets#omap(delimiters, matchers)
     call s:init(a:delimiters, a:matchers, v:count1)
-    call s:handleMatch(a:matchers)
+    call s:handleMatch(a:matchers, 'o')
     call s:clearCommandLine()
     call s:cleanUp()
 endfunction
@@ -29,7 +29,7 @@ endfunction
 " like targets#xmap, but inject count, triggered from targets#xmapExpr
 function! targets#xmapCount(delimiters, matchers, count)
     call s:init(a:delimiters, a:matchers, a:count)
-    call s:handleMatch(a:matchers)
+    call s:handleMatch(a:matchers, 'x')
     call s:saveState()
     call s:cleanUp()
 endfunction
@@ -110,23 +110,23 @@ function! s:findMatch(matchers)
 endfunction
 
 " handle the match by either selecting or aborting it
-function! s:handleMatch(matchers)
+function! s:handleMatch(matchers, mapmode)
     let view = winsaveview()
     let error = s:findMatch(a:matchers)
     call winrestview(view)
 
     if error || s:sl == 0 || s:el == 0
-        call s:abortMatch()
+        return s:abortMatch(a:mapmode)
     elseif s:sl < s:el
         call s:selectMatch()
     elseif s:sl > s:el
-        call s:abortMatch()
+        return s:abortMatch(a:mapmode)
     elseif s:sc == s:ec + 1
-        call s:handleEmptyMatch()
+        return s:handleEmptyMatch(a:mapmode)
     elseif s:sc > s:ec
-        call s:abortMatch()
+        return s:abortMatch(a:mapmode)
     else
-        call s:selectMatch()
+        return s:selectMatch()
     endif
 endfunction
 
@@ -156,9 +156,9 @@ endfunction
 " empty matches can't visually be selected
 " most operators would like to move to the end delimiter
 " for change or delete, insert temporary character that will be operated on
-function! s:handleEmptyMatch()
+function! s:handleEmptyMatch(mapmode)
     if v:operator !~# "^[cd]$"
-        return s:abortMatch()
+        return s:abortMatch(a:mapmode)
     endif
 
     " move cursor to delimiter after zero width match
@@ -174,12 +174,14 @@ function! s:handleEmptyMatch()
 endfunction
 
 " abort when no match was found
-function! s:abortMatch()
+function! s:abortMatch(mapmode)
     call setpos('.', s:oldpos)
     " get into normal mode and beep
     call feedkeys("\<C-\>\<C-N>\<Esc>", 'n')
     " undo partial command
     call s:triggerUndo()
+    " trigger reselect if called from xmap
+    call s:triggerReselect(a:mapmode)
 endfunction
 
 " feed keys to call undo after aborted operation and clear the command line
@@ -187,6 +189,13 @@ function! s:triggerUndo()
     if exists("*undotree")
         let undoseq = undotree().seq_cur
         call feedkeys(":call targets#undo(" . undoseq . ")\<CR>:echo\<CR>", 'n')
+    endif
+endfunction
+
+" feed keys to reselect the last visual selection if called with mapmode x
+function! s:triggerReselect(mapmode)
+    if a:mapmode ==# 'x'
+        call feedkeys("gv", 'n')
     endif
 endfunction
 
@@ -490,6 +499,7 @@ function! s:findArg(flags, skip, finish)
     while 1
         let [rl, rc] = searchpos('[]{(,)}[]', a:flags)
         if rl == 0
+            call s:debug('findArg 1')
             return [0, 0]
         endif
 
@@ -506,6 +516,7 @@ function! s:findArg(flags, skip, finish)
         elseif char =~# a:skip
             silent! normal! %
         else
+            call s:debug('findArg 2')
             return [0, 0]
         endif
     endwhile
@@ -543,16 +554,7 @@ function! s:seekselecta()
 endfunction
 
 function! s:nextselecta()
-    return s:searchselecta('({[', 'W')
-endfunction
-
-function! s:lastselecta()
-    return s:searchselecta(']})', 'bW')
-endfunction
-
-function! s:searchselecta(pattern, flags)
-    let pattern1 = '[,' . a:pattern . ']' " with comma
-    if s:search(pattern1, a:flags) > 0 " no start found
+    if s:search('[,({[]', 'W') > 0 " no start found
         return s:fail('searchselecta 1')
     endif
 
@@ -566,8 +568,7 @@ function! s:searchselecta(pattern, flags)
     endif
 
     call setpos('.', s:oldpos)
-    let pattern2 = '[' . a:pattern . ']' " without comma
-    if s:search(pattern2, a:flags) > 0 " no start found
+    if s:search('[({[]', 'W') > 0 " no start found
         return s:fail('searchselecta 3')
     endif
 
@@ -576,10 +577,52 @@ function! s:searchselecta(pattern, flags)
     endif
 
     return s:fail('searchselecta 4')
-endif
-
 endfunction
 
+function! s:lastselecta()
+    let oldchar = s:getchar()
+
+    if s:search('[]}),]', 'bcW', 'bW') > 0 " no start found
+        return s:fail('searchselecta 1')
+    endif
+    let char = s:getchar()
+
+    " if found comma, move left to select previous argument
+    " but not if started on opening, to reach all arguments when nested
+    " example: f1(a, f2(b), c) has four arguments
+    " TODO: v3ala still doesn't work from the end of the line above
+    "   because normal <BS> selects the wrong argument
+    "   add way to select argument to the left instead of moving in?
+    "   (example works with space before second comma,
+    "   but then repeated vala don't work)
+    if char ==# ',' && oldchar !~# '[{([]'
+        silent! execute "normal! \<BS>"
+    endif
+    if s:selecta() == 0 " argument found
+        return
+    endif
+
+    if char !=# ',' " start wasn't on comma
+        return s:fail('searchselecta 2')
+    endif
+
+    call setpos('.', s:oldpos)
+    if s:search('[]})]', 'bW') > 0 " no start found
+        return s:fail('searchselecta 3')
+    endif
+
+    let char = s:getchar()
+    if char ==# ','
+        silent! execute "normal! \<BS>"
+    endif
+    if s:selecta() == 0 " argument found
+        return
+    endif
+
+    return s:fail('searchselecta 4')
+endfunction
+
+" TODO: remove
 " TODO: comment
 " TODO: test again when selecting only one separator
 " TODO: combine with selecta to nextselecta that behaves like in seekselecta:
@@ -757,8 +800,12 @@ function! s:search(...)
 endfunction
 
 function! s:fail(message)
-    " echom 'failed' a:message
+    call s:debug(a:message)
     return 1
+endfunction
+
+function! s:debug(message)
+    " echom a:message
 endfunction
 
 let &cpoptions = s:save_cpoptions

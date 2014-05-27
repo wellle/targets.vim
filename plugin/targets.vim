@@ -117,7 +117,7 @@ endfunction
 function! s:createArgTextObjects()
     call s:createSimpleTextObject(s:a      , 'a', 'seekselecta')
     call s:createSimpleTextObject(s:a . s:n, 'a', 'nextselecta')
-    call s:createSimpleTextObject(s:a . s:l, 'a', 'lasta selecta')
+    call s:createSimpleTextObject(s:a . s:l, 'a', 'lastselecta')
 endfunction
 
 " quote text objects expand into quote (by counting quote signs)
