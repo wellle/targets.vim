@@ -2,7 +2,7 @@
 " Author:  Christian Wellenbrock <christian.wellenbrock@gmail.com>
 " License: MIT license
 " Updated: 2014-06-02
-" Version: 0.2.2
+" Version: 0.2.3
 
 set runtimepath+=../
 set softtabstop=16 expandtab

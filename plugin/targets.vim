@@ -2,12 +2,12 @@
 " Author:  Christian Wellenbrock <christian.wellenbrock@gmail.com>
 " License: MIT license
 " Updated: 2014-06-02
-" Version: 0.2.2
+" Version: 0.2.3
 
 if exists("g:loaded_targets") || &cp || v:version < 700
     finish
 endif
-let g:loaded_targets = '0.2.2' " version number
+let g:loaded_targets = '0.2.3' " version number
 let s:save_cpoptions = &cpoptions
 set cpo&vim
 
