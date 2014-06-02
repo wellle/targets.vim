@@ -1,8 +1,8 @@
 " targets.vim Provides additional text objects
 " Author:  Christian Wellenbrock <christian.wellenbrock@gmail.com>
 " License: MIT license
-" Updated: 2014-05-21
-" Version: 0.2.1
+" Updated: 2014-06-02
+" Version: 0.2.2
 
 let s:save_cpoptions = &cpoptions
 set cpo&vim
@@ -471,6 +471,7 @@ endfunction
 " ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
 " drop delimiters left and right
+" remove last line of multiline selection if it consists of whitespace only
 " in   │   ┌─────┐
 " line │ a .  b  . c
 " out  │    └───┘
@@ -480,6 +481,13 @@ function! s:drop()
     let [s:sl, s:sc] = getpos('.')[1:2]
     call cursor(s:el, s:ec)
     silent! execute "normal! \<BS>"
+
+    if searchpos('\S', 'bcnW', line('.'))[0] == 0
+        " if only whitespace in front of cursor
+        " move to end of line above
+        normal! -$
+    endif
+
     let [s:el, s:ec] = getpos('.')[1:2]
 endfunction
 
