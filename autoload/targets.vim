@@ -70,6 +70,9 @@ function! s:init(delimiters, matchers, count)
     else
         let s:closing = s:opening
     endif
+
+    let s:selection = &selection " remember 'selection' setting
+    let &selection = 'inclusive' " and set it to inclusive
 endfunction
 
 " remember last selection, delimiters and matchers
@@ -80,6 +83,9 @@ endfunction
 
 " clean up script variables after match
 function! s:cleanUp()
+    let &selection = s:selection " reset 'selection' setting
+    unlet s:selection
+
     unlet s:delimiters s:matchers s:count
     unlet s:sl s:sc s:el s:ec
     unlet s:oldpos
@@ -127,9 +133,15 @@ function! s:selectMatch()
     call setpos('.', s:oldpos)
     normal! m'
 
+    " visually select the match
     call cursor(s:sl, s:sc)
     silent! normal! v
     call cursor(s:el, s:ec)
+
+    " if selection should be exclusive, expand selection
+    if s:selection ==# 'exclusive'
+        normal! l
+    endif
 endfunction
 
 " empty matches can't visually be selected
