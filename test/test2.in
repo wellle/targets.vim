@@ -1,7 +1,7 @@
 // comment 1
 function f() {
     return 4;
-}
+    }
 
 // comment 2
 int a = 5;
