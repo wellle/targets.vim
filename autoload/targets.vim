@@ -242,20 +242,23 @@ endfunction
 " in   │     ...
 " line │  '  '  '  '
 " out  │        1  2
-function! s:next()
-    return s:search(s:opening, 'W')
+function! s:nextselect()
+    if s:search(s:opening, 'W') > 0
+        return s:fail('nextselect')
+    endif
+    return s:select('>')
 endfunction
 
 " find `count` last delimiter, move in front of it (multi line)
 " in   │     ...
 " line │  '  '  '  '
 " out  │ 2  1
-function! s:last()
-    if s:search(s:closing, 'bcW', 'bW') > 0
-        return s:fail('last')
+function! s:lastselect()
+    if s:search(s:closing, 'bW') > 0
+        return s:fail('lastselect')
     endif
 
-    silent! normal! h
+    return s:select('<')
 endfunction
 
 " find `count` next opening delimiter (multi line)
@@ -298,18 +301,35 @@ endfunction
 " cursor  │   ....
 " line    │ ' ' b ' '
 " matcher │   └───┘
-" TODO: use s:direction that gets set by s:last to '<' to select in a
-" direction. update s:last to not use 'bcW' and then update s:search to use an
-" optional third parameter for stopline
-function! s:select()
-    let [s:sl, s:sc] = searchpos(s:opening, 'bcW')
-    if s:sc == 0 " no match to the left
-        return s:fail('select opening')
+" TODO: similar to s:selecta, move them together, or can they even be merged
+" somehow?
+function! s:select(...)
+    let oldpos = getpos('.')
+
+    if a:0 == 0 || a:1 == '>'
+        let [s:sl, s:sc, s:el, s:ec, err] = s:findSeparators('bcW', 'W', s:opening, s:closing)
+        let message = 'select 1'
+    else
+        let [s:el, s:ec, s:sl, s:sc, err] = s:findSeparators('cW', 'bW', s:closing, s:opening)
+        let message = 'select 2'
     endif
-    let [s:el, s:ec] = searchpos(s:closing, 'W')
-    if s:ec == 0 " no match to the right
-        return s:fail('select closing')
+
+    if err > 0
+        call setpos('.', oldpos)
+        return s:fail(message)
     endif
+endfunction
+
+function! s:findSeparators(flags1, flags2, opening, closing)
+    let [sl, sc] = searchpos(a:opening, a:flags1)
+    if sc == 0 " no match to the left
+        return [0, 0, 0, 0, s:fail('findSeparators opening')]
+    endif
+    let [el, ec] = searchpos(a:closing, a:flags2)
+    if ec == 0 " no match to the right
+        return [0, 0, 0, 0, s:fail('findSeparators closing')]
+    endif
+    return [sl, sc, el, ec, 0]
 endfunction
 
 " select pair of delimiters around cursor (multi line, no seeking)
@@ -792,21 +812,17 @@ endfunction
 " TODO: comment
 function! s:search(...)
     if a:0 == 3
-        let [pattern, flags1, flags2] = [a:1, a:2, a:3]
+        let [pattern, flags, stopline] = [a:1, a:2, a:3]
     elseif a:0 == 2
-        let [pattern, flags1, flags2] = [a:1, a:2, a:2]
+        let [pattern, flags, stopline] = [a:1, a:2, 0]
     else
         return s:fail('search arguments')
     endif
 
-    if searchpos(pattern, flags1)[0] == 0
-        return s:fail('search first')
-    endif
-
-    for _ in range(s:count - 1)
-        let line = searchpos(pattern, flags2)[0]
+    for _ in range(s:count)
+        let line = searchpos(pattern, flags, stopline)[0]
         if line == 0 " not enough found
-            return s:fail('search next')
+            return s:fail('search')
         endif
     endfor
     let s:count = 1
