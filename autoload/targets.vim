@@ -571,6 +571,14 @@ function! s:seekselecta()
         return
     endif
 
+    if s:nextselecta(line('.')) == 0
+        return
+    endif
+
+    if s:lastselecta(line('.')) == 0
+        return
+    endif
+
     if s:nextselecta() == 0
         return
     endif
@@ -580,33 +588,14 @@ function! s:seekselecta()
     endif
 
     return s:fail('seekselecta')
-
-"     call setpos('.', s:oldpos)
-"     if s:search('[,({[]') == 0
-"         let char = s:getchar()
-"         if s:selecta('>') == 0
-"             return
-"         endif
-"         if char ==# ','
-"             call setpos('.', s:oldpos)
-"             if s:search('[({[]') == 0
-"                 if s:selecta('>') == 0
-"                     return
-"                 endif
-"             endif
-"         endif
-"     endif
-
-"     call setpos('.', s:oldpos)
-"     if s:lasta() == 0
-"         if s:selecta('>') == 0
-"             return
-"         endif
-"     endif
 endfunction
 
-function! s:nextselecta()
-    if s:search('[,({[]', 'W') > 0 " no start found
+" TODO: document parameter list for all functions with ...
+" optional stopline
+function! s:nextselecta(...)
+    let stopline = a:0 > 0 ? a:1 : 0
+
+    if s:search('[,({[]', 'W', stopline) > 0 " no start found
         return s:fail('nextselecta 1')
     endif
 
@@ -620,7 +609,7 @@ function! s:nextselecta()
     endif
 
     call setpos('.', s:oldpos)
-    if s:search('[({[]', 'W') > 0 " no start found
+    if s:search('[({[]', 'W', stopline) > 0 " no start found
         return s:fail('nextselecta 3')
     endif
 
@@ -631,13 +620,14 @@ function! s:nextselecta()
     return s:fail('nextselecta 4')
 endfunction
 
-function! s:lastselecta()
-    if s:mapmode ==# 'x' " if visual mode
+function! s:lastselecta(...)
+    let stopline = a:0 > 0 ? a:1 : 0
+    if s:mapmode ==# '' " if visual mode
         " move cursor to end of selection
         silent! normal! `>
     endif
 
-    if s:search('[]}),]', 'bW') > 0 " no start found
+    if s:search('[]}),]', 'bW', stopline) > 0 " no start found
         return s:fail('lastselecta 1')
     endif
 
@@ -651,7 +641,7 @@ function! s:lastselecta()
     endif
 
     call setpos('.', s:oldpos)
-    if s:search('[]})]', 'bW') > 0 " no start found
+    if s:search('[]})]', 'bW', stopline) > 0 " no start found
         return s:fail('lastselecta 3')
     endif
 
@@ -838,7 +828,7 @@ function! s:fail(...)
 endfunction
 
 function! s:debug(message)
-    echom a:message
+    " echom a:message
 endfunction
 
 let &cpoptions = s:save_cpoptions
