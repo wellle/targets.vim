@@ -243,7 +243,7 @@ endfunction
 " line │  '  '  '  '
 " out  │        1  2
 function! s:nextselect()
-    if s:search(s:opening, 'W') > 0
+    if s:search(s:count, s:opening, 'W') > 0
         return s:fail('nextselect')
     endif
     return s:select('>')
@@ -254,7 +254,7 @@ endfunction
 " line │  '  '  '  '
 " out  │ 2  1
 function! s:lastselect()
-    if s:search(s:closing, 'bW') > 0
+    if s:search(s:count, s:closing, 'bW') > 0
         return s:fail('lastselect')
     endif
 
@@ -266,7 +266,7 @@ endfunction
 " line │ ( ) ( ) ( ( ) ) ( )
 " out  │     1   2 3     4
 function! s:nextp()
-    return s:search(s:opening, 'W')
+    return s:search(s:count, s:opening, 'W')
 endfunction
 
 " find `count` last closing delimiter (multi line)
@@ -274,7 +274,7 @@ endfunction
 " line │ ( ) ( ) ( ( ) ) ( )
 " out  │   4   3     2 1
 function! s:lastp(...)
-    return s:search(s:closing, 'bW')
+    return s:search(s:count, s:closing, 'bW')
 endfunction
 
 " find `count` next opening tag delimiter (multi line)
@@ -282,7 +282,7 @@ endfunction
 " line │ <a> </a> <b> </b> <c> <d> </d> </c> <e> </e>
 " out  │          1        2   3             4
 function! s:nextt()
-    return s:search('<\a', 'W')
+    return s:search(s:count, '<\a', 'W')
 endfunction
 
 " find `count` last closing tag delimiter (multi line)
@@ -290,7 +290,7 @@ endfunction
 " line │ <a> </a> <b> </b> <c> <d> </d> </c> <e> </e>
 " out  │     4        3            2    1
 function! s:lastt()
-    return s:search('</\a', 'bW')
+    return s:search(s:count, '</\a', 'bW')
 endfunction
 
 " match selectors
@@ -569,9 +569,13 @@ endfunction
 " TODO: select last argument if found in line, but no next in line
 function! s:seekselecta()
     " TODO: use count here
-    " try find count'th closing, call selecta with new direction '^' (up)
+    " try find count-1'th closing, call selecta with new direction '^' (up)
     " selecta('^') on opening or closing should not select inside, but find
     " surrounding argument
+    if s:count > 1
+
+    endif
+
     if s:selecta('>') == 0
         return
     endif
@@ -600,7 +604,7 @@ endfunction
 function! s:nextselecta(...)
     let stopline = a:0 > 0 ? a:1 : 0
 
-    if s:search('[,({[]', 'W', stopline) > 0 " no start found
+    if s:search(s:count, '[,({[]', 'W', stopline) > 0 " no start found
         return s:fail('nextselecta 1')
     endif
 
@@ -614,7 +618,7 @@ function! s:nextselecta(...)
     endif
 
     call setpos('.', s:oldpos)
-    if s:search('[({[]', 'W', stopline) > 0 " no start found
+    if s:search(s:count, '[({[]', 'W', stopline) > 0 " no start found
         return s:fail('nextselecta 3')
     endif
 
@@ -632,7 +636,7 @@ function! s:lastselecta(...)
         silent! normal! `>
     endif
 
-    if s:search('[]}),]', 'bW', stopline) > 0 " no start found
+    if s:search(s:count, '[]}),]', 'bW', stopline) > 0 " no start found
         return s:fail('lastselecta 1')
     endif
 
@@ -646,7 +650,7 @@ function! s:lastselecta(...)
     endif
 
     call setpos('.', s:oldpos)
-    if s:search('[]})]', 'bW', stopline) > 0 " no start found
+    if s:search(s:count, '[]})]', 'bW', stopline) > 0 " no start found
         return s:fail('lastselecta 3')
     endif
 
@@ -664,14 +668,6 @@ endfunction
 "   search for , or opening, try selecta
 "   if selecta failed from , search for opening and try selecta again
 "   (effectively skipping top level commas)
-
-function! s:lasta()
-    silent! normal! `>
-    if s:search('[,)}\]]', 'bW') > 0
-        return s:fail('lasta')
-    endif
-    silent! execute "normal! \<BS>"
-endfunction
 
 " selects the current cursor position (useful to test modifiers)
 function! s:position()
@@ -806,21 +802,20 @@ endfunction
 
 " TODO: comment
 function! s:search(...)
-    if a:0 == 3
-        let [pattern, flags, stopline] = [a:1, a:2, a:3]
-    elseif a:0 == 2
-        let [pattern, flags, stopline] = [a:1, a:2, 0]
+    if a:0 == 4
+        let [cnt, pattern, flags, stopline] = [a:1, a:2, a:3, a:4]
+    elseif a:0 == 3
+        let [cnt, pattern, flags, stopline] = [a:1, a:2, a:3, 0]
     else
         return s:fail('search arguments')
     endif
 
-    for _ in range(s:count)
+    for _ in range(cnt)
         let line = searchpos(pattern, flags, stopline)[0]
         if line == 0 " not enough found
             return s:fail('search')
         endif
     endfor
-    let s:count = 1
 endfunction
 
 function! s:fail(...)
