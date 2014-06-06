@@ -154,8 +154,14 @@ function! s:handleEmptyMatch()
 
     " move cursor to delimiter after zero width match
     call cursor(s:sl, s:sc)
+
+    let eventignore = &eventignore " remember setting
+    let &eventignore = 'all' " disable auto commands
+
     " insert single space and visually select it
     silent! execute "normal! i \<Esc>v"
+
+    let &eventignore = eventignore " restore setting
 endfunction
 
 " abort when no match was found
