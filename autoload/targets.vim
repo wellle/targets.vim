@@ -253,9 +253,18 @@ endfunction
 " in   │     ...
 " line │  '  '  '  '
 " out  │ 2  1
+" TODO: was broken when invoked from separator! add test!
 function! s:lastselect()
-    if s:search(s:count, s:closing, 'bW') > 0
-        return s:fail('lastselect')
+    if s:getchar() ==# s:closing
+        let err = s:search(s:count - 1, s:closing, 'bW')
+        let message = 'lastselect 1'
+    else
+        let err = s:search(s:count, s:closing, 'bW')
+        let message = 'lastselect 2'
+    endif
+
+    if err > 0
+        return s:fail(message)
     endif
 
     return s:select('<')
@@ -303,10 +312,10 @@ endfunction
 " matcher │   └───┘
 " TODO: similar to s:selecta, move them together, or can they even be merged
 " somehow?
-function! s:select(...)
+function! s:select(direction)
     let oldpos = getpos('.')
 
-    if a:0 == 0 || a:1 == '>'
+    if a:direction == '>'
         let [s:sl, s:sc, s:el, s:ec, err] = s:findSeparators('bcW', 'W', s:opening, s:closing)
         let message = 'select 1'
     else
@@ -499,9 +508,10 @@ function! s:selecta(direction)
     if a:direction ==# '>'
         let [s:sl, s:sc, s:el, s:ec, err] = s:findArg('W', 'bW', '[({[]', '[]})]')
         let message = 'selecta 1'
-    else
+    elseif a:direction ==# '<'
         let [s:el, s:ec, s:sl, s:sc, err] = s:findArg('bW', 'W', '[]})]', '[({[]')
         let message = 'selecta 2'
+    else
     endif
 
     if err > 0
@@ -573,7 +583,12 @@ function! s:seekselecta()
     " selecta('^') on opening or closing should not select inside, but find
     " surrounding argument
     if s:count > 1
-
+        if s:search(s:count - 1, '[]})]', 'W') > 0
+            return s:fail('seekselecta count')
+        endif
+        if s:selecta('^') > 0
+            return s:fail('seekselecta count select')
+        endif
     endif
 
     if s:selecta('>') == 0
@@ -596,7 +611,7 @@ function! s:seekselecta()
         return
     endif
 
-    return s:fail('seekselecta')
+    return s:fail('seekselecta seek')
 endfunction
 
 " TODO: document parameter list for all functions with ...
