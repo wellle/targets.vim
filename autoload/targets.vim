@@ -419,6 +419,7 @@ endfunction
 " line     │ ( ( a ) )
 " modifier │ │ └─1─┘ │
 "          │ └── 2 ──┘
+" TODO: that image is wrong, right? there is no count involved here
 function! s:selectp()
     " try to select pair
     silent! execute 'normal! va' . s:opening
@@ -567,6 +568,10 @@ endfunction
 " TODO: support counts to select bigger arguments of outer functions
 " TODO: select last argument if found in line, but no next in line
 function! s:seekselecta()
+    " TODO: use count here
+    " try find count'th closing, call selecta with new direction '^' (up)
+    " selecta('^') on opening or closing should not select inside, but find
+    " surrounding argument
     if s:selecta('>') == 0
         return
     endif
@@ -773,16 +778,16 @@ endfunction
 " grows selection on repeated invocations by increasing s:count
 function! s:grow()
     if !exists('s:ldelimiters') " no previous invocation
-        return
+        return s:debug('grow no last invocations')
     endif
     if [s:ldelimiters, s:lmatchers] != [s:delimiters, s:matchers] " different invocation
-        return
+        return s:debug('grow different invocations')
     endif
     if getpos("'<")[1:2] != [s:lsl, s:lsc] " selection start changed
-        return
+        return s:debug('grow start changed')
     endif
     if getpos("'>")[1:2] != [s:lel, s:lec] " selection end changed
-        return
+        return s:debug('grow end changed')
     endif
 
     " increase s:count to grow selection
