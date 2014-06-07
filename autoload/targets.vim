@@ -258,14 +258,12 @@ endfunction
 "   by using `>
 function! s:lastselect()
     if s:getchar() ==# s:closing
-        let err = s:search(s:count - 1, s:closing, 'bW')
-        let message = 'lastselect 1'
+        let [cnt, message] = [s:count - 1, 'lastselect 1']
     else
-        let err = s:search(s:count, s:closing, 'bW')
-        let message = 'lastselect 2'
+        let [cnt, message] = [s:count, 'lastselect 2']
     endif
 
-    if err > 0
+    if s:search(cnt, s:closing, 'bW') > 0
         return s:fail(message)
     endif
 
@@ -618,7 +616,12 @@ function! s:seekselecta()
     " selecta('^') on opening or closing should not select inside, but find
     " surrounding argument
     if s:count > 1
-        if s:search(s:count - 1, '[]})]', 'W') > 0
+        if s:getchar() =~# '[]})]'
+            let [cnt, message] = [s:count - 2, 'seekselecta 1']
+        else
+            let [cnt, message] = [s:count - 1, 'seekselecta 2']
+        endif
+        if s:search(cnt, '[]})]', 'W') > 0
             return s:fail('seekselecta count')
         endif
         if s:selecta('^') == 0
