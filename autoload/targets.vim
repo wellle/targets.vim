@@ -254,6 +254,8 @@ endfunction
 " line │  '  '  '  '
 " out  │ 2  1
 " TODO: was broken when invoked from separator! add test!
+" TODO: enable to iterate all pairs in ( ( ) ( ) ) from end
+"   by using `>
 function! s:lastselect()
     if s:getchar() ==# s:closing
         let err = s:search(s:count - 1, s:closing, 'bW')
@@ -511,7 +513,11 @@ function! s:selecta(direction)
     elseif a:direction ==# '<'
         let [s:el, s:ec, s:sl, s:sc, err] = s:findArg('bW', 'W', '[]})]', '[({[]')
         let message = 'selecta 2'
+    elseif a:direction ==# '^'
+        echom 'up'
+        return
     else
+        return s:fail('selecta')
     endif
 
     if err > 0
@@ -644,11 +650,12 @@ function! s:nextselecta(...)
     return s:fail('nextselecta 4')
 endfunction
 
+" TODO: extract variables for '[]}),]' etc?
 function! s:lastselecta(...)
     let stopline = a:0 > 0 ? a:1 : 0
-    if s:mapmode ==# '' " if visual mode
+    if s:mapmode ==# 'x' " if visual mode
         " move cursor to end of selection
-        silent! normal! `>
+        " silent! normal! `>
     endif
 
     if s:search(s:count, '[]}),]', 'bW', stopline) > 0 " no start found
@@ -788,21 +795,27 @@ endfunction
 
 " grows selection on repeated invocations by increasing s:count
 function! s:grow()
+    if !s:newSelection()
+        " increase s:count to grow selection
+        let s:count = s:count + 1
+    endif
+endfunction
+
+function! s:newSelection()
     if !exists('s:ldelimiters') " no previous invocation
-        return s:debug('grow no last invocations')
+        return 1
     endif
     if [s:ldelimiters, s:lmatchers] != [s:delimiters, s:matchers] " different invocation
-        return s:debug('grow different invocations')
+        return 1
     endif
     if getpos("'<")[1:2] != [s:lsl, s:lsc] " selection start changed
-        return s:debug('grow start changed')
+        return 1
     endif
     if getpos("'>")[1:2] != [s:lel, s:lec] " selection end changed
-        return s:debug('grow end changed')
+        return 1
     endif
 
-    " increase s:count to grow selection
-    let s:count = s:count + 1
+    return
 endfunction
 
 " doubles the count (used for `iN'`)
