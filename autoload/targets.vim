@@ -514,8 +514,8 @@ function! s:selecta(direction)
         let [s:el, s:ec, s:sl, s:sc, err] = s:findArg('bW', 'W', '[]})]', '[({[]')
         let message = 'selecta 2'
     elseif a:direction ==# '^'
-        echom 'up'
-        return
+        let [s:sl, s:sc, s:el, s:ec, err] = s:findArgUp('W', 'bW', '[({[]', '[]})]')
+        let message = 'selecta 3'
     else
         return s:fail('selecta')
     endif
@@ -526,14 +526,13 @@ function! s:selecta(direction)
     endif
 endfunction
 
-function! s:findArg(flags1, flags2, opening, closing)
+" TODO: merge with findArg? clean up!
+function! s:findArgUp(flags1, flags2, opening, closing)
     let oldpos = getpos('.')
     let char = s:getchar()
 
     if char =~# a:closing " started on closing
-        let [el, ec] = oldpos[1:2] " use old position as end
-    else " find end to the right
-        let [el, ec, err] = s:findArgBoundary(a:flags1, a:opening, a:closing)
+        let [el, ec, err] = s:findArgBoundary(a:flags1, a:flags1, a:opening, a:closing)
         if err > 0 " no opening found
             return [0, 0, 0, 0, s:fail('findArg 1', a:)]
         endif
@@ -547,7 +546,7 @@ function! s:findArg(flags1, flags2, opening, closing)
     endif
 
     " find start to the left
-    let [sl, sc, err] = s:findArgBoundary(a:flags2, a:closing, a:opening)
+    let [sl, sc, err] = s:findArgBoundary('bcW', 'bW', a:closing, a:opening)
     if err > 0
         return [0, 0, 0, 0, s:fail('findArg 2')]
     endif
@@ -555,10 +554,39 @@ function! s:findArg(flags1, flags2, opening, closing)
     return [sl, sc, el, ec, 0]
 endfunction
 
-function! s:findArgBoundary(flags, skip, finish)
+function! s:findArg(flags1, flags2, opening, closing)
+    let oldpos = getpos('.')
+    let char = s:getchar()
+
+    if char =~# a:closing " started on closing
+        let [el, ec] = oldpos[1:2] " use old position as end
+    else " find end to the right
+        let [el, ec, err] = s:findArgBoundary(a:flags1, a:flags1, a:opening, a:closing)
+        if err > 0 " no opening found
+            return [0, 0, 0, 0, s:fail('findArg 1', a:)]
+        endif
+
+        if char =~# a:opening || char ==# ',' " started on opening or separator
+            let [sl, sc] = oldpos[1:2] " use old position as start
+            return [sl, sc, el, ec, 0]
+        endif
+
+        call setpos('.', oldpos) " return to old position
+    endif
+
+    " find start to the left
+    let [sl, sc, err] = s:findArgBoundary(a:flags2, a:flags2, a:closing, a:opening)
+    if err > 0
+        return [0, 0, 0, 0, s:fail('findArg 2')]
+    endif
+
+    return [sl, sc, el, ec, 0]
+endfunction
+
+function! s:findArgBoundary(flags1, flags2, skip, finish)
     let tl = 0
+    let [rl, rc] = searchpos('[]{(,)}[]', a:flags1)
     while 1
-        let [rl, rc] = searchpos('[]{(,)}[]', a:flags)
         if rl == 0
             return [0, 0, s:fail('findArgBoundary 1', a:)]
         endif
@@ -578,6 +606,7 @@ function! s:findArgBoundary(flags, skip, finish)
         else
             return [0, 0, s:fail('findArgBoundary 2')]
         endif
+        let [rl, rc] = searchpos('[]{(,)}[]', a:flags2)
     endwhile
 endfunction
 
@@ -592,9 +621,10 @@ function! s:seekselecta()
         if s:search(s:count - 1, '[]})]', 'W') > 0
             return s:fail('seekselecta count')
         endif
-        if s:selecta('^') > 0
-            return s:fail('seekselecta count select')
+        if s:selecta('^') == 0
+            return
         endif
+        return s:fail('seekselecta count select')
     endif
 
     if s:selecta('>') == 0
@@ -655,7 +685,14 @@ function! s:lastselecta(...)
     let stopline = a:0 > 0 ? a:1 : 0
     if s:mapmode ==# 'x' " if visual mode
         " move cursor to end of selection
-        " silent! normal! `>
+        silent! normal! `>
+    endif
+
+    " special case to handle vala when invoked on a comma
+    if s:getchar() ==# ',' && s:newSelection()
+        if s:selecta('<') == 0
+            return
+        endif
     endif
 
     if s:search(s:count, '[]}),]', 'bW', stopline) > 0 " no start found
@@ -794,18 +831,24 @@ function! s:expand()
 endfunction
 
 " grows selection on repeated invocations by increasing s:count
+" TODO: delay? remember that growing was requested, try normal selection,
+" compare with initial selection. only if they match, increase count and try
+" again
+" TODO: growing too far resets the visual selection, fix it
 function! s:grow()
-    if !s:newSelection()
-        " increase s:count to grow selection
-        let s:count = s:count + 1
+    if s:newSelection()
+        return
     endif
+    if [s:ldelimiters, s:lmatchers] != [s:delimiters, s:matchers] " different invocation
+        return
+    endif
+
+    " increase s:count to grow selection
+    let s:count = s:count + 1
 endfunction
 
 function! s:newSelection()
-    if !exists('s:ldelimiters') " no previous invocation
-        return 1
-    endif
-    if [s:ldelimiters, s:lmatchers] != [s:delimiters, s:matchers] " different invocation
+    if !exists('s:lsl') " no previous invocation
         return 1
     endif
     if getpos("'<")[1:2] != [s:lsl, s:lsc] " selection start changed
