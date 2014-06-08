@@ -80,9 +80,6 @@ endfunction
 function! s:saveState()
     let [s:lsl, s:lsc, s:lel, s:lec] = [s:sl, s:sc, s:el, s:ec]
     let [s:ldelimiters, s:lmatchers] = [s:delimiters, s:matchers]
-    " TODO: da) after va) shouldn't grow
-    " example va)<Esc>da) on x:  a ( b ( x ) c ) d
-    " take mapmode into account
 endfunction
 
 " clean up script variables after match
@@ -839,6 +836,9 @@ endfunction
 " again
 " TODO: growing too far resets the visual selection, fix it
 function! s:grow()
+    if s:mapmode == 'o'
+        return
+    endif
     if s:newSelection()
         return
     endif
