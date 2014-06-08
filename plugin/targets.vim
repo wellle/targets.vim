@@ -114,10 +114,20 @@ endfunction
 " TODO: implement growing?
 " TODO: no seeking?
 " TODO: skip top level commas () , ()
+" TODO: reorder
 function! s:createArgTextObjects()
+    call s:createSimpleTextObject(s:i      , 'a', 'grow seekselecta drop')
     call s:createSimpleTextObject(s:a      , 'a', 'grow seekselecta dropa')
+    call s:createSimpleTextObject(s:I      , 'a', 'grow seekselecta shrink')
+    call s:createSimpleTextObject(s:A      , 'a', 'grow seekselecta expand')
+    call s:createSimpleTextObject(s:i . s:n, 'a', 'nextselecta drop')
     call s:createSimpleTextObject(s:a . s:n, 'a', 'nextselecta dropa')
+    call s:createSimpleTextObject(s:I . s:n, 'a', 'nextselecta shrink')
+    call s:createSimpleTextObject(s:A . s:n, 'a', 'nextselecta expand')
+    call s:createSimpleTextObject(s:i . s:l, 'a', 'lastselecta drop')
     call s:createSimpleTextObject(s:a . s:l, 'a', 'lastselecta dropa')
+    call s:createSimpleTextObject(s:I . s:l, 'a', 'lastselecta shrink')
+    call s:createSimpleTextObject(s:A . s:l, 'a', 'lastselecta expand')
 endfunction
 
 " quote text objects expand into quote (by counting quote signs)
