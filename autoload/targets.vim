@@ -684,6 +684,8 @@ endfunction
 function! s:lastselecta(...)
     let stopline = a:0 > 0 ? a:1 : 0
     if s:mapmode ==# 'x' " if visual mode
+        " TODO: move to last raw end of selection (might have been changed by
+        " dropa and friends)
         " move cursor to end of selection
         silent! normal! `>
     endif
@@ -768,8 +770,21 @@ endfunction
 " in   │   ┌─────┐
 " line │ a . b c . d
 " out  │   └────┘
+" TODO: fix for s:ec==1 (beginning of line), by using normal! <BS>
+" similar for dropa
 function! s:dropr()
     let s:ec -= 1
+endfunction
+
+" TODO: comment
+function! s:dropa()
+    if s:getchar(s:sl, s:sc) !=# ','
+        let s:sc += 1
+        if s:getchar(s:el, s:ec) ==# ','
+            return s:expand()
+        endif
+    endif
+    return s:dropr()
 endfunction
 
 " select inner tag delimiters
@@ -870,8 +885,13 @@ function! s:double()
 endfunction
 
 " TODO: comment
-function! s:getchar()
-    return getline('.')[col('.')-1]
+function! s:getchar(...)
+    if a:0 == 2
+        let [l, c] = [a:1, a:2]
+    else
+        let [l, c] = ['.', col('.')]
+    endif
+    return getline(l)[c-1]
 endfunction
 
 " TODO: comment

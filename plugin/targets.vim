@@ -115,9 +115,9 @@ endfunction
 " TODO: no seeking?
 " TODO: skip top level commas () , ()
 function! s:createArgTextObjects()
-    call s:createSimpleTextObject(s:a      , 'a', 'grow seekselecta')
-    call s:createSimpleTextObject(s:a . s:n, 'a', 'nextselecta')
-    call s:createSimpleTextObject(s:a . s:l, 'a', 'lastselecta')
+    call s:createSimpleTextObject(s:a      , 'a', 'grow seekselecta dropa')
+    call s:createSimpleTextObject(s:a . s:n, 'a', 'nextselecta dropa')
+    call s:createSimpleTextObject(s:a . s:l, 'a', 'lastselecta dropa')
 endfunction
 
 " quote text objects expand into quote (by counting quote signs)
