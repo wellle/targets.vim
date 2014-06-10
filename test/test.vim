@@ -1,8 +1,8 @@
 " targets.vim Provides additional text objects
 " Author:  Christian Wellenbrock <christian.wellenbrock@gmail.com>
 " License: MIT license
-" Updated: 2014-06-06
-" Version: 0.2.4
+" Updated: 2014-06-10
+" Version: 0.2.5
 
 set runtimepath+=../
 set softtabstop=16 expandtab
@@ -155,9 +155,19 @@ function s:testVisual()
     write! test4.out
 endfunction
 
+function s:testModifiers()
+    edit! test5.in
+    normal gg0
+
+    normal fxvItr_
+
+    write! test5.out
+endfunction
+
 call s:testBasic()
 call s:testMultiline()
 call s:testSeeking()
 call s:testVisual()
+call s:testModifiers()
 
 quit!

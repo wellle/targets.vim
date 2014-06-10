@@ -1,13 +1,13 @@
 " targets.vim Provides additional text objects
 " Author:  Christian Wellenbrock <christian.wellenbrock@gmail.com>
 " License: MIT license
-" Updated: 2014-06-06
-" Version: 0.2.4
+" Updated: 2014-06-10
+" Version: 0.2.5
 
 if exists("g:loaded_targets") || &cp || v:version < 700
     finish
 endif
-let g:loaded_targets = '0.2.4' " version number
+let g:loaded_targets = '0.2.5' " version number
 let s:save_cpoptions = &cpoptions
 set cpo&vim
 
@@ -96,17 +96,17 @@ endfunction
 
 " tag text objects work on tags (similar to pair text objects)
 function! s:createTagTextObjects()
-    call s:createSimpleTextObject(s:i,       't', 'grow seekselectt dropt')
+    call s:createSimpleTextObject(s:i,       't', 'grow seekselectt innert drop')
     call s:createSimpleTextObject(s:a,       't', 'grow seekselectt')
-    call s:createSimpleTextObject(s:I,       't', 'seekselectt dropt shrink')
+    call s:createSimpleTextObject(s:I,       't', 'seekselectt innert shrink')
     call s:createSimpleTextObject(s:A,       't', 'seekselectt expand')
-    call s:createSimpleTextObject(s:i . s:n, 't', 'nextt selectp dropt')
+    call s:createSimpleTextObject(s:i . s:n, 't', 'nextt selectp innert drop')
     call s:createSimpleTextObject(s:a . s:n, 't', 'nextt selectp')
-    call s:createSimpleTextObject(s:I . s:n, 't', 'nextt selectp dropt shrink')
+    call s:createSimpleTextObject(s:I . s:n, 't', 'nextt selectp innert shrink')
     call s:createSimpleTextObject(s:A . s:n, 't', 'nextt selectp expand')
-    call s:createSimpleTextObject(s:i . s:l, 't', 'lastt selectp dropt')
+    call s:createSimpleTextObject(s:i . s:l, 't', 'lastt selectp innert drop')
     call s:createSimpleTextObject(s:a . s:l, 't', 'lastt selectp')
-    call s:createSimpleTextObject(s:I . s:l, 't', 'lastt selectp dropt shrink')
+    call s:createSimpleTextObject(s:I . s:l, 't', 'lastt selectp innert shrink')
     call s:createSimpleTextObject(s:A . s:l, 't', 'lastt selectp expand')
 endfunction
 

@@ -1,8 +1,8 @@
 " targets.vim Provides additional text objects
 " Author:  Christian Wellenbrock <christian.wellenbrock@gmail.com>
 " License: MIT license
-" Updated: 2014-06-06
-" Version: 0.2.4
+" Updated: 2014-06-10
+" Version: 0.2.5
 
 let s:save_cpoptions = &cpoptions
 set cpo&vim
@@ -517,22 +517,20 @@ function! s:dropr()
     let s:ec -= 1
 endfunction
 
-" drop tag delimiters left and right
+" select inner tag delimiters
 " in   │   ┌──────────┐
 " line │ a <b>  c  </b> c
-" out  │      └───┘
-function! s:dropt()
+" out  │     └─────┘
+function! s:innert()
     call cursor(s:sl, s:sc)
     call searchpos('>', 'W')
-    silent! execute "normal! 1 "
     let [s:sl, s:sc] = getpos('.')[1:2]
     call cursor(s:el, s:ec)
     call searchpos('<', 'bW')
-    silent! execute "normal! \<BS>"
     let [s:el, s:ec] = getpos('.')[1:2]
 endfunction
 
-" drop delimters and whitespace left and right
+" drop delimiters and whitespace left and right
 " fall back to drop when only whitespace is inside
 " in   │   ┌─────┐   │   ┌──┐
 " line │ a . b c . d │ a .  . d
