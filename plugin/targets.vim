@@ -31,12 +31,12 @@ function! s:createTextObject(prefix, trigger, delimiters, matchers)
     " don't create xmaps beginning with `A` or `I`
     " conflict with `^VA` and `^VI` to append before or insert after visual
     " block selection. #6
-    " instead, save mapping to targets#mapArgs so we can execute these only
+    " instead, save mapping to targets_mapArgs so we can execute these only
     " for character wise visual mode in targets#uppercaseXmap #23
     if a:prefix !~# '^[AI]'
         execute 'xnoremap <silent>' . mapping . ' :<C-U>call targets#xmap(' . arguments . ')<CR>'
     else
-        let g:targets#mapArgs[rawMapping] = rawArguments
+        let g:targets_mapArgs[rawMapping] = rawArguments
     endif
 
     unlet delimiters mapping arguments
@@ -257,11 +257,17 @@ function! s:loadSettings()
     let s:pair_list = split(g:targets_pairs)
     let s:quote_list = split(g:targets_quotes)
     let s:separator_list = split(g:targets_separators)
+
+    " TODO: document
+    let g:targets_argOpening = '[({[]'
+    let g:targets_argClosing = '[]})]'
+    let g:targets_argOpeningSep = '[,({[]'
+    let g:targets_argClosingSep = '[]}),]'
 endfunction
 
 " dictionary mapping uppercase xmap like `An,` to argument strings for
 " targets#xmapCount. used by targets#uppercaseXmap
-let targets#mapArgs = {}
+let targets_mapArgs = {}
 
 call s:loadSettings()
 

@@ -7,9 +7,6 @@
 let s:save_cpoptions = &cpoptions
 set cpo&vim
 
-function! targets#test()
-endfunction
-
 " visually select some text for the given delimiters and matchers
 " `matchers` is a list of functions that gets executed in order
 " it consists of optional position modifiers, followed by a match selector,
@@ -49,7 +46,7 @@ function! targets#uppercaseXmap(trigger)
     endif
 
     " get associated arguments for targets#xmapCount
-    let arguments = get(g:targets#mapArgs, a:trigger . chars, '')
+    let arguments = get(g:targets_mapArgs, a:trigger . chars, '')
     if arguments ==# ''
         return '\<Esc>'
     endif
@@ -502,14 +499,15 @@ endfunction
 function! s:selecta(direction)
     let oldpos = getpos('.')
 
+    let [opening, closing] = [g:targets_argOpening, g:targets_argClosing]
     if a:direction ==# '>'
-        let [s:sl, s:sc, s:el, s:ec, err] = s:findArg('W', 'bW', '[({[]', '[]})]')
+        let [s:sl, s:sc, s:el, s:ec, err] = s:findArg('W', 'bW', opening, closing)
         let message = 'selecta 1'
     elseif a:direction ==# '<'
-        let [s:el, s:ec, s:sl, s:sc, err] = s:findArg('bW', 'W', '[]})]', '[({[]')
+        let [s:el, s:ec, s:sl, s:sc, err] = s:findArg('bW', 'W', closing, opening)
         let message = 'selecta 2'
     elseif a:direction ==# '^'
-        let [s:sl, s:sc, s:el, s:ec, err] = s:findArgUp('W', 'bW', '[({[]', '[]})]')
+        let [s:sl, s:sc, s:el, s:ec, err] = s:findArgUp('W', 'bW', opening, closing)
         let message = 'selecta 3'
     else
         return s:fail('selecta')
@@ -613,12 +611,12 @@ function! s:seekselecta()
     " selecta('^') on opening or closing should not select inside, but find
     " surrounding argument
     if s:count > 1
-        if s:getchar() =~# '[]})]'
+        if s:getchar() =~# g:targets_argClosing
             let [cnt, message] = [s:count - 2, 'seekselecta 1']
         else
             let [cnt, message] = [s:count - 1, 'seekselecta 2']
         endif
-        if s:search(cnt, '[]})]', 'W') > 0
+        if s:search(cnt, g:targets_argClosing, 'W') > 0
             return s:fail('seekselecta count')
         endif
         if s:selecta('^') == 0
@@ -655,7 +653,8 @@ endfunction
 function! s:nextselecta(...)
     let stopline = a:0 > 0 ? a:1 : 0
 
-    if s:search(s:count, '[,({[]', 'W', stopline) > 0 " no start found
+    let openingSep = g:targets_argOpeningSep
+    if s:search(s:count, openingSep, 'W', stopline) > 0 " no start found
         return s:fail('nextselecta 1')
     endif
 
@@ -669,7 +668,8 @@ function! s:nextselecta(...)
     endif
 
     call setpos('.', s:oldpos)
-    if s:search(s:count, '[({[]', 'W', stopline) > 0 " no start found
+    let opening = g:targets_argOpening
+    if s:search(s:count, opening, 'W', stopline) > 0 " no start found
         return s:fail('nextselecta 3')
     endif
 
@@ -680,7 +680,6 @@ function! s:nextselecta(...)
     return s:fail('nextselecta 4')
 endfunction
 
-" TODO: extract variables for '[]}),]' etc?
 function! s:lastselecta(...)
     let stopline = a:0 > 0 ? a:1 : 0
     if s:mapmode ==# 'x' " if visual mode
@@ -697,7 +696,8 @@ function! s:lastselecta(...)
         endif
     endif
 
-    if s:search(s:count, '[]}),]', 'bW', stopline) > 0 " no start found
+    let closingSep = g:targets_argClosingSep
+    if s:search(s:count, closingSep, 'bW', stopline) > 0 " no start found
         return s:fail('lastselecta 1')
     endif
 
@@ -711,7 +711,8 @@ function! s:lastselecta(...)
     endif
 
     call setpos('.', s:oldpos)
-    if s:search(s:count, '[]})]', 'bW', stopline) > 0 " no start found
+    let closing = g:targets_argClosing
+    if s:search(s:count, closing, 'bW', stopline) > 0 " no start found
         return s:fail('lastselecta 3')
     endif
 
