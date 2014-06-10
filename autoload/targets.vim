@@ -524,15 +524,13 @@ endfunction
 function! s:dropt()
     call cursor(s:sl, s:sc)
     call searchpos('>', 'W')
-    silent! execute "normal! 1 "
     let [s:sl, s:sc] = getpos('.')[1:2]
     call cursor(s:el, s:ec)
     call searchpos('<', 'bW')
-    silent! execute "normal! \<BS>"
     let [s:el, s:ec] = getpos('.')[1:2]
 endfunction
 
-" drop delimters and whitespace left and right
+" drop delimiters and whitespace left and right
 " fall back to drop when only whitespace is inside
 " in   │   ┌─────┐   │   ┌──┐
 " line │ a . b c . d │ a .  . d
