@@ -517,11 +517,11 @@ function! s:dropr()
     let s:ec -= 1
 endfunction
 
-" drop tag delimiters left and right
+" select inner tag delimiters
 " in   │   ┌──────────┐
 " line │ a <b>  c  </b> c
-" out  │      └───┘
-function! s:dropt()
+" out  │     └─────┘
+function! s:innert()
     call cursor(s:sl, s:sc)
     call searchpos('>', 'W')
     let [s:sl, s:sc] = getpos('.')[1:2]
