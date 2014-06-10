@@ -7,6 +7,14 @@
 let s:save_cpoptions = &cpoptions
 set cpo&vim
 
+function! s:setup()
+    let s:argOpeningS = g:targets_argOpening . '\|' . g:targets_argSeparator
+    let s:argClosingS = g:targets_argClosing . '\|' . g:targets_argSeparator
+    let s:argAll      = s:argOpeningS        . '\|' . g:targets_argClosing
+endfunction
+
+call s:setup()
+
 " visually select some text for the given delimiters and matchers
 " `matchers` is a list of functions that gets executed in order
 " it consists of optional position modifiers, followed by a match selector,
@@ -530,7 +538,8 @@ function! s:findArgUp(flags1, flags2, opening, closing)
             return [0, 0, 0, 0, s:fail('findArg 1', a:)]
         endif
 
-        if char =~# a:opening || char ==# ',' " started on opening or separator
+        let separator = g:targets_argSeparator
+        if char =~# a:opening || char =~# separator " started on opening or separator
             let [sl, sc] = oldpos[1:2] " use old position as start
             return [sl, sc, el, ec, 0]
         endif
@@ -559,7 +568,8 @@ function! s:findArg(flags1, flags2, opening, closing)
             return [0, 0, 0, 0, s:fail('findArg 1', a:)]
         endif
 
-        if char =~# a:opening || char ==# ',' " started on opening or separator
+        let separator = g:targets_argSeparator
+        if char =~# a:opening || char =~# separator " started on opening or separator
             let [sl, sc] = oldpos[1:2] " use old position as start
             return [sl, sc, el, ec, 0]
         endif
@@ -578,14 +588,14 @@ endfunction
 
 function! s:findArgBoundary(flags1, flags2, skip, finish)
     let tl = 0
-    let [rl, rc] = searchpos('[]{(,)}[]', a:flags1)
+    let [rl, rc] = searchpos(s:argAll, a:flags1)
     while 1
         if rl == 0
             return [0, 0, s:fail('findArgBoundary 1', a:)]
         endif
 
         let char = s:getchar()
-        if char ==# ','
+        if char =~# g:targets_argSeparator
             if tl == 0
                 let [tl, tc] = [rl, rc]
             endif
@@ -599,7 +609,7 @@ function! s:findArgBoundary(flags1, flags2, skip, finish)
         else
             return [0, 0, s:fail('findArgBoundary 2')]
         endif
-        let [rl, rc] = searchpos('[]{(,)}[]', a:flags2)
+        let [rl, rc] = searchpos(s:argAll, a:flags2)
     endwhile
 endfunction
 
@@ -653,8 +663,7 @@ endfunction
 function! s:nextselecta(...)
     let stopline = a:0 > 0 ? a:1 : 0
 
-    let openingSep = g:targets_argOpeningSep
-    if s:search(s:count, openingSep, 'W', stopline) > 0 " no start found
+    if s:search(s:count, s:argOpeningS, 'W', stopline) > 0 " no start found
         return s:fail('nextselecta 1')
     endif
 
@@ -663,7 +672,7 @@ function! s:nextselecta(...)
         return
     endif
 
-    if char !=# ',' " start wasn't on comma
+    if char !~# g:targets_argSeparator " start wasn't on comma
         return s:fail('nextselecta 2')
     endif
 
@@ -689,15 +698,15 @@ function! s:lastselecta(...)
         silent! normal! `>
     endif
 
-    " special case to handle vala when invoked on a comma
-    if s:getchar() ==# ',' && s:newSelection()
+    " special case to handle vala when invoked on a separator
+    let separator = g:targets_argSeparator
+    if s:getchar() =~# separator && s:newSelection()
         if s:selecta('<') == 0
             return
         endif
     endif
 
-    let closingSep = g:targets_argClosingSep
-    if s:search(s:count, closingSep, 'bW', stopline) > 0 " no start found
+    if s:search(s:count, s:argClosingS, 'bW', stopline) > 0 " no start found
         return s:fail('lastselecta 1')
     endif
 
@@ -706,7 +715,7 @@ function! s:lastselecta(...)
         return
     endif
 
-    if char !=# ',' " start wasn't on comma
+    if char !~# separator " start wasn't on separator
         return s:fail('lastselecta 2')
     endif
 
@@ -779,9 +788,9 @@ endfunction
 
 " TODO: comment
 function! s:dropa()
-    if s:getchar(s:sl, s:sc) !=# ','
+    if s:getchar(s:sl, s:sc) !~# g:targets_argSeparator
         let s:sc += 1
-        if s:getchar(s:el, s:ec) ==# ','
+        if s:getchar(s:el, s:ec) =~# g:targets_argSeparator
             return s:expand()
         endif
     endif

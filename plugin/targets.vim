@@ -251,18 +251,23 @@ function! s:loadSettings()
         let g:targets_separators = ', . ; : + - = ~ _ * # / \ | & $'
     endif
 
+    " TODO: document
+    if !exists('g:targets_argOpening')
+        let g:targets_argOpening = '[({[]'
+    endif
+    if !exists('g:targets_argClosing')
+        let g:targets_argClosing = '[]})]'
+    endif
+    if !exists('g:targets_argSeparator')
+        let g:targets_argSeparator = ','
+    endif
+
     let [s:a, s:i, s:A, s:I] = split(g:targets_aiAI, '\zs')
     let [s:n, s:l, s:N, s:L] = split(g:targets_nlNL, '\zs')
 
     let s:pair_list = split(g:targets_pairs)
     let s:quote_list = split(g:targets_quotes)
     let s:separator_list = split(g:targets_separators)
-
-    " TODO: document
-    let g:targets_argOpening = '[({[]'
-    let g:targets_argClosing = '[]})]'
-    let g:targets_argOpeningSep = '[,({[]'
-    let g:targets_argClosingSep = '[]}),]'
 endfunction
 
 " dictionary mapping uppercase xmap like `An,` to argument strings for
