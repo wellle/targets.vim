@@ -155,9 +155,19 @@ function s:testVisual()
     write! test4.out
 endfunction
 
+function s:testModifiers()
+    edit! test5.in
+    normal gg0
+
+    normal fxvItr_
+
+    write! test5.out
+endfunction
+
 call s:testBasic()
 call s:testMultiline()
 call s:testSeeking()
 call s:testVisual()
+call s:testModifiers()
 
 quit!
