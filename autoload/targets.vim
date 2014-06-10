@@ -508,14 +508,14 @@ function! s:selecta(direction)
     let oldpos = getpos('.')
 
     let [opening, closing] = [g:targets_argOpening, g:targets_argClosing]
-    if a:direction ==# '>'
-        let [s:sl, s:sc, s:el, s:ec, err] = s:findArg('W', 'bW', opening, closing)
+    if a:direction ==# '^'
+        let [s:sl, s:sc, s:el, s:ec, err] = s:findArg(a:direction, 'W', 'bcW', 'bW', opening, closing)
         let message = 'selecta 1'
-    elseif a:direction ==# '<'
-        let [s:el, s:ec, s:sl, s:sc, err] = s:findArg('bW', 'W', closing, opening)
+    elseif a:direction ==# '>'
+        let [s:sl, s:sc, s:el, s:ec, err] = s:findArg(a:direction, 'W', 'bW', 'bW', opening, closing)
         let message = 'selecta 2'
-    elseif a:direction ==# '^'
-        let [s:sl, s:sc, s:el, s:ec, err] = s:findArgUp('W', 'bW', opening, closing)
+    elseif a:direction ==# '<' " like '>', but backwards
+        let [s:el, s:ec, s:sl, s:sc, err] = s:findArg(a:direction, 'bW', 'W', 'W', closing, opening)
         let message = 'selecta 3'
     else
         return s:fail('selecta')
@@ -527,40 +527,11 @@ function! s:selecta(direction)
     endif
 endfunction
 
-" TODO: merge with findArg? clean up!
-function! s:findArgUp(flags1, flags2, opening, closing)
+function! s:findArg(direction, flags1, flags2, flags3, opening, closing)
     let oldpos = getpos('.')
     let char = s:getchar()
 
-    if char =~# a:closing " started on closing
-        let [el, ec, err] = s:findArgBoundary(a:flags1, a:flags1, a:opening, a:closing)
-        if err > 0 " no opening found
-            return [0, 0, 0, 0, s:fail('findArg 1', a:)]
-        endif
-
-        let separator = g:targets_argSeparator
-        if char =~# a:opening || char =~# separator " started on opening or separator
-            let [sl, sc] = oldpos[1:2] " use old position as start
-            return [sl, sc, el, ec, 0]
-        endif
-
-        call setpos('.', oldpos) " return to old position
-    endif
-
-    " find start to the left
-    let [sl, sc, err] = s:findArgBoundary('bcW', 'bW', a:closing, a:opening)
-    if err > 0
-        return [0, 0, 0, 0, s:fail('findArg 2')]
-    endif
-
-    return [sl, sc, el, ec, 0]
-endfunction
-
-function! s:findArg(flags1, flags2, opening, closing)
-    let oldpos = getpos('.')
-    let char = s:getchar()
-
-    if char =~# a:closing " started on closing
+    if char =~# a:closing && a:direction !=# '^' " started on closing, but not up
         let [el, ec] = oldpos[1:2] " use old position as end
     else " find end to the right
         let [el, ec, err] = s:findArgBoundary(a:flags1, a:flags1, a:opening, a:closing)
@@ -578,7 +549,7 @@ function! s:findArg(flags1, flags2, opening, closing)
     endif
 
     " find start to the left
-    let [sl, sc, err] = s:findArgBoundary(a:flags2, a:flags2, a:closing, a:opening)
+    let [sl, sc, err] = s:findArgBoundary(a:flags2, a:flags3, a:closing, a:opening)
     if err > 0
         return [0, 0, 0, 0, s:fail('findArg 2')]
     endif
@@ -616,10 +587,8 @@ endfunction
 " TODO: support counts to select bigger arguments of outer functions
 " TODO: select last argument if found in line, but no next in line
 function! s:seekselecta()
-    " TODO: use count here
-    " try find count-1'th closing, call selecta with new direction '^' (up)
-    " selecta('^') on opening or closing should not select inside, but find
-    " surrounding argument
+    " TODO: v2aa on x should include x and y, not just a
+    " (z, (x, (a), y))
     if s:count > 1
         if s:getchar() =~# g:targets_argClosing
             let [cnt, message] = [s:count - 2, 'seekselecta 1']
