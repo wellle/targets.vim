@@ -530,7 +530,7 @@ function! s:dropt()
     let [s:el, s:ec] = getpos('.')[1:2]
 endfunction
 
-" drop delimters and whitespace left and right
+" drop delimiters and whitespace left and right
 " fall back to drop when only whitespace is inside
 " in   │   ┌─────┐   │   ┌──┐
 " line │ a . b c . d │ a .  . d
