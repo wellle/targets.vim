@@ -35,7 +35,7 @@ endfunction
 function! targets#xmapCount(delimiters, matchers, count)
     call s:init('x', a:delimiters, a:matchers, a:count)
     call s:handleMatch(a:matchers)
-    call s:saveState()
+    call s:saveSelection()
     call s:cleanUp()
 endfunction
 
@@ -81,8 +81,8 @@ function! s:init(mapmode, delimiters, matchers, count)
     let &selection = 'inclusive' " and set it to inclusive
 endfunction
 
-" remember last selection, delimiters and matchers
-function! s:saveState()
+" remember last selection
+function! s:saveSelection()
     let [s:lsl, s:lsc, s:lel, s:lec] = [s:sl, s:sc, s:el, s:ec]
     let [s:ldelimiters, s:lmatchers] = [s:delimiters, s:matchers]
 endfunction
