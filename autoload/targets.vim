@@ -334,6 +334,8 @@ function! s:select(direction)
         call setpos('.', oldpos)
         return s:fail(message)
     endif
+
+    return s:saveRawSelection()
 endfunction
 
 function! s:findSeparators(flags1, flags2, opening, closing)
@@ -355,25 +357,25 @@ function! s:seekselect()
         let [s:sl, s:sc] = searchpos(s:opening, 'b', line('.'))
         if s:sl > 0 " delim found before r in line
             let [s:el, s:ec] = [rl, rc]
-            return
+            return s:saveRawSelection()
         endif
         " no delim before cursor in line
         let [s:el, s:ec] = searchpos(s:opening, '', line('.'))
         if s:el > 0 " delim found after r in line
             let [s:sl, s:sc] = [rl, rc]
-            return
+            return s:saveRawSelection()
         endif
         " no delim found after r in line
         let [s:sl, s:sc] = searchpos(s:opening, 'bW')
         if s:sl > 0 " delim found before r
             let [s:el, s:ec] = [rl, rc]
-            return
+            return s:saveRawSelection()
         endif
         " no delim found before r
         let [s:el, s:ec] = searchpos(s:opening, 'W')
         if s:el > 0 " delim found after r
             let [s:sl, s:sc] = [rl, rc]
-            return
+            return s:saveRawSelection()
         endif
         " no delim found after r
         return s:fail('seekselect 1')
@@ -385,19 +387,19 @@ function! s:seekselect()
         let [s:sl, s:sc] = searchpos(s:opening, 'b', line('.'))
         if s:sl > 0 " delim found before l in line
             let [s:el, s:ec] = [ll, lc]
-            return
+            return s:saveRawSelection()
         endif
         " no delim found before l in line
         let [s:el, s:ec] = searchpos(s:opening, 'W')
         if s:el > 0 " delim found after l
             let [s:sl, s:sc] = [ll, lc]
-            return
+            return s:saveRawSelection()
         endif
         " no delim found after l
         let [s:sl, s:sc] = searchpos(s:opening, 'bW')
         if s:sl > 0 " delim found before l
             let [s:el, s:ec] = [ll, lc]
-            return
+            return s:saveRawSelection()
         endif
         " no delim found before l
         return s:fail('seekselect 2')
@@ -409,13 +411,13 @@ function! s:seekselect()
         let [s:sl, s:sc] = searchpos(s:opening, 'bW')
         if s:sl > 0 " delim found before r
             let [s:el, s:ec] = [rl, rc]
-            return
+            return s:saveRawSelection()
         endif
         " no delim found before r
         let [s:el, s:ec] = searchpos(s:opening, 'W')
         if s:el > 0 " delim found after r
             let [s:sl, s:sc] = [rl, rc]
-            return
+            return s:saveRawSelection()
         endif
         " no delim found after r
         return s:fail('seekselect 3')
@@ -425,8 +427,9 @@ function! s:seekselect()
     let [s:el, s:ec] = searchpos(s:opening, 'bW')
     let [s:sl, s:sc] = searchpos(s:opening, 'bW')
     if s:sl > 0 && s:el > 0 " match found before cursor
-        return
+        return s:saveRawSelection()
     endif
+
     return s:fail('seekselect 4')
 endfunction
 
@@ -447,6 +450,8 @@ function! s:selectp()
     if s:sc == s:ec && s:sl == s:el
         return s:fail('selectp')
     endif
+
+    return s:saveRawSelection()
 endfunction
 
 " pair matcher (works across multiple lines, supports seeking)
@@ -467,7 +472,7 @@ function! s:seekselectp(...)
     if s:sc != s:ec || s:sl != s:el
         " found target around cursor
         let s:count = 1
-        return
+        return s:saveRawSelection()
     endif
 
     if s:count > 1
@@ -530,6 +535,8 @@ function! s:selecta(direction)
         call setpos('.', oldpos)
         return s:fail(message)
     endif
+
+    return s:saveRawSelection()
 endfunction
 
 function! s:findArg(direction, flags1, flags2, flags3, opening, closing)
