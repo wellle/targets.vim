@@ -81,6 +81,11 @@ function! s:init(mapmode, delimiters, matchers, count)
     let &selection = 'inclusive' " and set it to inclusive
 endfunction
 
+" remember last raw selection, before applying modifiers
+function! s:saveRawSelection()
+    let [s:rsl, s:rsc, s:rel, s:rec] = [s:sl, s:sc, s:el, s:ec]
+endfunction
+
 " remember last selection
 function! s:saveSelection()
     let [s:lsl, s:lsc, s:lel, s:lec] = [s:sl, s:sc, s:el, s:ec]
@@ -599,29 +604,29 @@ function! s:seekselecta()
             return s:fail('seekselecta count')
         endif
         if s:selecta('^') == 0
-            return
+            return s:saveRawSelection()
         endif
         return s:fail('seekselecta count select')
     endif
 
     if s:selecta('>') == 0
-        return
+        return s:saveRawSelection()
     endif
 
     if s:nextselecta(line('.')) == 0
-        return
+        return s:saveRawSelection()
     endif
 
     if s:lastselecta(line('.')) == 0
-        return
+        return s:saveRawSelection()
     endif
 
     if s:nextselecta() == 0
-        return
+        return s:saveRawSelection()
     endif
 
     if s:lastselecta() == 0
-        return
+        return s:saveRawSelection()
     endif
 
     return s:fail('seekselecta seek')
@@ -630,15 +635,16 @@ endfunction
 " TODO: document parameter list for all functions with ...
 " optional stopline
 function! s:nextselecta(...)
-    let stopline = a:0 > 0 ? a:1 : 0
+    call s:prepareNext()
 
+    let stopline = a:0 > 0 ? a:1 : 0
     if s:search(s:count, s:argOpeningS, 'W', stopline) > 0 " no start found
         return s:fail('nextselecta 1')
     endif
 
     let char = s:getchar()
     if s:selecta('>') == 0 " argument found
-        return
+        return s:saveRawSelection()
     endif
 
     if char !~# g:targets_argSeparator " start wasn't on comma
@@ -652,36 +658,31 @@ function! s:nextselecta(...)
     endif
 
     if s:selecta('>') == 0 " argument found
-        return
+        return s:saveRawSelection()
     endif
 
     return s:fail('nextselecta 4')
 endfunction
 
 function! s:lastselecta(...)
-    let stopline = a:0 > 0 ? a:1 : 0
-    if s:mapmode ==# 'x' " if visual mode
-        " TODO: move to last raw end of selection (might have been changed by
-        " dropa and friends)
-        " move cursor to end of selection
-        silent! normal! `>
-    endif
+    call s:prepareLast()
 
     " special case to handle vala when invoked on a separator
     let separator = g:targets_argSeparator
     if s:getchar() =~# separator && s:newSelection()
         if s:selecta('<') == 0
-            return
+            return s:saveRawSelection()
         endif
     endif
 
+    let stopline = a:0 > 0 ? a:1 : 0
     if s:search(s:count, s:argClosingS, 'bW', stopline) > 0 " no start found
         return s:fail('lastselecta 1')
     endif
 
     let char = s:getchar()
     if s:selecta('<') == 0 " argument found
-        return
+        return s:saveRawSelection()
     endif
 
     if char !~# separator " start wasn't on separator
@@ -695,7 +696,7 @@ function! s:lastselecta(...)
     endif
 
     if s:selecta('<') == 0 " argument found
-        return
+        return s:saveRawSelection()
     endif
 
     return s:fail('lastselecta 4')
@@ -829,6 +830,7 @@ endfunction
 " compare with initial selection. only if they match, increase count and try
 " again
 " TODO: growing too far resets the visual selection, fix it
+" TODO: include in all seek functions to simplify mappings?
 function! s:grow()
     if s:mapmode == 'o'
         return
@@ -842,6 +844,20 @@ function! s:grow()
 
     " increase s:count to grow selection
     let s:count = s:count + 1
+endfunction
+
+" if in visual mode, move cursor to start of last raw selection
+function! s:prepareNext()
+    if s:mapmode ==# 'x' && exists('s:rsl')
+        call setpos('.', [0, s:rsl, s:rsc, 0])
+    endif
+endfunction
+
+" if in visual mode, move cursor to end of last raw selection
+function! s:prepareLast()
+    if s:mapmode ==# 'x' && exists('s:rel')
+        call setpos('.', [0, s:rel, s:rec, 0])
+    endif
 endfunction
 
 function! s:newSelection()
