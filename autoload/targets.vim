@@ -867,6 +867,9 @@ endfunction
 
 " if in visual mode, move cursor to start of last raw selection
 function! s:prepareNext()
+    if s:newSelection()
+        return
+    endif
     if s:mapmode ==# 'x' && exists('s:lrsl') && s:lrsl > 0
         call setpos('.', [0, s:lrsl, s:lrsc, 0])
     endif
@@ -874,6 +877,9 @@ endfunction
 
 " if in visual mode, move cursor to end of last raw selection
 function! s:prepareLast()
+    if s:newSelection()
+        return
+    endif
     if s:mapmode ==# 'x' && exists('s:lrel') && s:lrel > 0
         call setpos('.', [0, s:lrel, s:lrec, 0])
     endif
