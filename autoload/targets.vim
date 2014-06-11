@@ -34,8 +34,9 @@ endfunction
 " like targets#xmap, but inject count, triggered from targets#xmapExpr
 function! targets#xmapCount(delimiters, matchers, count)
     call s:init('x', a:delimiters, a:matchers, a:count)
-    call s:handleMatch(a:matchers)
-    call s:saveSelection()
+    if s:handleMatch(a:matchers) == 0
+        call s:saveState()
+    endif
     call s:cleanUp()
 endfunction
 
@@ -66,6 +67,7 @@ endfunction
 " initialize script local variables for the current matching
 function! s:init(mapmode, delimiters, matchers, count)
     let [s:mapmode, s:delimiters, s:matchers, s:count] = [a:mapmode, a:delimiters, a:matchers,  a:count]
+    let [s:rsl, s:rsc, s:rel, s:rec] = [0, 0, 0, 0]
     let [s:sl, s:sc, s:el, s:ec] = [0, 0, 0, 0]
     let [s:sLinewise, s:eLinewise] = [0, 0]
     let s:oldpos = getpos('.')
@@ -86,10 +88,11 @@ function! s:saveRawSelection()
     let [s:rsl, s:rsc, s:rel, s:rec] = [s:sl, s:sc, s:el, s:ec]
 endfunction
 
-" remember last selection
-function! s:saveSelection()
-    let [s:lsl, s:lsc, s:lel, s:lec] = [s:sl, s:sc, s:el, s:ec]
+" remember last selection and last raw selection
+function! s:saveState()
     let [s:ldelimiters, s:lmatchers] = [s:delimiters, s:matchers]
+    let [s:lsl, s:lsc, s:lel, s:lec] = [s:sl, s:sc, s:el, s:ec]
+    let [s:lrsl, s:lrsc, s:lrel, s:lrec] = [s:rsl, s:rsc, s:rel, s:rec]
 endfunction
 
 " clean up script variables after match
@@ -126,15 +129,15 @@ function! s:handleMatch(matchers)
     call winrestview(view)
 
     if error || s:sl == 0 || s:el == 0
-        return s:abortMatch()
+        return s:abortMatch('handleMatch 1')
     elseif s:sl < s:el
-        call s:selectMatch()
+        return s:selectMatch()
     elseif s:sl > s:el
-        return s:abortMatch()
+        return s:abortMatch('handleMatch 2')
     elseif s:sc == s:ec + 1
         return s:handleEmptyMatch()
     elseif s:sc > s:ec
-        return s:abortMatch()
+        return s:abortMatch('handleMatch 3')
     else
         return s:selectMatch()
     endif
@@ -168,7 +171,7 @@ endfunction
 " for change or delete, insert temporary character that will be operated on
 function! s:handleEmptyMatch()
     if v:operator !~# "^[cd]$"
-        return s:abortMatch()
+        return s:abortMatch('handleEmptyMatch')
     endif
 
     " move cursor to delimiter after zero width match
@@ -184,7 +187,7 @@ function! s:handleEmptyMatch()
 endfunction
 
 " abort when no match was found
-function! s:abortMatch()
+function! s:abortMatch(message)
     call setpos('.', s:oldpos)
     " get into normal mode and beep
     call feedkeys("\<C-\>\<C-N>\<Esc>", 'n')
@@ -192,6 +195,8 @@ function! s:abortMatch()
     call s:triggerUndo()
     " trigger reselect if called from xmap
     call s:triggerReselect()
+
+    return s:fail(a:message)
 endfunction
 
 " feed keys to call undo after aborted operation and clear the command line
@@ -226,6 +231,10 @@ endfunction
 " in   │ . │  . │ . │  .
 " line │ ' │  ' │ ' │  '
 " out  │ . │ .  │ . │ .
+" TODO: remove the quote function, add {seek,next,last}selectq
+" current problem: skipping v"an"an" doesn't work
+" also va", van", val" doesn't capture the three correct quotes when issued on
+" a quote character
 function! s:quote()
     if s:getchar() !=# s:delimiters[0]
         return
@@ -351,6 +360,7 @@ function! s:findSeparators(flags1, flags2, opening, closing)
 endfunction
 
 " select pair of delimiters around cursor (multi line, no seeking)
+" TODO: update comment (seeking included)
 function! s:seekselect()
     let [rl, rc] = searchpos(s:opening, '', line('.'))
     if rl > 0 " delim r found after cursor in line
@@ -616,6 +626,8 @@ function! s:seekselecta()
         return s:fail('seekselecta count select')
     endif
 
+    " TODO: prefer seeking into single line arguments over selecting multiline
+    " arguments around cursor (similar to how seekselect works)
     if s:selecta('>') == 0
         return s:saveRawSelection()
     endif
@@ -855,15 +867,15 @@ endfunction
 
 " if in visual mode, move cursor to start of last raw selection
 function! s:prepareNext()
-    if s:mapmode ==# 'x' && exists('s:rsl')
-        call setpos('.', [0, s:rsl, s:rsc, 0])
+    if s:mapmode ==# 'x' && exists('s:lrsl') && s:lrsl > 0
+        call setpos('.', [0, s:lrsl, s:lrsc, 0])
     endif
 endfunction
 
 " if in visual mode, move cursor to end of last raw selection
 function! s:prepareLast()
-    if s:mapmode ==# 'x' && exists('s:rel')
-        call setpos('.', [0, s:rel, s:rec, 0])
+    if s:mapmode ==# 'x' && exists('s:lrel') && s:lrel > 0
+        call setpos('.', [0, s:lrel, s:lrec, 0])
     endif
 endfunction
 
