@@ -273,8 +273,6 @@ endfunction
 " line │  '  '  '  '
 " out  │ 2  1
 " TODO: was broken when invoked from separator! add test!
-" TODO: enable to iterate all pairs in ( ( ) ( ) ) from end
-"   by using `>
 function! s:lastselect()
     " if started on closing, but not when skipping
     if !s:prepareLast() && s:getchar() ==# s:closing
@@ -295,6 +293,7 @@ endfunction
 " line │ ( ) ( ) ( ( ) ) ( )
 " out  │     1   2 3     4
 function! s:nextp()
+    call s:prepareNext()
     return s:search(s:count, s:opening, 'W')
 endfunction
 
@@ -303,6 +302,7 @@ endfunction
 " line │ ( ) ( ) ( ( ) ) ( )
 " out  │   4   3     2 1
 function! s:lastp(...)
+    call s:prepareLast()
     return s:search(s:count, s:closing, 'bW')
 endfunction
 
@@ -311,6 +311,7 @@ endfunction
 " line │ <a> </a> <b> </b> <c> <d> </d> </c> <e> </e>
 " out  │          1        2   3             4
 function! s:nextt()
+    call s:prepareNext()
     return s:search(s:count, '<\a', 'W')
 endfunction
 
@@ -319,7 +320,8 @@ endfunction
 " line │ <a> </a> <b> </b> <c> <d> </d> </c> <e> </e>
 " out  │     4        3            2    1
 function! s:lastt()
-    return s:search(s:count, '</\a', 'bW')
+    call s:prepareLast()
+    return s:search(s:count, '</\a\zs', 'bW')
 endfunction
 
 " match selectors
