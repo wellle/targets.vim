@@ -525,11 +525,6 @@ function! s:seekselectt()
 endfunction
 
 " TODO: comment, reorder selecta functions
-" foo(a, b(x), c)
-
-" TODO: grow
-" TODO: skip quotes?
-" TODO: can't select argument from d: x(a(b)c)d
 function! s:selecta(direction)
     let oldpos = getpos('.')
 
@@ -867,11 +862,14 @@ function! s:grow()
         return
     endif
 
+    call s:prepareNext()
+
     " increase s:count to grow selection
     let s:count = s:count + 1
 endfunction
 
 " if in visual mode, move cursor to start of last raw selection
+" also used in s:grow to move to last raw end
 function! s:prepareNext()
     if s:newSelection()
         return
