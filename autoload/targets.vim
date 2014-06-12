@@ -259,9 +259,12 @@ endfunction
 " line │  '  '  '  '
 " out  │        1  2
 function! s:nextselect()
+    call s:prepareNext()
+
     if s:search(s:count, s:opening, 'W') > 0
         return s:fail('nextselect')
     endif
+
     return s:select('>')
 endfunction
 
@@ -273,7 +276,8 @@ endfunction
 " TODO: enable to iterate all pairs in ( ( ) ( ) ) from end
 "   by using `>
 function! s:lastselect()
-    if s:getchar() ==# s:closing
+    " if started on closing, but not when skipping
+    if !s:prepareLast() && s:getchar() ==# s:closing
         let [cnt, message] = [s:count - 1, 'lastselect 1']
     else
         let [cnt, message] = [s:count, 'lastselect 2']
@@ -876,12 +880,14 @@ function! s:prepareNext()
 endfunction
 
 " if in visual mode, move cursor to end of last raw selection
+" returns whether or not the cursor was moved
 function! s:prepareLast()
     if s:newSelection()
         return
     endif
     if s:mapmode ==# 'x' && exists('s:lrel') && s:lrel > 0
         call setpos('.', [0, s:lrel, s:lrec, 0])
+        return 1
     endif
 endfunction
 
