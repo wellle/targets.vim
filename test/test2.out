@@ -4,13 +4,17 @@ function f() {
     }
 
 // comment 2
+function f() {
+    }
+
+// comment 3
 int a = 5;
 foo;
 
-// comment 3
+// comment 4
 string x = `foo`;
 
-// comment 4
+// comment 5
 function f() {
     foo
 }

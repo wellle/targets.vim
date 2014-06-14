@@ -2,7 +2,7 @@
 " Author:  Christian Wellenbrock <christian.wellenbrock@gmail.com>
 " License: MIT license
 " Updated: 2014-06-14
-" Version: 0.2.6
+" Version: 0.2.7
 
 let s:save_cpoptions = &cpoptions
 set cpo&vim
@@ -61,6 +61,7 @@ endfunction
 function! s:init(delimiters, matchers, count)
     let [s:delimiters, s:matchers, s:count] = [a:delimiters, a:matchers,  a:count]
     let [s:sl, s:sc, s:el, s:ec] = [0, 0, 0, 0]
+    let [s:sLinewise, s:eLinewise] = [0, 0]
     let s:oldpos = getpos('.')
     let s:failed = 0
 
@@ -135,7 +136,13 @@ function! s:selectMatch()
 
     " visually select the match
     call cursor(s:sl, s:sc)
-    silent! normal! v
+
+    if s:sLinewise && s:eLinewise
+        silent! normal! V
+    else
+        silent! normal! v
+    endif
+
     call cursor(s:el, s:ec)
 
     " if selection should be exclusive, expand selection
@@ -496,18 +503,16 @@ endfunction
 function! s:drop()
     call cursor(s:sl, s:sc)
     if searchpos('\S', 'nW', line('.'))[0] == 0
-        " if only whitespace in front of cursor
-        " move to first character on next line
-        normal! +
-    else
-        " one character ahead
-        silent! execute "normal! 1 "
+        " if only whitespace after cursor
+        let s:sLinewise = 1
     endif
+    silent! execute "normal! 1 "
     let [s:sl, s:sc] = getpos('.')[1:2]
 
     call cursor(s:el, s:ec)
-    if searchpos('\S', 'bnW', line('.'))[0] == 0
+    if s:sl < s:el && searchpos('\S', 'bnW', line('.'))[0] == 0
         " if only whitespace in front of cursor
+        let s:eLinewise = 1
         " move to end of line above
         normal! -$
     else
