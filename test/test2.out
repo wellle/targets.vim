@@ -1,6 +1,6 @@
 // comment 1
 function f() {
-foo
+        foo
     }
 
 // comment 2
