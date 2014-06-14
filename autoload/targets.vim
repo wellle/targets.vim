@@ -1,8 +1,8 @@
 " targets.vim Provides additional text objects
 " Author:  Christian Wellenbrock <christian.wellenbrock@gmail.com>
 " License: MIT license
-" Updated: 2014-06-10
-" Version: 0.2.5
+" Updated: 2014-06-14
+" Version: 0.2.6
 
 let s:save_cpoptions = &cpoptions
 set cpo&vim
@@ -495,17 +495,25 @@ endfunction
 " out  │    └───┘
 function! s:drop()
     call cursor(s:sl, s:sc)
-    silent! execute "normal! 1 "
+    if searchpos('\S', 'nW', line('.'))[0] == 0
+        " if only whitespace in front of cursor
+        " move to first character on next line
+        normal! +
+    else
+        " one character ahead
+        silent! execute "normal! 1 "
+    endif
     let [s:sl, s:sc] = getpos('.')[1:2]
-    call cursor(s:el, s:ec)
-    silent! execute "normal! \<BS>"
 
-    if searchpos('\S', 'bcnW', line('.'))[0] == 0
+    call cursor(s:el, s:ec)
+    if searchpos('\S', 'bnW', line('.'))[0] == 0
         " if only whitespace in front of cursor
         " move to end of line above
         normal! -$
+    else
+        " one character back
+        silent! execute "normal! \<BS>"
     endif
-
     let [s:el, s:ec] = getpos('.')[1:2]
 endfunction
 
