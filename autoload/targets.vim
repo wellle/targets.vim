@@ -722,14 +722,6 @@ function! s:lastselecta(...)
     return s:fail('lastselecta 4')
 endfunction
 
-" TODO: remove
-" TODO: comment
-" TODO: test again when selecting only one separator
-" TODO: combine with selecta to nextselecta that behaves like in seekselecta:
-"   search for , or opening, try selecta
-"   if selecta failed from , search for opening and try selecta again
-"   (effectively skipping top level commas)
-
 " selects the current cursor position (useful to test modifiers)
 function! s:position()
     let [s:sl, s:sc] = getpos('.')[1:2]
@@ -850,7 +842,12 @@ endfunction
 " compare with initial selection. only if they match, increase count and try
 " again
 " TODO: growing too far resets the visual selection, fix it
-" TODO: include in all seek functions to simplify mappings?
+"  (it's because we check if normal v5a) leads to a selection of a single
+"  character, which is just wrong when the selection was bigger before.
+"  instead check if the selection changed because of the normal command)
+"  confirmed in seekselectp
+"  related? seekselecta only grows twice, fix it
+" TODO: include in seekselect[apt] functions to simplify mappings
 function! s:grow()
     if s:mapmode == 'o'
         return
