@@ -10,7 +10,9 @@ set cpo&vim
 function! s:setup()
     let s:argOpeningS = g:targets_argOpening . '\|' . g:targets_argSeparator
     let s:argClosingS = g:targets_argClosing . '\|' . g:targets_argSeparator
+    let s:argOuter    = g:targets_argOpening . '\|' . g:targets_argClosing
     let s:argAll      = s:argOpeningS        . '\|' . g:targets_argClosing
+    let s:none        = 'a^' " matches nothing
 endfunction
 
 call s:setup()
@@ -548,12 +550,13 @@ endfunction
 function! s:findArg(direction, flags1, flags2, flags3, opening, closing)
     let oldpos = getpos('.')
     let char = s:getchar()
+    let separator = g:targets_argSeparator
 
     if char =~# a:closing && a:direction !=# '^' " started on closing, but not up
         let [el, ec] = oldpos[1:2] " use old position as end
     else " find end to the right
         let [el, ec, err] = s:findArgBoundary(a:flags1, a:flags1, a:opening, a:closing)
-        if err > 0 " no opening found
+        if err > 0 " no closing found
             return [0, 0, 0, 0, s:fail('findArg 1', a:)]
         endif
 
@@ -568,38 +571,49 @@ function! s:findArg(direction, flags1, flags2, flags3, opening, closing)
 
     " find start to the left
     let [sl, sc, err] = s:findArgBoundary(a:flags2, a:flags3, a:closing, a:opening)
-    if err > 0
+    if err > 0 " no opening found
         return [0, 0, 0, 0, s:fail('findArg 2')]
     endif
 
     return [sl, sc, el, ec, 0]
 endfunction
 
-function! s:findArgBoundary(flags1, flags2, skip, finish)
-    let tl = 0
-    let [rl, rc] = searchpos(s:argAll, a:flags1)
-    while 1
-        if rl == 0
-            return [0, 0, s:fail('findArgBoundary 1', a:)]
-        endif
+function! s:findArgBoundary(...)
+    let [flags1, flags2, skip, finish] = [a:1, a:2, a:3, a:4]
+    if a:0 == 6
+        let [all, separator, cnt] = [a:5, a:6, a:7]
+    else
+        let [all, separator, cnt] = [s:argAll, g:targets_argSeparator, 2]
+    endif
 
-        let char = s:getchar()
-        if char =~# g:targets_argSeparator
-            if tl == 0
-                let [tl, tc] = [rl, rc]
+    let tl = 0
+    let [rl, rc] = searchpos(all, flags1)
+    for _ in range(cnt)
+        while 1
+            if rl == 0
+                return [0, 0, s:fail('findArgBoundary 1', a:)]
             endif
-        elseif char =~# a:finish
-            if tl > 0
-                return [tl, tc, 0]
+
+            let char = s:getchar()
+            if char =~# separator
+                if tl == 0
+                    let [tl, tc] = [rl, rc]
+                endif
+            elseif char =~# finish
+                if tl > 0
+                    return [tl, tc, 0]
+                endif
+                break
+            elseif char =~# skip
+                silent! normal! %
+            else
+                return [0, 0, s:fail('findArgBoundary 2')]
             endif
-            return [rl, rc, 0]
-        elseif char =~# a:skip
-            silent! normal! %
-        else
-            return [0, 0, s:fail('findArgBoundary 2')]
-        endif
-        let [rl, rc] = searchpos(s:argAll, a:flags2)
-    endwhile
+            let [rl, rc] = searchpos(all, flags2)
+        endwhile
+    endfor
+
+    return [rl, rc, 0]
 endfunction
 
 " TODO: prefer seeking into single line arguments over selecting multiline
@@ -840,7 +854,7 @@ endfunction
 "  character, which is just wrong when the selection was bigger before.
 "  instead check if the selection changed because of the normal command)
 "  confirmed in seekselectp
-"  related? seekselecta only grows twice, fix it
+" TODO: related to above? seekselecta only grows twice, fix it
 " TODO: include in seekselect[apt] functions to simplify mappings
 function! s:grow()
     if s:mapmode == 'o'
