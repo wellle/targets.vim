@@ -332,8 +332,6 @@ endfunction
 " cursor  │   ....
 " line    │ ' ' b ' '
 " matcher │   └───┘
-" TODO: similar to s:selecta, move them together, or can they even be merged
-" somehow?
 function! s:select(direction)
     let oldpos = getpos('.')
 
@@ -365,8 +363,7 @@ function! s:findSeparators(flags1, flags2, opening, closing)
     return [sl, sc, el, ec, 0]
 endfunction
 
-" select pair of delimiters around cursor (multi line, no seeking)
-" TODO: update comment (seeking included)
+" select pair of delimiters around cursor (multi line, supports seeking)
 function! s:seekselect()
     let [rl, rc] = searchpos(s:opening, '', line('.'))
     if rl > 0 " delim r found after cursor in line
@@ -449,12 +446,6 @@ function! s:seekselect()
     return s:fail('seekselect 4')
 endfunction
 
-" pair matcher (works across multiple lines, no seeking)
-" cursor   │   .....
-" line     │ ( ( a ) )
-" modifier │ │ └─1─┘ │
-"          │ └── 2 ──┘
-" TODO: that image is wrong, right? there is no count involved here
 function! s:selectp()
     " try to select pair
     silent! execute 'normal! va' . s:opening
@@ -471,6 +462,10 @@ function! s:selectp()
 endfunction
 
 " pair matcher (works across multiple lines, supports seeking)
+" cursor   │   .....
+" line     │ ( ( a ) )
+" modifier │ │ └─1─┘ │
+"          │ └── 2 ──┘
 function! s:seekselectp(...)
     if a:0 == 3
         let [ opening, closing, trigger ] = [ a:1, a:2, a:3 ]
@@ -607,8 +602,9 @@ function! s:findArgBoundary(flags1, flags2, skip, finish)
     endwhile
 endfunction
 
-" TODO: support counts to select bigger arguments of outer functions
-" TODO: select last argument if found in line, but no next in line
+" TODO: prefer seeking into single line arguments over selecting multiline
+" arguments around cursor (similar to how seekselect works)
+" same for seekselectp
 function! s:seekselecta()
     " TODO: v2aa on x should include x and y, not just a
     " (z, (x, (a), y))
@@ -627,8 +623,6 @@ function! s:seekselecta()
         return s:fail('seekselecta count select')
     endif
 
-    " TODO: prefer seeking into single line arguments over selecting multiline
-    " arguments around cursor (similar to how seekselect works)
     if s:selecta('>') == 0
         return s:saveRawSelection()
     endif
@@ -762,16 +756,19 @@ endfunction
 " in   │   ┌─────┐
 " line │ a . b c . d
 " out  │   └────┘
-" TODO: fix for s:ec==1 (beginning of line), by using normal! <BS>
-" similar for dropa
 function! s:dropr()
-    let s:ec -= 1
+    call cursor(s:el, s:ec)
+    silent! execute "normal! \<BS>"
+    let [s:el, s:ec] = getpos('.')[1:2]
 endfunction
 
 " TODO: comment
 function! s:dropa()
     if s:getchar(s:sl, s:sc) !~# g:targets_argSeparator
-        let s:sc += 1
+        call cursor(s:sl, s:sc)
+        silent! execute "normal! 1 "
+        let [s:sl, s:sc] = getpos('.')[1:2]
+
         if s:getchar(s:el, s:ec) =~# g:targets_argSeparator
             return s:expand()
         endif
@@ -838,9 +835,6 @@ function! s:expand()
 endfunction
 
 " grows selection on repeated invocations by increasing s:count
-" TODO: delay? remember that growing was requested, try normal selection,
-" compare with initial selection. only if they match, increase count and try
-" again
 " TODO: growing too far resets the visual selection, fix it
 "  (it's because we check if normal v5a) leads to a selection of a single
 "  character, which is just wrong when the selection was bigger before.

@@ -110,11 +110,7 @@ function! s:createTagTextObjects()
     call s:createSimpleTextObject(s:A . s:l, 't', 'lastt selectp expand')
 endfunction
 
-" TODO: create more argument mappings
-" TODO: implement growing?
-" TODO: no seeking?
-" TODO: skip top level commas () , ()
-" TODO: reorder
+" TODO: reorder, realing commas
 function! s:createArgTextObjects()
     call s:createSimpleTextObject(s:i      , 'a', 'grow seekselecta drop')
     call s:createSimpleTextObject(s:a      , 'a', 'grow seekselecta dropa')
