@@ -854,7 +854,6 @@ endfunction
 "  character, which is just wrong when the selection was bigger before.
 "  instead check if the selection changed because of the normal command)
 "  confirmed in seekselectp
-" TODO: related to above? seekselecta only grows twice, fix it
 " TODO: include in seekselect[apt] functions to simplify mappings
 function! s:grow()
     if s:mapmode == 'o'
@@ -880,7 +879,7 @@ function! s:prepareNext()
         return
     endif
     if s:mapmode ==# 'x' && exists('s:lrsl') && s:lrsl > 0
-        call setpos('.', [0, s:lrsl, s:lrsc, 0])
+        call setpos('.', [0, s:lrel, s:lrec, 0])
     endif
 endfunction
 
