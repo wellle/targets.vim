@@ -628,6 +628,9 @@ function! s:findArg(direction, flags1, flags2, flags3, opening, closing)
     return [sl, sc, el, ec, 0]
 endfunction
 
+" args (flags1, flags2, skip, finish, all=s:argAll,
+" separator=g:targets_argSeparator, cnt=2)
+" return (line, column, err)
 function! s:findArgBoundary(...)
     let [flags1, flags2, skip, finish] = [a:1, a:2, a:3, a:4]
     if a:0 == 6
@@ -954,13 +957,13 @@ function! s:getchar(...)
 endfunction
 
 " TODO: comment
+" args (cnt, pattern, flags, stopline=0)
 function! s:search(...)
+    let [cnt, pattern, flags] = [a:1, a:2, a:3]
     if a:0 == 4
-        let [cnt, pattern, flags, stopline] = [a:1, a:2, a:3, a:4]
+        let stopline = a:4
     elseif a:0 == 3
-        let [cnt, pattern, flags, stopline] = [a:1, a:2, a:3, 0]
-    else
-        return s:fail('search arguments')
+        let stopline = 0
     endif
 
     for _ in range(cnt)
