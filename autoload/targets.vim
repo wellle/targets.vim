@@ -469,6 +469,8 @@ endfunction
 " modifier │ │ └─1─┘ │
 "          │ └── 2 ──┘
 function! s:seekselectp(...)
+    call s:grow()
+
     if a:0 == 3
         let [ opening, closing, trigger ] = [ a:1, a:2, a:3 ]
     else
@@ -620,6 +622,8 @@ endfunction
 " arguments around cursor (similar to how seekselect works)
 " same for seekselectp
 function! s:seekselecta()
+    call s:grow()
+
     " TODO: v2aa on x should include x and y, not just a
     " (z, (x, (a), y))
     if s:count > 1
