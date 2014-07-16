@@ -36,6 +36,7 @@ endfunction
 " like targets#xmap, but inject count, triggered from targets#xmapExpr
 function! targets#xmapCount(delimiters, matchers, count)
     call s:init('x', a:delimiters, a:matchers, a:count)
+    call s:saveVisualSelection()
     if s:handleMatch(a:matchers) == 0
         call s:saveState()
     endif
@@ -73,6 +74,7 @@ function! s:init(mapmode, delimiters, matchers, count)
     let [s:sl, s:sc, s:el, s:ec] = [0, 0, 0, 0]
     let [s:sLinewise, s:eLinewise] = [0, 0]
     let s:oldpos = getpos('.')
+    let s:newSelection = 1
 
     let s:opening = escape(a:delimiters[0], '".~\$')
     if len(a:delimiters) == 2
@@ -85,6 +87,32 @@ function! s:init(mapmode, delimiters, matchers, count)
     let &selection = 'inclusive' " and set it to inclusive
 endfunction
 
+function! s:saveVisualSelection()
+    let [s:vsl, s:vsc] = getpos("'<")[1:2]
+    let [s:vel, s:vec] = getpos("'>")[1:2]
+
+    " reselect, save mode and go back to normal mode
+    normal! gv
+    let s:vmode = mode()
+    silent! execute "normal! \<C-\>\<C-N>"
+
+    let s:newSelection = s:isNewSelection()
+endfunction
+
+function! s:isNewSelection()
+    if !exists('s:lsl') " no previous invocation
+        return 1
+    endif
+    if [s:vsl, s:vsc] != [s:lsl, s:lsc] " selection start changed
+        return 1
+    endif
+    if [s:vel, s:vec] != [s:lel, s:lec] " selection end changed
+        return 1
+    endif
+
+    return 0
+endfunction
+
 " remember last raw selection, before applying modifiers
 function! s:saveRawSelection()
     let [s:rsl, s:rsc, s:rel, s:rec] = [s:sl, s:sc, s:el, s:ec]
@@ -93,8 +121,15 @@ endfunction
 " remember last selection and last raw selection
 function! s:saveState()
     let [s:ldelimiters, s:lmatchers] = [s:delimiters, s:matchers]
-    let [s:lsl, s:lsc, s:lel, s:lec] = [s:sl, s:sc, s:el, s:ec]
     let [s:lrsl, s:lrsc, s:lrel, s:lrec] = [s:rsl, s:rsc, s:rel, s:rec]
+
+    let s:lmode = mode()
+
+    " back to normal mode, save positions, reselect
+    silent! execute "normal! \<C-\>\<C-N>"
+    let [s:lsl, s:lsc] = getpos("'<")[1:2]
+    let [s:lel, s:lec] = getpos("'>")[1:2]
+    normal! gv
 endfunction
 
 " clean up script variables after match
@@ -151,16 +186,21 @@ function! s:selectMatch()
     call setpos('.', s:oldpos)
     normal! m'
 
-    " visually select the match
-    call cursor(s:sl, s:sc)
+    let linewise = s:sLinewise && s:eLinewise
+    call s:selectRegion(linewise, s:sl, s:sc, s:el, s:ec)
+endfunction
 
-    if s:sLinewise && s:eLinewise
+function! s:selectRegion(linewise, sl, sc, el, ec)
+    " visually select the match
+    call cursor(a:sl, a:sc)
+
+    if a:linewise
         silent! normal! V
     else
         silent! normal! v
     endif
 
-    call cursor(s:el, s:ec)
+    call cursor(a:el, a:ec)
 
     " if selection should be exclusive, expand selection
     if s:selection ==# 'exclusive'
@@ -193,6 +233,8 @@ function! s:abortMatch(message)
     call setpos('.', s:oldpos)
     " get into normal mode and beep
     call feedkeys("\<C-\>\<C-N>\<Esc>", 'n')
+    " TODO: comment
+    call s:prepareReselect()
     " undo partial command
     call s:triggerUndo()
     " trigger reselect if called from xmap
@@ -207,6 +249,10 @@ function! s:triggerUndo()
         let undoseq = undotree().seq_cur
         call feedkeys(":call targets#undo(" . undoseq . ")\<CR>:echo\<CR>", 'n')
     endif
+endfunction
+
+function! s:prepareReselect()
+    let linewise = (s:vmode ==# 'V')
 endfunction
 
 " feed keys to reselect the last visual selection if called with mapmode x
@@ -490,6 +536,9 @@ function! s:seekselectp(...)
         return s:saveRawSelection()
     endif
 
+    " TODO: when trying to grow, don't continue here. growing should not seek
+    " inline growing into the seekselect functions and don't seek when growing
+
     if s:count > 1
         return s:fail('seekselectp count')
     endif
@@ -515,7 +564,7 @@ function! s:seekselectp(...)
         return s:selectp()
     endif
 
-    return s:fail('seekselect')
+    return s:fail('seekselectp')
 endfunction
 
 " tag pair matcher (works across multiple lines, supports seeking)
@@ -701,7 +750,7 @@ function! s:lastselecta(...)
 
     " special case to handle vala when invoked on a separator
     let separator = g:targets_argSeparator
-    if s:getchar() =~# separator && s:newSelection()
+    if s:getchar() =~# separator && s:newSelection
         if s:selecta('<') == 0
             return s:saveRawSelection()
         endif
@@ -860,10 +909,7 @@ endfunction
 "  confirmed in seekselectp
 " TODO: include in seekselect[apt] functions to simplify mappings
 function! s:grow()
-    if s:mapmode == 'o'
-        return
-    endif
-    if s:newSelection()
+    if s:mapmode == 'o' || s:newSelection
         return
     endif
     if [s:ldelimiters, s:lmatchers] != [s:delimiters, s:matchers] " different invocation
@@ -879,7 +925,7 @@ endfunction
 " if in visual mode, move cursor to start of last raw selection
 " also used in s:grow to move to last raw end
 function! s:prepareNext()
-    if s:newSelection()
+    if s:newSelection
         return
     endif
     if s:mapmode ==# 'x' && exists('s:lrsl') && s:lrsl > 0
@@ -890,27 +936,13 @@ endfunction
 " if in visual mode, move cursor to end of last raw selection
 " returns whether or not the cursor was moved
 function! s:prepareLast()
-    if s:newSelection()
+    if s:newSelection
         return
     endif
     if s:mapmode ==# 'x' && exists('s:lrel') && s:lrel > 0
         call setpos('.', [0, s:lrel, s:lrec, 0])
         return 1
     endif
-endfunction
-
-function! s:newSelection()
-    if !exists('s:lsl') " no previous invocation
-        return 1
-    endif
-    if getpos("'<")[1:2] != [s:lsl, s:lsc] " selection start changed
-        return 1
-    endif
-    if getpos("'>")[1:2] != [s:lel, s:lec] " selection end changed
-        return 1
-    endif
-
-    return
 endfunction
 
 " doubles the count (used for `iN'`)
