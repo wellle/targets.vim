@@ -233,7 +233,7 @@ function! s:abortMatch(message)
     call setpos('.', s:oldpos)
     " get into normal mode and beep
     call feedkeys("\<C-\>\<C-N>\<Esc>", 'n')
-    " TODO: comment
+
     call s:prepareReselect()
     " undo partial command
     call s:triggerUndo()
@@ -251,8 +251,10 @@ function! s:triggerUndo()
     endif
 endfunction
 
+" temporarily select original selection to reselect later
 function! s:prepareReselect()
     let linewise = (s:vmode ==# 'V')
+    call s:selectRegion(linewise, s:vsl, s:vsc, s:vel, s:vec)
 endfunction
 
 " feed keys to reselect the last visual selection if called with mapmode x
@@ -535,9 +537,6 @@ function! s:seekselectp(...)
         let s:count = 1
         return s:saveRawSelection()
     endif
-
-    " TODO: when trying to grow, don't continue here. growing should not seek
-    " inline growing into the seekselect functions and don't seek when growing
 
     if s:count > 1
         return s:fail('seekselectp count')
@@ -902,12 +901,6 @@ function! s:expand()
 endfunction
 
 " grows selection on repeated invocations by increasing s:count
-" TODO: growing too far resets the visual selection, fix it
-"  (it's because we check if normal v5a) leads to a selection of a single
-"  character, which is just wrong when the selection was bigger before.
-"  instead check if the selection changed because of the normal command)
-"  confirmed in seekselectp
-" TODO: include in seekselect[apt] functions to simplify mappings
 function! s:grow()
     if s:mapmode == 'o' || s:newSelection
         return
