@@ -675,7 +675,7 @@ endfunction
 function! s:seekselecta()
     call s:grow()
 
-    " TODO: v2aa on x should include x and y, not just a
+    " TODO: v2aa on y doesn't work
     " (z, (x, (a), y))
     if s:count > 1
         if s:getchar() =~# g:targets_argClosing
@@ -683,7 +683,10 @@ function! s:seekselecta()
         else
             let [cnt, message] = [s:count - 1, 'seekselecta 2']
         endif
-        if s:search(cnt, g:targets_argClosing, 'W') > 0
+        " find cnt closing while skipping matched openings
+        let [opening, closing] = [g:targets_argOpening, g:targets_argClosing]
+        if s:findArgBoundary('W', 'W', opening, closing, s:argOuter, s:none, cnt)[2] > 0
+        " if s:search(cnt, g:targets_argClosing, 'W') > 0
             return s:fail('seekselecta count')
         endif
         if s:selecta('^') == 0
