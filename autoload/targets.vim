@@ -517,7 +517,9 @@ endfunction
 " modifier │ │ └─1─┘ │
 "          │ └── 2 ──┘
 function! s:seekselectp(...)
-    call s:grow()
+    if s:grow() == 0
+        call s:prepareNext()
+    endif
 
     if a:0 == 3
         let [ opening, closing, trigger ] = [ a:1, a:2, a:3 ]
@@ -675,8 +677,6 @@ endfunction
 function! s:seekselecta()
     call s:grow()
 
-    " TODO: v2aa on y doesn't work
-    " (z, (x, (a), y))
     if s:count > 1
         if s:getchar() =~# g:targets_argClosing
             let [cnt, message] = [s:count - 2, 'seekselecta 1']
@@ -909,13 +909,11 @@ endfunction
 " grows selection on repeated invocations by increasing s:count
 function! s:grow()
     if s:mapmode == 'o' || s:newSelection
-        return
+        return 1
     endif
     if [s:ldelimiters, s:lmatchers] != [s:delimiters, s:matchers] " different invocation
-        return
+        return 1
     endif
-
-    call s:prepareNext()
 
     " increase s:count to grow selection
     let s:count = s:count + 1
