@@ -253,8 +253,10 @@ endfunction
 
 " temporarily select original selection to reselect later
 function! s:prepareReselect()
-    let linewise = (s:vmode ==# 'V')
-    call s:selectRegion(linewise, s:vsl, s:vsc, s:vel, s:vec)
+    if s:mapmode ==# 'x'
+        let linewise = (s:vmode ==# 'V')
+        call s:selectRegion(linewise, s:vsl, s:vsc, s:vel, s:vec)
+    endif
 endfunction
 
 " feed keys to reselect the last visual selection if called with mapmode x
