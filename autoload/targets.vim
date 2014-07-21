@@ -928,7 +928,7 @@ function! s:prepareNext()
         return
     endif
     if s:mapmode ==# 'x' && exists('s:lrsl') && s:lrsl > 0
-        call setpos('.', [0, s:lrel, s:lrec, 0])
+        call setpos('.', [0, s:lrsl, s:lrsc, 0])
     endif
 endfunction
 
