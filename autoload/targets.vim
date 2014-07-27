@@ -4,12 +4,13 @@
 " Updated: 2014-06-14
 " Version: 0.2.7
 
-" TODO: reorder and comment functions
 " TODO: document parameter list for all functions with ...
 
+" save cpoptions
 let s:save_cpoptions = &cpoptions
 set cpo&vim
 
+" called once when loaded
 function! s:setup()
     let s:argOpeningS = g:targets_argOpening . '\|' . g:targets_argSeparator
     let s:argClosingS = g:targets_argClosing . '\|' . g:targets_argSeparator
@@ -90,6 +91,21 @@ function! s:init(mapmode, delimiters, matchers, count)
     let &selection = 'inclusive' " and set it to inclusive
 endfunction
 
+" clean up script variables after match
+function! s:cleanUp()
+    let &selection = s:selection " reset 'selection' setting
+
+    unlet s:mapmode s:delimiters s:matchers s:count
+    unlet s:rsl s:rsc s:rel s:rec
+    unlet s:sl s:sc s:el s:ec
+    unlet s:sLinewise s:eLinewise
+    unlet s:oldpos
+    unlet s:newSelection
+    unlet s:opening s:closing
+    unlet s:selection
+endfunction
+
+" save old visual selection to detect new selections and reselect on fail
 function! s:saveVisualSelection()
     let [s:vsl, s:vsc] = getpos("'<")[1:2]
     let [s:vel, s:vec] = getpos("'>")[1:2]
@@ -102,6 +118,8 @@ function! s:saveVisualSelection()
     let s:newSelection = s:isNewSelection()
 endfunction
 
+" return 0 if the selection changed since the last invocation. used for
+" growing
 function! s:isNewSelection()
     if !exists('s:lsl') " no previous invocation
         return 1
@@ -133,17 +151,6 @@ function! s:saveState()
     let [s:lsl, s:lsc] = getpos("'<")[1:2]
     let [s:lel, s:lec] = getpos("'>")[1:2]
     normal! gv
-endfunction
-
-" clean up script variables after match
-function! s:cleanUp()
-    let &selection = s:selection " reset 'selection' setting
-    unlet s:selection
-
-    unlet s:mapmode s:delimiters s:matchers s:count
-    unlet s:sl s:sc s:el s:ec
-    unlet s:oldpos
-    unlet s:opening s:closing
 endfunction
 
 " clear the commandline to hide targets function calls
@@ -193,6 +200,7 @@ function! s:selectMatch()
     call s:selectRegion(linewise, s:sl, s:sc, s:el, s:ec)
 endfunction
 
+" visually select a given region. used for match or old selection
 function! s:selectRegion(linewise, sl, sc, el, ec)
     " visually select the match
     call cursor(a:sl, a:sc)
@@ -405,6 +413,8 @@ function! s:select(direction)
     return s:saveRawSelection()
 endfunction
 
+" find separators around cursor by searching for opening with flags1 and for
+" closing with flags2
 function! s:findSeparators(flags1, flags2, opening, closing)
     let [sl, sc] = searchpos(a:opening, a:flags1)
     if sc == 0 " no match to the left
@@ -500,6 +510,7 @@ function! s:seekselect()
     return s:fail('seekselect 4')
 endfunction
 
+" select a pair around the cursor
 function! s:selectp()
     " try to select pair
     silent! execute 'normal! va' . s:opening
@@ -577,6 +588,11 @@ function! s:seekselectt()
     return s:seekselectp('<\a', '</\a', 't')
 endfunction
 
+" select an argument around the cursor
+" parameter direction decides where to select when invoked on a separator:
+"   '>' select to the right (default)
+"   '<' select to the left (used when selecting or skipping to the left)
+"   '^' select up (surrounding argument, used for growing)
 function! s:selecta(direction)
     let oldpos = getpos('.')
 
@@ -602,6 +618,9 @@ function! s:selecta(direction)
     return s:saveRawSelection()
 endfunction
 
+" find an argument around the cursor given a direction (see s:selecta)
+" uses flags1 to search for end to the right; flags1 and flags2 to search for
+" start to the left
 function! s:findArg(direction, flags1, flags2, flags3, opening, closing)
     let oldpos = getpos('.')
     let char = s:getchar()
@@ -633,6 +652,9 @@ function! s:findArg(direction, flags1, flags2, flags3, opening, closing)
     return [sl, sc, el, ec, 0]
 endfunction
 
+" find arg boundary by search for `finish` or `separator` while skipping
+" matching `skip`s
+" example: find ',' or ')' while skipping a pair when finding '('
 " args (flags1, flags2, skip, finish, all=s:argAll,
 " separator=g:targets_argSeparator, cnt=2)
 " return (line, column, err)
@@ -674,6 +696,7 @@ function! s:findArgBoundary(...)
     return [rl, rc, 0]
 endfunction
 
+" selects and argument, supports growing and seeking
 " TODO: prefer seeking into single line arguments over selecting multiline
 " arguments around cursor (similar to how seekselect works)
 " same for seekselectp
@@ -721,7 +744,7 @@ function! s:seekselecta()
     return s:fail('seekselecta seek')
 endfunction
 
-" optional stopline
+" try to select a next argument, supports count and optional stopline
 function! s:nextselecta(...)
     call s:prepareNext()
 
@@ -752,6 +775,7 @@ function! s:nextselecta(...)
     return s:fail('nextselecta 4')
 endfunction
 
+" try to select a last argument, supports count and optional stopline
 function! s:lastselecta(...)
     call s:prepareLast()
 
@@ -836,6 +860,8 @@ function! s:dropr()
     let [s:el, s:ec] = getpos('.')[1:2]
 endfunction
 
+" drop an argument separator (like a comma), prefer the right one, fall back
+" to the left (one on first argument)
 function! s:dropa()
     if s:getchar(s:sl, s:sc) !~# g:targets_argSeparator
         call cursor(s:sl, s:sc)
@@ -948,6 +974,7 @@ function! s:double()
     let s:count = s:count * 2
 endfunction
 
+" returns the character under the cursor
 function! s:getchar(...)
     if a:0 == 2
         let [l, c] = [a:1, a:2]
@@ -957,6 +984,7 @@ function! s:getchar(...)
     return getline(l)[c-1]
 endfunction
 
+" search for pattern using flags and a count, optional stopline
 " args (cnt, pattern, flags, stopline=0)
 function! s:search(...)
     let [cnt, pattern, flags] = [a:1, a:2, a:3]
@@ -974,6 +1002,7 @@ function! s:search(...)
     endfor
 endfunction
 
+" return 1 and send a message to s:debug
 function! s:fail(...)
     if a:0 == 2
         call s:debug('fail ' . a:1 . ' ' . string(a:2))
@@ -983,9 +1012,11 @@ function! s:fail(...)
     return 1
 endfunction
 
+" useful for debugging
 function! s:debug(message)
     " echom a:message
 endfunction
 
+" reset cpoptions
 let &cpoptions = s:save_cpoptions
 unlet s:save_cpoptions
