@@ -42,7 +42,7 @@ function! s:createTextObject(prefix, trigger, delimiters, matchers)
     unlet delimiters mapping arguments
 endfunction
 
-" creat a text object for a single delimiter
+" create a text object for a single delimiter
 function! s:createSimpleTextObject(prefix, delimiter, matchers)
     call s:createTextObject(a:prefix, a:delimiter[0], a:delimiter[0], a:matchers)
     if strlen(a:delimiter) > 1  " check for alias
@@ -166,7 +166,6 @@ endfunction
 "         │   │└─i,─┤ │      │       │└─i,─┤ │
 "         │   ├──a,─┘ │      │       ├──a,─┘ │
 "         │   └──A,───┘      │       └──A,───┘
-"         | nsth |
 function! s:createSeparatorTextObjects()
     for delimiter in s:separator_list
         let [ delimiter, dropr ] = s:parseDelimiter(delimiter)
@@ -194,7 +193,19 @@ function! s:createSeparatorTextObjects()
     endfor
 endfunction
 
-" TODO: comment
+" argument text objects expand to the right
+" cursor  |                          .........
+" line    │ a ( bbbbbb , ccccccc , d ( eeeeee , fffffff ) , gggggg ) h
+" command │   ││├2Ila┘│││└─Ila─┘││││ ││├─Ia─┘│││└─Ina─┘│││││└2Ina┘│ │
+"         │   │└┼2ila─┘│├──ila──┤│││ │└┼─ia──┘│├──ina──┤│││├─2ina─┤ │
+"         │   │ └2ala──┼┤       ││││ │ └─aa───┼┤       │││├┼─2ana─┘ │
+"         │   └──2Ala──┼┘       ││││ └───Aa───┼┘       │││└┼─2Ana───┘
+"         │            ├───ala──┘│││          ├───ana──┘││ │
+"         │            └───Ala───┼┤│          └───Ana───┼┤ │
+"         │                      ││└─────2Ia────────────┘│ │
+"         │                      │└──────2ia─────────────┤ │
+"         │                      ├───────2aa─────────────┘ │
+"         │                      └───────2Aa───────────────┘
 function! s:createArgTextObjects()
     call s:createSimpleTextObject(s:i,       'a', 'seekselecta drop')
     call s:createSimpleTextObject(s:a,       'a', 'seekselecta dropa')
@@ -246,8 +257,6 @@ function! s:loadSettings()
     if !exists('g:targets_separators')
         let g:targets_separators = ', . ; : + - = ~ _ * # / \ | & $'
     endif
-
-    " TODO: document
     if !exists('g:targets_argOpening')
         let g:targets_argOpening = '[([]'
     endif
