@@ -865,8 +865,7 @@ endfunction
 function! s:dropa()
     if s:getchar(s:sl, s:sc) !~# g:targets_argSeparator
         call cursor(s:sl, s:sc)
-        silent! execute "normal! 1 "
-        let [s:sl, s:sc] = getpos('.')[1:2]
+        let [s:sl, s:sc] = searchpos('\S', '', s:el)
 
         if s:getchar(s:el, s:ec) =~# g:targets_argSeparator
             return s:expand()
