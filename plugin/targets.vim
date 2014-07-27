@@ -110,22 +110,6 @@ function! s:createTagTextObjects()
     call s:createSimpleTextObject(s:A . s:l, 't', 'lastt selectp expand')
 endfunction
 
-" TODO: reorder, realing commas
-function! s:createArgTextObjects()
-    call s:createSimpleTextObject(s:i      , 'a', 'seekselecta drop')
-    call s:createSimpleTextObject(s:a      , 'a', 'seekselecta dropa')
-    call s:createSimpleTextObject(s:I      , 'a', 'seekselecta shrink')
-    call s:createSimpleTextObject(s:A      , 'a', 'seekselecta expand')
-    call s:createSimpleTextObject(s:i . s:n, 'a', 'nextselecta drop')
-    call s:createSimpleTextObject(s:a . s:n, 'a', 'nextselecta dropa')
-    call s:createSimpleTextObject(s:I . s:n, 'a', 'nextselecta shrink')
-    call s:createSimpleTextObject(s:A . s:n, 'a', 'nextselecta expand')
-    call s:createSimpleTextObject(s:i . s:l, 'a', 'lastselecta drop')
-    call s:createSimpleTextObject(s:a . s:l, 'a', 'lastselecta dropa')
-    call s:createSimpleTextObject(s:I . s:l, 'a', 'lastselecta shrink')
-    call s:createSimpleTextObject(s:A . s:l, 'a', 'lastselecta expand')
-endfunction
-
 " quote text objects expand into quote (by counting quote signs)
 " `aN'` is a shortcut for `2an'` to jump from within one quote into the
 " next one, instead of the quote in between
@@ -210,6 +194,22 @@ function! s:createSeparatorTextObjects()
     endfor
 endfunction
 
+" TODO: comment
+function! s:createArgTextObjects()
+    call s:createSimpleTextObject(s:i,       'a', 'seekselecta drop')
+    call s:createSimpleTextObject(s:a,       'a', 'seekselecta dropa')
+    call s:createSimpleTextObject(s:I,       'a', 'seekselecta shrink')
+    call s:createSimpleTextObject(s:A,       'a', 'seekselecta expand')
+    call s:createSimpleTextObject(s:i . s:n, 'a', 'nextselecta drop')
+    call s:createSimpleTextObject(s:a . s:n, 'a', 'nextselecta dropa')
+    call s:createSimpleTextObject(s:I . s:n, 'a', 'nextselecta shrink')
+    call s:createSimpleTextObject(s:A . s:n, 'a', 'nextselecta expand')
+    call s:createSimpleTextObject(s:i . s:l, 'a', 'lastselecta drop')
+    call s:createSimpleTextObject(s:a . s:l, 'a', 'lastselecta dropa')
+    call s:createSimpleTextObject(s:I . s:l, 'a', 'lastselecta shrink')
+    call s:createSimpleTextObject(s:A . s:l, 'a', 'lastselecta expand')
+endfunction
+
 function! s:parseDelimiter(delimiter)
     if len(a:delimiter) >= 2 && a:delimiter[0] == a:delimiter[1] " delimiter is doubled
         return [ a:delimiter[1:], '' ] " remove first double, don't drop right separator
@@ -249,10 +249,10 @@ function! s:loadSettings()
 
     " TODO: document
     if !exists('g:targets_argOpening')
-        let g:targets_argOpening = '[({[]'
+        let g:targets_argOpening = '[([]'
     endif
     if !exists('g:targets_argClosing')
-        let g:targets_argClosing = '[]})]'
+        let g:targets_argClosing = '[])]'
     endif
     if !exists('g:targets_argSeparator')
         let g:targets_argSeparator = ','

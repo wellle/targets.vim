@@ -4,6 +4,9 @@
 " Updated: 2014-06-14
 " Version: 0.2.7
 
+" TODO: reorder and comment functions
+" TODO: document parameter list for all functions with ...
+
 let s:save_cpoptions = &cpoptions
 set cpo&vim
 
@@ -324,7 +327,6 @@ endfunction
 " in   │     ...
 " line │  '  '  '  '
 " out  │ 2  1
-" TODO: was broken when invoked from separator! add test!
 function! s:lastselect()
     " if started on closing, but not when skipping
     if !s:prepareLast() && s:getchar() ==# s:closing
@@ -575,7 +577,6 @@ function! s:seekselectt()
     return s:seekselectp('<\a', '</\a', 't')
 endfunction
 
-" TODO: comment, reorder selecta functions
 function! s:selecta(direction)
     let oldpos = getpos('.')
 
@@ -720,7 +721,6 @@ function! s:seekselecta()
     return s:fail('seekselecta seek')
 endfunction
 
-" TODO: document parameter list for all functions with ...
 " optional stopline
 function! s:nextselecta(...)
     call s:prepareNext()
@@ -836,7 +836,6 @@ function! s:dropr()
     let [s:el, s:ec] = getpos('.')[1:2]
 endfunction
 
-" TODO: comment
 function! s:dropa()
     if s:getchar(s:sl, s:sc) !~# g:targets_argSeparator
         call cursor(s:sl, s:sc)
@@ -949,7 +948,6 @@ function! s:double()
     let s:count = s:count * 2
 endfunction
 
-" TODO: comment
 function! s:getchar(...)
     if a:0 == 2
         let [l, c] = [a:1, a:2]
@@ -959,7 +957,6 @@ function! s:getchar(...)
     return getline(l)[c-1]
 endfunction
 
-" TODO: comment
 " args (cnt, pattern, flags, stopline=0)
 function! s:search(...)
     let [cnt, pattern, flags] = [a:1, a:2, a:3]
