@@ -532,9 +532,7 @@ endfunction
 " modifier │ │ └─1─┘ │
 "          │ └── 2 ──┘
 function! s:seekselectp(...)
-    if s:grow() == 0
-        call s:prepareNext()
-    endif
+    call s:grow()
 
     if a:0 == 3
         let [ opening, closing, trigger ] = [ a:1, a:2, a:3 ]
@@ -712,13 +710,12 @@ function! s:seekselecta()
         " find cnt closing while skipping matched openings
         let [opening, closing] = [g:targets_argOpening, g:targets_argClosing]
         if s:findArgBoundary('W', 'W', opening, closing, s:argOuter, s:none, cnt)[2] > 0
-        " if s:search(cnt, g:targets_argClosing, 'W') > 0
-            return s:fail('seekselecta count')
+            return s:fail(message . ' count')
         endif
         if s:selecta('^') == 0
             return s:saveRawSelection()
         endif
-        return s:fail('seekselecta count select')
+        return s:fail(message . ' select')
     endif
 
     if s:selecta('>') == 0
@@ -940,6 +937,10 @@ function! s:grow()
     if [s:ldelimiters, s:lmatchers] != [s:delimiters, s:matchers] " different invocation
         return 1
     endif
+
+    " move cursor back to last raw end of selection to avoid growing being
+    " confused by last modifiers
+    call s:prepareNext()
 
     " increase s:count to grow selection
     let s:count = s:count + 1
