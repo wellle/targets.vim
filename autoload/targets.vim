@@ -860,23 +860,30 @@ endfunction
 " drop an argument separator (like a comma), prefer the right one, fall back
 " to the left (one on first argument)
 function! s:dropa()
-    if s:getchar(s:sl, s:sc) !~# g:targets_argSeparator
-        " start on opening
-        call cursor(s:sl, s:sc)
-        let [s:sl, s:sc] = searchpos('\S', '', s:el)
+    let startOpening = s:getchar(s:sl, s:sc) !~# g:targets_argSeparator
+    let endOpening   = s:getchar(s:el, s:ec) !~# g:targets_argSeparator
 
-        if s:getchar(s:el, s:ec) =~# g:targets_argSeparator
-            " end on separator
-            return s:expand()
+    if startOpening
+        if endOpening
+            " ( x ) select space on both sides
+            return s:drop()
+        else
+            " ( x , a ) select separator and space after
+            call cursor(s:sl, s:sc)
+            let [s:sl, s:sc] = searchpos('\S', '', s:el)
+            return s:expand('>')
         endif
-        " end on closing, fall back to dropr
-    elseif s:getchar(s:sl, s:ec) !~# g:targets_argSeparator
-        " end on closing
-        call cursor(s:el, s:ec)
-        let [s:el, s:ec] = searchpos('\S', 'b', s:sl)
-        return
+    else
+        if !endOpening
+            " (a , x , b) select leading separator, no surrounding space
+            return s:dropr()
+        else
+            " ( a , x ) select separator and space before
+            call cursor(s:el, s:ec)
+            let [s:el, s:ec] = searchpos('\S', 'b', s:sl)
+            return s:expand('<')
+        endif
     endif
-    return s:dropr()
 endfunction
 
 " select inner tag delimiters
