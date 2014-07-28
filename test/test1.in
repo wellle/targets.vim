@@ -25,3 +25,4 @@ a \ b \ c \ d \ e \ x \ g \ h \ i \ k \ l
 a & b & c & d & e & x & g & h & i & k & l
 a $ b $ c $ d $ e $ x $ g $ h $ i $ k $ l
 
+a ( b , c ( d ) , d ( x , e ) , f ) g
