@@ -909,32 +909,34 @@ function! s:shrink()
 endfunction
 
 " expand selection by some whitespace
-" prefer to expand to the right, don't expand when there is none
 " in   │   ┌───┐   │   ┌───┐  │  ┌───┐  │ ┌───┐
 " line │ a . b . c │ a . b .c │ a. c .c │ . a .c
 " out  │   └────┘  │  └────┘  │  └───┘  │└────┘
-function! s:expand()
-    call cursor(s:el, s:ec)
-    let [line, column] = searchpos('\S\|$', '', line('.'))
-    if line > 0 && column-1 > s:ec
-        " non whitespace or EOL after trailing whitespace found
-        let s:el = line
-        let s:ec = column-1
-        unlet line column
-        return
+" optional parameter: direction (default: try right, then left)
+function! s:expand(...)
+    if a:0 == 0 || a:1 == '>'
+        call cursor(s:el, s:ec)
+        let [line, column] = searchpos('\S\|$', '', line('.'))
+        if line > 0 && column-1 > s:ec
+            " non whitespace or EOL after trailing whitespace found
+            " not counting whitespace directly after end
+            let [s:el, s:ec] = [line, column-1]
+            return
+        endif
     endif
-    call cursor(s:sl, s:sc)
-    let [line, column] = searchpos('\S', 'b', line('.'))
-    if line > 0
-        " non whitespace before leading whitespace found
-        let s:sl = line
-        let s:sc = column+1
-        unlet line column
-        return
+
+    if a:0 == 0 || a:1 == '<'
+        call cursor(s:sl, s:sc)
+        let [line, column] = searchpos('\S', 'b', line('.'))
+        if line > 0
+            " non whitespace before leading whitespace found
+            let [s:sl, s:sc] = [line, column+1]
+            return
+        endif
+        " only whitespace in front of start
+        " include all leading whitespace from beginning of line
+        let s:sc = 1
     endif
-    unlet line column
-    " include all leading whitespace from BOL
-    let s:sc = 1
 endfunction
 
 " grows selection on repeated invocations by increasing s:count
