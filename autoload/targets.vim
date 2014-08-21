@@ -4,8 +4,6 @@
 " Updated: 2014-06-14
 " Version: 0.2.7
 
-" TODO: document parameter list for all functions with ...
-
 " save cpoptions
 let s:save_cpoptions = &cpoptions
 set cpo&vim
@@ -294,7 +292,6 @@ endfunction
 " in   │ . │  . │ . │  .
 " line │ ' │  ' │ ' │  '
 " out  │ . │ .  │ . │ .
-" TODO: remove the quote function, add {seek,next,last}selectq
 " current problem: skipping v"an"an" doesn't work
 " also va", van", val" doesn't capture the three correct quotes when issued on
 " a quote character
@@ -363,7 +360,7 @@ endfunction
 " in   │               ....
 " line │ ( ) ( ) ( ( ) ) ( )
 " out  │   4   3     2 1
-function! s:lastp(...)
+function! s:lastp()
     call s:prepareLast()
     return s:search(s:count, s:closing, 'bW')
 endfunction
@@ -531,6 +528,7 @@ endfunction
 " line     │ ( ( a ) )
 " modifier │ │ └─1─┘ │
 "          │ └── 2 ──┘
+" args (opening=s:opening, closing=s:closing, trigger=s:closing)
 function! s:seekselectp(...)
     call s:grow()
 
@@ -742,6 +740,7 @@ function! s:seekselecta()
 endfunction
 
 " try to select a next argument, supports count and optional stopline
+" args (stopline=0)
 function! s:nextselecta(...)
     call s:prepareNext()
 
@@ -773,6 +772,7 @@ function! s:nextselecta(...)
 endfunction
 
 " try to select a last argument, supports count and optional stopline
+" args (stopline=0)
 function! s:lastselecta(...)
     call s:prepareLast()
 
@@ -859,6 +859,7 @@ endfunction
 
 " drop an argument separator (like a comma), prefer the right one, fall back
 " to the left (one on first argument)
+" TODO: add picture comments to new functions
 function! s:dropa()
     let startOpening = s:getchar(s:sl, s:sc) !~# g:targets_argSeparator
     let endOpening   = s:getchar(s:el, s:ec) !~# g:targets_argSeparator
@@ -919,7 +920,7 @@ endfunction
 " in   │   ┌───┐   │   ┌───┐  │  ┌───┐  │ ┌───┐
 " line │ a . b . c │ a . b .c │ a. c .c │ . a .c
 " out  │   └────┘  │  └────┘  │  └───┘  │└────┘
-" optional parameter: direction (default: try right, then left)
+" args (direction=<try right, then left>)
 function! s:expand(...)
     if a:0 == 0 || a:1 == '>'
         call cursor(s:el, s:ec)
@@ -992,6 +993,7 @@ function! s:double()
 endfunction
 
 " returns the character under the cursor
+" args (line=current, column=current)
 function! s:getchar(...)
     if a:0 == 2
         let [l, c] = [a:1, a:2]
@@ -1020,6 +1022,7 @@ function! s:search(...)
 endfunction
 
 " return 1 and send a message to s:debug
+" args (message, parameters=nil)
 function! s:fail(...)
     if a:0 == 2
         call s:debug('fail ' . a:1 . ' ' . string(a:2))
