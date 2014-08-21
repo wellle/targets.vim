@@ -1,8 +1,8 @@
 " targets.vim Provides additional text objects
 " Author:  Christian Wellenbrock <christian.wellenbrock@gmail.com>
 " License: MIT license
-" Updated: 2014-06-14
-" Version: 0.2.7
+" Updated: 2014-08-21
+" Version: 0.3.0
 
 " save cpoptions
 let s:save_cpoptions = &cpoptions

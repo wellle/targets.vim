@@ -1,13 +1,13 @@
 " targets.vim Provides additional text objects
 " Author:  Christian Wellenbrock <christian.wellenbrock@gmail.com>
 " License: MIT license
-" Updated: 2014-06-14
-" Version: 0.2.7
+" Updated: 2014-08-21
+" Version: 0.3.0
 
 if exists("g:loaded_targets") || &cp || v:version < 700
     finish
 endif
-let g:loaded_targets = '0.2.7' " version number
+let g:loaded_targets = '0.3.0' " version number
 let s:save_cpoptions = &cpoptions
 set cpo&vim
 
