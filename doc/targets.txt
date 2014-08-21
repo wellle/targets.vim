@@ -52,6 +52,7 @@ differently:
     Pair text objects           |targets-pair-text-objects|
     Quote text objects          |targets-quote-text-objects|
     Separator text objects      |targets-separator-text-objects|
+    Argument text objects       |targets-argument-text-objects|
 
 ==============================================================================
 PAIR TEXT OBJECTS                                  *targets-pair-text-objects*
@@ -404,6 +405,91 @@ Like |targets-quote-seek|. If any of the normal separator commands (not
 containing `n` or `l`) is executed when the cursor is not positioned inside a
 pair of separators, it seeks for the separator before or after the cursor.
 This is similar to using the explicit version containing `n` or `l`.
+
+==============================================================================
+ARGUMENT TEXT OBJECTS                          *targets-argument-text-objects*
+
+These text objects are similar to separator text objects, but are specialized
+for arguments surrounded by braces and commas. They also take matching braces
+into account to capture only valid arguments.
+
+Argument text objects work over multiple lines.
+
+ia                                                                        *ia*
+    Select inside argument. Supports |targets-argument-seek|. Accepts a
+    [count] to select bigger nested arguments.
+
+              ...........
+        a , b ( cccccccc , d ) e ~
+               └── ia ──┘
+
+aa                                                                        *aa*
+    Select an argument in a list of arguments. This includes a separator if
+    present, but excludes surrounding braces. This leaves a proper of
+    arguments after deletion. Supports |targets-argument-seek|. Accepts a
+    [count] to select bigger nested arguments.
+
+              ...........
+        a , b ( cccccccc , d ) e ~
+                └─── aa ──┘
+
+Ia                                                                        *Ia*
+    Select contents of an argument. Like inside argument, but exclude
+    whitespace at both ends. Useful for changing contents while preserving
+    spacing. Supports |targets-argument-seek|. Accepts a [count] to select
+    bigger nested arguments.
+
+              ...........
+        a , b ( cccccccc , d ) e ~
+                └─ Ia ─┘
+
+Aa                                                                        *Aa*
+    Select around an argument. This includes both delimiters and a surrounding
+    whitespace, similar to `a'` and `A(`. Supports |targets-argument-seek|.
+    Accepts a [count] to select bigger nested arguments.
+
+              ...........
+        a , b ( cccccccc , d ) e ~
+              └─── Aa ────┘
+
+------------------------------------------------------------------------------
+NEXT AND LAST ARGUMENT                            *targets-next-last-argument*
+
+Work directly on distant arguments without moving there separately.
+
+ina ana Ina Ana                                        *ina* *ana* *Ina* *Ana*
+ila ala Ila Ala                                        *ila* *ala* *Ila* *Ala*
+
+    All the above argument text objects can be shifted to the next argument
+    by including the letter `n`. The command `ina` selects inside of the next
+    argument. Use the letter `l` instead to work on the previous (last)
+    argument. Uses a [count] to skip multiple argument characters. The order
+    is determined by the nearest surrounding argument delimiter.
+
+                                                     *targets-argument-chart*
+The following chart summarizes all argument mappings:
+
+                             .........
+    a ( bbbbbb , ccccccc , d ( eeeeee , fffffff ) , gggggg ) h ~
+      ││├2Ila┘│││└─Ila─┘││││ ││├─Ia─┘│││└─Ina─┘│││││└2Ina┘│ │
+      │└┼2ila─┘│├──ila──┤│││ │└┼─ia──┘│├──ina──┤│││├─2ina─┤ │
+      │ └2ala──┼┤       ││││ │ └─aa───┼┤       │││├┼─2ana─┘ │
+      └──2Ala──┼┘       ││││ └───Aa───┼┘       │││└┼─2Ana───┘
+               ├───ala──┘│││          ├───ana──┘││ │
+               └───Ala───┼┤│          └───Ana───┼┤ │
+                         ││└─────2Ia────────────┘│ │
+                         │└──────2ia─────────────┤ │
+                         ├───────2aa─────────────┘ │
+                         └───────2Aa───────────────┘
+
+------------------------------------------------------------------------------
+ARGUMENT SEEK                                          *targets-argument-seek*
+
+Like |targets-separator-seek|. If any of the normal argument commands (not
+containing `n` or `l`) is executed when the cursor is not positioned inside an
+argument, it seeks for the argument before or after the cursor. This is
+similar to using the explicit version containing `n` or `l`.
+
 
 ==============================================================================
 SETTINGS                                                    *targets-settings*
