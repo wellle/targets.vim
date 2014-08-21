@@ -41,6 +41,7 @@ differently:
 - Pair text objects
 - Quote text objects
 - Separator text objects
+- Argument text objects
 
 ## Pair Text Objects
 
@@ -348,6 +349,97 @@ Like quote seeking. If any of the normal separator commands (not
 containing `n` or `l`) is executed when the cursor is not positioned inside a
 pair of separators, it seeks for the separator before or after the cursor.
 This is similar to using the explicit version containing `n` or `l`.
+
+## Argument Text Objects
+
+These text objects are similar to separator text objects, but are specialized
+for arguments surrounded by braces and commas. They also take matching braces
+into account to capture only valid arguments.
+
+Argument text objects work over multiple lines.
+
+#### In Argument
+
+`ia`
+
+- Select inside arguments. Similar to in quote.
+- Supports seeking.
+- Accepts a count.
+
+```
+      ...........
+a , b ( cccccccc , d ) e
+       └── ia ──┘
+```
+
+#### An Argument
+
+`aa`
+
+- Select an argument in a list of arguments.
+- Includes a separator if preset, but excludes surrounding braces. This leaves
+  a proper argument list after deletion.
+- Supports seeking.
+- Accepts a count.
+
+```
+      ...........
+a , b ( cccccccc , d ) e
+        └─── aa ──┘
+```
+
+#### Inside Argument
+
+`Ia`
+
+- Select content of an argument.
+- Like inside separators, but exclude whitespace at both ends. Useful for
+  changing contents while preserving spacing.
+- Supports seeking.
+- Accepts a count.
+
+```
+      ...........
+a , b ( cccccccc , d ) e
+        └─ Ia ─┘
+```
+
+#### Around Argument
+
+`Aa`
+
+- Select around an argument.
+- Includes both delimiters and a surrounding whitespace, similar to `a'` and
+  `A(`.
+- Supports seeking.
+- Accepts a count.
+
+```
+      ...........
+a , b ( cccccccc , d ) e
+      └─── Aa ────┘
+```
+
+### Next and Last Argument
+
+`ina ana Ina Ana ila ala Ila Ala`
+
+Work directly on distant arguments without moving there separately.
+
+All the above argument text objects can be shifted to the next argument by
+including the letter `n`. The command `ina` selects inside of the next
+argument. Use the letter `l` instead to work on the previous (last) argument.
+Uses a [count] to skip multiple argument characters. The order is determined by
+the nearest surrounding argument delimiter.
+
+See our [Cheat Sheet][cheatsheet] for a chart summarizing all argument mappings.
+
+### Argument Seek
+
+Like separator seeking. If any of the normal argument commands (not containing
+`n` or `l`) is executed when the cursor is not positioned inside an argument,
+it seeks for the argument before or after the cursor. This is similar to using
+the explicit version containing `n` or `l`.
 
 ## Installation
 
