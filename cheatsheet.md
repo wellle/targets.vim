@@ -110,3 +110,29 @@ a , bbbbbbb , ccccccc , dddddd , eeeeeee , fffffff , g
             └─  Al,  ──┘       └─  An,  ──┘
 ```
 
+## Argument mappings
+
+Available mappings
+
+```
+     ia  aa  Ia  Aa
+    ina ana Ina Ana
+    ila ala Ila Ala
+```
+
+Chart for arguments
+
+```
+                         .........
+a ( bbbbbb , ccccccc , d ( eeeeee , fffffff ) , gggggg ) h
+  ││├2Ila┘│││└─Ila─┘││││ ││├─Ia─┘│││└─Ina─┘│││││└2Ina┘│ │
+  │└┼2ila─┘│├──ila──┤│││ │└┼─ia──┘│├──ina──┤│││├─2ina─┤ │
+  │ └2ala──┼┤       ││││ │ └─aa───┼┤       │││├┼─2ana─┘ │
+  └──2Ala──┼┘       ││││ └───Aa───┼┘       │││└┼─2Ana───┘
+           ├───ala──┘│││          ├───ana──┘││ │
+           └───Ala───┼┤│          └───Ana───┼┤ │
+                     ││└─────2Ia────────────┘│ │
+                     │└──────2ia─────────────┤ │
+                     ├───────2aa─────────────┘ │
+                     └───────2Aa───────────────┘
+```

@@ -1,8 +1,8 @@
 " targets.vim Provides additional text objects
 " Author:  Christian Wellenbrock <christian.wellenbrock@gmail.com>
 " License: MIT license
-" Updated: 2014-06-14
-" Version: 0.2.7
+" Updated: 2014-08-21
+" Version: 0.3.0
 
 set runtimepath+=../
 set softtabstop=16 expandtab
@@ -31,18 +31,18 @@ function! s:testBasic()
                 \ [ '(', ')', 'b' ],
                 \ [ '{', '}', 'B' ],
                 \ [ '[', ']', 'r' ],
-                \ [ '<', '>', 'a' ],
+                \ [ '<', '>' ],
                 \ [ 't' ]
                 \ ]
         normal "lyy
 
         for op in [ 'c', 'd', 'y', 'v' ]
             for cnt in [ '', '1', '2' ]
-                for nl in [ 'l', '', 'n' ]
+                for ln in [ 'l', '', 'n' ]
                     for iaIA in [ 'I', 'i', 'a', 'A' ]
                         for del in delset
                             execute "normal \"lpfx"
-                            call s:execute(op, cnt . iaIA . nl . del)
+                            call s:execute(op, cnt . iaIA . ln . del)
                         endfor
                     endfor
                 endfor
@@ -88,6 +88,21 @@ function! s:testBasic()
         endfor
 
         normal +
+    endfor
+
+    normal +
+
+    normal "lyy
+
+    for op in [ 'c', 'd', 'y', 'v' ]
+        for cnt in [ '', '1', '2' ]
+            for ln in [ 'l', '', 'n' ]
+                for iaIA in [ 'I', 'i', 'a', 'A' ]
+                    execute "normal \"lpfx"
+                    call s:execute(op, cnt . iaIA . ln . 'a')
+                endfor
+            endfor
+        endfor
     endfor
 
     write! test1.out
@@ -142,7 +157,7 @@ function s:testVisual()
                 \ [ '(', ')', 'b' ],
                 \ [ '{', '}', 'B' ],
                 \ [ '[', ']', 'r' ],
-                \ [ '<', '>', 'a' ],
+                \ [ '<', '>' ],
                 \ [ 't' ]
                 \ ]
         normal "lyy

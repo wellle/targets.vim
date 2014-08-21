@@ -1,13 +1,13 @@
 " targets.vim Provides additional text objects
 " Author:  Christian Wellenbrock <christian.wellenbrock@gmail.com>
 " License: MIT license
-" Updated: 2014-06-14
-" Version: 0.2.7
+" Updated: 2014-08-21
+" Version: 0.3.0
 
 if exists("g:loaded_targets") || &cp || v:version < 700
     finish
 endif
-let g:loaded_targets = '0.2.7' " version number
+let g:loaded_targets = '0.3.0' " version number
 let s:save_cpoptions = &cpoptions
 set cpo&vim
 
@@ -31,18 +31,18 @@ function! s:createTextObject(prefix, trigger, delimiters, matchers)
     " don't create xmaps beginning with `A` or `I`
     " conflict with `^VA` and `^VI` to append before or insert after visual
     " block selection. #6
-    " instead, save mapping to targets#mapArgs so we can execute these only
+    " instead, save mapping to targets_mapArgs so we can execute these only
     " for character wise visual mode in targets#uppercaseXmap #23
     if a:prefix !~# '^[AI]'
         execute 'xnoremap <silent>' . mapping . ' :<C-U>call targets#xmap(' . arguments . ')<CR>'
     else
-        let g:targets#mapArgs[rawMapping] = rawArguments
+        let g:targets_mapArgs[rawMapping] = rawArguments
     endif
 
     unlet delimiters mapping arguments
 endfunction
 
-" creat a text object for a single delimiter
+" create a text object for a single delimiter
 function! s:createSimpleTextObject(prefix, delimiter, matchers)
     call s:createTextObject(a:prefix, a:delimiter[0], a:delimiter[0], a:matchers)
     if strlen(a:delimiter) > 1  " check for alias
@@ -79,8 +79,8 @@ endfunction
 "         │   └───────Al)───────┘└──────2A)───────┘└───────An)───────┘
 function! s:createPairTextObjects()
     for delimiters in s:pair_list " aliases like surround
-        call s:createPairTextObject(s:i,       delimiters, 'grow seekselectp drop')
-        call s:createPairTextObject(s:a,       delimiters, 'grow seekselectp')
+        call s:createPairTextObject(s:i,       delimiters, 'seekselectp drop')
+        call s:createPairTextObject(s:a,       delimiters, 'seekselectp')
         call s:createPairTextObject(s:I,       delimiters, 'seekselectp shrink')
         call s:createPairTextObject(s:A,       delimiters, 'seekselectp expand')
         call s:createPairTextObject(s:i . s:n, delimiters, 'nextp selectp drop')
@@ -96,8 +96,8 @@ endfunction
 
 " tag text objects work on tags (similar to pair text objects)
 function! s:createTagTextObjects()
-    call s:createSimpleTextObject(s:i,       't', 'grow seekselectt innert drop')
-    call s:createSimpleTextObject(s:a,       't', 'grow seekselectt')
+    call s:createSimpleTextObject(s:i,       't', 'seekselectt innert drop')
+    call s:createSimpleTextObject(s:a,       't', 'seekselectt')
     call s:createSimpleTextObject(s:I,       't', 'seekselectt innert shrink')
     call s:createSimpleTextObject(s:A,       't', 'seekselectt expand')
     call s:createSimpleTextObject(s:i . s:n, 't', 'nextt selectp innert drop')
@@ -133,22 +133,22 @@ function! s:createQuoteTextObjects()
         call s:createSimpleTextObject(s:a,       delimiter, 'quote seekselect')
         call s:createSimpleTextObject(s:I,       delimiter, 'quote seekselect shrink')
         call s:createSimpleTextObject(s:A,       delimiter, 'quote seekselect expand')
-        call s:createSimpleTextObject(s:i . s:n, delimiter, 'quote next select drop')
-        call s:createSimpleTextObject(s:a . s:n, delimiter, 'quote next select')
-        call s:createSimpleTextObject(s:I . s:n, delimiter, 'quote next select shrink')
-        call s:createSimpleTextObject(s:A . s:n, delimiter, 'quote next select expand')
-        call s:createSimpleTextObject(s:i . s:l, delimiter, 'quote last select drop')
-        call s:createSimpleTextObject(s:a . s:l, delimiter, 'quote last select')
-        call s:createSimpleTextObject(s:I . s:l, delimiter, 'quote last select shrink')
-        call s:createSimpleTextObject(s:A . s:l, delimiter, 'quote last select expand')
-        call s:createSimpleTextObject(s:i . s:N, delimiter, 'quote double next select drop')
-        call s:createSimpleTextObject(s:a . s:N, delimiter, 'quote double next select')
-        call s:createSimpleTextObject(s:I . s:N, delimiter, 'quote double next select shrink')
-        call s:createSimpleTextObject(s:A . s:N, delimiter, 'quote double next select expand')
-        call s:createSimpleTextObject(s:i . s:L, delimiter, 'quote double last select drop')
-        call s:createSimpleTextObject(s:a . s:L, delimiter, 'quote double last select')
-        call s:createSimpleTextObject(s:I . s:L, delimiter, 'quote double last select shrink')
-        call s:createSimpleTextObject(s:A . s:L, delimiter, 'quote double last select expand')
+        call s:createSimpleTextObject(s:i . s:n, delimiter, 'quote nextselect drop')
+        call s:createSimpleTextObject(s:a . s:n, delimiter, 'quote nextselect')
+        call s:createSimpleTextObject(s:I . s:n, delimiter, 'quote nextselect shrink')
+        call s:createSimpleTextObject(s:A . s:n, delimiter, 'quote nextselect expand')
+        call s:createSimpleTextObject(s:i . s:l, delimiter, 'quote lastselect drop')
+        call s:createSimpleTextObject(s:a . s:l, delimiter, 'quote lastselect')
+        call s:createSimpleTextObject(s:I . s:l, delimiter, 'quote lastselect shrink')
+        call s:createSimpleTextObject(s:A . s:l, delimiter, 'quote lastselect expand')
+        call s:createSimpleTextObject(s:i . s:N, delimiter, 'quote double nextselect drop')
+        call s:createSimpleTextObject(s:a . s:N, delimiter, 'quote double nextselect')
+        call s:createSimpleTextObject(s:I . s:N, delimiter, 'quote double nextselect shrink')
+        call s:createSimpleTextObject(s:A . s:N, delimiter, 'quote double nextselect expand')
+        call s:createSimpleTextObject(s:i . s:L, delimiter, 'quote double lastselect drop')
+        call s:createSimpleTextObject(s:a . s:L, delimiter, 'quote double lastselect')
+        call s:createSimpleTextObject(s:I . s:L, delimiter, 'quote double lastselect shrink')
+        call s:createSimpleTextObject(s:A . s:L, delimiter, 'quote double lastselect expand')
     endfor
 endfunction
 
@@ -166,7 +166,6 @@ endfunction
 "         │   │└─i,─┤ │      │       │└─i,─┤ │
 "         │   ├──a,─┘ │      │       ├──a,─┘ │
 "         │   └──A,───┘      │       └──A,───┘
-"         | nsth |
 function! s:createSeparatorTextObjects()
     for delimiter in s:separator_list
         let [ delimiter, dropr ] = s:parseDelimiter(delimiter)
@@ -175,23 +174,51 @@ function! s:createSeparatorTextObjects()
         call s:createSimpleTextObject(s:a,       delimiter, 'seekselect' . dropr)
         call s:createSimpleTextObject(s:I,       delimiter, 'seekselect shrink')
         call s:createSimpleTextObject(s:A,       delimiter, 'seekselect expand')
-        call s:createSimpleTextObject(s:i . s:n, delimiter, 'next select drop')
-        call s:createSimpleTextObject(s:a . s:n, delimiter, 'next select' . dropr)
-        call s:createSimpleTextObject(s:I . s:n, delimiter, 'next select shrink')
-        call s:createSimpleTextObject(s:A . s:n, delimiter, 'next select expand')
-        call s:createSimpleTextObject(s:i . s:l, delimiter, 'last select drop')
-        call s:createSimpleTextObject(s:a . s:l, delimiter, 'last select' . dropr)
-        call s:createSimpleTextObject(s:I . s:l, delimiter, 'last select shrink')
-        call s:createSimpleTextObject(s:A . s:l, delimiter, 'last select expand')
-        call s:createSimpleTextObject(s:i . s:N, delimiter, 'double next select drop')
-        call s:createSimpleTextObject(s:a . s:N, delimiter, 'double next select' . dropr)
-        call s:createSimpleTextObject(s:I . s:N, delimiter, 'double next select shrink')
-        call s:createSimpleTextObject(s:A . s:N, delimiter, 'double next select expand')
-        call s:createSimpleTextObject(s:i . s:L, delimiter, 'double last select drop')
-        call s:createSimpleTextObject(s:a . s:L, delimiter, 'double last select' . dropr)
-        call s:createSimpleTextObject(s:I . s:L, delimiter, 'double last select shrink')
-        call s:createSimpleTextObject(s:A . s:L, delimiter, 'double last select expand')
+        call s:createSimpleTextObject(s:i . s:n, delimiter, 'nextselect drop')
+        call s:createSimpleTextObject(s:a . s:n, delimiter, 'nextselect' . dropr)
+        call s:createSimpleTextObject(s:I . s:n, delimiter, 'nextselect shrink')
+        call s:createSimpleTextObject(s:A . s:n, delimiter, 'nextselect expand')
+        call s:createSimpleTextObject(s:i . s:l, delimiter, 'lastselect drop')
+        call s:createSimpleTextObject(s:a . s:l, delimiter, 'lastselect' . dropr)
+        call s:createSimpleTextObject(s:I . s:l, delimiter, 'lastselect shrink')
+        call s:createSimpleTextObject(s:A . s:l, delimiter, 'lastselect expand')
+        call s:createSimpleTextObject(s:i . s:N, delimiter, 'double nextselect drop')
+        call s:createSimpleTextObject(s:a . s:N, delimiter, 'double nextselect' . dropr)
+        call s:createSimpleTextObject(s:I . s:N, delimiter, 'double nextselect shrink')
+        call s:createSimpleTextObject(s:A . s:N, delimiter, 'double nextselect expand')
+        call s:createSimpleTextObject(s:i . s:L, delimiter, 'double lastselect drop')
+        call s:createSimpleTextObject(s:a . s:L, delimiter, 'double lastselect' . dropr)
+        call s:createSimpleTextObject(s:I . s:L, delimiter, 'double lastselect shrink')
+        call s:createSimpleTextObject(s:A . s:L, delimiter, 'double lastselect expand')
     endfor
+endfunction
+
+" argument text objects expand to the right
+" cursor  |                          .........
+" line    │ a ( bbbbbb , ccccccc , d ( eeeeee , fffffff ) , gggggg ) h
+" command │   ││├2Ila┘│││└─Ila─┘││││ ││├─Ia─┘│││└─Ina─┘│││││└2Ina┘│ │
+"         │   │└┼2ila─┘│├──ila──┤│││ │└┼─ia──┘│├──ina──┤│││├─2ina─┤ │
+"         │   │ └2ala──┼┤       ││││ │ └─aa───┼┤       │││├┼─2ana─┘ │
+"         │   └──2Ala──┼┘       ││││ └───Aa───┼┘       │││└┼─2Ana───┘
+"         │            ├───ala──┘│││          ├───ana──┘││ │
+"         │            └───Ala───┼┤│          └───Ana───┼┤ │
+"         │                      ││└─────2Ia────────────┘│ │
+"         │                      │└──────2ia─────────────┤ │
+"         │                      ├───────2aa─────────────┘ │
+"         │                      └───────2Aa───────────────┘
+function! s:createArgTextObjects()
+    call s:createSimpleTextObject(s:i,       'a', 'seekselecta drop')
+    call s:createSimpleTextObject(s:a,       'a', 'seekselecta dropa')
+    call s:createSimpleTextObject(s:I,       'a', 'seekselecta shrink')
+    call s:createSimpleTextObject(s:A,       'a', 'seekselecta expand')
+    call s:createSimpleTextObject(s:i . s:n, 'a', 'nextselecta drop')
+    call s:createSimpleTextObject(s:a . s:n, 'a', 'nextselecta dropa')
+    call s:createSimpleTextObject(s:I . s:n, 'a', 'nextselecta shrink')
+    call s:createSimpleTextObject(s:A . s:n, 'a', 'nextselecta expand')
+    call s:createSimpleTextObject(s:i . s:l, 'a', 'lastselecta drop')
+    call s:createSimpleTextObject(s:a . s:l, 'a', 'lastselecta dropa')
+    call s:createSimpleTextObject(s:I . s:l, 'a', 'lastselecta shrink')
+    call s:createSimpleTextObject(s:A . s:l, 'a', 'lastselecta expand')
 endfunction
 
 function! s:parseDelimiter(delimiter)
@@ -222,13 +249,22 @@ function! s:loadSettings()
         let g:targets_nlNL = 'nlNL'
     endif
     if !exists('g:targets_pairs')
-        let g:targets_pairs = '()b {}B []r <>a'
+        let g:targets_pairs = '()b {}B []r <>'
     endif
     if !exists('g:targets_quotes')
         let g:targets_quotes = '" '' `'
     endif
     if !exists('g:targets_separators')
         let g:targets_separators = ', . ; : + - = ~ _ * # / \ | & $'
+    endif
+    if !exists('g:targets_argOpening')
+        let g:targets_argOpening = '[([]'
+    endif
+    if !exists('g:targets_argClosing')
+        let g:targets_argClosing = '[])]'
+    endif
+    if !exists('g:targets_argSeparator')
+        let g:targets_argSeparator = ','
     endif
 
     let [s:a, s:i, s:A, s:I] = split(g:targets_aiAI, '\zs')
@@ -241,7 +277,7 @@ endfunction
 
 " dictionary mapping uppercase xmap like `An,` to argument strings for
 " targets#xmapCount. used by targets#uppercaseXmap
-let targets#mapArgs = {}
+let targets_mapArgs = {}
 
 call s:loadSettings()
 
@@ -250,6 +286,7 @@ call s:createPairTextObjects()
 call s:createTagTextObjects()
 call s:createQuoteTextObjects()
 call s:createSeparatorTextObjects()
+call s:createArgTextObjects()
 call s:addExpressionMappings()
 
 let &cpoptions = s:save_cpoptions
