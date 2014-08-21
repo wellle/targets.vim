@@ -693,9 +693,6 @@ function! s:findArgBoundary(...)
 endfunction
 
 " selects and argument, supports growing and seeking
-" TODO: prefer seeking into single line arguments over selecting multiline
-" arguments around cursor (similar to how seekselect works)
-" same for seekselectp
 function! s:seekselecta()
     call s:grow()
 
@@ -859,7 +856,9 @@ endfunction
 
 " drop an argument separator (like a comma), prefer the right one, fall back
 " to the left (one on first argument)
-" TODO: add picture comments to new functions
+" in   │ ┌───┐ ┌───┐        ┌───┐        ┌───┐
+" line │ ( x ) ( x , a ) (a , x , b) ( a , x )
+" out  │  └─┘    └──┘       └──┘        └──┘
 function! s:dropa()
     let startOpening = s:getchar(s:sl, s:sc) !~# g:targets_argSeparator
     let endOpening   = s:getchar(s:el, s:ec) !~# g:targets_argSeparator
