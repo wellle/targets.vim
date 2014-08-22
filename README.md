@@ -61,7 +61,7 @@ Pair text objects work over multiple lines.
 
 #### In Pair
 
-`i( i) ib i{ i} iB i[ i] ir i< i> ia it`
+`i( i) ib i{ i} iB i[ i] i< i> it`
 
 - Select inside of pair characters.
 - This overrides Vim's default text object to allow seeking for the next pair
@@ -80,7 +80,7 @@ a ( b ( cccccccc ) d ) e
 
 #### A Pair
 
-`a( a) ab a{ a} aB a[ a] ar a< a> aa at`
+`a( a) ab a{ a} aB a[ a] a< a> at`
 
 - Select a pair including pair characters.
 - Overrides Vim's default text object to allow seeking.
@@ -95,7 +95,7 @@ a ( b ( cccccccc ) d ) e
 
 #### Inside Pair
 
-`I( I) Ib I{ I} IB I[ I] Ir I< I> Ia It`
+`I( I) Ib I{ I} IB I[ I] I< I> It`
 
 - Select contents of pair characters.
 - Like inside of parentheses, but exclude whitespace at both ends. Useful for
@@ -112,7 +112,7 @@ a ( b ( cccccccc ) d ) e
 
 #### Around Pair
 
-`A( A) Ab A{ A} AB A[ A] Ar A< A> Aa At`
+`A( A) Ab A{ A} AB A[ A] A< A> At`
 
 - Select around pair characters.
 - Like a pair, but include whitespace at one side of the pair. Prefers to
@@ -516,7 +516,7 @@ character long list.
 Default:
 
 ```vim
-let g:targets_pairs = '()b {}B []r <>a'
+let g:targets_pairs = '()b {}B [] <>'
 ```
 
 Defines the space separated list of pair objects you wish to use, along with
