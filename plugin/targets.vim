@@ -249,7 +249,7 @@ function! s:loadSettings()
         let g:targets_nlNL = 'nlNL'
     endif
     if !exists('g:targets_pairs')
-        let g:targets_pairs = '()b {}B []r <>'
+        let g:targets_pairs = '()b {}B [] <>'
     endif
     if !exists('g:targets_quotes')
         let g:targets_quotes = '" '' `'
