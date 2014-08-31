@@ -285,10 +285,6 @@ function! s:loadSettings()
     let [s:n, s:l, s:N, s:L] = split(g:targets_nlNL, '\zs')
 endfunction
 
-" dictionary mapping uppercase xmap like `An,` to argument strings for
-" targets#xmapCount. used by targets#uppercaseXmap
-let targets_mapArgs = {}
-
 call s:loadSettings()
 
 " create the text objects (current total count: 536)
