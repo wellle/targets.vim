@@ -191,10 +191,10 @@ function! s:findObject(kind, which)
         if a:which ==# 'c'
             call s:seekselectp()
         elseif a:which ==# 'n'
-            call s:nextp()
+            call s:nextp(s:count)
             call s:selectp()
         elseif a:which ==# 'l'
-            call s:lastp()
+            call s:lastp(s:count)
             call s:selectp()
         else
             " TODO: fail
@@ -239,10 +239,10 @@ function! s:findObject(kind, which)
         if a:which ==# 'c'
             call s:seekselectt()
         elseif a:which ==# 'n'
-            call s:nextt()
+            call s:nextt(s:count)
             call s:selectp()
         elseif a:which ==# 'l'
-            call s:lastt()
+            call s:lastt(s:count)
             call s:selectp()
         else
             " TODO: fail
@@ -623,36 +623,36 @@ endfunction
 " in   │ ....
 " line │ ( ) ( ) ( ( ) ) ( )
 " out  │     1   2 3     4
-function! s:nextp()
+function! s:nextp(count)
     call s:prepareNext()
-    return s:search(s:count, s:opening, 'W')
+    return s:search(a:count, s:opening, 'W')
 endfunction
 
 " find `count` last closing delimiter (multi line)
 " in   │               ....
 " line │ ( ) ( ) ( ( ) ) ( )
 " out  │   4   3     2 1
-function! s:lastp()
+function! s:lastp(count)
     call s:prepareLast()
-    return s:search(s:count, s:closing, 'bW')
+    return s:search(a:count, s:closing, 'bW')
 endfunction
 
 " find `count` next opening tag delimiter (multi line)
 " in   │ .........
 " line │ <a> </a> <b> </b> <c> <d> </d> </c> <e> </e>
 " out  │          1        2   3             4
-function! s:nextt()
+function! s:nextt(count)
     call s:prepareNext()
-    return s:search(s:count, '<\a', 'W')
+    return s:search(a:count, '<\a', 'W')
 endfunction
 
 " find `count` last closing tag delimiter (multi line)
 " in   │                                    .........
 " line │ <a> </a> <b> </b> <c> <d> </d> </c> <e> </e>
 " out  │     4        3            2    1
-function! s:lastt()
+function! s:lastt(count)
     call s:prepareLast()
-    return s:search(s:count, '</\a\zs', 'bW')
+    return s:search(a:count, '</\a\zs', 'bW')
 endfunction
 
 " match selectors
