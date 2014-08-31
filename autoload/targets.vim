@@ -209,7 +209,7 @@ function! s:findObject(kind, which)
             call s:nextselect(s:count)
         elseif a:which ==# 'l'
             call s:quote()
-            call s:lastselect()
+            call s:lastselect(s:count)
         elseif a:which ==# 'N'
             call s:quote()
             call s:double()
@@ -217,7 +217,7 @@ function! s:findObject(kind, which)
         elseif a:which ==# 'L'
             call s:quote()
             call s:double()
-            call s:lastselect()
+            call s:lastselect(s:count)
         else
             " TODO: fail
         endif
@@ -228,13 +228,13 @@ function! s:findObject(kind, which)
         elseif a:which ==# 'n'
             call s:nextselect(s:count)
         elseif a:which ==# 'l'
-            call s:lastselect()
+            call s:lastselect(s:count)
         elseif a:which ==# 'N'
             call s:double()
             call s:nextselect(s:count)
         elseif a:which ==# 'L'
             call s:double()
-            call s:lastselect()
+            call s:lastselect(s:count)
         else
             " TODO: fail
         endif
@@ -608,12 +608,12 @@ endfunction
 " in   │     ...
 " line │  '  '  '  '
 " out  │ 2  1
-function! s:lastselect()
+function! s:lastselect(count)
     " if started on closing, but not when skipping
     if !s:prepareLast() && s:getchar() ==# s:closing
-        let [cnt, message] = [s:count - 1, 'lastselect 1']
+        let [cnt, message] = [a:count - 1, 'lastselect 1']
     else
-        let [cnt, message] = [s:count, 'lastselect 2']
+        let [cnt, message] = [a:count, 'lastselect 2']
     endif
 
     if s:search(cnt, s:closing, 'bW') > 0
