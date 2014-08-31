@@ -202,8 +202,18 @@ function! s:findObject(kind, which)
     endif
 endfunction
 
-" TODO: escape? escape(delimiter, '".~\$')
 function! s:getDelimiters(kind, trigger)
+    let [rawOpening, rawClosing, err] = s:getRawDelimiters(a:kind, a:trigger)
+    if err > 0
+        return [0, 0, err]
+    endif
+
+    let opening = escape(rawOpening, '".~\$')
+    let closing = escape(rawClosing, '".~\$')
+    return [opening, closing, 0]
+endfunction
+
+function! s:getRawDelimiters(kind, trigger)
     " TODO: cache
     if a:kind ==# 'p'
         for pair in split(g:targets_pairs)
