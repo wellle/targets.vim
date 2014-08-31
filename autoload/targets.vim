@@ -4,6 +4,9 @@
 " Updated: 2014-08-21
 " Version: 0.3.0
 
+" TODO: remove all unlets?
+" TODO: consistent naming err vs error
+
 " save cpoptions
 let s:save_cpoptions = &cpoptions
 set cpo&vim
@@ -19,27 +22,248 @@ endfunction
 
 call s:setup()
 
-" visually select some text for the given delimiters and matchers
-" `matchers` is a list of functions that gets executed in order
+function! targets#o(trigger)
+    " TODO: pass count around?
+    call s:init('o', v:count1)
+    let view = winsaveview()
+
+    " TODO: rename delimiter and trigger vars?
+    let [kind, delimiter, which, modifier] = split(a:trigger, '\zs')
+
+    " TODO: extract kind specific stuff into autoload subdirectories
+    " TODO: pass parameters instead of using s: vars?
+    let [s:opening, s:closing, err] = s:getDelimiters(kind, delimiter)
+    if err
+        echom "failed to find delimiter"
+    else
+        " echo s:opening s:closing
+    endif
+
+    call s:findObject(kind, which)
+    " call s:saveRawSelection() here
+    call s:modifyMatch(kind, modifier)
+
+    call winrestview(view)
+    call s:handleMatch()
+
+    call s:cleanUp() " TODO: clean up this function
+endfunction
+
+" TODO: move down
+function! s:modifyMatch(kind, modifier)
+    if a:kind ==# 'p'
+        if a:modifier ==# 'i'
+            call s:drop()
+        elseif a:modifier ==# 'a'
+            " nothing
+        elseif a:modifier ==# 'I'
+            call s:shrink()
+        elseif a:modifier ==# 'A'
+            call s:expand()
+        else
+            " TODO: fail
+        endif
+
+    elseif a:kind ==# 'q'
+        if a:modifier ==# 'i'
+            call s:drop()
+        elseif a:modifier ==# 'a'
+            " nothing
+        elseif a:modifier ==# 'I'
+            call s:shrink()
+        elseif a:modifier ==# 'A'
+            call s:expand()
+        else
+            " TODO: fail
+        endif
+
+    elseif a:kind ==# 's'
+        if a:modifier ==# 'i'
+            call s:drop()
+        elseif a:modifier ==# 'a'
+            call s:dropr()
+        elseif a:modifier ==# 'I'
+            call s:shrink()
+        elseif a:modifier ==# 'A'
+            call s:expand()
+        else
+            " TODO: fail
+        endif
+
+    elseif a:kind ==# 't'
+        if a:modifier ==# 'i'
+            call s:innert()
+            call s:drop()
+        elseif a:modifier ==# 'a'
+            " nothing
+        elseif a:modifier ==# 'I'
+            call s:innert()
+            call s:shrink()
+        elseif a:modifier ==# 'A'
+            call s:expand()
+        else
+            " TODO: fail
+        endif
+
+    elseif a:kind ==# 'a'
+        if a:modifier ==# 'i'
+            call s:drop()
+        elseif a:modifier ==# 'a'
+            call s:dropa()
+        elseif a:modifier ==# 'I'
+            call s:shrink()
+        elseif a:modifier ==# 'A'
+            call s:expand()
+        else
+            " TODO: fail
+        endif
+
+    endif
+endfunction
+
+" TODO: move down
+function! s:findObject(kind, which)
+    if a:kind ==# 'p'
+        if a:which ==# 'c'
+            call s:seekselectp()
+        elseif a:which ==# 'n'
+            call s:nextp()
+            call s:selectp()
+        elseif a:which ==# 'l'
+            call s:lastp()
+            call s:selectp()
+        else
+            " TODO: fail
+        endif
+
+    elseif a:kind ==# 'q'
+        if a:which ==# 'c'
+            call s:quote()
+            call s:seekselect()
+        elseif a:which ==# 'n'
+            call s:quote()
+            call s:nextselect()
+        elseif a:which ==# 'l'
+            call s:quote()
+            call s:lastselect()
+        elseif a:which ==# 'N'
+            call s:quote()
+            call s:double()
+            call s:nextselect()
+        elseif a:which ==# 'L'
+            call s:quote()
+            call s:double()
+            call s:lastselect()
+        else
+            " TODO: fail
+        endif
+
+    elseif a:kind ==# 's'
+        if a:which ==# 'c'
+            call s:seekselect()
+        elseif a:which ==# 'n'
+            call s:nextselect()
+        elseif a:which ==# 'l'
+            call s:lastselect()
+        elseif a:which ==# 'N'
+            call s:double()
+            call s:nextselect()
+        elseif a:which ==# 'L'
+            call s:double()
+            call s:lastselect()
+        else
+            " TODO: fail
+        endif
+
+    elseif a:kind ==# 't'
+        if a:which ==# 'c'
+            call s:seekselectt()
+        elseif a:which ==# 'n'
+            call s:nextt()
+            call s:selectp()
+        elseif a:which ==# 'l'
+            call s:lastt()
+            call s:selectp()
+        else
+            " TODO: fail
+        endif
+
+    elseif a:kind ==# 'a'
+        if a:which ==# 'c'
+            call s:seekselecta()
+        elseif a:which ==# 'n'
+            call s:nextselecta()
+        elseif a:which ==# 'l'
+            call s:lastselecta()
+        else
+            " TODO: fail
+        endif
+
+    endif
+endfunction
+
+" TODO: escape? escape(delimiter, '".~\$')
+function! s:getDelimiters(kind, trigger)
+    " TODO: cache
+    if a:kind ==# 'p'
+        for pair in split(g:targets_pairs)
+            for trigger in split(pair, '\zs')
+                if trigger ==# a:trigger
+                    return [pair[0], pair[1], 0]
+                endif
+            endfor
+        endfor
+        return [0, 0, 1] " TODO: echo error message
+
+    elseif a:kind ==# 'q'
+        for quote in split(g:targets_quotes)
+            for trigger in split(quote, '\zs')
+                if trigger ==# a:trigger
+                    return [quote[0], quote[0], 0]
+                endif
+            endfor
+        endfor
+
+    elseif a:kind ==# 's'
+        for separator in split(g:targets_separators)
+            for trigger in split(separator, '\zs')
+                if trigger ==# a:trigger
+                    return [separator[0], separator[0], 0]
+                endif
+            endfor
+        endfor
+
+    elseif a:kind ==# 't'
+        return [0, 0, 0] " TODO: set tag patterns here and remove special tag functions?
+
+    elseif a:kind ==# 'a'
+        return [0, 0, 0]
+
+    endif
+
+    return [0, 0, 1]
+endfunction
+
+" visually select some text
 " it consists of optional position modifiers, followed by a match selector,
 " followed by optional selection modifiers
-function! targets#omap(delimiters, matchers)
-    call s:init('o', a:delimiters, a:matchers, v:count1)
-    call s:handleMatch(a:matchers)
+function! targets#omap()
+    call s:init('o', v:count1)
+    call s:handleMatch()
     call s:clearCommandLine()
     call s:cleanUp()
 endfunction
 
 " like targets#omap, but don't clear the command line
-function! targets#xmap(delimiters, matchers)
-    call targets#xmapCount(a:delimiters, a:matchers, v:count1)
+function! targets#xmap()
+    call targets#xmapCount(v:count1)
 endfunction
 
 " like targets#xmap, but inject count, triggered from targets#xmapExpr
-function! targets#xmapCount(delimiters, matchers, count)
-    call s:init('x', a:delimiters, a:matchers, a:count)
+function! targets#xmapCount(count)
+    call s:init('x', a:count)
     call s:saveVisualSelection()
-    if s:handleMatch(a:matchers) == 0
+    if s:handleMatch() == 0
         call s:saveState()
     endif
     call s:cleanUp()
@@ -70,20 +294,13 @@ function! targets#uppercaseXmap(trigger)
 endfunction
 
 " initialize script local variables for the current matching
-function! s:init(mapmode, delimiters, matchers, count)
-    let [s:mapmode, s:delimiters, s:matchers, s:count] = [a:mapmode, a:delimiters, a:matchers,  a:count]
+function! s:init(mapmode, count)
+    let [s:mapmode, s:count] = [a:mapmode, a:count]
     let [s:rsl, s:rsc, s:rel, s:rec] = [0, 0, 0, 0]
     let [s:sl, s:sc, s:el, s:ec] = [0, 0, 0, 0]
     let [s:sLinewise, s:eLinewise] = [0, 0]
     let s:oldpos = getpos('.')
     let s:newSelection = 1
-
-    let s:opening = escape(a:delimiters[0], '".~\$')
-    if len(a:delimiters) == 2
-        let s:closing = escape(a:delimiters[1], '".~\$')
-    else
-        let s:closing = s:opening
-    endif
 
     let s:selection = &selection " remember 'selection' setting
     let &selection = 'inclusive' " and set it to inclusive
@@ -93,7 +310,7 @@ endfunction
 function! s:cleanUp()
     let &selection = s:selection " reset 'selection' setting
 
-    unlet s:mapmode s:delimiters s:matchers s:count
+    unlet s:mapmode s:count
     unlet s:rsl s:rsc s:rel s:rec
     unlet s:sl s:sc s:el s:ec
     unlet s:sLinewise s:eLinewise
@@ -139,7 +356,7 @@ endfunction
 
 " remember last selection and last raw selection
 function! s:saveState()
-    let [s:ldelimiters, s:lmatchers] = [s:delimiters, s:matchers]
+    " XXX: remember raw trigger
     let [s:lrsl, s:lrsc, s:lrel, s:lrec] = [s:rsl, s:rsc, s:rel, s:rec]
 
     let s:lmode = mode()
@@ -156,24 +373,13 @@ function! s:clearCommandLine()
     echo
 endfunction
 
-" try to find match
-function! s:findMatch(matchers)
-    for matcher in split(a:matchers)
-        let Matcher = function('s:' . matcher)
-        if Matcher() > 0
-            return s:fail('findMatch')
-        endif
-    endfor
-    unlet! Matcher
-endfunction
-
 " handle the match by either selecting or aborting it
-function! s:handleMatch(matchers)
-    let view = winsaveview()
-    let error = s:findMatch(a:matchers)
-    call winrestview(view)
+function! s:handleMatch()
+    " let view = winsaveview()
+    " let error = s:findMatch(a:matchers)
+    " call winrestview(view)
 
-    if error || s:sl == 0 || s:el == 0
+    if s:sl == 0 || s:el == 0
         return s:abortMatch('handleMatch 1')
     elseif s:sl < s:el
         return s:selectMatch()
@@ -188,6 +394,17 @@ function! s:handleMatch(matchers)
     endif
 endfunction
 
+" try to find match
+function! s:findMatch(matchers)
+    for matcher in split(a:matchers)
+        let Matcher = function('s:' . matcher)
+        if Matcher() > 0
+            return s:fail('findMatch')
+        endif
+    endfor
+    unlet! Matcher
+endfunction
+
 " select a proper match
 function! s:selectMatch()
     " add old position to jump list
@@ -200,6 +417,7 @@ endfunction
 
 " visually select a given region. used for match or old selection
 function! s:selectRegion(linewise, sl, sc, el, ec)
+    echo [s:sl, s:sc, s:el, s:ec]
     " visually select the match
     call cursor(a:sl, a:sc)
 
@@ -296,7 +514,7 @@ endfunction
 " also va", van", val" doesn't capture the three correct quotes when issued on
 " a quote character
 function! s:quote()
-    if s:getchar() !=# s:delimiters[0]
+    if s:getchar() !=# s:opening
         return
     endif
 
@@ -394,7 +612,7 @@ endfunction
 function! s:select(direction)
     let oldpos = getpos('.')
 
-    if a:direction == '>'
+    if a:direction ==# '>'
         let [s:sl, s:sc, s:el, s:ec, err] = s:findSeparators('bcW', 'W', s:opening, s:closing)
         let message = 'select 1'
     else
@@ -921,7 +1139,7 @@ endfunction
 " out  │   └────┘  │  └────┘  │  └───┘  │└────┘
 " args (direction=<try right, then left>)
 function! s:expand(...)
-    if a:0 == 0 || a:1 == '>'
+    if a:0 == 0 || a:1 ==# '>'
         call cursor(s:el, s:ec)
         let [line, column] = searchpos('\S\|$', '', line('.'))
         if line > 0 && column-1 > s:ec
@@ -932,7 +1150,7 @@ function! s:expand(...)
         endif
     endif
 
-    if a:0 == 0 || a:1 == '<'
+    if a:0 == 0 || a:1 ==# '<'
         call cursor(s:sl, s:sc)
         let [line, column] = searchpos('\S', 'b', line('.'))
         if line > 0
@@ -948,12 +1166,13 @@ endfunction
 
 " grows selection on repeated invocations by increasing s:count
 function! s:grow()
-    if s:mapmode == 'o' || s:newSelection
+    if s:mapmode ==# 'o' || s:newSelection
         return 1
     endif
-    if [s:ldelimiters, s:lmatchers] != [s:delimiters, s:matchers] " different invocation
-        return 1
-    endif
+    " XXX: compare raw trigger
+    " if [s:lopening, s:lclosing] != [s:opening, s:closing] " different invocation
+    "     return 1
+    " endif
 
     " move cursor back to last raw end of selection to avoid growing being
     " confused by last modifiers
