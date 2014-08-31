@@ -78,36 +78,41 @@ endfunction
 "         │   ├───────al)──────┘│├──────2a)──────┘│├───────an)──────┘│
 "         │   └───────Al)───────┘└──────2A)───────┘└───────An)───────┘
 function! s:createPairTextObjects()
-    for delimiters in s:pair_list " aliases like surround
-        call s:createPairTextObject(s:i,       delimiters, 'seekselectp drop')
-        call s:createPairTextObject(s:a,       delimiters, 'seekselectp')
-        call s:createPairTextObject(s:I,       delimiters, 'seekselectp shrink')
-        call s:createPairTextObject(s:A,       delimiters, 'seekselectp expand')
-        call s:createPairTextObject(s:i . s:n, delimiters, 'nextp selectp drop')
-        call s:createPairTextObject(s:a . s:n, delimiters, 'nextp selectp')
-        call s:createPairTextObject(s:I . s:n, delimiters, 'nextp selectp shrink')
-        call s:createPairTextObject(s:A . s:n, delimiters, 'nextp selectp expand')
-        call s:createPairTextObject(s:i . s:l, delimiters, 'lastp selectp drop')
-        call s:createPairTextObject(s:a . s:l, delimiters, 'lastp selectp')
-        call s:createPairTextObject(s:I . s:l, delimiters, 'lastp selectp shrink')
-        call s:createPairTextObject(s:A . s:l, delimiters, 'lastp selectp expand')
+    for trigger in split(g:targets_pairs, '\zs')
+        if trigger ==# ' '
+            continue
+        endif
+        let triggerMap = trigger . " :<C-U>call targets#o('p" . trigger
+        execute 'onoremap <silent>' . s:i       . triggerMap . "ci')<CR>"
+        execute 'onoremap <silent>' . s:a       . triggerMap . "ca')<CR>"
+        execute 'onoremap <silent>' . s:I       . triggerMap . "cI')<CR>"
+        execute 'onoremap <silent>' . s:A       . triggerMap . "cA')<CR>"
+        execute 'onoremap <silent>' . s:i . s:n . triggerMap . "ni')<CR>"
+        execute 'onoremap <silent>' . s:a . s:n . triggerMap . "na')<CR>"
+        execute 'onoremap <silent>' . s:I . s:n . triggerMap . "nI')<CR>"
+        execute 'onoremap <silent>' . s:A . s:n . triggerMap . "nA')<CR>"
+        execute 'onoremap <silent>' . s:i . s:l . triggerMap . "li')<CR>"
+        execute 'onoremap <silent>' . s:a . s:l . triggerMap . "la')<CR>"
+        execute 'onoremap <silent>' . s:I . s:l . triggerMap . "lI')<CR>"
+        execute 'onoremap <silent>' . s:A . s:l . triggerMap . "lA')<CR>"
     endfor
 endfunction
 
 " tag text objects work on tags (similar to pair text objects)
 function! s:createTagTextObjects()
-    call s:createSimpleTextObject(s:i,       't', 'seekselectt innert drop')
-    call s:createSimpleTextObject(s:a,       't', 'seekselectt')
-    call s:createSimpleTextObject(s:I,       't', 'seekselectt innert shrink')
-    call s:createSimpleTextObject(s:A,       't', 'seekselectt expand')
-    call s:createSimpleTextObject(s:i . s:n, 't', 'nextt selectp innert drop')
-    call s:createSimpleTextObject(s:a . s:n, 't', 'nextt selectp')
-    call s:createSimpleTextObject(s:I . s:n, 't', 'nextt selectp innert shrink')
-    call s:createSimpleTextObject(s:A . s:n, 't', 'nextt selectp expand')
-    call s:createSimpleTextObject(s:i . s:l, 't', 'lastt selectp innert drop')
-    call s:createSimpleTextObject(s:a . s:l, 't', 'lastt selectp')
-    call s:createSimpleTextObject(s:I . s:l, 't', 'lastt selectp innert shrink')
-    call s:createSimpleTextObject(s:A . s:l, 't', 'lastt selectp expand')
+    let triggerMap = "t :<C-U>call targets#o('t"
+    execute 'onoremap <silent>' . s:i       . triggerMap . " ci')<CR>"
+    execute 'onoremap <silent>' . s:a       . triggerMap . " ca')<CR>"
+    execute 'onoremap <silent>' . s:I       . triggerMap . " cI')<CR>"
+    execute 'onoremap <silent>' . s:A       . triggerMap . " cA')<CR>"
+    execute 'onoremap <silent>' . s:i . s:n . triggerMap . " ni')<CR>"
+    execute 'onoremap <silent>' . s:a . s:n . triggerMap . " na')<CR>"
+    execute 'onoremap <silent>' . s:I . s:n . triggerMap . " nI')<CR>"
+    execute 'onoremap <silent>' . s:A . s:n . triggerMap . " nA')<CR>"
+    execute 'onoremap <silent>' . s:i . s:l . triggerMap . " li')<CR>"
+    execute 'onoremap <silent>' . s:a . s:l . triggerMap . " la')<CR>"
+    execute 'onoremap <silent>' . s:I . s:l . triggerMap . " lI')<CR>"
+    execute 'onoremap <silent>' . s:A . s:l . triggerMap . " lA')<CR>"
 endfunction
 
 " quote text objects expand into quote (by counting quote signs)
@@ -128,27 +133,35 @@ endfunction
 "         │   ├──a'──┘│     │     ├──a'──┘│    │      ├──a'──┘│
 "         │   └──A'───┘     │     └──A'───┘    │      └──A'───┘
 function! s:createQuoteTextObjects()
-    for delimiter in s:quote_list
-        call s:createSimpleTextObject(s:i,       delimiter, 'quote seekselect drop')
-        call s:createSimpleTextObject(s:a,       delimiter, 'quote seekselect')
-        call s:createSimpleTextObject(s:I,       delimiter, 'quote seekselect shrink')
-        call s:createSimpleTextObject(s:A,       delimiter, 'quote seekselect expand')
-        call s:createSimpleTextObject(s:i . s:n, delimiter, 'quote nextselect drop')
-        call s:createSimpleTextObject(s:a . s:n, delimiter, 'quote nextselect')
-        call s:createSimpleTextObject(s:I . s:n, delimiter, 'quote nextselect shrink')
-        call s:createSimpleTextObject(s:A . s:n, delimiter, 'quote nextselect expand')
-        call s:createSimpleTextObject(s:i . s:l, delimiter, 'quote lastselect drop')
-        call s:createSimpleTextObject(s:a . s:l, delimiter, 'quote lastselect')
-        call s:createSimpleTextObject(s:I . s:l, delimiter, 'quote lastselect shrink')
-        call s:createSimpleTextObject(s:A . s:l, delimiter, 'quote lastselect expand')
-        call s:createSimpleTextObject(s:i . s:N, delimiter, 'quote double nextselect drop')
-        call s:createSimpleTextObject(s:a . s:N, delimiter, 'quote double nextselect')
-        call s:createSimpleTextObject(s:I . s:N, delimiter, 'quote double nextselect shrink')
-        call s:createSimpleTextObject(s:A . s:N, delimiter, 'quote double nextselect expand')
-        call s:createSimpleTextObject(s:i . s:L, delimiter, 'quote double lastselect drop')
-        call s:createSimpleTextObject(s:a . s:L, delimiter, 'quote double lastselect')
-        call s:createSimpleTextObject(s:I . s:L, delimiter, 'quote double lastselect shrink')
-        call s:createSimpleTextObject(s:A . s:L, delimiter, 'quote double lastselect expand')
+    " quote text objects
+    for trigger in split(g:targets_quotes, '\zs')
+        if trigger ==# " "
+            continue
+        elseif trigger ==# "'"
+            let triggerMap = "' :<C-U>call targets#o('q''"
+        else
+            let triggerMap = trigger . " :<C-U>call targets#o('q" . trigger
+        endif
+        execute 'onoremap <silent>' . s:i       . triggerMap . "ci')<CR>"
+        execute 'onoremap <silent>' . s:a       . triggerMap . "ca')<CR>"
+        execute 'onoremap <silent>' . s:I       . triggerMap . "cI')<CR>"
+        execute 'onoremap <silent>' . s:A       . triggerMap . "cA')<CR>"
+        execute 'onoremap <silent>' . s:i . s:n . triggerMap . "ni')<CR>"
+        execute 'onoremap <silent>' . s:a . s:n . triggerMap . "na')<CR>"
+        execute 'onoremap <silent>' . s:I . s:n . triggerMap . "nI')<CR>"
+        execute 'onoremap <silent>' . s:A . s:n . triggerMap . "nA')<CR>"
+        execute 'onoremap <silent>' . s:i . s:l . triggerMap . "li')<CR>"
+        execute 'onoremap <silent>' . s:a . s:l . triggerMap . "la')<CR>"
+        execute 'onoremap <silent>' . s:I . s:l . triggerMap . "lI')<CR>"
+        execute 'onoremap <silent>' . s:A . s:l . triggerMap . "lA')<CR>"
+        execute 'onoremap <silent>' . s:i . s:N . triggerMap . "Ni')<CR>"
+        execute 'onoremap <silent>' . s:a . s:N . triggerMap . "Na')<CR>"
+        execute 'onoremap <silent>' . s:I . s:N . triggerMap . "NI')<CR>"
+        execute 'onoremap <silent>' . s:A . s:N . triggerMap . "NA')<CR>"
+        execute 'onoremap <silent>' . s:i . s:L . triggerMap . "Li')<CR>"
+        execute 'onoremap <silent>' . s:a . s:L . triggerMap . "La')<CR>"
+        execute 'onoremap <silent>' . s:I . s:L . triggerMap . "LI')<CR>"
+        execute 'onoremap <silent>' . s:A . s:L . triggerMap . "LA')<CR>"
     endfor
 endfunction
 
@@ -167,27 +180,34 @@ endfunction
 "         │   ├──a,─┘ │      │       ├──a,─┘ │
 "         │   └──A,───┘      │       └──A,───┘
 function! s:createSeparatorTextObjects()
-    for delimiter in s:separator_list
-        call s:createSimpleTextObject(s:i,       delimiter, 'seekselect drop')
-        call s:createSimpleTextObject(s:a,       delimiter, 'seekselect dropr')
-        call s:createSimpleTextObject(s:I,       delimiter, 'seekselect shrink')
-        call s:createSimpleTextObject(s:A,       delimiter, 'seekselect expand')
-        call s:createSimpleTextObject(s:i . s:n, delimiter, 'nextselect drop')
-        call s:createSimpleTextObject(s:a . s:n, delimiter, 'nextselect dropr')
-        call s:createSimpleTextObject(s:I . s:n, delimiter, 'nextselect shrink')
-        call s:createSimpleTextObject(s:A . s:n, delimiter, 'nextselect expand')
-        call s:createSimpleTextObject(s:i . s:l, delimiter, 'lastselect drop')
-        call s:createSimpleTextObject(s:a . s:l, delimiter, 'lastselect dropr')
-        call s:createSimpleTextObject(s:I . s:l, delimiter, 'lastselect shrink')
-        call s:createSimpleTextObject(s:A . s:l, delimiter, 'lastselect expand')
-        call s:createSimpleTextObject(s:i . s:N, delimiter, 'double nextselect drop')
-        call s:createSimpleTextObject(s:a . s:N, delimiter, 'double nextselect dropr')
-        call s:createSimpleTextObject(s:I . s:N, delimiter, 'double nextselect shrink')
-        call s:createSimpleTextObject(s:A . s:N, delimiter, 'double nextselect expand')
-        call s:createSimpleTextObject(s:i . s:L, delimiter, 'double lastselect drop')
-        call s:createSimpleTextObject(s:a . s:L, delimiter, 'double lastselect dropr')
-        call s:createSimpleTextObject(s:I . s:L, delimiter, 'double lastselect shrink')
-        call s:createSimpleTextObject(s:A . s:L, delimiter, 'double lastselect expand')
+    " separator text objects
+    for trigger in split(g:targets_separators, '\zs')
+        if trigger ==# ' '
+            continue
+        elseif trigger ==# '|'
+            let trigger = '\|'
+        endif
+        let triggerMap = trigger . " :<C-U>call targets#o('s" . trigger
+        execute 'onoremap <silent>' . s:i       . triggerMap . "ci')<CR>"
+        execute 'onoremap <silent>' . s:a       . triggerMap . "ca')<CR>"
+        execute 'onoremap <silent>' . s:I       . triggerMap . "cI')<CR>"
+        execute 'onoremap <silent>' . s:A       . triggerMap . "cA')<CR>"
+        execute 'onoremap <silent>' . s:i . s:n . triggerMap . "ni')<CR>"
+        execute 'onoremap <silent>' . s:a . s:n . triggerMap . "na')<CR>"
+        execute 'onoremap <silent>' . s:I . s:n . triggerMap . "nI')<CR>"
+        execute 'onoremap <silent>' . s:A . s:n . triggerMap . "nA')<CR>"
+        execute 'onoremap <silent>' . s:i . s:l . triggerMap . "li')<CR>"
+        execute 'onoremap <silent>' . s:a . s:l . triggerMap . "la')<CR>"
+        execute 'onoremap <silent>' . s:I . s:l . triggerMap . "lI')<CR>"
+        execute 'onoremap <silent>' . s:A . s:l . triggerMap . "lA')<CR>"
+        execute 'onoremap <silent>' . s:i . s:N . triggerMap . "Ni')<CR>"
+        execute 'onoremap <silent>' . s:a . s:N . triggerMap . "Na')<CR>"
+        execute 'onoremap <silent>' . s:I . s:N . triggerMap . "NI')<CR>"
+        execute 'onoremap <silent>' . s:A . s:N . triggerMap . "NA')<CR>"
+        execute 'onoremap <silent>' . s:i . s:L . triggerMap . "Li')<CR>"
+        execute 'onoremap <silent>' . s:a . s:L . triggerMap . "La')<CR>"
+        execute 'onoremap <silent>' . s:I . s:L . triggerMap . "LI')<CR>"
+        execute 'onoremap <silent>' . s:A . s:L . triggerMap . "LA')<CR>"
     endfor
 endfunction
 
@@ -205,18 +225,22 @@ endfunction
 "         │                      ├───────2aa─────────────┘ │
 "         │                      └───────2Aa───────────────┘
 function! s:createArgTextObjects()
-    call s:createSimpleTextObject(s:i,       'a', 'seekselecta drop')
-    call s:createSimpleTextObject(s:a,       'a', 'seekselecta dropa')
-    call s:createSimpleTextObject(s:I,       'a', 'seekselecta shrink')
-    call s:createSimpleTextObject(s:A,       'a', 'seekselecta expand')
-    call s:createSimpleTextObject(s:i . s:n, 'a', 'nextselecta drop')
-    call s:createSimpleTextObject(s:a . s:n, 'a', 'nextselecta dropa')
-    call s:createSimpleTextObject(s:I . s:n, 'a', 'nextselecta shrink')
-    call s:createSimpleTextObject(s:A . s:n, 'a', 'nextselecta expand')
-    call s:createSimpleTextObject(s:i . s:l, 'a', 'lastselecta drop')
-    call s:createSimpleTextObject(s:a . s:l, 'a', 'lastselecta dropa')
-    call s:createSimpleTextObject(s:I . s:l, 'a', 'lastselecta shrink')
-    call s:createSimpleTextObject(s:A . s:l, 'a', 'lastselecta expand')
+    " special text objects
+    for trigger in ['t', 'a']
+        let triggerMap = trigger . " :<C-U>call targets#o('" . trigger
+        execute 'onoremap <silent>' . s:i       . triggerMap . " ci')<CR>"
+        execute 'onoremap <silent>' . s:a       . triggerMap . " ca')<CR>"
+        execute 'onoremap <silent>' . s:I       . triggerMap . " cI')<CR>"
+        execute 'onoremap <silent>' . s:A       . triggerMap . " cA')<CR>"
+        execute 'onoremap <silent>' . s:i . s:n . triggerMap . " ni')<CR>"
+        execute 'onoremap <silent>' . s:a . s:n . triggerMap . " na')<CR>"
+        execute 'onoremap <silent>' . s:I . s:n . triggerMap . " nI')<CR>"
+        execute 'onoremap <silent>' . s:A . s:n . triggerMap . " nA')<CR>"
+        execute 'onoremap <silent>' . s:i . s:l . triggerMap . " li')<CR>"
+        execute 'onoremap <silent>' . s:a . s:l . triggerMap . " la')<CR>"
+        execute 'onoremap <silent>' . s:I . s:l . triggerMap . " lI')<CR>"
+        execute 'onoremap <silent>' . s:A . s:l . triggerMap . " lA')<CR>"
+    endfor
 endfunction
 
 " add expression mappings for `A` and `I` in visual mode #23 unless
