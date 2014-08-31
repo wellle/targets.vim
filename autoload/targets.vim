@@ -4,7 +4,6 @@
 " Updated: 2014-08-21
 " Version: 0.3.0
 
-" TODO: remove all unlets?
 " TODO: consistent naming err vs error
 
 " save cpoptions
@@ -379,15 +378,6 @@ endfunction
 " clean up script variables after match
 function! s:cleanUp()
     let &selection = s:selection " reset 'selection' setting
-
-    unlet s:mapmode s:count
-    unlet s:rsl s:rsc s:rel s:rec
-    unlet s:sl s:sc s:el s:ec
-    unlet s:sLinewise s:eLinewise
-    unlet s:oldpos
-    unlet s:newSelection
-    unlet s:opening s:closing
-    unlet s:selection
 endfunction
 
 " save old visual selection to detect new selections and reselect on fail
@@ -472,7 +462,6 @@ function! s:findMatch(matchers)
             return s:fail('findMatch')
         endif
     endfor
-    unlet! Matcher
 endfunction
 
 " select a proper match
@@ -599,7 +588,6 @@ function! s:quote()
     if closing " cursor is on closing delimiter
         silent! normal! h
     endif
-    unlet oldpos closing line
 endfunction
 
 " find `count` next delimiter (multi line)
