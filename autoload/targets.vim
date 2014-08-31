@@ -28,7 +28,6 @@ call s:setup()
 function! targets#o(trigger)
     " TODO: pass count around?
     call s:init('o', v:count1)
-    let view = winsaveview()
 
     " TODO: rename delimiter and trigger vars?
     let [delimiter, which, modifier] = split(a:trigger, '\zs')
@@ -42,11 +41,11 @@ function! targets#o(trigger)
         " echo s:opening s:closing
     endif
 
+    let view = winsaveview()
     call s:findObject(kind, which)
     " echo [s:sl, s:sc, s:el, s:ec]
     " call s:saveRawSelection() here
     call s:modifyMatch(kind, modifier)
-
     call winrestview(view)
     call s:handleMatch()
 
@@ -59,15 +58,15 @@ function! targets#e(modifier)
     endif
 
     let char = nr2char(getchar())
-    let [which, err] = s:getWhich(char)
-    if err > 0 " char was delimiter, use current for which
-        let userDelimiter = char
-        let which = 'c'
-    else " delimiter was which, get another char for delimiter
-        let userDelimiter = nr2char(getchar())
+    if g:targets_nlNL =~# char
+        " char is which, get another for delimiter
+        let [delimiter, which] = [nr2char(getchar()), char]
+    else
+        " char is delimiter, take current as which
+        let [delimiter, which] = [char, 'c']
     endif
 
-    return "\<Esc>:\<C-U>call targets#x('" . userDelimiter . which . a:modifier . "', " . v:count1 . ")\<CR>"
+    return "\<Esc>:\<C-U>call targets#x('" . delimiter . which . a:modifier . "', " . v:count1 . ")\<CR>"
 endfunction
 
 function! s:getWhich(char)
@@ -85,7 +84,9 @@ function! s:getWhich(char)
 endfunction
 
 function! targets#x(trigger, count)
-    echom 'x' a:trigger a:count
+    call s:init('x', a:count)
+    let [delimiter, which, modifier] = split(a:trigger, '\zs')
+    echom delimiter which modifier
 endfunction
 
 " TODO: move down
