@@ -101,18 +101,18 @@ endfunction
 " tag text objects work on tags (similar to pair text objects)
 function! s:createTagTextObjects()
     let triggerMap = "t :<C-U>call targets#o('t"
-    execute 'onoremap <silent>' . s:i       . triggerMap . " ci')<CR>"
-    execute 'onoremap <silent>' . s:a       . triggerMap . " ca')<CR>"
-    execute 'onoremap <silent>' . s:I       . triggerMap . " cI')<CR>"
-    execute 'onoremap <silent>' . s:A       . triggerMap . " cA')<CR>"
-    execute 'onoremap <silent>' . s:i . s:n . triggerMap . " ni')<CR>"
-    execute 'onoremap <silent>' . s:a . s:n . triggerMap . " na')<CR>"
-    execute 'onoremap <silent>' . s:I . s:n . triggerMap . " nI')<CR>"
-    execute 'onoremap <silent>' . s:A . s:n . triggerMap . " nA')<CR>"
-    execute 'onoremap <silent>' . s:i . s:l . triggerMap . " li')<CR>"
-    execute 'onoremap <silent>' . s:a . s:l . triggerMap . " la')<CR>"
-    execute 'onoremap <silent>' . s:I . s:l . triggerMap . " lI')<CR>"
-    execute 'onoremap <silent>' . s:A . s:l . triggerMap . " lA')<CR>"
+    execute 'onoremap <silent>' . s:i       . triggerMap . "tci')<CR>"
+    execute 'onoremap <silent>' . s:a       . triggerMap . "tca')<CR>"
+    execute 'onoremap <silent>' . s:I       . triggerMap . "tcI')<CR>"
+    execute 'onoremap <silent>' . s:A       . triggerMap . "tcA')<CR>"
+    execute 'onoremap <silent>' . s:i . s:n . triggerMap . "tni')<CR>"
+    execute 'onoremap <silent>' . s:a . s:n . triggerMap . "tna')<CR>"
+    execute 'onoremap <silent>' . s:I . s:n . triggerMap . "tnI')<CR>"
+    execute 'onoremap <silent>' . s:A . s:n . triggerMap . "tnA')<CR>"
+    execute 'onoremap <silent>' . s:i . s:l . triggerMap . "tli')<CR>"
+    execute 'onoremap <silent>' . s:a . s:l . triggerMap . "tla')<CR>"
+    execute 'onoremap <silent>' . s:I . s:l . triggerMap . "tlI')<CR>"
+    execute 'onoremap <silent>' . s:A . s:l . triggerMap . "tlA')<CR>"
 endfunction
 
 " quote text objects expand into quote (by counting quote signs)

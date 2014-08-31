@@ -40,6 +40,7 @@ function! targets#o(trigger)
     endif
 
     call s:findObject(kind, which)
+    " echo [s:sl, s:sc, s:el, s:ec]
     " call s:saveRawSelection() here
     call s:modifyMatch(kind, modifier)
 
@@ -244,7 +245,7 @@ function! s:getRawDelimiters(kind, trigger)
         endfor
 
     elseif a:kind ==# 't'
-        return [0, 0, 0] " TODO: set tag patterns here and remove special tag functions?
+        return ['t', 0, 0] " TODO: set tag patterns here and remove special tag functions?
 
     elseif a:kind ==# 'a'
         return [0, 0, 0]
@@ -294,10 +295,10 @@ function! targets#uppercaseXmap(trigger)
     endif
 
     " get associated arguments for targets#xmapCount
-    let arguments = get(g:targets_mapArgs, a:trigger . chars, '')
-    if arguments ==# ''
+    " let arguments = get(g:targets_mapArgs, a:trigger . chars, '')
+    " if arguments ==# ''
         return '\<Esc>'
-    endif
+    " endif
 
     " exit visual mode and call targets#xmapCount
     return "\<Esc>:\<C-U>call targets#xmapCount(" . arguments . ", " . v:count1 . ")\<CR>"
@@ -427,7 +428,7 @@ endfunction
 
 " visually select a given region. used for match or old selection
 function! s:selectRegion(linewise, sl, sc, el, ec)
-    echo [s:sl, s:sc, s:el, s:ec]
+    " echo [s:sl, s:sc, s:el, s:ec]
     " visually select the match
     call cursor(a:sl, a:sc)
 
