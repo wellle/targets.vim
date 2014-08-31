@@ -243,12 +243,10 @@ endfunction
 " add expression mappings for `A` and `I` in visual mode #23 unless
 " deactivated #49
 function! s:addExpressionMappings()
-    if s:A !=# ' '
-        xnoremap <expr> <silent> A targets#uppercaseXmap('A')
-    endif
-    if s:I !=# ' '
-        xnoremap <expr> <silent> I targets#uppercaseXmap('I')
-    endif
+    execute 'xnoremap <expr> <silent> ' . s:i . " targets#e('i')"
+    execute 'xnoremap <expr> <silent> ' . s:a . " targets#e('a')"
+    execute 'xnoremap <expr> <silent> ' . s:I . " targets#e('I')"
+    execute 'xnoremap <expr> <silent> ' . s:A . " targets#e('A')"
 endfunction
 
 function! s:loadSettings()
