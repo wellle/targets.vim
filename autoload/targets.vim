@@ -59,13 +59,17 @@ function! targets#e(modifier)
         return a:modifier
     endif
 
-    let char = nr2char(getchar())
-    if g:targets_nlNL =~# char
-        " char is which, get another for delimiter
-        let [delimiter, which] = [nr2char(getchar()), char]
-    else
-        " char is delimiter, take current as which
-        let [delimiter, which] = [char, 'c']
+    " TODO: wrap getchar()? handle complicated return values
+    let [delimiter, which] = [nr2char(getchar()), 'c']
+    for nlNL in split(g:targets_nlNL, '\zs')
+        if nlNL ==# delimiter
+            " delimiter was which, get another char for delimiter
+            let [delimiter, which] = [nr2char(getchar()), delimiter]
+        endif
+    endfor
+
+    if delimiter ==# "'"
+        let delimiter = "''"
     endif
 
     return "\<Esc>:\<C-U>call targets#x('" . delimiter . which . a:modifier . "', " . v:count1 . ")\<CR>"
