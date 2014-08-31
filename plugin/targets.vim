@@ -11,55 +11,6 @@ let g:loaded_targets = '0.3.0' " version number
 let s:save_cpoptions = &cpoptions
 set cpo&vim
 
-" create a text object by combining prefix and trigger to call Match with
-" the given delimiters and matchers
-function! s:createTextObject(prefix, trigger, delimiters, matchers)
-    if match(a:prefix, ' ') >= 0  " if there's a blank in the prefix, it should be deactivated
-        return
-    endif
-
-    let delimiters = substitute(a:delimiters, "'", "''", 'g')
-
-    let rawMapping = a:prefix . a:trigger
-    let rawArguments = "'" . delimiters . "', '" . a:matchers . "'"
-
-    let mapping = substitute(rawMapping, '|', '\\\|', 'g')
-    let arguments = substitute(rawArguments, '|', '\\\|', 'g')
-
-    execute 'onoremap <silent>' . mapping . ' :<C-U>call targets#omap(' . arguments . ')<CR>'
-
-    " don't create xmaps beginning with `A` or `I`
-    " conflict with `^VA` and `^VI` to append before or insert after visual
-    " block selection. #6
-    " instead, save mapping to targets_mapArgs so we can execute these only
-    " for character wise visual mode in targets#uppercaseXmap #23
-    if a:prefix !~# '^[AI]'
-        execute 'xnoremap <silent>' . mapping . ' :<C-U>call targets#xmap(' . arguments . ')<CR>'
-    else
-        let g:targets_mapArgs[rawMapping] = rawArguments
-    endif
-
-    unlet delimiters mapping arguments
-endfunction
-
-" create a text object for a single delimiter
-function! s:createSimpleTextObject(prefix, delimiter, matchers)
-    call s:createTextObject(a:prefix, a:delimiter[0], a:delimiter[0], a:matchers)
-    if strlen(a:delimiter) > 1  " check for alias
-        call s:createTextObject(a:prefix, a:delimiter[1], a:delimiter[0], a:matchers)
-    endif
-endfunction
-
-" create multiple text objects for a pair of delimiters and optional
-" additional triggers
-function! s:createPairTextObject(prefix, delimiters, matchers)
-    let [opening, closing] = [a:delimiters[0], a:delimiters[1]]
-    for trigger in split(a:delimiters, '\zs')
-        call s:createTextObject(a:prefix, trigger, opening . closing, a:matchers)
-    endfor
-    unlet opening closing
-endfunction
-
 " pair text objects (multi line objects with single line seek)
 " cursor  │                        .........
 " line    │ a ( bbbbbb ) ( ccccc ) ( ddddd ) ( eeeee ) ( ffffff ) g
@@ -250,7 +201,6 @@ function! s:addExpressionMappings()
 endfunction
 
 function! s:loadSettings()
-    " load configuration options if present
     if !exists('g:targets_aiAI')
         let g:targets_aiAI = 'aiAI'
     endif
@@ -282,7 +232,7 @@ endfunction
 
 call s:loadSettings()
 
-" create the text objects (current total count: 536)
+" create the text objects (current total count: 528)
 call s:createPairTextObjects()
 call s:createTagTextObjects()
 call s:createQuoteTextObjects()
