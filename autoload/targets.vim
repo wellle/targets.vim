@@ -49,6 +49,8 @@ function! targets#o(trigger)
     call winrestview(view)
     call s:handleMatch()
 
+    " call s:clearCommandLine()
+
     call s:cleanUp() " TODO: clean up this function
 endfunction
 
@@ -85,8 +87,26 @@ endfunction
 
 function! targets#x(trigger, count)
     call s:init('x', a:count)
+    call s:saveVisualSelection()
     let [delimiter, which, modifier] = split(a:trigger, '\zs')
-    echom delimiter which modifier
+    let [kind, s:opening, s:closing, err] = s:getDelimiters(delimiter)
+    if err
+        echom "failed to find delimiter"
+    else
+        " echo s:opening s:closing
+    endif
+
+    let view = winsaveview()
+    call s:findObject(kind, which)
+    " echo [s:sl, s:sc, s:el, s:ec]
+    " call s:saveRawSelection() here
+    call s:modifyMatch(kind, modifier)
+    call winrestview(view)
+    if s:handleMatch() == 0
+        call s:saveState()
+    endif
+
+    call s:cleanUp() " TODO: clean up this function
 endfunction
 
 " TODO: move down
