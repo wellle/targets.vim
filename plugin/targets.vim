@@ -283,10 +283,6 @@ function! s:loadSettings()
 
     let [s:a, s:i, s:A, s:I] = split(g:targets_aiAI, '\zs')
     let [s:n, s:l, s:N, s:L] = split(g:targets_nlNL, '\zs')
-
-    let s:pair_list = split(g:targets_pairs)
-    let s:quote_list = split(g:targets_quotes)
-    let s:separator_list = split(g:targets_separators)
 endfunction
 
 " dictionary mapping uppercase xmap like `An,` to argument strings for
