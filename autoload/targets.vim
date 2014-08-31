@@ -13,6 +13,9 @@ set cpo&vim
 
 " called once when loaded
 function! s:setup()
+    let [s:a, s:i, s:A, s:I] = split(g:targets_aiAI, '\zs')
+    let [s:n, s:l, s:N, s:L] = split(g:targets_nlNL, '\zs')
+
     let s:argOpeningS = g:targets_argOpening . '\|' . g:targets_argSeparator
     let s:argClosingS = g:targets_argClosing . '\|' . g:targets_argSeparator
     let s:argOuter    = g:targets_argOpening . '\|' . g:targets_argClosing
@@ -50,7 +53,43 @@ function! targets#o(trigger)
     call s:cleanUp() " TODO: clean up this function
 endfunction
 
+function! targets#e(modifier)
+    if mode() !=? 'v'
+        return a:modifier
+    endif
+
+    let char = nr2char(getchar())
+    let [which, err] = s:getWhich(char)
+    if err > 0 " char was delimiter, use current for which
+        let userDelimiter = char
+        let which = 'c'
+    else " delimiter was which, get another char for delimiter
+        let userDelimiter = nr2char(getchar())
+    endif
+
+    return "\<Esc>:\<C-U>call targets#x('" . userDelimiter . which . a:modifier . "', " . v:count1 . ")\<CR>"
+endfunction
+
+function! s:getWhich(char)
+    if a:char ==# s:n
+        return ['n', 0]
+    elseif a:char ==# s:l
+        return ['l', 0]
+    elseif a:char ==# s:N
+        return ['N', 0]
+    elseif a:char ==# s:L
+        return ['L', 0]
+    else
+        return [0, 1]
+    endif
+endfunction
+
+function! targets#x(trigger, count)
+    echom 'x' a:trigger a:count
+endfunction
+
 " TODO: move down
+" TODO: use s:i instead of 'i'
 function! s:modifyMatch(kind, modifier)
     if a:kind ==# 'p'
         if a:modifier ==# 'i'
@@ -214,6 +253,7 @@ function! s:getDelimiters(kind, trigger)
     return [opening, closing, 0]
 endfunction
 
+" TODO: use =~# instead of iterating
 function! s:getRawDelimiters(kind, trigger)
     " TODO: cache
     if a:kind ==# 'p'
