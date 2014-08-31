@@ -212,12 +212,10 @@ function! s:findObject(kind, which)
             call s:lastselect(s:count)
         elseif a:which ==# 'N'
             call s:quote()
-            call s:double()
-            call s:nextselect(s:count)
+            call s:nextselect(s:count * 2)
         elseif a:which ==# 'L'
             call s:quote()
-            call s:double()
-            call s:lastselect(s:count)
+            call s:lastselect(s:count * 2)
         else
             " TODO: fail
         endif
@@ -230,11 +228,9 @@ function! s:findObject(kind, which)
         elseif a:which ==# 'l'
             call s:lastselect(s:count)
         elseif a:which ==# 'N'
-            call s:double()
-            call s:nextselect(s:count)
+            call s:nextselect(s:count * 2)
         elseif a:which ==# 'L'
-            call s:double()
-            call s:lastselect(s:count)
+            call s:lastselect(s:count * 2)
         else
             " TODO: fail
         endif
@@ -1261,11 +1257,6 @@ function! s:prepareLast()
         call setpos('.', [0, s:lrel, s:lrec, 0])
         return 1
     endif
-endfunction
-
-" doubles the count (used for `iN'`)
-function! s:double()
-    let s:count = s:count * 2
 endfunction
 
 " returns the character under the cursor
