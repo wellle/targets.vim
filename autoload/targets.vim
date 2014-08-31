@@ -206,14 +206,14 @@ function! s:findObject(kind, which)
             call s:seekselect()
         elseif a:which ==# 'n'
             call s:quote()
-            call s:nextselect()
+            call s:nextselect(s:count)
         elseif a:which ==# 'l'
             call s:quote()
             call s:lastselect()
         elseif a:which ==# 'N'
             call s:quote()
             call s:double()
-            call s:nextselect()
+            call s:nextselect(s:count)
         elseif a:which ==# 'L'
             call s:quote()
             call s:double()
@@ -226,12 +226,12 @@ function! s:findObject(kind, which)
         if a:which ==# 'c'
             call s:seekselect()
         elseif a:which ==# 'n'
-            call s:nextselect()
+            call s:nextselect(s:count)
         elseif a:which ==# 'l'
             call s:lastselect()
         elseif a:which ==# 'N'
             call s:double()
-            call s:nextselect()
+            call s:nextselect(s:count)
         elseif a:which ==# 'L'
             call s:double()
             call s:lastselect()
@@ -594,10 +594,10 @@ endfunction
 " in   │     ...
 " line │  '  '  '  '
 " out  │        1  2
-function! s:nextselect()
+function! s:nextselect(count)
     call s:prepareNext()
 
-    if s:search(s:count, s:opening, 'W') > 0
+    if s:search(a:count, s:opening, 'W') > 0
         return s:fail('nextselect')
     endif
 
