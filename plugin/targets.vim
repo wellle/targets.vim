@@ -168,26 +168,24 @@ endfunction
 "         │   └──A,───┘      │       └──A,───┘
 function! s:createSeparatorTextObjects()
     for delimiter in s:separator_list
-        let [ delimiter, dropr ] = s:parseDelimiter(delimiter)
-
         call s:createSimpleTextObject(s:i,       delimiter, 'seekselect drop')
-        call s:createSimpleTextObject(s:a,       delimiter, 'seekselect' . dropr)
+        call s:createSimpleTextObject(s:a,       delimiter, 'seekselect dropr')
         call s:createSimpleTextObject(s:I,       delimiter, 'seekselect shrink')
         call s:createSimpleTextObject(s:A,       delimiter, 'seekselect expand')
         call s:createSimpleTextObject(s:i . s:n, delimiter, 'nextselect drop')
-        call s:createSimpleTextObject(s:a . s:n, delimiter, 'nextselect' . dropr)
+        call s:createSimpleTextObject(s:a . s:n, delimiter, 'nextselect dropr')
         call s:createSimpleTextObject(s:I . s:n, delimiter, 'nextselect shrink')
         call s:createSimpleTextObject(s:A . s:n, delimiter, 'nextselect expand')
         call s:createSimpleTextObject(s:i . s:l, delimiter, 'lastselect drop')
-        call s:createSimpleTextObject(s:a . s:l, delimiter, 'lastselect' . dropr)
+        call s:createSimpleTextObject(s:a . s:l, delimiter, 'lastselect dropr')
         call s:createSimpleTextObject(s:I . s:l, delimiter, 'lastselect shrink')
         call s:createSimpleTextObject(s:A . s:l, delimiter, 'lastselect expand')
         call s:createSimpleTextObject(s:i . s:N, delimiter, 'double nextselect drop')
-        call s:createSimpleTextObject(s:a . s:N, delimiter, 'double nextselect' . dropr)
+        call s:createSimpleTextObject(s:a . s:N, delimiter, 'double nextselect dropr')
         call s:createSimpleTextObject(s:I . s:N, delimiter, 'double nextselect shrink')
         call s:createSimpleTextObject(s:A . s:N, delimiter, 'double nextselect expand')
         call s:createSimpleTextObject(s:i . s:L, delimiter, 'double lastselect drop')
-        call s:createSimpleTextObject(s:a . s:L, delimiter, 'double lastselect' . dropr)
+        call s:createSimpleTextObject(s:a . s:L, delimiter, 'double lastselect dropr')
         call s:createSimpleTextObject(s:I . s:L, delimiter, 'double lastselect shrink')
         call s:createSimpleTextObject(s:A . s:L, delimiter, 'double lastselect expand')
     endfor
@@ -219,14 +217,6 @@ function! s:createArgTextObjects()
     call s:createSimpleTextObject(s:a . s:l, 'a', 'lastselecta dropa')
     call s:createSimpleTextObject(s:I . s:l, 'a', 'lastselecta shrink')
     call s:createSimpleTextObject(s:A . s:l, 'a', 'lastselecta expand')
-endfunction
-
-function! s:parseDelimiter(delimiter)
-    if len(a:delimiter) >= 2 && a:delimiter[0] == a:delimiter[1] " delimiter is doubled
-        return [ a:delimiter[1:], '' ] " remove first double, don't drop right separator
-    endif
-
-    return [ a:delimiter, ' dropr' ] " drop right delimiter (default)
 endfunction
 
 " add expression mappings for `A` and `I` in visual mode #23 unless
