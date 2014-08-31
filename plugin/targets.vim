@@ -225,22 +225,19 @@ endfunction
 "         │                      ├───────2aa─────────────┘ │
 "         │                      └───────2Aa───────────────┘
 function! s:createArgTextObjects()
-    " special text objects
-    for trigger in ['t', 'a']
-        let triggerMap = trigger . " :<C-U>call targets#o('" . trigger
-        execute 'onoremap <silent>' . s:i       . triggerMap . " ci')<CR>"
-        execute 'onoremap <silent>' . s:a       . triggerMap . " ca')<CR>"
-        execute 'onoremap <silent>' . s:I       . triggerMap . " cI')<CR>"
-        execute 'onoremap <silent>' . s:A       . triggerMap . " cA')<CR>"
-        execute 'onoremap <silent>' . s:i . s:n . triggerMap . " ni')<CR>"
-        execute 'onoremap <silent>' . s:a . s:n . triggerMap . " na')<CR>"
-        execute 'onoremap <silent>' . s:I . s:n . triggerMap . " nI')<CR>"
-        execute 'onoremap <silent>' . s:A . s:n . triggerMap . " nA')<CR>"
-        execute 'onoremap <silent>' . s:i . s:l . triggerMap . " li')<CR>"
-        execute 'onoremap <silent>' . s:a . s:l . triggerMap . " la')<CR>"
-        execute 'onoremap <silent>' . s:I . s:l . triggerMap . " lI')<CR>"
-        execute 'onoremap <silent>' . s:A . s:l . triggerMap . " lA')<CR>"
-    endfor
+    let triggerMap = "a :<C-U>call targets#o('a"
+    execute 'onoremap <silent>' . s:i       . triggerMap . " ci')<CR>"
+    execute 'onoremap <silent>' . s:a       . triggerMap . " ca')<CR>"
+    execute 'onoremap <silent>' . s:I       . triggerMap . " cI')<CR>"
+    execute 'onoremap <silent>' . s:A       . triggerMap . " cA')<CR>"
+    execute 'onoremap <silent>' . s:i . s:n . triggerMap . " ni')<CR>"
+    execute 'onoremap <silent>' . s:a . s:n . triggerMap . " na')<CR>"
+    execute 'onoremap <silent>' . s:I . s:n . triggerMap . " nI')<CR>"
+    execute 'onoremap <silent>' . s:A . s:n . triggerMap . " nA')<CR>"
+    execute 'onoremap <silent>' . s:i . s:l . triggerMap . " li')<CR>"
+    execute 'onoremap <silent>' . s:a . s:l . triggerMap . " la')<CR>"
+    execute 'onoremap <silent>' . s:I . s:l . triggerMap . " lI')<CR>"
+    execute 'onoremap <silent>' . s:A . s:l . triggerMap . " lA')<CR>"
 endfunction
 
 " add expression mappings for `A` and `I` in visual mode #23 unless
