@@ -31,11 +31,11 @@ function! targets#o(trigger)
     let view = winsaveview()
 
     " TODO: rename delimiter and trigger vars?
-    let [kind, delimiter, which, modifier] = split(a:trigger, '\zs')
+    let [delimiter, which, modifier] = split(a:trigger, '\zs')
 
     " TODO: extract kind specific stuff into autoload subdirectories
     " TODO: pass parameters instead of using s: vars?
-    let [s:opening, s:closing, err] = s:getDelimiters(kind, delimiter)
+    let [kind, s:opening, s:closing, err] = s:getDelimiters(delimiter)
     if err
         echom "failed to find delimiter"
     else
@@ -242,57 +242,51 @@ function! s:findObject(kind, which)
     endif
 endfunction
 
-function! s:getDelimiters(kind, trigger)
-    let [rawOpening, rawClosing, err] = s:getRawDelimiters(a:kind, a:trigger)
+function! s:getDelimiters(trigger)
+    let [kind, rawOpening, rawClosing, err] = s:getRawDelimiters(a:trigger)
     if err > 0
-        return [0, 0, err]
+        return [0, 0, 0, err]
     endif
 
     let opening = escape(rawOpening, '".~\$')
     let closing = escape(rawClosing, '".~\$')
-    return [opening, closing, 0]
+    return [kind, opening, closing, 0]
 endfunction
 
 " TODO: use =~# instead of iterating
-function! s:getRawDelimiters(kind, trigger)
+function! s:getRawDelimiters(trigger)
     " TODO: cache
-    if a:kind ==# 'p'
-        for pair in split(g:targets_pairs)
-            for trigger in split(pair, '\zs')
-                if trigger ==# a:trigger
-                    return [pair[0], pair[1], 0]
-                endif
-            endfor
+    for pair in split(g:targets_pairs)
+        for trigger in split(pair, '\zs')
+            if trigger ==# a:trigger
+                return ['p', pair[0], pair[1], 0]
+            endif
         endfor
-        return [0, 0, 1] " TODO: echo error message
+    endfor
 
-    elseif a:kind ==# 'q'
-        for quote in split(g:targets_quotes)
-            for trigger in split(quote, '\zs')
-                if trigger ==# a:trigger
-                    return [quote[0], quote[0], 0]
-                endif
-            endfor
+    for quote in split(g:targets_quotes)
+        for trigger in split(quote, '\zs')
+            if trigger ==# a:trigger
+                return ['q', quote[0], quote[0], 0]
+            endif
         endfor
+    endfor
 
-    elseif a:kind ==# 's'
-        for separator in split(g:targets_separators)
-            for trigger in split(separator, '\zs')
-                if trigger ==# a:trigger
-                    return [separator[0], separator[0], 0]
-                endif
-            endfor
+    for separator in split(g:targets_separators)
+        for trigger in split(separator, '\zs')
+            if trigger ==# a:trigger
+                return ['s', separator[0], separator[0], 0]
+            endif
         endfor
+    endfor
 
-    elseif a:kind ==# 't'
-        return ['t', 0, 0] " TODO: set tag patterns here and remove special tag functions?
-
-    elseif a:kind ==# 'a'
-        return [0, 0, 0]
-
+    if a:trigger ==# 't'
+        return ['t', 't', 0, 0] " TODO: set tag patterns here and remove special tag functions?
+    elseif a:trigger ==# 'a'
+        return ['a', 0, 0, 0]
+    else
+        return [0, 0, 0, 1]
     endif
-
-    return [0, 0, 1]
 endfunction
 
 " visually select some text

@@ -82,7 +82,7 @@ function! s:createPairTextObjects()
         if trigger ==# ' '
             continue
         endif
-        let triggerMap = trigger . " :<C-U>call targets#o('p" . trigger
+        let triggerMap = trigger . " :<C-U>call targets#o('" . trigger
         execute 'onoremap <silent>' . s:i       . triggerMap . "ci')<CR>"
         execute 'onoremap <silent>' . s:a       . triggerMap . "ca')<CR>"
         execute 'onoremap <silent>' . s:I       . triggerMap . "cI')<CR>"
@@ -100,7 +100,7 @@ endfunction
 
 " tag text objects work on tags (similar to pair text objects)
 function! s:createTagTextObjects()
-    let triggerMap = "t :<C-U>call targets#o('t"
+    let triggerMap = "t :<C-U>call targets#o('"
     execute 'onoremap <silent>' . s:i       . triggerMap . "tci')<CR>"
     execute 'onoremap <silent>' . s:a       . triggerMap . "tca')<CR>"
     execute 'onoremap <silent>' . s:I       . triggerMap . "tcI')<CR>"
@@ -138,9 +138,9 @@ function! s:createQuoteTextObjects()
         if trigger ==# " "
             continue
         elseif trigger ==# "'"
-            let triggerMap = "' :<C-U>call targets#o('q''"
+            let triggerMap = "' :<C-U>call targets#o('''"
         else
-            let triggerMap = trigger . " :<C-U>call targets#o('q" . trigger
+            let triggerMap = trigger . " :<C-U>call targets#o('" . trigger
         endif
         execute 'onoremap <silent>' . s:i       . triggerMap . "ci')<CR>"
         execute 'onoremap <silent>' . s:a       . triggerMap . "ca')<CR>"
@@ -187,7 +187,7 @@ function! s:createSeparatorTextObjects()
         elseif trigger ==# '|'
             let trigger = '\|'
         endif
-        let triggerMap = trigger . " :<C-U>call targets#o('s" . trigger
+        let triggerMap = trigger . " :<C-U>call targets#o('" . trigger
         execute 'onoremap <silent>' . s:i       . triggerMap . "ci')<CR>"
         execute 'onoremap <silent>' . s:a       . triggerMap . "ca')<CR>"
         execute 'onoremap <silent>' . s:I       . triggerMap . "cI')<CR>"
@@ -225,19 +225,19 @@ endfunction
 "         │                      ├───────2aa─────────────┘ │
 "         │                      └───────2Aa───────────────┘
 function! s:createArgTextObjects()
-    let triggerMap = "a :<C-U>call targets#o('a"
-    execute 'onoremap <silent>' . s:i       . triggerMap . " ci')<CR>"
-    execute 'onoremap <silent>' . s:a       . triggerMap . " ca')<CR>"
-    execute 'onoremap <silent>' . s:I       . triggerMap . " cI')<CR>"
-    execute 'onoremap <silent>' . s:A       . triggerMap . " cA')<CR>"
-    execute 'onoremap <silent>' . s:i . s:n . triggerMap . " ni')<CR>"
-    execute 'onoremap <silent>' . s:a . s:n . triggerMap . " na')<CR>"
-    execute 'onoremap <silent>' . s:I . s:n . triggerMap . " nI')<CR>"
-    execute 'onoremap <silent>' . s:A . s:n . triggerMap . " nA')<CR>"
-    execute 'onoremap <silent>' . s:i . s:l . triggerMap . " li')<CR>"
-    execute 'onoremap <silent>' . s:a . s:l . triggerMap . " la')<CR>"
-    execute 'onoremap <silent>' . s:I . s:l . triggerMap . " lI')<CR>"
-    execute 'onoremap <silent>' . s:A . s:l . triggerMap . " lA')<CR>"
+    let triggerMap = "a :<C-U>call targets#o('"
+    execute 'onoremap <silent>' . s:i       . triggerMap . "aci')<CR>"
+    execute 'onoremap <silent>' . s:a       . triggerMap . "aca')<CR>"
+    execute 'onoremap <silent>' . s:I       . triggerMap . "acI')<CR>"
+    execute 'onoremap <silent>' . s:A       . triggerMap . "acA')<CR>"
+    execute 'onoremap <silent>' . s:i . s:n . triggerMap . "ani')<CR>"
+    execute 'onoremap <silent>' . s:a . s:n . triggerMap . "ana')<CR>"
+    execute 'onoremap <silent>' . s:I . s:n . triggerMap . "anI')<CR>"
+    execute 'onoremap <silent>' . s:A . s:n . triggerMap . "anA')<CR>"
+    execute 'onoremap <silent>' . s:i . s:l . triggerMap . "ali')<CR>"
+    execute 'onoremap <silent>' . s:a . s:l . triggerMap . "ala')<CR>"
+    execute 'onoremap <silent>' . s:I . s:l . triggerMap . "alI')<CR>"
+    execute 'onoremap <silent>' . s:A . s:l . triggerMap . "alA')<CR>"
 endfunction
 
 " add expression mappings for `A` and `I` in visual mode #23 unless
