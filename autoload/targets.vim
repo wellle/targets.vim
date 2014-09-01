@@ -293,55 +293,6 @@ function! s:getRawDelimiters(trigger)
     endif
 endfunction
 
-" visually select some text
-" it consists of optional position modifiers, followed by a match selector,
-" followed by optional selection modifiers
-function! targets#omap()
-    call s:init('o')
-    call s:handleMatch()
-    call s:clearCommandLine()
-    call s:cleanUp()
-endfunction
-
-" like targets#omap, but don't clear the command line
-function! targets#xmap()
-    call targets#xmapCount(v:count1)
-endfunction
-
-" like targets#xmap, but inject count, triggered from targets#xmapExpr
-function! targets#xmapCount(count)
-    call s:init('x')
-    call s:saveVisualSelection()
-    if s:handleMatch() == 0
-        call s:saveState()
-    endif
-    call s:cleanUp()
-endfunction
-
-" called on `vA` and `vI` to start visual mappings like `vAn,`
-" we use it like this to still allow to append after visually selected blocks
-function! targets#uppercaseXmap(trigger)
-    " only supported for character wise visual mode
-    if mode() !=# 'v'
-        return a:trigger
-    endif
-
-    " read characters like `n` and `,` for `vAn,`
-    let chars = nr2char(getchar())
-    if chars =~? '^[nl]'
-        let chars .= nr2char(getchar())
-    endif
-
-    " get associated arguments for targets#xmapCount
-    " let arguments = get(g:targets_mapArgs, a:trigger . chars, '')
-    " if arguments ==# ''
-        return '\<Esc>'
-    " endif
-
-    " exit visual mode and call targets#xmapCount
-    return "\<Esc>:\<C-U>call targets#xmapCount(" . arguments . ", " . v:count1 . ")\<CR>"
-endfunction
-
 " initialize script local variables for the current matching
 function! s:init(mapmode)
     let s:mapmode = a:mapmode
