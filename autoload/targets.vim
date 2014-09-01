@@ -432,14 +432,14 @@ function! s:selectMatch()
     normal! m'
 
     let linewise = s:sLinewise && s:eLinewise
-    call s:selectRegion(linewise, s:sl, s:sc, s:el, s:ec)
+    call s:selectRegion(linewise, [[s:sl, s:sc], [s:el, s:ec]])
 endfunction
 
 " visually select a given region. used for match or old selection
-function! s:selectRegion(linewise, sl, sc, el, ec)
+function! s:selectRegion(linewise, region)
     " echo [s:sl, s:sc, s:el, s:ec]
     " visually select the match
-    call cursor(a:sl, a:sc)
+    call cursor(a:region[0])
 
     if a:linewise
         silent! normal! V
@@ -447,7 +447,7 @@ function! s:selectRegion(linewise, sl, sc, el, ec)
         silent! normal! v
     endif
 
-    call cursor(a:el, a:ec)
+    call cursor(a:region[1])
 
     " if selection should be exclusive, expand selection
     if s:selection ==# 'exclusive'
@@ -502,7 +502,7 @@ endfunction
 function! s:prepareReselect()
     if s:mapmode ==# 'x'
         let linewise = (s:vmode ==# 'V')
-        call s:selectRegion(linewise, s:vsl, s:vsc, s:vel, s:vec)
+        call s:selectRegion(linewise, [[s:vsl, s:vsc], [s:vel, s:vec]])
     endif
 endfunction
 
