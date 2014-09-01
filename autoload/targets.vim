@@ -24,12 +24,10 @@ call s:setup()
 
 function! targets#o(trigger)
     call s:init('o')
-
     call s:findMatch(a:trigger, v:count1)
-
     call s:handleMatch()
     call s:clearCommandLine()
-    call s:cleanUp() " TODO: clean up this function
+    call s:cleanUp()
 endfunction
 
 function! targets#e(modifier)
@@ -70,14 +68,13 @@ endfunction
 function! targets#x(trigger, count)
     call s:init('x')
     call s:saveVisualSelection()
-
     call s:findMatch(a:trigger, a:count)
 
     if s:handleMatch() == 0
         call s:saveState()
     endif
 
-    call s:cleanUp() " TODO: clean up this function
+    call s:cleanUp()
 endfunction
 
 function! s:findMatch(trigger, count)
@@ -101,70 +98,69 @@ function! s:saveRawSelection()
 endfunction
 
 " TODO: move down
-" TODO: use s:i instead of 'i'
 function! s:modifyMatch(kind, modifier)
     if a:kind ==# 'p'
-        if a:modifier ==# 'i'
+        if a:modifier ==# s:i
             call s:drop()
-        elseif a:modifier ==# 'a'
+        elseif a:modifier ==# s:a
             " nothing
-        elseif a:modifier ==# 'I'
+        elseif a:modifier ==# s:I
             call s:shrink()
-        elseif a:modifier ==# 'A'
+        elseif a:modifier ==# s:A
             call s:expand()
         else
             " TODO: fail
         endif
 
     elseif a:kind ==# 'q'
-        if a:modifier ==# 'i'
+        if a:modifier ==# s:i
             call s:drop()
-        elseif a:modifier ==# 'a'
+        elseif a:modifier ==# s:a
             " nothing
-        elseif a:modifier ==# 'I'
+        elseif a:modifier ==# s:I
             call s:shrink()
-        elseif a:modifier ==# 'A'
+        elseif a:modifier ==# s:A
             call s:expand()
         else
             " TODO: fail
         endif
 
     elseif a:kind ==# 's'
-        if a:modifier ==# 'i'
+        if a:modifier ==# s:i
             call s:drop()
-        elseif a:modifier ==# 'a'
+        elseif a:modifier ==# s:a
             call s:dropr()
-        elseif a:modifier ==# 'I'
+        elseif a:modifier ==# s:I
             call s:shrink()
-        elseif a:modifier ==# 'A'
+        elseif a:modifier ==# s:A
             call s:expand()
         else
             " TODO: fail
         endif
 
     elseif a:kind ==# 't'
-        if a:modifier ==# 'i'
+        if a:modifier ==# s:i
             call s:innert()
             call s:drop()
-        elseif a:modifier ==# 'a'
+        elseif a:modifier ==# s:a
             " nothing
-        elseif a:modifier ==# 'I'
+        elseif a:modifier ==# s:I
             call s:innert()
             call s:shrink()
-        elseif a:modifier ==# 'A'
+        elseif a:modifier ==# s:A
             call s:expand()
         else
             " TODO: fail
         endif
 
-    elseif a:kind ==# 'a'
-        if a:modifier ==# 'i'
+    elseif a:kind ==# s:a
+        if a:modifier ==# s:i
             call s:drop()
-        elseif a:modifier ==# 'a'
+        elseif a:modifier ==# s:a
             call s:dropa()
-        elseif a:modifier ==# 'I'
+        elseif a:modifier ==# s:I
             call s:shrink()
-        elseif a:modifier ==# 'A'
+        elseif a:modifier ==# s:A
             call s:expand()
         else
             " TODO: fail
