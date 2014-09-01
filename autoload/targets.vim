@@ -25,8 +25,7 @@ endfunction
 call s:setup()
 
 function! targets#o(trigger)
-    " TODO: pass count around?
-    call s:init('o', v:count1)
+    call s:init('o')
 
     " TODO: rename delimiter and trigger vars?
     let [delimiter, which, modifier] = split(a:trigger, '\zs')
@@ -89,7 +88,7 @@ function! s:getWhich(char)
 endfunction
 
 function! targets#x(trigger, count)
-    call s:init('x', a:count)
+    call s:init('x')
     call s:saveVisualSelection()
     let [delimiter, which, modifier] = split(a:trigger, '\zs')
     let [kind, s:opening, s:closing, err] = s:getDelimiters(delimiter)
@@ -313,7 +312,7 @@ endfunction
 " it consists of optional position modifiers, followed by a match selector,
 " followed by optional selection modifiers
 function! targets#omap()
-    call s:init('o', v:count1)
+    call s:init('o')
     call s:handleMatch()
     call s:clearCommandLine()
     call s:cleanUp()
@@ -326,7 +325,7 @@ endfunction
 
 " like targets#xmap, but inject count, triggered from targets#xmapExpr
 function! targets#xmapCount(count)
-    call s:init('x', a:count)
+    call s:init('x')
     call s:saveVisualSelection()
     if s:handleMatch() == 0
         call s:saveState()
@@ -359,8 +358,8 @@ function! targets#uppercaseXmap(trigger)
 endfunction
 
 " initialize script local variables for the current matching
-function! s:init(mapmode, count)
-    let [s:mapmode, s:count] = [a:mapmode, a:count]
+function! s:init(mapmode)
+    let s:mapmode = a:mapmode
     let [s:rsl, s:rsc, s:rel, s:rec] = [0, 0, 0, 0]
     let [s:sl, s:sc, s:el, s:ec] = [0, 0, 0, 0]
     let [s:sLinewise, s:eLinewise] = [0, 0]
