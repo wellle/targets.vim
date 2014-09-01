@@ -24,8 +24,11 @@ call s:setup()
 
 function! targets#o(trigger)
     call s:init('o')
-    call s:findMatch(a:trigger, v:count1)
-    call s:handleMatch([[s:sl, s:sc], [s:el, s:ec]])
+    let [match, err] = s:findMatch(a:trigger, v:count1)
+    if err
+        return s:cleanUp()
+    endif
+    call s:handleMatch(match)
     call s:clearCommandLine()
     call s:cleanUp()
 endfunction
@@ -68,12 +71,13 @@ endfunction
 function! targets#x(trigger, count)
     call s:init('x')
     call s:saveVisualSelection()
-    call s:findMatch(a:trigger, a:count)
-
-    if s:handleMatch([[s:sl, s:sc], [s:el, s:ec]]) == 0
+    let [match, err] = s:findMatch(a:trigger, a:count)
+    if err
+        return s:cleanUp()
+    endif
+    if s:handleMatch(match) == 0
         call s:saveState()
     endif
-
     call s:cleanUp()
 endfunction
 
@@ -81,8 +85,7 @@ function! s:findMatch(trigger, count)
     let [delimiter, which, modifier] = split(a:trigger, '\zs')
     let [kind, s:opening, s:closing, err] = s:getDelimiters(delimiter)
     if err
-        echom "failed to find delimiter"
-        return
+        return [0, s:fail("failed to find delimiter")]
     endif
 
     let view = winsaveview()
@@ -90,6 +93,7 @@ function! s:findMatch(trigger, count)
     call s:saveRawSelection()
     call s:modifyMatch(kind, modifier)
     call winrestview(view)
+    return [[[s:sl, s:sc], [s:el, s:ec]], 0]
 endfunction
 
 " remember last raw selection, before applying modifiers
