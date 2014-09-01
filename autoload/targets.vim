@@ -254,7 +254,7 @@ function! s:findObject(kind, which)
         elseif a:which ==# 'n'
             call s:nextselecta(s:count)
         elseif a:which ==# 'l'
-            call s:lastselecta()
+            call s:lastselecta(s:count)
         else
             " TODO: fail
         endif
@@ -993,7 +993,7 @@ function! s:seekselecta()
         return s:saveRawSelection()
     endif
 
-    if s:lastselecta(line('.')) == 0
+    if s:lastselecta(s:count, line('.')) == 0
         return s:saveRawSelection()
     endif
 
@@ -1001,7 +1001,7 @@ function! s:seekselecta()
         return s:saveRawSelection()
     endif
 
-    if s:lastselecta() == 0
+    if s:lastselecta(s:count) == 0
         return s:saveRawSelection()
     endif
 
@@ -1042,7 +1042,7 @@ function! s:nextselecta(...)
 endfunction
 
 " try to select a last argument, supports count and optional stopline
-" args (stopline=0)
+" args (count, stopline=0) TODO: make count optional
 function! s:lastselecta(...)
     call s:prepareLast()
 
@@ -1054,8 +1054,9 @@ function! s:lastselecta(...)
         endif
     endif
 
-    let stopline = a:0 > 0 ? a:1 : 0
-    if s:search(s:count, s:argClosingS, 'bW', stopline) > 0 " no start found
+    let cnt = a:1
+    let stopline = a:0 > 1 ? a:2 : 0
+    if s:search(cnt, s:argClosingS, 'bW', stopline) > 0 " no start found
         return s:fail('lastselecta 1')
     endif
 
@@ -1070,7 +1071,7 @@ function! s:lastselecta(...)
 
     call setpos('.', s:oldpos)
     let closing = g:targets_argClosing
-    if s:search(s:count, closing, 'bW', stopline) > 0 " no start found
+    if s:search(cnt, closing, 'bW', stopline) > 0 " no start found
         return s:fail('lastselecta 3')
     endif
 
