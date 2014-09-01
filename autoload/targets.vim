@@ -4,8 +4,6 @@
 " Updated: 2014-08-21
 " Version: 0.3.0
 
-" TODO: consistent naming err vs error
-
 " save cpoptions
 let s:save_cpoptions = &cpoptions
 set cpo&vim
@@ -430,10 +428,6 @@ endfunction
 
 " handle the match by either selecting or aborting it
 function! s:handleMatch()
-    " let view = winsaveview()
-    " let error = s:findMatch(a:matchers)
-    " call winrestview(view)
-
     if s:sl == 0 || s:el == 0
         return s:abortMatch('handleMatch 1')
     elseif s:sl < s:el
@@ -447,16 +441,6 @@ function! s:handleMatch()
     else
         return s:selectMatch()
     endif
-endfunction
-
-" try to find match
-function! s:findMatch(matchers)
-    for matcher in split(a:matchers)
-        let Matcher = function('s:' . matcher)
-        if Matcher() > 0
-            return s:fail('findMatch')
-        endif
-    endfor
 endfunction
 
 " select a proper match
