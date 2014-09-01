@@ -41,7 +41,7 @@ function! targets#o(trigger)
     endif
 
     let view = winsaveview()
-    call s:findObject(kind, which)
+    call s:findObject(kind, which, v:count1)
     " echo [s:sl, s:sc, s:el, s:ec]
     " call s:saveRawSelection() here
     call s:modifyMatch(kind, modifier)
@@ -100,7 +100,7 @@ function! targets#x(trigger, count)
     endif
 
     let view = winsaveview()
-    call s:findObject(kind, which)
+    call s:findObject(kind, which, a:count)
     " echo [s:sl, s:sc, s:el, s:ec]
     " call s:saveRawSelection() here
     call s:modifyMatch(kind, modifier)
@@ -186,15 +186,15 @@ function! s:modifyMatch(kind, modifier)
 endfunction
 
 " TODO: move down
-function! s:findObject(kind, which)
+function! s:findObject(kind, which, count)
     if a:kind ==# 'p'
         if a:which ==# 'c'
-            call s:seekselectp(s:count)
+            call s:seekselectp(a:count)
         elseif a:which ==# 'n'
-            call s:nextp(s:count)
+            call s:nextp(a:count)
             call s:selectp()
         elseif a:which ==# 'l'
-            call s:lastp(s:count)
+            call s:lastp(a:count)
             call s:selectp()
         else
             " TODO: fail
@@ -206,16 +206,16 @@ function! s:findObject(kind, which)
             call s:seekselect()
         elseif a:which ==# 'n'
             call s:quote()
-            call s:nextselect(s:count)
+            call s:nextselect(a:count)
         elseif a:which ==# 'l'
             call s:quote()
-            call s:lastselect(s:count)
+            call s:lastselect(a:count)
         elseif a:which ==# 'N'
             call s:quote()
-            call s:nextselect(s:count * 2)
+            call s:nextselect(a:count * 2)
         elseif a:which ==# 'L'
             call s:quote()
-            call s:lastselect(s:count * 2)
+            call s:lastselect(a:count * 2)
         else
             " TODO: fail
         endif
@@ -224,25 +224,25 @@ function! s:findObject(kind, which)
         if a:which ==# 'c'
             call s:seekselect()
         elseif a:which ==# 'n'
-            call s:nextselect(s:count)
+            call s:nextselect(a:count)
         elseif a:which ==# 'l'
-            call s:lastselect(s:count)
+            call s:lastselect(a:count)
         elseif a:which ==# 'N'
-            call s:nextselect(s:count * 2)
+            call s:nextselect(a:count * 2)
         elseif a:which ==# 'L'
-            call s:lastselect(s:count * 2)
+            call s:lastselect(a:count * 2)
         else
             " TODO: fail
         endif
 
     elseif a:kind ==# 't'
         if a:which ==# 'c'
-            call s:seekselectt(s:count)
+            call s:seekselectt(a:count)
         elseif a:which ==# 'n'
-            call s:nextt(s:count)
+            call s:nextt(a:count)
             call s:selectp()
         elseif a:which ==# 'l'
-            call s:lastt(s:count)
+            call s:lastt(a:count)
             call s:selectp()
         else
             " TODO: fail
@@ -250,11 +250,11 @@ function! s:findObject(kind, which)
 
     elseif a:kind ==# 'a'
         if a:which ==# 'c'
-            call s:seekselecta(s:count)
+            call s:seekselecta(a:count)
         elseif a:which ==# 'n'
-            call s:nextselecta(s:count)
+            call s:nextselecta(a:count)
         elseif a:which ==# 'l'
-            call s:lastselecta(s:count)
+            call s:lastselecta(a:count)
         else
             " TODO: fail
         endif
