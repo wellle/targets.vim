@@ -413,7 +413,7 @@ function! s:handleMatch()
     if s:sl == 0 || s:el == 0
         return s:abortMatch('handleMatch 1')
     elseif s:sl < s:el
-        return s:selectMatch()
+        return s:selectMatch([[s:sl, s:sc], [s:el, s:ec]])
     elseif s:sl > s:el
         return s:abortMatch('handleMatch 2')
     elseif s:sc == s:ec + 1
@@ -421,18 +421,18 @@ function! s:handleMatch()
     elseif s:sc > s:ec
         return s:abortMatch('handleMatch 3')
     else
-        return s:selectMatch()
+        return s:selectMatch([[s:sl, s:sc], [s:el, s:ec]])
     endif
 endfunction
 
 " select a proper match
-function! s:selectMatch()
+function! s:selectMatch(match)
     " add old position to jump list
     call setpos('.', s:oldpos)
     normal! m'
 
     let linewise = s:sLinewise && s:eLinewise
-    call s:selectRegion(linewise, [[s:sl, s:sc], [s:el, s:ec]])
+    call s:selectRegion(linewise, a:match)
 endfunction
 
 " visually select a given region. used for match or old selection
