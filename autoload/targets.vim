@@ -90,9 +90,14 @@ function! s:findMatch(trigger, count)
 
     let view = winsaveview()
     call s:findObject(kind, which, a:count)
-    " call s:saveRawSelection() here
+    call s:saveRawSelection()
     call s:modifyMatch(kind, modifier)
     call winrestview(view)
+endfunction
+
+" remember last raw selection, before applying modifiers
+function! s:saveRawSelection()
+    let [s:rsl, s:rsc, s:rel, s:rec] = [s:sl, s:sc, s:el, s:ec]
 endfunction
 
 " TODO: move down
@@ -388,11 +393,6 @@ function! s:isNewSelection()
     return 0
 endfunction
 
-" remember last raw selection, before applying modifiers
-function! s:saveRawSelection()
-    let [s:rsl, s:rsc, s:rel, s:rec] = [s:sl, s:sc, s:el, s:ec]
-endfunction
-
 " remember last selection and last raw selection
 function! s:saveState()
     " XXX: remember raw trigger
@@ -647,8 +647,6 @@ function! s:select(direction)
         call setpos('.', oldpos)
         return s:fail(message)
     endif
-
-    return s:saveRawSelection()
 endfunction
 
 " find separators around cursor by searching for opening with flags1 and for
@@ -672,25 +670,25 @@ function! s:seekselect()
         let [s:sl, s:sc] = searchpos(s:opening, 'b', line('.'))
         if s:sl > 0 " delim found before r in line
             let [s:el, s:ec] = [rl, rc]
-            return s:saveRawSelection()
+            return
         endif
         " no delim before cursor in line
         let [s:el, s:ec] = searchpos(s:opening, '', line('.'))
         if s:el > 0 " delim found after r in line
             let [s:sl, s:sc] = [rl, rc]
-            return s:saveRawSelection()
+            return
         endif
         " no delim found after r in line
         let [s:sl, s:sc] = searchpos(s:opening, 'bW')
         if s:sl > 0 " delim found before r
             let [s:el, s:ec] = [rl, rc]
-            return s:saveRawSelection()
+            return
         endif
         " no delim found before r
         let [s:el, s:ec] = searchpos(s:opening, 'W')
         if s:el > 0 " delim found after r
             let [s:sl, s:sc] = [rl, rc]
-            return s:saveRawSelection()
+            return
         endif
         " no delim found after r
         return s:fail('seekselect 1')
@@ -702,19 +700,19 @@ function! s:seekselect()
         let [s:sl, s:sc] = searchpos(s:opening, 'b', line('.'))
         if s:sl > 0 " delim found before l in line
             let [s:el, s:ec] = [ll, lc]
-            return s:saveRawSelection()
+            return
         endif
         " no delim found before l in line
         let [s:el, s:ec] = searchpos(s:opening, 'W')
         if s:el > 0 " delim found after l
             let [s:sl, s:sc] = [ll, lc]
-            return s:saveRawSelection()
+            return
         endif
         " no delim found after l
         let [s:sl, s:sc] = searchpos(s:opening, 'bW')
         if s:sl > 0 " delim found before l
             let [s:el, s:ec] = [ll, lc]
-            return s:saveRawSelection()
+            return
         endif
         " no delim found before l
         return s:fail('seekselect 2')
@@ -726,13 +724,13 @@ function! s:seekselect()
         let [s:sl, s:sc] = searchpos(s:opening, 'bW')
         if s:sl > 0 " delim found before r
             let [s:el, s:ec] = [rl, rc]
-            return s:saveRawSelection()
+            return
         endif
         " no delim found before r
         let [s:el, s:ec] = searchpos(s:opening, 'W')
         if s:el > 0 " delim found after r
             let [s:sl, s:sc] = [rl, rc]
-            return s:saveRawSelection()
+            return
         endif
         " no delim found after r
         return s:fail('seekselect 3')
@@ -742,7 +740,7 @@ function! s:seekselect()
     let [s:el, s:ec] = searchpos(s:opening, 'bW')
     let [s:sl, s:sc] = searchpos(s:opening, 'bW')
     if s:sl > 0 && s:el > 0 " match found before cursor
-        return s:saveRawSelection()
+        return
     endif
 
     return s:fail('seekselect 4')
@@ -760,8 +758,6 @@ function! s:selectp()
     if s:sc == s:ec && s:sl == s:el
         return s:fail('selectp')
     endif
-
-    return s:saveRawSelection()
 endfunction
 
 " pair matcher (works across multiple lines, supports seeking)
@@ -789,7 +785,7 @@ function! s:seekselectp(...)
     if s:sc != s:ec || s:sl != s:el
         " found target around cursor
         let cnt = 1
-        return s:saveRawSelection()
+        return
     endif
 
     if cnt > 1
@@ -851,8 +847,6 @@ function! s:selecta(direction)
         call setpos('.', oldpos)
         return s:fail(message)
     endif
-
-    return s:saveRawSelection()
 endfunction
 
 " find an argument around the cursor given a direction (see s:selecta)
@@ -949,29 +943,29 @@ function! s:seekselecta(count)
             return s:fail(message . ' count')
         endif
         if s:selecta('^') == 0
-            return s:saveRawSelection()
+            return
         endif
         return s:fail(message . ' select')
     endif
 
     if s:selecta('>') == 0
-        return s:saveRawSelection()
+        return
     endif
 
     if s:nextselecta(cnt, line('.')) == 0
-        return s:saveRawSelection()
+        return
     endif
 
     if s:lastselecta(cnt, line('.')) == 0
-        return s:saveRawSelection()
+        return
     endif
 
     if s:nextselecta(cnt) == 0
-        return s:saveRawSelection()
+        return
     endif
 
     if s:lastselecta(cnt) == 0
-        return s:saveRawSelection()
+        return
     endif
 
     return s:fail('seekselecta seek')
@@ -990,7 +984,7 @@ function! s:nextselecta(...)
 
     let char = s:getchar()
     if s:selecta('>') == 0 " argument found
-        return s:saveRawSelection()
+        return
     endif
 
     if char !~# g:targets_argSeparator " start wasn't on comma
@@ -1004,7 +998,7 @@ function! s:nextselecta(...)
     endif
 
     if s:selecta('>') == 0 " argument found
-        return s:saveRawSelection()
+        return
     endif
 
     return s:fail('nextselecta 4')
@@ -1019,7 +1013,7 @@ function! s:lastselecta(...)
     let separator = g:targets_argSeparator
     if s:getchar() =~# separator && s:newSelection
         if s:selecta('<') == 0
-            return s:saveRawSelection()
+            return
         endif
     endif
 
@@ -1031,7 +1025,7 @@ function! s:lastselecta(...)
 
     let char = s:getchar()
     if s:selecta('<') == 0 " argument found
-        return s:saveRawSelection()
+        return
     endif
 
     if char !~# separator " start wasn't on separator
@@ -1045,7 +1039,7 @@ function! s:lastselecta(...)
     endif
 
     if s:selecta('<') == 0 " argument found
-        return s:saveRawSelection()
+        return
     endif
 
     return s:fail('lastselecta 4')
