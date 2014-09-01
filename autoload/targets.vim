@@ -189,7 +189,7 @@ endfunction
 function! s:findObject(kind, which)
     if a:kind ==# 'p'
         if a:which ==# 'c'
-            call s:seekselectp()
+            call s:seekselectp(s:count)
         elseif a:which ==# 'n'
             call s:nextp(s:count)
             call s:selectp()
@@ -800,18 +800,18 @@ endfunction
 " line     │ ( ( a ) )
 " modifier │ │ └─1─┘ │
 "          │ └── 2 ──┘
-" args (opening=s:opening, closing=s:closing, trigger=s:closing)
+" args (count, opening=s:opening, closing=s:closing, trigger=s:closing)
 function! s:seekselectp(...)
-    let s:count += s:grow()
+    let cnt = a:1 + s:grow()
 
-    if a:0 == 3
-        let [ opening, closing, trigger ] = [ a:1, a:2, a:3 ]
+    if a:0 == 4
+        let [opening, closing, trigger] = [a:2, a:3, a:4]
     else
-        let [ opening, closing, trigger ] = [ s:opening, s:closing, s:closing ]
+        let [opening, closing, trigger] = [s:opening, s:closing, s:closing]
     endif
 
     " try to select around cursor
-    silent! execute 'normal! v' . s:count . 'a' . trigger
+    silent! execute 'normal! v' . cnt . 'a' . trigger
     let [s:el, s:ec] = getpos('.')[1:2]
     silent! normal! o
     let [s:sl, s:sc] = getpos('.')[1:2]
@@ -819,14 +819,14 @@ function! s:seekselectp(...)
 
     if s:sc != s:ec || s:sl != s:el
         " found target around cursor
-        let s:count = 1
+        let cnt = 1
         return s:saveRawSelection()
     endif
 
-    if s:count > 1
+    if cnt > 1
         return s:fail('seekselectp count')
     endif
-    let s:count = 1
+    let cnt = 1
 
     let [s:sl, s:sc] = searchpos(opening, '', line('.'))
     if s:sc > 0 " found opening to the right in line
@@ -853,7 +853,7 @@ endfunction
 
 " tag pair matcher (works across multiple lines, supports seeking)
 function! s:seekselectt()
-    return s:seekselectp('<\a', '</\a', 't')
+    return s:seekselectp(s:count, '<\a', '</\a', 't')
 endfunction
 
 " select an argument around the cursor
