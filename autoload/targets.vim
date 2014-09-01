@@ -802,7 +802,7 @@ endfunction
 "          │ └── 2 ──┘
 " args (opening=s:opening, closing=s:closing, trigger=s:closing)
 function! s:seekselectp(...)
-    call s:grow()
+    let s:count += s:grow()
 
     if a:0 == 3
         let [ opening, closing, trigger ] = [ a:1, a:2, a:3 ]
@@ -966,13 +966,13 @@ endfunction
 
 " selects and argument, supports growing and seeking
 function! s:seekselecta(count)
-    call s:grow()
+    let cnt = a:count + s:grow()
 
-    if a:count > 1
+    if cnt > 1
         if s:getchar() =~# g:targets_argClosing
-            let [cnt, message] = [a:count - 2, 'seekselecta 1']
+            let [cnt, message] = [cnt - 2, 'seekselecta 1']
         else
-            let [cnt, message] = [a:count - 1, 'seekselecta 2']
+            let [cnt, message] = [cnt - 1, 'seekselecta 2']
         endif
         " find cnt closing while skipping matched openings
         let [opening, closing] = [g:targets_argOpening, g:targets_argClosing]
@@ -989,19 +989,19 @@ function! s:seekselecta(count)
         return s:saveRawSelection()
     endif
 
-    if s:nextselecta(a:count, line('.')) == 0
+    if s:nextselecta(cnt, line('.')) == 0
         return s:saveRawSelection()
     endif
 
-    if s:lastselecta(a:count, line('.')) == 0
+    if s:lastselecta(cnt, line('.')) == 0
         return s:saveRawSelection()
     endif
 
-    if s:nextselecta(a:count) == 0
+    if s:nextselecta(cnt) == 0
         return s:saveRawSelection()
     endif
 
-    if s:lastselecta(a:count) == 0
+    if s:lastselecta(cnt) == 0
         return s:saveRawSelection()
     endif
 
@@ -1220,10 +1220,11 @@ function! s:expand(...)
     endif
 endfunction
 
-" grows selection on repeated invocations by increasing s:count
+" return 1 if count should be increased by one to grow selection on repeated
+" invocations
 function! s:grow()
     if s:mapmode ==# 'o' || s:newSelection
-        return 1
+        return 0
     endif
     " XXX: compare raw trigger
     " if [s:lopening, s:lclosing] != [s:opening, s:closing] " different invocation
@@ -1234,8 +1235,7 @@ function! s:grow()
     " confused by last modifiers
     call s:prepareNext()
 
-    " increase s:count to grow selection
-    let s:count = s:count + 1
+    return 1
 endfunction
 
 " if in visual mode, move cursor to start of last raw selection
