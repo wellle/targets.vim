@@ -237,7 +237,7 @@ function! s:findObject(kind, which)
 
     elseif a:kind ==# 't'
         if a:which ==# 'c'
-            call s:seekselectt()
+            call s:seekselectt(s:count)
         elseif a:which ==# 'n'
             call s:nextt(s:count)
             call s:selectp()
@@ -852,8 +852,8 @@ function! s:seekselectp(...)
 endfunction
 
 " tag pair matcher (works across multiple lines, supports seeking)
-function! s:seekselectt()
-    return s:seekselectp(s:count, '<\a', '</\a', 't')
+function! s:seekselectt(count)
+    return s:seekselectp(a:count, '<\a', '</\a', 't')
 endfunction
 
 " select an argument around the cursor
