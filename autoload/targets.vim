@@ -252,7 +252,7 @@ function! s:findObject(kind, which)
         if a:which ==# 'c'
             call s:seekselecta()
         elseif a:which ==# 'n'
-            call s:nextselecta()
+            call s:nextselecta(s:count)
         elseif a:which ==# 'l'
             call s:lastselecta()
         else
@@ -989,7 +989,7 @@ function! s:seekselecta()
         return s:saveRawSelection()
     endif
 
-    if s:nextselecta(line('.')) == 0
+    if s:nextselecta(s:count, line('.')) == 0
         return s:saveRawSelection()
     endif
 
@@ -997,7 +997,7 @@ function! s:seekselecta()
         return s:saveRawSelection()
     endif
 
-    if s:nextselecta() == 0
+    if s:nextselecta(s:count) == 0
         return s:saveRawSelection()
     endif
 
@@ -1009,12 +1009,13 @@ function! s:seekselecta()
 endfunction
 
 " try to select a next argument, supports count and optional stopline
-" args (stopline=0)
+" args (count, stopline=0) TODO: make count optional
 function! s:nextselecta(...)
     call s:prepareNext()
 
-    let stopline = a:0 > 0 ? a:1 : 0
-    if s:search(s:count, s:argOpeningS, 'W', stopline) > 0 " no start found
+    let cnt = a:1
+    let stopline = a:0 > 1 ? a:2 : 0
+    if s:search(cnt, s:argOpeningS, 'W', stopline) > 0 " no start found
         return s:fail('nextselecta 1')
     endif
 
@@ -1029,7 +1030,7 @@ function! s:nextselecta(...)
 
     call setpos('.', s:oldpos)
     let opening = g:targets_argOpening
-    if s:search(s:count, opening, 'W', stopline) > 0 " no start found
+    if s:search(cnt, opening, 'W', stopline) > 0 " no start found
         return s:fail('nextselecta 3')
     endif
 
