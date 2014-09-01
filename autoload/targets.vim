@@ -25,7 +25,7 @@ call s:setup()
 function! targets#o(trigger)
     call s:init('o')
     call s:findMatch(a:trigger, v:count1)
-    call s:handleMatch()
+    call s:handleMatch([[s:sl, s:sc], [s:el, s:ec]])
     call s:clearCommandLine()
     call s:cleanUp()
 endfunction
@@ -70,7 +70,7 @@ function! targets#x(trigger, count)
     call s:saveVisualSelection()
     call s:findMatch(a:trigger, a:count)
 
-    if s:handleMatch() == 0
+    if s:handleMatch([[s:sl, s:sc], [s:el, s:ec]]) == 0
         call s:saveState()
     endif
 
@@ -360,11 +360,11 @@ function! s:clearCommandLine()
 endfunction
 
 " handle the match by either selecting or aborting it
-function! s:handleMatch()
+function! s:handleMatch(match)
     if s:sl == 0 || s:el == 0
         return s:abortMatch('handleMatch 1')
     elseif s:sl < s:el
-        return s:selectMatch([[s:sl, s:sc], [s:el, s:ec]])
+        return s:selectMatch(a:match)
     elseif s:sl > s:el
         return s:abortMatch('handleMatch 2')
     elseif s:sc == s:ec + 1
@@ -372,7 +372,7 @@ function! s:handleMatch()
     elseif s:sc > s:ec
         return s:abortMatch('handleMatch 3')
     else
-        return s:selectMatch([[s:sl, s:sc], [s:el, s:ec]])
+        return s:selectMatch(a:match)
     endif
 endfunction
 
