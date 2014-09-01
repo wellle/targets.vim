@@ -25,28 +25,10 @@ call s:setup()
 function! targets#o(trigger)
     call s:init('o')
 
-    " TODO: rename delimiter and trigger vars?
-    let [delimiter, which, modifier] = split(a:trigger, '\zs')
+    call s:findMatch(a:trigger, v:count1)
 
-    " TODO: extract kind specific stuff into autoload subdirectories
-    " TODO: pass parameters instead of using s: vars?
-    let [kind, s:opening, s:closing, err] = s:getDelimiters(delimiter)
-    if err
-        echom "failed to find delimiter"
-    else
-        " echo s:opening s:closing
-    endif
-
-    let view = winsaveview()
-    call s:findObject(kind, which, v:count1)
-    " echo [s:sl, s:sc, s:el, s:ec]
-    " call s:saveRawSelection() here
-    call s:modifyMatch(kind, modifier)
-    call winrestview(view)
     call s:handleMatch()
-
-    " call s:clearCommandLine()
-
+    call s:clearCommandLine()
     call s:cleanUp() " TODO: clean up this function
 endfunction
 
@@ -88,25 +70,29 @@ endfunction
 function! targets#x(trigger, count)
     call s:init('x')
     call s:saveVisualSelection()
-    let [delimiter, which, modifier] = split(a:trigger, '\zs')
-    let [kind, s:opening, s:closing, err] = s:getDelimiters(delimiter)
-    if err
-        echom "failed to find delimiter"
-    else
-        " echo s:opening s:closing
-    endif
 
-    let view = winsaveview()
-    call s:findObject(kind, which, a:count)
-    " echo [s:sl, s:sc, s:el, s:ec]
-    " call s:saveRawSelection() here
-    call s:modifyMatch(kind, modifier)
-    call winrestview(view)
+    call s:findMatch(a:trigger, a:count)
+
     if s:handleMatch() == 0
         call s:saveState()
     endif
 
     call s:cleanUp() " TODO: clean up this function
+endfunction
+
+function! s:findMatch(trigger, count)
+    let [delimiter, which, modifier] = split(a:trigger, '\zs')
+    let [kind, s:opening, s:closing, err] = s:getDelimiters(delimiter)
+    if err
+        echom "failed to find delimiter"
+        return
+    endif
+
+    let view = winsaveview()
+    call s:findObject(kind, which, a:count)
+    " call s:saveRawSelection() here
+    call s:modifyMatch(kind, modifier)
+    call winrestview(view)
 endfunction
 
 " TODO: move down
