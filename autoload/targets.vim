@@ -108,26 +108,26 @@ function! s:modifyMatch(kind, modifier)
         if a:modifier ==# s:i
             return s:drop()
         elseif a:modifier ==# s:a
-            " nothing
+            return [[[s:sl, s:sc], [s:el, s:ec]], 0]
         elseif a:modifier ==# s:I
             return s:shrink()
         elseif a:modifier ==# s:A
             return s:expand()
         else
-            " TODO: fail
+            return [0, s:fail('modifyMatch p')]
         endif
 
     elseif a:kind ==# 'q'
         if a:modifier ==# s:i
             return s:drop()
         elseif a:modifier ==# s:a
-            " nothing
+            return [[[s:sl, s:sc], [s:el, s:ec]], 0]
         elseif a:modifier ==# s:I
             return s:shrink()
         elseif a:modifier ==# s:A
             return s:expand()
         else
-            " TODO: fail
+            return [0, s:fail('modifyMatch q')]
         endif
 
     elseif a:kind ==# 's'
@@ -140,7 +140,7 @@ function! s:modifyMatch(kind, modifier)
         elseif a:modifier ==# s:A
             return s:expand()
         else
-            " TODO: fail
+            return [0, s:fail('modifyMatch s')]
         endif
 
     elseif a:kind ==# 't'
@@ -148,14 +148,14 @@ function! s:modifyMatch(kind, modifier)
             call s:innert()
             return s:drop()
         elseif a:modifier ==# s:a
-            " nothing
+            return [[[s:sl, s:sc], [s:el, s:ec]], 0]
         elseif a:modifier ==# s:I
             call s:innert()
             return s:shrink()
         elseif a:modifier ==# s:A
             return s:expand()
         else
-            " TODO: fail
+            return [0, s:fail('modifyMatch t')]
         endif
 
     elseif a:kind ==# s:a
@@ -168,11 +168,11 @@ function! s:modifyMatch(kind, modifier)
         elseif a:modifier ==# s:A
             return s:expand()
         else
-            " TODO: fail
+            return [0, s:fail('modifyMatch a')]
         endif
     endif
 
-    return [[[s:sl, s:sc], [s:el, s:ec]], 0]
+    return [0, s:fail('modifyMatch kind')]
 endfunction
 
 " TODO: move down
