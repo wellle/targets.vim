@@ -106,7 +106,7 @@ endfunction
 function! s:modifyMatch(kind, modifier)
     if a:kind ==# 'p'
         if a:modifier ==# s:i
-            call s:drop()
+            return s:drop()
         elseif a:modifier ==# s:a
             " nothing
         elseif a:modifier ==# s:I
@@ -119,7 +119,7 @@ function! s:modifyMatch(kind, modifier)
 
     elseif a:kind ==# 'q'
         if a:modifier ==# s:i
-            call s:drop()
+            return s:drop()
         elseif a:modifier ==# s:a
             " nothing
         elseif a:modifier ==# s:I
@@ -132,7 +132,7 @@ function! s:modifyMatch(kind, modifier)
 
     elseif a:kind ==# 's'
         if a:modifier ==# s:i
-            call s:drop()
+            return s:drop()
         elseif a:modifier ==# s:a
             call s:dropr()
         elseif a:modifier ==# s:I
@@ -146,7 +146,7 @@ function! s:modifyMatch(kind, modifier)
     elseif a:kind ==# 't'
         if a:modifier ==# s:i
             call s:innert()
-            call s:drop()
+            return s:drop()
         elseif a:modifier ==# s:a
             " nothing
         elseif a:modifier ==# s:I
@@ -160,7 +160,7 @@ function! s:modifyMatch(kind, modifier)
 
     elseif a:kind ==# s:a
         if a:modifier ==# s:i
-            call s:drop()
+            return s:drop()
         elseif a:modifier ==# s:a
             return s:dropa()
         elseif a:modifier ==# s:I
@@ -1032,6 +1032,7 @@ function! s:drop()
         silent! execute "normal! \<BS>"
     endif
     let [s:el, s:ec] = getpos('.')[1:2]
+    return [[[s:sl, s:sc], [s:el, s:ec]], 0]
 endfunction
 
 " drop right delimiter
@@ -1056,7 +1057,7 @@ function! s:dropa()
     if startOpening
         if endOpening
             " ( x ) select space on both sides
-            call s:drop()
+            return s:drop()
         else
             " ( x , a ) select separator and space after
             call cursor(s:sl, s:sc)
@@ -1100,7 +1101,7 @@ function! s:shrink()
     let [s:el, s:ec] = searchpos('\S', 'b', s:sl)
     if s:ec <= s:sc && s:el <= s:sl
         " fall back to drop when there's only whitespace in between
-        call s:drop()
+        return s:drop()
     else
         call cursor(s:sl, s:sc)
         let [s:sl, s:sc] = searchpos('\S', '', s:el)
