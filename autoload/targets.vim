@@ -112,7 +112,7 @@ function! s:modifyMatch(kind, modifier)
         elseif a:modifier ==# s:I
             return s:shrink()
         elseif a:modifier ==# s:A
-            call s:expand()
+            return s:expand()
         else
             " TODO: fail
         endif
@@ -125,7 +125,7 @@ function! s:modifyMatch(kind, modifier)
         elseif a:modifier ==# s:I
             return s:shrink()
         elseif a:modifier ==# s:A
-            call s:expand()
+            return s:expand()
         else
             " TODO: fail
         endif
@@ -138,7 +138,7 @@ function! s:modifyMatch(kind, modifier)
         elseif a:modifier ==# s:I
             return s:shrink()
         elseif a:modifier ==# s:A
-            call s:expand()
+            return s:expand()
         else
             " TODO: fail
         endif
@@ -153,7 +153,7 @@ function! s:modifyMatch(kind, modifier)
             call s:innert()
             return s:shrink()
         elseif a:modifier ==# s:A
-            call s:expand()
+            return s:expand()
         else
             " TODO: fail
         endif
@@ -166,7 +166,7 @@ function! s:modifyMatch(kind, modifier)
         elseif a:modifier ==# s:I
             return s:shrink()
         elseif a:modifier ==# s:A
-            call s:expand()
+            return s:expand()
         else
             " TODO: fail
         endif
@@ -1062,7 +1062,7 @@ function! s:dropa()
             " ( x , a ) select separator and space after
             call cursor(s:sl, s:sc)
             let [s:sl, s:sc] = searchpos('\S', '', s:el)
-            call s:expand('>')
+            return s:expand('>')
         endif
     else
         if !endOpening
@@ -1072,7 +1072,7 @@ function! s:dropa()
             " ( a , x ) select separator and space before
             call cursor(s:el, s:ec)
             let [s:el, s:ec] = searchpos('\S', 'b', s:sl)
-            call s:expand('<')
+            return s:expand('<')
         endif
     endif
     return [[[s:sl, s:sc], [s:el, s:ec]], 0]
@@ -1122,7 +1122,7 @@ function! s:expand(...)
             " non whitespace or EOL after trailing whitespace found
             " not counting whitespace directly after end
             let [s:el, s:ec] = [line, column-1]
-            return
+            return [[[s:sl, s:sc], [s:el, s:ec]], 0]
         endif
     endif
 
@@ -1132,12 +1132,14 @@ function! s:expand(...)
         if line > 0
             " non whitespace before leading whitespace found
             let [s:sl, s:sc] = [line, column+1]
-            return
+            return [[[s:sl, s:sc], [s:el, s:ec]], 0]
         endif
         " only whitespace in front of start
         " include all leading whitespace from beginning of line
         let s:sc = 1
     endif
+
+    return [[[s:sl, s:sc], [s:el, s:ec]], 0]
 endfunction
 
 " return 1 if count should be increased by one to grow selection on repeated
