@@ -91,9 +91,9 @@ function! s:findMatch(trigger, count)
     let view = winsaveview()
     call s:findObject(kind, which, a:count)
     call s:saveRawSelection()
-    call s:modifyMatch(kind, modifier)
+    let [match, err] = s:modifyMatch(kind, modifier)
     call winrestview(view)
-    return [[[s:sl, s:sc], [s:el, s:ec]], 0]
+    return [match, 0]
 endfunction
 
 " remember last raw selection, before applying modifiers
@@ -102,6 +102,7 @@ function! s:saveRawSelection()
 endfunction
 
 " TODO: move down
+" TODO: return [[[a, b], [c, d]], err]
 function! s:modifyMatch(kind, modifier)
     if a:kind ==# 'p'
         if a:modifier ==# s:i
@@ -169,8 +170,9 @@ function! s:modifyMatch(kind, modifier)
         else
             " TODO: fail
         endif
-
     endif
+
+    return [[[s:sl, s:sc], [s:el, s:ec]], 0]
 endfunction
 
 " TODO: move down
