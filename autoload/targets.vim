@@ -162,7 +162,7 @@ function! s:modifyMatch(kind, modifier)
         if a:modifier ==# s:i
             call s:drop()
         elseif a:modifier ==# s:a
-            call s:dropa()
+            return s:dropa()
         elseif a:modifier ==# s:I
             call s:shrink()
         elseif a:modifier ==# s:A
@@ -1056,24 +1056,25 @@ function! s:dropa()
     if startOpening
         if endOpening
             " ( x ) select space on both sides
-            return s:drop()
+            call s:drop()
         else
             " ( x , a ) select separator and space after
             call cursor(s:sl, s:sc)
             let [s:sl, s:sc] = searchpos('\S', '', s:el)
-            return s:expand('>')
+            call s:expand('>')
         endif
     else
         if !endOpening
             " (a , x , b) select leading separator, no surrounding space
-            return s:dropr()
+            call s:dropr()
         else
             " ( a , x ) select separator and space before
             call cursor(s:el, s:ec)
             let [s:el, s:ec] = searchpos('\S', 'b', s:sl)
-            return s:expand('<')
+            call s:expand('<')
         endif
     endif
+    return [[[s:sl, s:sc], [s:el, s:ec]], 0]
 endfunction
 
 " select inner tag delimiters
