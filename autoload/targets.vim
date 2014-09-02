@@ -110,7 +110,7 @@ function! s:modifyMatch(kind, modifier)
         elseif a:modifier ==# s:a
             " nothing
         elseif a:modifier ==# s:I
-            call s:shrink()
+            return s:shrink()
         elseif a:modifier ==# s:A
             call s:expand()
         else
@@ -123,7 +123,7 @@ function! s:modifyMatch(kind, modifier)
         elseif a:modifier ==# s:a
             " nothing
         elseif a:modifier ==# s:I
-            call s:shrink()
+            return s:shrink()
         elseif a:modifier ==# s:A
             call s:expand()
         else
@@ -136,7 +136,7 @@ function! s:modifyMatch(kind, modifier)
         elseif a:modifier ==# s:a
             call s:dropr()
         elseif a:modifier ==# s:I
-            call s:shrink()
+            return s:shrink()
         elseif a:modifier ==# s:A
             call s:expand()
         else
@@ -151,7 +151,7 @@ function! s:modifyMatch(kind, modifier)
             " nothing
         elseif a:modifier ==# s:I
             call s:innert()
-            call s:shrink()
+            return s:shrink()
         elseif a:modifier ==# s:A
             call s:expand()
         else
@@ -164,7 +164,7 @@ function! s:modifyMatch(kind, modifier)
         elseif a:modifier ==# s:a
             return s:dropa()
         elseif a:modifier ==# s:I
-            call s:shrink()
+            return s:shrink()
         elseif a:modifier ==# s:A
             call s:expand()
         else
@@ -1100,10 +1100,12 @@ function! s:shrink()
     let [s:el, s:ec] = searchpos('\S', 'b', s:sl)
     if s:ec <= s:sc && s:el <= s:sl
         " fall back to drop when there's only whitespace in between
-        return s:drop()
+        call s:drop()
+    else
+        call cursor(s:sl, s:sc)
+        let [s:sl, s:sc] = searchpos('\S', '', s:el)
     endif
-    call cursor(s:sl, s:sc)
-    let [s:sl, s:sc] = searchpos('\S', '', s:el)
+    return [[[s:sl, s:sc], [s:el, s:ec]], 0]
 endfunction
 
 " expand selection by some whitespace
