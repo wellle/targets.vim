@@ -91,7 +91,8 @@ function! s:findMatch(trigger, count)
     let view = winsaveview()
     call s:findObject(kind, which, a:count)
     call s:saveRawSelection()
-    let [match, err] = s:modifyMatch(kind, modifier)
+    let match = [[s:sl, s:sc], [s:el, s:ec]]
+    let [match, err] = s:modifyMatch(match, kind, modifier)
     call winrestview(view)
     return [match, 0]
 endfunction
@@ -103,12 +104,12 @@ endfunction
 
 " TODO: move down
 " TODO: return [[[a, b], [c, d]], err]
-function! s:modifyMatch(kind, modifier)
+function! s:modifyMatch(match, kind, modifier)
     if a:kind ==# 'p'
         if a:modifier ==# s:i
             return s:drop()
         elseif a:modifier ==# s:a
-            return [[[s:sl, s:sc], [s:el, s:ec]], 0]
+            return [a:match, 0]
         elseif a:modifier ==# s:I
             return s:shrink()
         elseif a:modifier ==# s:A
@@ -121,7 +122,7 @@ function! s:modifyMatch(kind, modifier)
         if a:modifier ==# s:i
             return s:drop()
         elseif a:modifier ==# s:a
-            return [[[s:sl, s:sc], [s:el, s:ec]], 0]
+            return [a:match, 0]
         elseif a:modifier ==# s:I
             return s:shrink()
         elseif a:modifier ==# s:A
@@ -148,7 +149,7 @@ function! s:modifyMatch(kind, modifier)
             let [match, err] = s:innert()
             return s:drop()
         elseif a:modifier ==# s:a
-            return [[[s:sl, s:sc], [s:el, s:ec]], 0]
+            return [a:match, 0]
         elseif a:modifier ==# s:I
             let [match, err] = s:innert()
             return s:shrink()
