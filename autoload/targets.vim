@@ -145,12 +145,12 @@ function! s:modifyMatch(kind, modifier)
 
     elseif a:kind ==# 't'
         if a:modifier ==# s:i
-            call s:innert()
+            let [match, err] = s:innert()
             return s:drop()
         elseif a:modifier ==# s:a
             return [[[s:sl, s:sc], [s:el, s:ec]], 0]
         elseif a:modifier ==# s:I
-            call s:innert()
+            let [match, err] = s:innert()
             return s:shrink()
         elseif a:modifier ==# s:A
             return s:expand()
@@ -1089,6 +1089,7 @@ function! s:innert()
     call cursor(s:el, s:ec)
     call searchpos('<', 'bW')
     let [s:el, s:ec] = getpos('.')[1:2]
+    return [[[s:sl, s:sc], [s:el, s:ec]], 0]
 endfunction
 
 " drop delimiters and whitespace left and right
