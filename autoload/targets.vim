@@ -379,7 +379,7 @@ function! s:handleTarget(target)
     elseif s:sl > s:el
         return s:abortMatch('handleTarget 2')
     elseif s:sc == s:ec + 1
-        return s:handleEmptyMatch()
+        return s:handleEmptyMatch(a:target)
     elseif s:sc > s:ec
         return s:abortMatch('handleTarget 3')
     else
@@ -410,13 +410,13 @@ endfunction
 " empty matches can't visually be selected
 " most operators would like to move to the end delimiter
 " for change or delete, insert temporary character that will be operated on
-function! s:handleEmptyMatch()
+function! s:handleEmptyMatch(target)
     if v:operator !~# "^[cd]$"
         return s:abortMatch('handleEmptyMatch')
     endif
 
     " move cursor to delimiter after zero width match
-    call cursor(s:sl, s:sc)
+    call a:target.cursorS()
 
     let eventignore = &eventignore " remember setting
     let &eventignore = 'all' " disable auto commands
