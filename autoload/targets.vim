@@ -185,9 +185,7 @@ function! s:modifyTarget(match, kind, modifier)
             let target = targets#target#fromArray(match)
             return [target, 0]
         elseif a:modifier ==# s:a
-            let [match, err] = s:dropa()
-            let target = targets#target#fromArray(match)
-            return [target, 0]
+            return s:dropa()
         elseif a:modifier ==# s:I
             return s:shrink()
         elseif a:modifier ==# s:A
@@ -1077,22 +1075,30 @@ function! s:dropa()
     if startOpening
         if endOpening
             " ( x ) select space on both sides
-            return s:drop()
+            let [match, err] = s:drop()
+            let target = targets#target#fromArray(match)
+            return [target, 0]
         else
             " ( x , a ) select separator and space after
             call cursor(s:sl, s:sc)
             let [s:sl, s:sc] = searchpos('\S', '', s:el)
-            return s:expand('>')
+            let [match, err] = s:expand('>')
+            let target = targets#target#fromArray(match)
+            return [target, 0]
         endif
     else
         if !endOpening
             " (a , x , b) select leading separator, no surrounding space
-            return s:dropr()
+            let [match, err] = s:dropr()
+            let target = targets#target#fromArray(match)
+            return [target, 0]
         else
             " ( a , x ) select separator and space before
             call cursor(s:el, s:ec)
             let [s:el, s:ec] = searchpos('\S', 'b', s:sl)
-            return s:expand('<')
+            let [match, err] = s:expand('<')
+            let target = targets#target#fromArray(match)
+            return [target, 0]
         endif
     endif
 endfunction
