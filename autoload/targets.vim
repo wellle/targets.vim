@@ -397,15 +397,7 @@ endfunction
 " visually select a given match. used for match or old selection
 function! s:selectRegion(target)
     " visually select the target
-    call cursor(a:target.s())
-
-    if a:target.linewise
-        silent! normal! V
-    else
-        silent! normal! v
-    endif
-
-    call cursor(a:target.e())
+    call a:target.select()
 
     " if selection should be exclusive, expand selection
     if s:selection ==# 'exclusive'

@@ -15,15 +15,29 @@ function! targets#target#fromValues(sl, sc, el, ec)
         \ 'ec': a:ec,
         \ 'linewise': 0,
         \
-        \ 's': function('targets#target#S'),
-        \ 'e': function('targets#target#E')
+        \ 'select': function('targets#target#select'),
+        \ 's': function('targets#target#s'),
+        \ 'e': function('targets#target#e')
         \ }
 endfunction
 
-function! targets#target#S() dict
+" visually select the target
+function! targets#target#select() dict
+    call cursor(self.s())
+
+    if self.linewise
+        silent! normal! V
+    else
+        silent! normal! v
+    endif
+
+    call cursor(self.e())
+endfunction
+
+function! targets#target#s() dict
     return [self.sl, self.sc]
 endfunction
 
-function! targets#target#E() dict
+function! targets#target#e() dict
     return [self.el, self.ec]
 endfunction
