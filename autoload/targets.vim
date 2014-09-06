@@ -28,7 +28,8 @@ function! targets#o(trigger)
     if err
         return s:cleanUp()
     endif
-    call s:handleMatch(match)
+    let target = targets#target#fromArray(match)
+    call s:handleTarget(target)
     call s:clearCommandLine()
     call s:cleanUp()
 endfunction
@@ -75,7 +76,8 @@ function! targets#x(trigger, count)
     if err
         return s:cleanUp()
     endif
-    if s:handleMatch(match) == 0
+    let target = targets#target#fromArray(match)
+    if s:handleTarget(target) == 0
         call s:saveState()
     endif
     call s:cleanUp()
@@ -367,20 +369,19 @@ function! s:clearCommandLine()
 endfunction
 
 " handle the match by either selecting or aborting it
-function! s:handleMatch(match)
-    let target = targets#target#fromArray(a:match)
+function! s:handleTarget(target)
     if s:sl == 0 || s:el == 0
-        return s:abortMatch('handleMatch 1')
+        return s:abortMatch('handleTarget 1')
     elseif s:sl < s:el
-        return s:selectTarget(target)
+        return s:selectTarget(a:target)
     elseif s:sl > s:el
-        return s:abortMatch('handleMatch 2')
+        return s:abortMatch('handleTarget 2')
     elseif s:sc == s:ec + 1
         return s:handleEmptyMatch()
     elseif s:sc > s:ec
-        return s:abortMatch('handleMatch 3')
+        return s:abortMatch('handleTarget 3')
     else
-        return s:selectTarget(target)
+        return s:selectTarget(a:target)
     endif
 endfunction
 
