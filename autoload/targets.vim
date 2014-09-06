@@ -106,9 +106,7 @@ endfunction
 function! s:modifyTarget(match, kind, modifier)
     if a:kind ==# 'p'
         if a:modifier ==# s:i
-            let [match, err] = s:drop()
-            let target = targets#target#fromArray(match)
-            return [target, 0]
+            return s:drop()
         elseif a:modifier ==# s:a
             let target = targets#target#fromArray(a:match)
             return [target, 0]
@@ -122,9 +120,7 @@ function! s:modifyTarget(match, kind, modifier)
 
     elseif a:kind ==# 'q'
         if a:modifier ==# s:i
-            let [match, err] = s:drop()
-            let target = targets#target#fromArray(match)
-            return [target, 0]
+            return s:drop()
         elseif a:modifier ==# s:a
             let target = targets#target#fromArray(a:match)
             return [target, 0]
@@ -138,9 +134,7 @@ function! s:modifyTarget(match, kind, modifier)
 
     elseif a:kind ==# 's'
         if a:modifier ==# s:i
-            let [match, err] = s:drop()
-            let target = targets#target#fromArray(match)
-            return [target, 0]
+            return s:drop()
         elseif a:modifier ==# s:a
             let [match, err] = s:dropr()
             let target = targets#target#fromArray(match)
@@ -156,9 +150,7 @@ function! s:modifyTarget(match, kind, modifier)
     elseif a:kind ==# 't'
         if a:modifier ==# s:i
             let [match, err] = s:innert()
-            let [match, err] = s:drop()
-            let target = targets#target#fromArray(match)
-            return [target, 0]
+            return s:drop()
         elseif a:modifier ==# s:a
             let target = targets#target#fromArray(a:match)
             return [target, 0]
@@ -173,9 +165,7 @@ function! s:modifyTarget(match, kind, modifier)
 
     elseif a:kind ==# s:a
         if a:modifier ==# s:i
-            let [match, err] = s:drop()
-            let target = targets#target#fromArray(match)
-            return [target, 0]
+            return s:drop()
         elseif a:modifier ==# s:a
             return s:dropa()
         elseif a:modifier ==# s:I
@@ -1039,7 +1029,7 @@ function! s:drop()
         silent! execute "normal! \<BS>"
     endif
     let [s:el, s:ec] = getpos('.')[1:2]
-    return [[[s:sl, s:sc], [s:el, s:ec]], 0]
+    return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
 endfunction
 
 " drop right delimiter
@@ -1065,9 +1055,7 @@ function! s:dropa()
     if startOpening
         if endOpening
             " ( x ) select space on both sides
-            let [match, err] = s:drop()
-            let target = targets#target#fromArray(match)
-            return [target, 0]
+            return s:drop()
         else
             " ( x , a ) select separator and space after
             call cursor(s:sl, s:sc)
@@ -1113,9 +1101,7 @@ function! s:shrink()
     let [s:el, s:ec] = searchpos('\S', 'b', s:sl)
     if s:ec <= s:sc && s:el <= s:sl
         " fall back to drop when there's only whitespace in between
-        let [match, err] = s:drop()
-        let target = targets#target#fromArray(match)
-        return [target, 0]
+        return s:drop()
     else
         call cursor(s:sl, s:sc)
         let [s:sl, s:sc] = searchpos('\S', '', s:el)
