@@ -372,16 +372,10 @@ endfunction
 
 " handle the match by either selecting or aborting it
 function! s:handleTarget(target)
-    if s:sl == 0 || s:el == 0
-        return s:abortMatch('handleTarget 1')
-    elseif s:sl < s:el
-        return s:selectTarget(a:target)
-    elseif s:sl > s:el
-        return s:abortMatch('handleTarget 2')
-    elseif s:sc == s:ec + 1
+    if a:target.invalid()
+        return s:abortMatch('handleTarget')
+    elseif a:target.empty()
         return s:handleEmptyMatch(a:target)
-    elseif s:sc > s:ec
-        return s:abortMatch('handleTarget 3')
     else
         return s:selectTarget(a:target)
     endif

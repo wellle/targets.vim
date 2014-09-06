@@ -18,6 +18,8 @@ function! targets#target#fromValues(sl, sc, el, ec)
         \ 'select': function('targets#target#select'),
         \ 'cursorS': function('targets#target#cursorS'),
         \ 'cursorE': function('targets#target#cursorE'),
+        \ 'invalid': function('targets#target#invalid'),
+        \ 'empty': function('targets#target#empty'),
         \ 's': function('targets#target#s'),
         \ 'e': function('targets#target#e')
         \ }
@@ -42,6 +44,32 @@ endfunction
 
 function! targets#target#cursorE() dict
     call cursor(self.e())
+endfunction
+
+function! targets#target#invalid() dict
+    if self.sl == 0 || self.el == 0
+        return 1
+    elseif self.sl < self.el
+        return 0
+    elseif self.sl > self.el
+        return 1
+    elseif self.sc == self.ec + 1 " empty match
+        return 0
+    elseif self.sc > self.ec
+        return 1
+    else
+        return 0
+    endif
+endfunction
+
+function! targets#target#empty() dict
+    if self.sl != self.el
+        return 0
+    elseif self.sc == self.ec + 1
+        return 1
+    else
+        return 0
+    endif
 endfunction
 
 function! targets#target#s() dict
