@@ -147,13 +147,13 @@ function! s:modifyTarget(match, kind, modifier)
 
     elseif a:kind ==# 't'
         if a:modifier ==# s:i
-            let [match, err] = s:innert()
+            let [target, err] = s:innert() " TODO: pass into s:drop
             return s:drop()
         elseif a:modifier ==# s:a
             let target = targets#target#fromArray(a:match)
             return [target, 0]
         elseif a:modifier ==# s:I
-            let [match, err] = s:innert()
+            let [target, err] = s:innert() " TODO: pass into s:shrink
             return s:shrink()
         elseif a:modifier ==# s:A
             return s:expand()
@@ -1084,7 +1084,7 @@ function! s:innert()
     call cursor(s:el, s:ec)
     call searchpos('<', 'bW')
     let [s:el, s:ec] = getpos('.')[1:2]
-    return [[[s:sl, s:sc], [s:el, s:ec]], 0]
+    return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
 endfunction
 
 " drop delimiters and whitespace left and right
