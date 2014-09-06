@@ -92,10 +92,9 @@ function! s:findTarget(trigger, count)
     call s:findObject(kind, which, a:count)
     call s:saveRawSelection()
     let match = [[s:sl, s:sc], [s:el, s:ec]]
-    let [match, err] = s:modifyMatch(match, kind, modifier)
+    let [target, err] = s:modifyTarget(match, kind, modifier)
     call winrestview(view)
-    let target = targets#target#fromArray(match)
-    return [target, 0]
+    return [target, err]
 endfunction
 
 " remember last raw selection, before applying modifiers
@@ -104,77 +103,113 @@ function! s:saveRawSelection()
 endfunction
 
 " TODO: move down
-" TODO: return [[[a, b], [c, d]], err]
-function! s:modifyMatch(match, kind, modifier)
+function! s:modifyTarget(match, kind, modifier)
     if a:kind ==# 'p'
         if a:modifier ==# s:i
-            return s:drop()
+            let [match, err] = s:drop()
+            let target = targets#target#fromArray(match)
+            return [target, 0]
         elseif a:modifier ==# s:a
-            return [a:match, 0]
+            let target = targets#target#fromArray(a:match)
+            return [target, 0]
         elseif a:modifier ==# s:I
-            return s:shrink()
+            let [match, err] = s:shrink()
+            let target = targets#target#fromArray(match)
+            return [target, 0]
         elseif a:modifier ==# s:A
-            return s:expand()
+            let [match, err] = s:expand()
+            let target = targets#target#fromArray(match)
+            return [target, 0]
         else
-            return [0, s:fail('modifyMatch p')]
+            return [0, s:fail('modifyTarget p')]
         endif
 
     elseif a:kind ==# 'q'
         if a:modifier ==# s:i
-            return s:drop()
+            let [match, err] = s:drop()
+            let target = targets#target#fromArray(match)
+            return [target, 0]
         elseif a:modifier ==# s:a
-            return [a:match, 0]
+            let target = targets#target#fromArray(a:match)
+            return [target, 0]
         elseif a:modifier ==# s:I
-            return s:shrink()
+            let [match, err] = s:shrink()
+            let target = targets#target#fromArray(match)
+            return [target, 0]
         elseif a:modifier ==# s:A
-            return s:expand()
+            let [match, err] = s:expand()
+            let target = targets#target#fromArray(match)
+            return [target, 0]
         else
-            return [0, s:fail('modifyMatch q')]
+            return [0, s:fail('modifyTarget q')]
         endif
 
     elseif a:kind ==# 's'
         if a:modifier ==# s:i
-            return s:drop()
+            let [match, err] = s:drop()
+            let target = targets#target#fromArray(match)
+            return [target, 0]
         elseif a:modifier ==# s:a
-            return s:dropr()
+            let [match, err] = s:dropr()
+            let target = targets#target#fromArray(match)
+            return [target, 0]
         elseif a:modifier ==# s:I
-            return s:shrink()
+            let [match, err] = s:shrink()
+            let target = targets#target#fromArray(match)
+            return [target, 0]
         elseif a:modifier ==# s:A
-            return s:expand()
+            let [match, err] = s:expand()
+            let target = targets#target#fromArray(match)
+            return [target, 0]
         else
-            return [0, s:fail('modifyMatch s')]
+            return [0, s:fail('modifyTarget s')]
         endif
 
     elseif a:kind ==# 't'
         if a:modifier ==# s:i
             let [match, err] = s:innert()
-            return s:drop()
+            let [match, err] = s:drop()
+            let target = targets#target#fromArray(match)
+            return [target, 0]
         elseif a:modifier ==# s:a
-            return [a:match, 0]
+            let target = targets#target#fromArray(a:match)
+            return [target, 0]
         elseif a:modifier ==# s:I
             let [match, err] = s:innert()
-            return s:shrink()
+            let [match, err] = s:shrink()
+            let target = targets#target#fromArray(match)
+            return [target, 0]
         elseif a:modifier ==# s:A
-            return s:expand()
+            let [match, err] = s:expand()
+            let target = targets#target#fromArray(match)
+            return [target, 0]
         else
-            return [0, s:fail('modifyMatch t')]
+            return [0, s:fail('modifyTarget t')]
         endif
 
     elseif a:kind ==# s:a
         if a:modifier ==# s:i
-            return s:drop()
+            let [match, err] = s:drop()
+            let target = targets#target#fromArray(match)
+            return [target, 0]
         elseif a:modifier ==# s:a
-            return s:dropa()
+            let [match, err] = s:dropa()
+            let target = targets#target#fromArray(match)
+            return [target, 0]
         elseif a:modifier ==# s:I
-            return s:shrink()
+            let [match, err] = s:shrink()
+            let target = targets#target#fromArray(match)
+            return [target, 0]
         elseif a:modifier ==# s:A
-            return s:expand()
+            let [match, err] = s:expand()
+            let target = targets#target#fromArray(match)
+            return [target, 0]
         else
-            return [0, s:fail('modifyMatch a')]
+            return [0, s:fail('modifyTarget a')]
         endif
     endif
 
-    return [0, s:fail('modifyMatch kind')]
+    return [0, s:fail('modifyTarget kind')]
 endfunction
 
 " TODO: move down
