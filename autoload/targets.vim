@@ -304,7 +304,6 @@ function! s:init(mapmode)
     let s:mapmode = a:mapmode
     let [s:rsl, s:rsc, s:rel, s:rec] = [0, 0, 0, 0]
     let [s:sl, s:sc, s:el, s:ec] = [0, 0, 0, 0]
-    let [s:sLinewise, s:eLinewise] = [0, 0]
     let s:oldpos = getpos('.')
     let s:newSelection = 1
 
@@ -388,7 +387,6 @@ function! s:selectTarget(target)
     call setpos('.', s:oldpos)
     normal! m'
 
-    let a:target.linewise = s:sLinewise && s:eLinewise
     call s:selectRegion(a:target)
 endfunction
 
@@ -1005,10 +1003,11 @@ endfunction
 " line │ a .  b  . c
 " out  │    └───┘
 function! s:drop()
+    let [sLinewise, eLinewise] = [0, 0]
     call cursor(s:sl, s:sc)
     if searchpos('\S', 'nW', line('.'))[0] == 0
         " if only whitespace after cursor
-        let s:sLinewise = 1
+        let sLinewise = 1
     endif
     silent! execute "normal! 1 "
     let [s:sl, s:sc] = getpos('.')[1:2]
@@ -1016,7 +1015,7 @@ function! s:drop()
     call cursor(s:el, s:ec)
     if s:sl < s:el && searchpos('\S', 'bnW', line('.'))[0] == 0
         " if only whitespace in front of cursor
-        let s:eLinewise = 1
+        let eLinewise = 1
         " move to end of line above
         normal! -$
     else
@@ -1024,7 +1023,9 @@ function! s:drop()
         silent! execute "normal! \<BS>"
     endif
     let [s:el, s:ec] = getpos('.')[1:2]
-    return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
+    let target = targets#target#fromValues(s:sl, s:sc, s:el, s:ec)
+    let target.linewise = sLinewise && eLinewise
+    return [target, 0]
 endfunction
 
 " drop right delimiter
