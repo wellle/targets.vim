@@ -106,67 +106,73 @@ endfunction
 function! s:modifyTarget(target, kind, modifier)
     if a:kind ==# 'p'
         if a:modifier ==# s:i
-            return s:drop()
+            return s:drop(a:target)
         elseif a:modifier ==# s:a
             return [a:target, 0]
         elseif a:modifier ==# s:I
-            return s:shrink()
+            return s:shrink(a:target)
         elseif a:modifier ==# s:A
-            return s:expand()
+            return s:expand(a:target)
         else
             return [0, s:fail('modifyTarget p')]
         endif
 
     elseif a:kind ==# 'q'
         if a:modifier ==# s:i
-            return s:drop()
+            return s:drop(a:target)
         elseif a:modifier ==# s:a
             return [a:target, 0]
         elseif a:modifier ==# s:I
-            return s:shrink()
+            return s:shrink(a:target)
         elseif a:modifier ==# s:A
-            return s:expand()
+            return s:expand(a:target)
         else
             return [0, s:fail('modifyTarget q')]
         endif
 
     elseif a:kind ==# 's'
         if a:modifier ==# s:i
-            return s:drop()
+            return s:drop(a:target)
         elseif a:modifier ==# s:a
-            return s:dropr()
+            return s:dropr(a:target)
         elseif a:modifier ==# s:I
-            return s:shrink()
+            return s:shrink(a:target)
         elseif a:modifier ==# s:A
-            return s:expand()
+            return s:expand(a:target)
         else
             return [0, s:fail('modifyTarget s')]
         endif
 
     elseif a:kind ==# 't'
         if a:modifier ==# s:i
-            let [target, err] = s:innert() " TODO: pass into s:drop
-            return s:drop()
+            let [target, err] = s:innert(a:target)
+            if err
+                return [0, err]
+            endif
+            return s:drop(target)
         elseif a:modifier ==# s:a
             return [a:target, 0]
         elseif a:modifier ==# s:I
-            let [target, err] = s:innert() " TODO: pass into s:shrink
-            return s:shrink()
+            let [target, err] = s:innert(a:target)
+            if err
+                return [0, err]
+            endif
+            return s:shrink(target)
         elseif a:modifier ==# s:A
-            return s:expand()
+            return s:expand(a:target)
         else
             return [0, s:fail('modifyTarget t')]
         endif
 
     elseif a:kind ==# s:a
         if a:modifier ==# s:i
-            return s:drop()
+            return s:drop(a:target)
         elseif a:modifier ==# s:a
-            return s:dropa()
+            return s:dropa(a:target)
         elseif a:modifier ==# s:I
-            return s:shrink()
+            return s:shrink(a:target)
         elseif a:modifier ==# s:A
-            return s:expand()
+            return s:expand(a:target)
         else
             return [0, s:fail('modifyTarget a')]
         endif
@@ -1002,7 +1008,7 @@ endfunction
 " in   │   ┌─────┐
 " line │ a .  b  . c
 " out  │    └───┘
-function! s:drop()
+function! s:drop(target)
     let [sLinewise, eLinewise] = [0, 0]
     call cursor(s:sl, s:sc)
     if searchpos('\S', 'nW', line('.'))[0] == 0
@@ -1032,7 +1038,7 @@ endfunction
 " in   │   ┌─────┐
 " line │ a . b c . d
 " out  │   └────┘
-function! s:dropr()
+function! s:dropr(target)
     call cursor(s:el, s:ec)
     silent! execute "normal! \<BS>"
     let [s:el, s:ec] = getpos('.')[1:2]
@@ -1044,29 +1050,31 @@ endfunction
 " in   │ ┌───┐ ┌───┐        ┌───┐        ┌───┐
 " line │ ( x ) ( x , a ) (a , x , b) ( a , x )
 " out  │  └─┘    └──┘       └──┘        └──┘
-function! s:dropa()
+function! s:dropa(target)
     let startOpening = s:getchar(s:sl, s:sc) !~# g:targets_argSeparator
     let endOpening   = s:getchar(s:el, s:ec) !~# g:targets_argSeparator
 
     if startOpening
         if endOpening
             " ( x ) select space on both sides
-            return s:drop()
+            return s:drop(a:target)
         else
             " ( x , a ) select separator and space after
             call cursor(s:sl, s:sc)
             let [s:sl, s:sc] = searchpos('\S', '', s:el)
-            return s:expand('>')
+            let [a:target.sl, a:target.sc] = [s:sl, s:sc]
+            return s:expand(a:target, '>')
         endif
     else
         if !endOpening
             " (a , x , b) select leading separator, no surrounding space
-            return s:dropr()
+            return s:dropr(a:target)
         else
             " ( a , x ) select separator and space before
             call cursor(s:el, s:ec)
             let [s:el, s:ec] = searchpos('\S', 'b', s:sl)
-            return s:expand('<')
+            let [a:target.el, a:target.ec] = [s:el, s:ec]
+            return s:expand(a:target, '<')
         endif
     endif
 endfunction
@@ -1075,7 +1083,7 @@ endfunction
 " in   │   ┌──────────┐
 " line │ a <b>  c  </b> c
 " out  │     └─────┘
-function! s:innert()
+function! s:innert(target)
     call cursor(s:sl, s:sc)
     call searchpos('>', 'W')
     let [s:sl, s:sc] = getpos('.')[1:2]
@@ -1090,12 +1098,13 @@ endfunction
 " in   │   ┌─────┐   │   ┌──┐
 " line │ a . b c . d │ a .  . d
 " out  │     └─┘     │    └┘
-function! s:shrink()
+function! s:shrink(target)
     call cursor(s:el, s:ec)
     let [s:el, s:ec] = searchpos('\S', 'b', s:sl)
     if s:ec <= s:sc && s:el <= s:sl
         " fall back to drop when there's only whitespace in between
-        return s:drop()
+        let [a:target.el, a:target.ec] = [s:el, s:ec]
+        return s:drop(a:target)
     else
         call cursor(s:sl, s:sc)
         let [s:sl, s:sc] = searchpos('\S', '', s:el)
@@ -1107,9 +1116,11 @@ endfunction
 " in   │   ┌───┐   │   ┌───┐  │  ┌───┐  │ ┌───┐
 " line │ a . b . c │ a . b .c │ a. c .c │ . a .c
 " out  │   └────┘  │  └────┘  │  └───┘  │└────┘
-" args (direction=<try right, then left>)
+" args (target, direction=<try right, then left>)
 function! s:expand(...)
-    if a:0 == 0 || a:1 ==# '>'
+    let target = a:1
+
+    if a:0 == 1 || a:2 ==# '>'
         call cursor(s:el, s:ec)
         let [line, column] = searchpos('\S\|$', '', line('.'))
         if line > 0 && column-1 > s:ec
@@ -1120,7 +1131,7 @@ function! s:expand(...)
         endif
     endif
 
-    if a:0 == 0 || a:1 ==# '<'
+    if a:0 == 1 || a:2 ==# '<'
         call cursor(s:sl, s:sc)
         let [line, column] = searchpos('\S', 'b', line('.'))
         if line > 0
