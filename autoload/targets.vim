@@ -368,10 +368,11 @@ endfunction
 
 " handle the match by either selecting or aborting it
 function! s:handleMatch(match)
+    let target = targets#target#fromArray(a:match)
     if s:sl == 0 || s:el == 0
         return s:abortMatch('handleMatch 1')
     elseif s:sl < s:el
-        return s:selectMatch(a:match)
+        return s:selectTarget(target)
     elseif s:sl > s:el
         return s:abortMatch('handleMatch 2')
     elseif s:sc == s:ec + 1
@@ -379,19 +380,18 @@ function! s:handleMatch(match)
     elseif s:sc > s:ec
         return s:abortMatch('handleMatch 3')
     else
-        return s:selectMatch(a:match)
+        return s:selectTarget(target)
     endif
 endfunction
 
 " select a proper match
-function! s:selectMatch(match)
+function! s:selectTarget(target)
     " add old position to jump list
     call setpos('.', s:oldpos)
     normal! m'
 
     let linewise = s:sLinewise && s:eLinewise
-    let target = targets#target#fromArray(a:match)
-    call s:selectRegion(linewise, target)
+    call s:selectRegion(linewise, a:target)
 endfunction
 
 " visually select a given match. used for match or old selection
