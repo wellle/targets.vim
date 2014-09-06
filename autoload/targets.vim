@@ -24,11 +24,10 @@ call s:setup()
 
 function! targets#o(trigger)
     call s:init('o')
-    let [match, err] = s:findMatch(a:trigger, v:count1)
+    let [target, err] = s:findTarget(a:trigger, v:count1)
     if err
         return s:cleanUp()
     endif
-    let target = targets#target#fromArray(match)
     call s:handleTarget(target)
     call s:clearCommandLine()
     call s:cleanUp()
@@ -72,18 +71,17 @@ endfunction
 function! targets#x(trigger, count)
     call s:init('x')
     call s:saveVisualSelection()
-    let [match, err] = s:findMatch(a:trigger, a:count)
+    let [target, err] = s:findTarget(a:trigger, a:count)
     if err
         return s:cleanUp()
     endif
-    let target = targets#target#fromArray(match)
     if s:handleTarget(target) == 0
         call s:saveState()
     endif
     call s:cleanUp()
 endfunction
 
-function! s:findMatch(trigger, count)
+function! s:findTarget(trigger, count)
     let [delimiter, which, modifier] = split(a:trigger, '\zs')
     let [kind, s:opening, s:closing, err] = s:getDelimiters(delimiter)
     if err
@@ -96,7 +94,8 @@ function! s:findMatch(trigger, count)
     let match = [[s:sl, s:sc], [s:el, s:ec]]
     let [match, err] = s:modifyMatch(match, kind, modifier)
     call winrestview(view)
-    return [match, 0]
+    let target = targets#target#fromArray(match)
+    return [target, 0]
 endfunction
 
 " remember last raw selection, before applying modifiers
