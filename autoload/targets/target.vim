@@ -16,6 +16,8 @@ function! targets#target#fromValues(sl, sc, el, ec)
         \ 'linewise': 0,
         \
         \ 'select': function('targets#target#select'),
+        \ 'cursorS': function('targets#target#cursorS'),
+        \ 'cursorE': function('targets#target#cursorE'),
         \ 's': function('targets#target#s'),
         \ 'e': function('targets#target#e')
         \ }
@@ -31,6 +33,14 @@ function! targets#target#select() dict
         silent! normal! v
     endif
 
+    call cursor(self.e())
+endfunction
+
+function! targets#target#cursorS() dict
+    call cursor(self.s())
+endfunction
+
+function! targets#target#cursorE() dict
     call cursor(self.e())
 endfunction
 
