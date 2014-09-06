@@ -113,9 +113,7 @@ function! s:modifyTarget(match, kind, modifier)
             let target = targets#target#fromArray(a:match)
             return [target, 0]
         elseif a:modifier ==# s:I
-            let [match, err] = s:shrink()
-            let target = targets#target#fromArray(match)
-            return [target, 0]
+            return s:shrink()
         elseif a:modifier ==# s:A
             let [match, err] = s:expand()
             let target = targets#target#fromArray(match)
@@ -133,9 +131,7 @@ function! s:modifyTarget(match, kind, modifier)
             let target = targets#target#fromArray(a:match)
             return [target, 0]
         elseif a:modifier ==# s:I
-            let [match, err] = s:shrink()
-            let target = targets#target#fromArray(match)
-            return [target, 0]
+            return s:shrink()
         elseif a:modifier ==# s:A
             let [match, err] = s:expand()
             let target = targets#target#fromArray(match)
@@ -154,9 +150,7 @@ function! s:modifyTarget(match, kind, modifier)
             let target = targets#target#fromArray(match)
             return [target, 0]
         elseif a:modifier ==# s:I
-            let [match, err] = s:shrink()
-            let target = targets#target#fromArray(match)
-            return [target, 0]
+            return s:shrink()
         elseif a:modifier ==# s:A
             let [match, err] = s:expand()
             let target = targets#target#fromArray(match)
@@ -176,9 +170,7 @@ function! s:modifyTarget(match, kind, modifier)
             return [target, 0]
         elseif a:modifier ==# s:I
             let [match, err] = s:innert()
-            let [match, err] = s:shrink()
-            let target = targets#target#fromArray(match)
-            return [target, 0]
+            return s:shrink()
         elseif a:modifier ==# s:A
             let [match, err] = s:expand()
             let target = targets#target#fromArray(match)
@@ -197,9 +189,7 @@ function! s:modifyTarget(match, kind, modifier)
             let target = targets#target#fromArray(match)
             return [target, 0]
         elseif a:modifier ==# s:I
-            let [match, err] = s:shrink()
-            let target = targets#target#fromArray(match)
-            return [target, 0]
+            return s:shrink()
         elseif a:modifier ==# s:A
             let [match, err] = s:expand()
             let target = targets#target#fromArray(match)
@@ -1131,12 +1121,14 @@ function! s:shrink()
     let [s:el, s:ec] = searchpos('\S', 'b', s:sl)
     if s:ec <= s:sc && s:el <= s:sl
         " fall back to drop when there's only whitespace in between
-        return s:drop()
+        let [match, err] = s:drop()
+        let target = targets#target#fromArray(match)
+        return [target, 0]
     else
         call cursor(s:sl, s:sc)
         let [s:sl, s:sc] = searchpos('\S', '', s:el)
     endif
-    return [[[s:sl, s:sc], [s:el, s:ec]], 0]
+    return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
 endfunction
 
 " expand selection by some whitespace
