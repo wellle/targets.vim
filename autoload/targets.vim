@@ -136,9 +136,7 @@ function! s:modifyTarget(match, kind, modifier)
         if a:modifier ==# s:i
             return s:drop()
         elseif a:modifier ==# s:a
-            let [match, err] = s:dropr()
-            let target = targets#target#fromArray(match)
-            return [target, 0]
+            return s:dropr()
         elseif a:modifier ==# s:I
             return s:shrink()
         elseif a:modifier ==# s:A
@@ -1040,7 +1038,7 @@ function! s:dropr()
     call cursor(s:el, s:ec)
     silent! execute "normal! \<BS>"
     let [s:el, s:ec] = getpos('.')[1:2]
-    return [[[s:sl, s:sc], [s:el, s:ec]], 0]
+    return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
 endfunction
 
 " drop an argument separator (like a comma), prefer the right one, fall back
@@ -1065,9 +1063,7 @@ function! s:dropa()
     else
         if !endOpening
             " (a , x , b) select leading separator, no surrounding space
-            let [match, err] = s:dropr()
-            let target = targets#target#fromArray(match)
-            return [target, 0]
+            return s:dropr()
         else
             " ( a , x ) select separator and space before
             call cursor(s:el, s:ec)
