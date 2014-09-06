@@ -1,9 +1,18 @@
 function! targets#target#fromArray(array)
+    return targets#target#fromValues(
+        \ a:array[0][0],
+        \ a:array[0][1],
+        \ a:array[1][0],
+        \ a:array[1][1],
+        \ )
+endfunction
+
+function! targets#target#fromValues(sl, sc, el, ec)
     return {
-        \ 'sl': a:array[0][0],
-        \ 'sc': a:array[0][1],
-        \ 'el': a:array[1][0],
-        \ 'ec': a:array[1][1],
+        \ 'sl': a:sl,
+        \ 'sc': a:sc,
+        \ 'el': a:el,
+        \ 'ec': a:ec,
         \ 's': function('targets#target#S'),
         \ 'e': function('targets#target#E')
         \ }
