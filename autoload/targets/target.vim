@@ -13,6 +13,8 @@ function! targets#target#fromValues(sl, sc, el, ec)
         \ 'sc': a:sc,
         \ 'el': a:el,
         \ 'ec': a:ec,
+        \ 'linewise': 0,
+        \
         \ 's': function('targets#target#S'),
         \ 'e': function('targets#target#E')
         \ }

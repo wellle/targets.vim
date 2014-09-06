@@ -390,16 +390,16 @@ function! s:selectTarget(target)
     call setpos('.', s:oldpos)
     normal! m'
 
-    let linewise = s:sLinewise && s:eLinewise
-    call s:selectRegion(linewise, a:target)
+    let a:target.linewise = s:sLinewise && s:eLinewise
+    call s:selectRegion(a:target)
 endfunction
 
 " visually select a given match. used for match or old selection
-function! s:selectRegion(linewise, target)
+function! s:selectRegion(target)
     " visually select the target
     call cursor(a:target.s())
 
-    if a:linewise
+    if a:target.linewise
         silent! normal! V
     else
         silent! normal! v
@@ -459,9 +459,9 @@ endfunction
 " temporarily select original selection to reselect later
 function! s:prepareReselect()
     if s:mapmode ==# 'x'
-        let linewise = (s:vmode ==# 'V')
         let target = targets#target#fromValues(s:vsl, s:vsc, s:vel, s:vec)
-        call s:selectRegion(linewise, target)
+        let target.linewise = (s:vmode ==# 'V')
+        call s:selectRegion(target)
     endif
 endfunction
 
