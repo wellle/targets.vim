@@ -91,8 +91,8 @@ function! s:findTarget(trigger, count)
     let view = winsaveview()
     call s:findObject(kind, which, a:count)
     call s:saveRawSelection()
-    let match = [[s:sl, s:sc], [s:el, s:ec]]
-    let [target, err] = s:modifyTarget(match, kind, modifier)
+    let target = targets#target#fromValues(s:sl, s:sc, s:el, s:ec)
+    let [target, err] = s:modifyTarget(target, kind, modifier)
     call winrestview(view)
     return [target, err]
 endfunction
@@ -103,13 +103,12 @@ function! s:saveRawSelection()
 endfunction
 
 " TODO: move down
-function! s:modifyTarget(match, kind, modifier)
+function! s:modifyTarget(target, kind, modifier)
     if a:kind ==# 'p'
         if a:modifier ==# s:i
             return s:drop()
         elseif a:modifier ==# s:a
-            let target = targets#target#fromArray(a:match)
-            return [target, 0]
+            return [a:target, 0]
         elseif a:modifier ==# s:I
             return s:shrink()
         elseif a:modifier ==# s:A
@@ -122,8 +121,7 @@ function! s:modifyTarget(match, kind, modifier)
         if a:modifier ==# s:i
             return s:drop()
         elseif a:modifier ==# s:a
-            let target = targets#target#fromArray(a:match)
-            return [target, 0]
+            return [a:target, 0]
         elseif a:modifier ==# s:I
             return s:shrink()
         elseif a:modifier ==# s:A
@@ -150,8 +148,7 @@ function! s:modifyTarget(match, kind, modifier)
             let [target, err] = s:innert() " TODO: pass into s:drop
             return s:drop()
         elseif a:modifier ==# s:a
-            let target = targets#target#fromArray(a:match)
-            return [target, 0]
+            return [a:target, 0]
         elseif a:modifier ==# s:I
             let [target, err] = s:innert() " TODO: pass into s:shrink
             return s:shrink()
