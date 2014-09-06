@@ -988,12 +988,6 @@ function! s:lastselecta(...)
     return s:fail('lastselecta 4')
 endfunction
 
-" selects the current cursor position (useful to test modifiers)
-function! s:position()
-    let [s:sl, s:sc] = getpos('.')[1:2]
-    let [s:el, s:ec] = [s:sl, s:sc]
-endfunction
-
 " selection modifiers
 " ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
