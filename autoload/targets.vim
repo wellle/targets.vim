@@ -393,11 +393,12 @@ function! s:selectMatch(match)
     call s:selectRegion(linewise, a:match)
 endfunction
 
-" visually select a given region. used for match or old selection
-function! s:selectRegion(linewise, region)
+" visually select a given match. used for match or old selection
+function! s:selectRegion(linewise, match)
+    let target = targets#target#fromArray(a:match)
     " echo [s:sl, s:sc, s:el, s:ec]
-    " visually select the match
-    call cursor(a:region[0])
+    " visually select the target
+    call cursor(target.s())
 
     if a:linewise
         silent! normal! V
@@ -405,7 +406,7 @@ function! s:selectRegion(linewise, region)
         silent! normal! v
     endif
 
-    call cursor(a:region[1])
+    call cursor(target.e())
 
     " if selection should be exclusive, expand selection
     if s:selection ==# 'exclusive'

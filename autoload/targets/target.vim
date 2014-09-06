@@ -1,5 +1,3 @@
-
-
 function! targets#target#fromArray(array)
     return {
         \ 'sl': a:array[0][0],
