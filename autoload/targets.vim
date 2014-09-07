@@ -206,16 +206,16 @@ function! s:findRawTarget(kind, which, count)
             return s:seekselect()
         elseif a:which ==# 'n'
             call s:quote()
-            call s:nextselect(a:count)
+            return s:nextselect(a:count)
         elseif a:which ==# 'l'
             call s:quote()
-            call s:lastselect(a:count)
+            return s:lastselect(a:count)
         elseif a:which ==# 'N'
             call s:quote()
-            call s:nextselect(a:count * 2)
+            return s:nextselect(a:count * 2)
         elseif a:which ==# 'L'
             call s:quote()
-            call s:lastselect(a:count * 2)
+            return s:lastselect(a:count * 2)
         else
             " TODO: fail
         endif
@@ -224,13 +224,13 @@ function! s:findRawTarget(kind, which, count)
         if a:which ==# 'c'
             return s:seekselect()
         elseif a:which ==# 'n'
-            call s:nextselect(a:count)
+            return s:nextselect(a:count)
         elseif a:which ==# 'l'
-            call s:lastselect(a:count)
+            return s:lastselect(a:count)
         elseif a:which ==# 'N'
-            call s:nextselect(a:count * 2)
+            return s:nextselect(a:count * 2)
         elseif a:which ==# 'L'
-            call s:lastselect(a:count * 2)
+            return s:lastselect(a:count * 2)
         else
             " TODO: fail
         endif
@@ -511,7 +511,7 @@ function! s:nextselect(count)
     call s:prepareNext()
 
     if s:search(a:count, s:opening, 'W') > 0
-        return s:fail('nextselect')
+        return [0, s:fail('nextselect')]
     endif
 
     return s:select('>')
@@ -530,7 +530,7 @@ function! s:lastselect(count)
     endif
 
     if s:search(cnt, s:closing, 'bW') > 0
-        return s:fail(message)
+        return [0, s:fail(message)]
     endif
 
     return s:select('<')
@@ -593,8 +593,10 @@ function! s:select(direction)
 
     if err > 0
         call setpos('.', oldpos)
-        return s:fail(message)
+        return [0, s:fail(message)]
     endif
+
+    return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
 endfunction
 
 " find separators around cursor by searching for opening with flags1 and for
