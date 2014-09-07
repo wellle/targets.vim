@@ -29,6 +29,7 @@ function! targets#target#fromValues(sl, sc, el, ec)
         \ 'cursorE': function('targets#target#cursorE'),
         \ 'invalid': function('targets#target#invalid'),
         \ 'empty': function('targets#target#empty'),
+        \ 'nonempty': function('targets#target#nonempty'),
         \ 'select': function('targets#target#select')
         \ }
 endfunction
@@ -91,6 +92,7 @@ function! targets#target#cursorE() dict
     call cursor(self.e())
 endfunction
 
+" TODO: combine these into single target#state function?
 function! targets#target#invalid() dict
     if self.sl == 0 || self.el == 0
         return 1
@@ -111,6 +113,16 @@ function! targets#target#empty() dict
     if self.sl != self.el
         return 0
     elseif self.sc == self.ec + 1
+        return 1
+    else
+        return 0
+    endif
+endfunction
+
+function! targets#target#nonempty() dict
+    if self.sl < self.el
+        return 1
+    elseif self.sc < self.ec
         return 1
     else
         return 0
