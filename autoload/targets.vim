@@ -89,9 +89,13 @@ function! s:findTarget(trigger, count)
     endif
 
     let view = winsaveview()
-    call s:findObject(kind, which, a:count)
+    let [target, err] = s:findRawTarget(kind, which, a:count)
+    if err
+        call winrestview(view)
+        return [0, err]
+    endif
+
     call s:saveRawSelection()
-    let target = targets#target#fromValues(s:sl, s:sc, s:el, s:ec)
     let [target, err] = s:modifyTarget(target, kind, modifier)
     call winrestview(view)
     return [target, err]
@@ -182,7 +186,7 @@ function! s:modifyTarget(target, kind, modifier)
 endfunction
 
 " TODO: move down
-function! s:findObject(kind, which, count)
+function! s:findRawTarget(kind, which, count)
     if a:kind ==# 'p'
         if a:which ==# 'c'
             call s:seekselectp(a:count)
@@ -254,8 +258,9 @@ function! s:findObject(kind, which, count)
         else
             " TODO: fail
         endif
-
     endif
+
+    return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
 endfunction
 
 function! s:getDelimiters(trigger)
