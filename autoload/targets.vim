@@ -1026,10 +1026,10 @@ endfunction
 " line │ a . b c . d
 " out  │   └────┘
 function! s:dropr(target)
-    call cursor(s:el, s:ec)
+    call a:target.cursorE()
     silent! execute "normal! \<BS>"
-    let [s:el, s:ec] = getpos('.')[1:2]
-    return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
+    call a:target.getposE()
+    return [a:target, 0]
 endfunction
 
 " drop an argument separator (like a comma), prefer the right one, fall back
