@@ -1047,9 +1047,8 @@ function! s:dropa(target)
             return s:drop(a:target)
         else
             " ( x , a ) select separator and space after
-            call cursor(s:sl, s:sc)
-            let [s:sl, s:sc] = searchpos('\S', '', s:el)
-            let [a:target.sl, a:target.sc] = [s:sl, s:sc]
+            call a:target.cursorS()
+            call a:target.searchposS('\S', '', a:target.el)
             return s:expand(a:target, '>')
         endif
     else
@@ -1058,9 +1057,8 @@ function! s:dropa(target)
             return s:dropr(a:target)
         else
             " ( a , x ) select separator and space before
-            call cursor(s:el, s:ec)
-            let [s:el, s:ec] = searchpos('\S', 'b', s:sl)
-            let [a:target.el, a:target.ec] = [s:el, s:ec]
+            call a:target.cursorE()
+            call a:target.searchposE('\S', 'b', a:target.sl)
             return s:expand(a:target, '<')
         endif
     endif
