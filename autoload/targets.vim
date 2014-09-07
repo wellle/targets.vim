@@ -1176,14 +1176,8 @@ function! s:prepareLast()
 endfunction
 
 " returns the character under the cursor
-" args (line=current, column=current)
-function! s:getchar(...)
-    if a:0 == 2
-        let [l, c] = [a:1, a:2]
-    else
-        let [l, c] = ['.', col('.')]
-    endif
-    return getline(l)[c-1]
+function! s:getchar()
+    return getline('.')[col('.')-1]
 endfunction
 
 " search for pattern using flags and a count, optional stopline
