@@ -1069,13 +1069,11 @@ endfunction
 " line │ a <b>  c  </b> c
 " out  │     └─────┘
 function! s:innert(target)
-    call cursor(s:sl, s:sc)
-    call searchpos('>', 'W')
-    let [s:sl, s:sc] = getpos('.')[1:2]
-    call cursor(s:el, s:ec)
-    call searchpos('<', 'bW')
-    let [s:el, s:ec] = getpos('.')[1:2]
-    return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
+    call a:target.cursorS()
+    call a:target.searchposS('>', 'W')
+    call a:target.cursorE()
+    call a:target.searchposE('<', 'bW')
+    return [a:target, 0]
 endfunction
 
 " drop delimiters and whitespace left and right
