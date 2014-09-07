@@ -254,7 +254,7 @@ function! s:findRawTarget(kind, which, count)
         elseif a:which ==# 'n'
             return s:nextselecta(a:count)
         elseif a:which ==# 'l'
-            call s:lastselecta(a:count)
+            return s:lastselecta(a:count)
         else
             " TODO: fail
         endif
@@ -909,7 +909,8 @@ function! s:seekselecta(count)
         return
     endif
 
-    if s:lastselecta(cnt, line('.')) == 0
+    let [target, err] = s:lastselecta(cnt, line('.'))
+    if err == 0
         return
     endif
 
@@ -918,7 +919,8 @@ function! s:seekselecta(count)
         return
     endif
 
-    if s:lastselecta(cnt) == 0
+    let [target, err] = s:lastselecta(cnt)
+    if err == 0
         return
     endif
 
@@ -970,38 +972,38 @@ function! s:lastselecta(...)
     if s:getchar() =~# separator && s:newSelection
         let [target, err] = s:selecta('<')
         if err == 0
-            return
+            return [target, 0]
         endif
     endif
 
     let cnt = a:1
     let stopline = a:0 > 1 ? a:2 : 0
     if s:search(cnt, s:argClosingS, 'bW', stopline) > 0 " no start found
-        return s:fail('lastselecta 1')
+        return [0, s:fail('lastselecta 1')]
     endif
 
     let char = s:getchar()
     let [target, err] = s:selecta('<')
     if err == 0 " argument found
-        return
+        return [target, 0]
     endif
 
     if char !~# separator " start wasn't on separator
-        return s:fail('lastselecta 2')
+        return [0, s:fail('lastselecta 2')]
     endif
 
     call setpos('.', s:oldpos)
     let closing = g:targets_argClosing
     if s:search(cnt, closing, 'bW', stopline) > 0 " no start found
-        return s:fail('lastselecta 3')
+        return [0, s:fail('lastselecta 3')]
     endif
 
     let [target, err] = s:selecta('<')
     if err == 0 " argument found
-        return
+        return [target, 0]
     endif
 
-    return s:fail('lastselecta 4')
+    return [0, s:fail('lastselecta 4')]
 endfunction
 
 " selection modifiers
