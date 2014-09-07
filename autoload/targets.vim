@@ -1108,30 +1108,30 @@ function! s:expand(...)
     let target = a:1
 
     if a:0 == 1 || a:2 ==# '>'
-        call cursor(s:el, s:ec)
+        call target.cursorE()
         let [line, column] = searchpos('\S\|$', '', line('.'))
-        if line > 0 && column-1 > s:ec
+        if line > 0 && column-1 > target.ec
             " non whitespace or EOL after trailing whitespace found
             " not counting whitespace directly after end
-            let [s:el, s:ec] = [line, column-1]
-            return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
+            call target.setE(line, column-1)
+            return [target, 0]
         endif
     endif
 
     if a:0 == 1 || a:2 ==# '<'
-        call cursor(s:sl, s:sc)
+        call target.cursorS()
         let [line, column] = searchpos('\S', 'b', line('.'))
         if line > 0
             " non whitespace before leading whitespace found
-            let [s:sl, s:sc] = [line, column+1]
-            return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
+            call target.setS(line, column+1)
+            return [target, 0]
         endif
         " only whitespace in front of start
         " include all leading whitespace from beginning of line
-        let s:sc = 1
+        let target.sc = 1
     endif
 
-    return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
+    return [target, 0]
 endfunction
 
 " return 1 if count should be increased by one to grow selection on repeated
