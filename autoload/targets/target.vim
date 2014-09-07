@@ -15,7 +15,10 @@ function! targets#target#fromValues(sl, sc, el, ec)
         \ 'ec': a:ec,
         \ 'linewise': 0,
         \
-        \ 'select': function('targets#target#select'),
+        \ 'setS': function('targets#target#setS'),
+        \ 'setE': function('targets#target#setE'),
+        \ 's': function('targets#target#s'),
+        \ 'e': function('targets#target#e'),
         \ 'getcharS': function('targets#target#getcharS'),
         \ 'getcharE': function('targets#target#getcharE'),
         \ 'getposS': function('targets#target#getposS'),
@@ -24,22 +27,24 @@ function! targets#target#fromValues(sl, sc, el, ec)
         \ 'cursorE': function('targets#target#cursorE'),
         \ 'invalid': function('targets#target#invalid'),
         \ 'empty': function('targets#target#empty'),
-        \ 's': function('targets#target#s'),
-        \ 'e': function('targets#target#e')
+        \ 'select': function('targets#target#select')
         \ }
 endfunction
 
-" visually select the target
-function! targets#target#select() dict
-    call cursor(self.s())
+function! targets#target#setS(line, column) dict
+    let [self.sl, self.sc] = [a:line, a:column]
+endfunction
 
-    if self.linewise
-        silent! normal! V
-    else
-        silent! normal! v
-    endif
+function! targets#target#setE(line, column) dict
+    let [self.el, self.ec] = [a:line, a:column]
+endfunction
 
-    call cursor(self.e())
+function! targets#target#s() dict
+    return [self.sl, self.sc]
+endfunction
+
+function! targets#target#e() dict
+    return [self.el, self.ec]
 endfunction
 
 function! targets#target#getcharS() dict
@@ -96,10 +101,15 @@ function! targets#target#empty() dict
     endif
 endfunction
 
-function! targets#target#s() dict
-    return [self.sl, self.sc]
-endfunction
+" visually select the target
+function! targets#target#select() dict
+    call cursor(self.s())
 
-function! targets#target#e() dict
-    return [self.el, self.ec]
+    if self.linewise
+        silent! normal! V
+    else
+        silent! normal! v
+    endif
+
+    call cursor(self.e())
 endfunction
