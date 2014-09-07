@@ -203,7 +203,7 @@ function! s:findRawTarget(kind, which, count)
     elseif a:kind ==# 'q'
         if a:which ==# 'c'
             call s:quote()
-            call s:seekselect()
+            return s:seekselect()
         elseif a:which ==# 'n'
             call s:quote()
             call s:nextselect(a:count)
@@ -222,7 +222,7 @@ function! s:findRawTarget(kind, which, count)
 
     elseif a:kind ==# 's'
         if a:which ==# 'c'
-            call s:seekselect()
+            return s:seekselect()
         elseif a:which ==# 'n'
             call s:nextselect(a:count)
         elseif a:which ==# 'l'
@@ -618,28 +618,28 @@ function! s:seekselect()
         let [s:sl, s:sc] = searchpos(s:opening, 'b', line('.'))
         if s:sl > 0 " delim found before r in line
             let [s:el, s:ec] = [rl, rc]
-            return
+            return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
         endif
         " no delim before cursor in line
         let [s:el, s:ec] = searchpos(s:opening, '', line('.'))
         if s:el > 0 " delim found after r in line
             let [s:sl, s:sc] = [rl, rc]
-            return
+            return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
         endif
         " no delim found after r in line
         let [s:sl, s:sc] = searchpos(s:opening, 'bW')
         if s:sl > 0 " delim found before r
             let [s:el, s:ec] = [rl, rc]
-            return
+            return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
         endif
         " no delim found before r
         let [s:el, s:ec] = searchpos(s:opening, 'W')
         if s:el > 0 " delim found after r
             let [s:sl, s:sc] = [rl, rc]
-            return
+            return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
         endif
         " no delim found after r
-        return s:fail('seekselect 1')
+        return [0, s:fail('seekselect 1')]
     endif
 
     " no delim found after cursor in line
@@ -648,22 +648,22 @@ function! s:seekselect()
         let [s:sl, s:sc] = searchpos(s:opening, 'b', line('.'))
         if s:sl > 0 " delim found before l in line
             let [s:el, s:ec] = [ll, lc]
-            return
+            return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
         endif
         " no delim found before l in line
         let [s:el, s:ec] = searchpos(s:opening, 'W')
         if s:el > 0 " delim found after l
             let [s:sl, s:sc] = [ll, lc]
-            return
+            return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
         endif
         " no delim found after l
         let [s:sl, s:sc] = searchpos(s:opening, 'bW')
         if s:sl > 0 " delim found before l
             let [s:el, s:ec] = [ll, lc]
-            return
+            return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
         endif
         " no delim found before l
-        return s:fail('seekselect 2')
+        return [0, s:fail('seekselect 2')]
     endif
 
     " no delim found before cursor in line
@@ -672,26 +672,26 @@ function! s:seekselect()
         let [s:sl, s:sc] = searchpos(s:opening, 'bW')
         if s:sl > 0 " delim found before r
             let [s:el, s:ec] = [rl, rc]
-            return
+            return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
         endif
         " no delim found before r
         let [s:el, s:ec] = searchpos(s:opening, 'W')
         if s:el > 0 " delim found after r
             let [s:sl, s:sc] = [rl, rc]
-            return
+            return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
         endif
         " no delim found after r
-        return s:fail('seekselect 3')
+        return [0, s:fail('seekselect 3')]
     endif
 
     " no delim found after cursor
     let [s:el, s:ec] = searchpos(s:opening, 'bW')
     let [s:sl, s:sc] = searchpos(s:opening, 'bW')
     if s:sl > 0 && s:el > 0 " match found before cursor
-        return
+        return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
     endif
 
-    return s:fail('seekselect 4')
+    return [0, s:fail('seekselect 4')]
 endfunction
 
 " select a pair around the cursor
