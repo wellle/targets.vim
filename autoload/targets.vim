@@ -189,13 +189,13 @@ endfunction
 function! s:findRawTarget(kind, which, count)
     if a:kind ==# 'p'
         if a:which ==# 'c'
-            call s:seekselectp(a:count)
+            return s:seekselectp(a:count)
         elseif a:which ==# 'n'
             call s:nextp(a:count)
-            call s:selectp()
+            return s:selectp()
         elseif a:which ==# 'l'
             call s:lastp(a:count)
-            call s:selectp()
+            return s:selectp()
         else
             " TODO: fail
         endif
@@ -237,13 +237,13 @@ function! s:findRawTarget(kind, which, count)
 
     elseif a:kind ==# 't'
         if a:which ==# 'c'
-            call s:seekselectt(a:count)
+            return s:seekselectt(a:count)
         elseif a:which ==# 'n'
             call s:nextt(a:count)
-            call s:selectp()
+            return s:selectp()
         elseif a:which ==# 'l'
             call s:lastt(a:count)
-            call s:selectp()
+            return s:selectp()
         else
             " TODO: fail
         endif
@@ -704,8 +704,10 @@ function! s:selectp()
     silent! normal! v
 
     if s:sc == s:ec && s:sl == s:el
-        return s:fail('selectp')
+        return [0, s:fail('selectp')]
     endif
+
+    return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
 endfunction
 
 " pair matcher (works across multiple lines, supports seeking)
@@ -733,11 +735,11 @@ function! s:seekselectp(...)
     if s:sc != s:ec || s:sl != s:el
         " found target around cursor
         let cnt = 1
-        return
+        return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
     endif
 
     if cnt > 1
-        return s:fail('seekselectp count')
+        return [0, s:fail('seekselectp count')]
     endif
     let cnt = 1
 
@@ -761,7 +763,7 @@ function! s:seekselectp(...)
         return s:selectp()
     endif
 
-    return s:fail('seekselectp')
+    return [0, s:fail('seekselectp')]
 endfunction
 
 " tag pair matcher (works across multiple lines, supports seeking)
