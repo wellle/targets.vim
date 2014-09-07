@@ -197,7 +197,7 @@ function! s:findRawTarget(kind, which, count)
             call s:lastp(a:count)
             return s:selectp()
         else
-            " TODO: fail
+            return [0, s:fail('findRawTarget p')]
         endif
 
     elseif a:kind ==# 'q'
@@ -217,7 +217,7 @@ function! s:findRawTarget(kind, which, count)
             call s:quote()
             return s:lastselect(a:count * 2)
         else
-            " TODO: fail
+            return [0, s:fail('findRawTarget q')]
         endif
 
     elseif a:kind ==# 's'
@@ -232,7 +232,7 @@ function! s:findRawTarget(kind, which, count)
         elseif a:which ==# 'L'
             return s:lastselect(a:count * 2)
         else
-            " TODO: fail
+            return [0, s:fail('findRawTarget s')]
         endif
 
     elseif a:kind ==# 't'
@@ -245,7 +245,7 @@ function! s:findRawTarget(kind, which, count)
             call s:lastt(a:count)
             return s:selectp()
         else
-            " TODO: fail
+            return [0, s:fail('findRawTarget t')]
         endif
 
     elseif a:kind ==# 'a'
@@ -256,11 +256,11 @@ function! s:findRawTarget(kind, which, count)
         elseif a:which ==# 'l'
             return s:lastselecta(a:count)
         else
-            " TODO: fail
+            return [0, s:fail('findRawTarget a')]
         endif
     endif
 
-    return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
+    return [0, s:fail('findRawTarget kind')]
 endfunction
 
 function! s:getDelimiters(trigger)
