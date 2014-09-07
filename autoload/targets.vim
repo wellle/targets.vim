@@ -998,16 +998,16 @@ endfunction
 " out  │    └───┘
 function! s:drop(target)
     let [sLinewise, eLinewise] = [0, 0]
-    call cursor(s:sl, s:sc)
+    call a:target.cursorS()
     if searchpos('\S', 'nW', line('.'))[0] == 0
         " if only whitespace after cursor
         let sLinewise = 1
     endif
     silent! execute "normal! 1 "
-    let [s:sl, s:sc] = getpos('.')[1:2]
+    call a:target.getposS()
 
-    call cursor(s:el, s:ec)
-    if s:sl < s:el && searchpos('\S', 'bnW', line('.'))[0] == 0
+    call a:target.cursorE()
+    if a:target.sl < a:target.el && searchpos('\S', 'bnW', line('.'))[0] == 0
         " if only whitespace in front of cursor
         let eLinewise = 1
         " move to end of line above
@@ -1016,10 +1016,9 @@ function! s:drop(target)
         " one character back
         silent! execute "normal! \<BS>"
     endif
-    let [s:el, s:ec] = getpos('.')[1:2]
-    let target = targets#target#fromValues(s:sl, s:sc, s:el, s:ec)
-    let target.linewise = sLinewise && eLinewise
-    return [target, 0]
+    call a:target.getposE()
+    let a:target.linewise = sLinewise && eLinewise
+    return [a:target, 0]
 endfunction
 
 " drop right delimiter
