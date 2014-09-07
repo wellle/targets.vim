@@ -252,7 +252,7 @@ function! s:findRawTarget(kind, which, count)
         if a:which ==# 'c'
             call s:seekselecta(a:count)
         elseif a:which ==# 'n'
-            call s:nextselecta(a:count)
+            return s:nextselecta(a:count)
         elseif a:which ==# 'l'
             call s:lastselecta(a:count)
         else
@@ -904,7 +904,8 @@ function! s:seekselecta(count)
         return
     endif
 
-    if s:nextselecta(cnt, line('.')) == 0
+    let [target, err] = s:nextselecta(cnt, line('.'))
+    if err == 0
         return
     endif
 
@@ -912,7 +913,8 @@ function! s:seekselecta(count)
         return
     endif
 
-    if s:nextselecta(cnt) == 0
+    let [target, err] = s:nextselecta(cnt)
+    if err == 0
         return
     endif
 
@@ -931,31 +933,31 @@ function! s:nextselecta(...)
     let cnt = a:1
     let stopline = a:0 > 1 ? a:2 : 0
     if s:search(cnt, s:argOpeningS, 'W', stopline) > 0 " no start found
-        return s:fail('nextselecta 1')
+        return [0, s:fail('nextselecta 1')]
     endif
 
     let char = s:getchar()
     let [target, err] = s:selecta('>')
     if err == 0 " argument found
-        return
+        return [target, 0]
     endif
 
     if char !~# g:targets_argSeparator " start wasn't on comma
-        return s:fail('nextselecta 2')
+        return [0, s:fail('nextselecta 2')]
     endif
 
     call setpos('.', s:oldpos)
     let opening = g:targets_argOpening
     if s:search(cnt, opening, 'W', stopline) > 0 " no start found
-        return s:fail('nextselecta 3')
+        return [0, s:fail('nextselecta 3')]
     endif
 
     let [target, err] = s:selecta('>')
     if err == 0 " argument found
-        return
+        return [target, 0]
     endif
 
-    return s:fail('nextselecta 4')
+    return [0, s:fail('nextselecta 4')]
 endfunction
 
 " try to select a last argument, supports count and optional stopline
