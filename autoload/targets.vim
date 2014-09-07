@@ -250,7 +250,7 @@ function! s:findRawTarget(kind, which, count)
 
     elseif a:kind ==# 'a'
         if a:which ==# 'c'
-            call s:seekselecta(a:count)
+            return s:seekselecta(a:count)
         elseif a:which ==# 'n'
             return s:nextselecta(a:count)
         elseif a:which ==# 'l'
@@ -894,37 +894,37 @@ function! s:seekselecta(count)
         " find cnt closing while skipping matched openings
         let [opening, closing] = [g:targets_argOpening, g:targets_argClosing]
         if s:findArgBoundary('W', 'W', opening, closing, s:argOuter, s:none, cnt)[2] > 0
-            return s:fail(message . ' count')
+            return [0, s:fail(message . ' count')]
         endif
         return s:selecta('^')
     endif
 
     let [target, err] = s:selecta('>')
     if err == 0
-        return
+        return [target, 0]
     endif
 
     let [target, err] = s:nextselecta(cnt, line('.'))
     if err == 0
-        return
+        return [target, 0]
     endif
 
     let [target, err] = s:lastselecta(cnt, line('.'))
     if err == 0
-        return
+        return [target, 0]
     endif
 
     let [target, err] = s:nextselecta(cnt)
     if err == 0
-        return
+        return [target, 0]
     endif
 
     let [target, err] = s:lastselecta(cnt)
     if err == 0
-        return
+        return [target, 0]
     endif
 
-    return s:fail('seekselecta seek')
+    return [0, s:fail('seekselecta seek')]
 endfunction
 
 " try to select a next argument, supports count and optional stopline
