@@ -1084,17 +1084,16 @@ endfunction
 " line │ a . b c . d │ a .  . d
 " out  │     └─┘     │    └┘
 function! s:shrink(target)
-    call cursor(s:el, s:ec)
-    let [s:el, s:ec] = searchpos('\S', 'b', s:sl)
-    if s:ec <= s:sc && s:el <= s:sl
+    call a:target.cursorE()
+    call a:target.searchposE('\S', 'b', a:target.sl)
+    if !a:target.nonempty()
         " fall back to drop when there's only whitespace in between
-        let [a:target.el, a:target.ec] = [s:el, s:ec]
         return s:drop(a:target)
     else
-        call cursor(s:sl, s:sc)
-        let [s:sl, s:sc] = searchpos('\S', '', s:el)
+        call a:target.cursorS()
+        call a:target.searchposS('\S', '', a:target.el)
     endif
-    return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
+    return [a:target, 0]
 endfunction
 
 " expand selection by some whitespace
