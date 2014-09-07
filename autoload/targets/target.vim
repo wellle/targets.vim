@@ -16,6 +16,8 @@ function! targets#target#fromValues(sl, sc, el, ec)
         \ 'linewise': 0,
         \
         \ 'select': function('targets#target#select'),
+        \ 'getposS': function('targets#target#getposS'),
+        \ 'getposE': function('targets#target#getposE'),
         \ 'cursorS': function('targets#target#cursorS'),
         \ 'cursorE': function('targets#target#cursorE'),
         \ 'invalid': function('targets#target#invalid'),
@@ -36,6 +38,18 @@ function! targets#target#select() dict
     endif
 
     call cursor(self.e())
+endfunction
+
+" args (mark = '.')
+function! targets#target#getposS(...) dict
+    let mark = a:0 > 0 ? a:1 : '.'
+    let [self.sl, self.sc] = getpos(mark)[1:2]
+endfunction
+
+" args (mark = '.')
+function! targets#target#getposE(...) dict
+    let mark = a:0 > 0 ? a:1 : '.'
+    let [self.el, self.ec] = getpos(mark)[1:2]
 endfunction
 
 function! targets#target#cursorS() dict
