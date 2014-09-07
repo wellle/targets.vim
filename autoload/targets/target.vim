@@ -19,6 +19,8 @@ function! targets#target#fromValues(sl, sc, el, ec)
         \ 'setE': function('targets#target#setE'),
         \ 's': function('targets#target#s'),
         \ 'e': function('targets#target#e'),
+        \ 'searchposS': function('targets#target#searchposS'),
+        \ 'searchposE': function('targets#target#searchposE'),
         \ 'getcharS': function('targets#target#getcharS'),
         \ 'getcharE': function('targets#target#getcharE'),
         \ 'getposS': function('targets#target#getposS'),
@@ -45,6 +47,20 @@ endfunction
 
 function! targets#target#e() dict
     return [self.el, self.ec]
+endfunction
+
+function! targets#target#searchposS(...) dict
+    let pattern = a:1
+    let flags = a:0 > 1 ? a:2 : ''
+    let stopline = a:0 > 2 ? a:3 : 0
+    let [self.sl, self.sc] = searchpos(pattern, flags, stopline)
+endfunction
+
+function! targets#target#searchposE(...) dict
+    let pattern = a:1
+    let flags = a:0 > 1 ? a:2 : ''
+    let stopline = a:0 > 2 ? a:3 : 0
+    let [self.el, self.ec] = searchpos(pattern, flags, stopline)
 endfunction
 
 function! targets#target#getcharS() dict
