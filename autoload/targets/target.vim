@@ -16,6 +16,8 @@ function! targets#target#fromValues(sl, sc, el, ec)
         \ 'linewise': 0,
         \
         \ 'select': function('targets#target#select'),
+        \ 'getcharS': function('targets#target#getcharS'),
+        \ 'getcharE': function('targets#target#getcharE'),
         \ 'getposS': function('targets#target#getposS'),
         \ 'getposE': function('targets#target#getposE'),
         \ 'cursorS': function('targets#target#cursorS'),
@@ -38,6 +40,14 @@ function! targets#target#select() dict
     endif
 
     call cursor(self.e())
+endfunction
+
+function! targets#target#getcharS() dict
+    return getline(self.sl)[self.sc-1]
+endfunction
+
+function! targets#target#getcharE() dict
+    return getline(self.el)[self.ec-1]
 endfunction
 
 " args (mark = '.')

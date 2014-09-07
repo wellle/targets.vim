@@ -1038,8 +1038,8 @@ endfunction
 " line │ ( x ) ( x , a ) (a , x , b) ( a , x )
 " out  │  └─┘    └──┘       └──┘        └──┘
 function! s:dropa(target)
-    let startOpening = s:getchar(s:sl, s:sc) !~# g:targets_argSeparator
-    let endOpening   = s:getchar(s:el, s:ec) !~# g:targets_argSeparator
+    let startOpening = a:target.getcharS() !~# g:targets_argSeparator
+    let endOpening   = a:target.getcharE() !~# g:targets_argSeparator
 
     if startOpening
         if endOpening
