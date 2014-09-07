@@ -792,13 +792,15 @@ function! s:selecta(direction)
         let [s:el, s:ec, s:sl, s:sc, err] = s:findArg(a:direction, 'bW', 'W', 'W', closing, opening)
         let message = 'selecta 3'
     else
-        return s:fail('selecta')
+        return [0, s:fail('selecta')]
     endif
 
     if err > 0
         call setpos('.', oldpos)
-        return s:fail(message)
+        return [0, s:fail(message)]
     endif
+
+    return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
 endfunction
 
 " find an argument around the cursor given a direction (see s:selecta)
@@ -894,13 +896,11 @@ function! s:seekselecta(count)
         if s:findArgBoundary('W', 'W', opening, closing, s:argOuter, s:none, cnt)[2] > 0
             return s:fail(message . ' count')
         endif
-        if s:selecta('^') == 0
-            return
-        endif
-        return s:fail(message . ' select')
+        return s:selecta('^')
     endif
 
-    if s:selecta('>') == 0
+    let [target, err] = s:selecta('>')
+    if err == 0
         return
     endif
 
@@ -935,7 +935,8 @@ function! s:nextselecta(...)
     endif
 
     let char = s:getchar()
-    if s:selecta('>') == 0 " argument found
+    let [target, err] = s:selecta('>')
+    if err == 0 " argument found
         return
     endif
 
@@ -949,7 +950,8 @@ function! s:nextselecta(...)
         return s:fail('nextselecta 3')
     endif
 
-    if s:selecta('>') == 0 " argument found
+    let [target, err] = s:selecta('>')
+    if err == 0 " argument found
         return
     endif
 
@@ -964,7 +966,8 @@ function! s:lastselecta(...)
     " special case to handle vala when invoked on a separator
     let separator = g:targets_argSeparator
     if s:getchar() =~# separator && s:newSelection
-        if s:selecta('<') == 0
+        let [target, err] = s:selecta('<')
+        if err == 0
             return
         endif
     endif
@@ -976,7 +979,8 @@ function! s:lastselecta(...)
     endif
 
     let char = s:getchar()
-    if s:selecta('<') == 0 " argument found
+    let [target, err] = s:selecta('<')
+    if err == 0 " argument found
         return
     endif
 
@@ -990,7 +994,8 @@ function! s:lastselecta(...)
         return s:fail('lastselecta 3')
     endif
 
-    if s:selecta('<') == 0 " argument found
+    let [target, err] = s:selecta('<')
+    if err == 0 " argument found
         return
     endif
 
