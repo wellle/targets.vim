@@ -24,7 +24,7 @@ call s:setup()
 
 function! targets#o(trigger)
     call s:init('o')
-    let [target, err] = s:findTarget(a:trigger, v:count1)
+    let [rawTarget, target, err] = s:findTarget(a:trigger, v:count1)
     if err
         return s:cleanUp()
     endif
@@ -71,12 +71,12 @@ endfunction
 function! targets#x(trigger, count)
     call s:init('x')
     call s:saveVisualSelection()
-    let [target, err] = s:findTarget(a:trigger, a:count)
+    let [rawTarget, target, err] = s:findTarget(a:trigger, a:count)
     if err
         return s:cleanUp()
     endif
     if s:handleTarget(target) == 0
-        call s:saveState()
+        call s:saveState(rawTarget, target)
     endif
     call s:cleanUp()
 endfunction
@@ -85,25 +85,19 @@ function! s:findTarget(trigger, count)
     let [delimiter, which, modifier] = split(a:trigger, '\zs')
     let [kind, s:opening, s:closing, err] = s:getDelimiters(delimiter)
     if err
-        return [0, s:fail("failed to find delimiter")]
+        return [0, 0, s:fail("failed to find delimiter")]
     endif
 
     let view = winsaveview()
-    let [target, err] = s:findRawTarget(kind, which, a:count)
+    let [rawTarget, err] = s:findRawTarget(kind, which, a:count)
     if err
         call winrestview(view)
-        return [0, err]
+        return [0, 0, err]
     endif
 
-    call s:saveRawSelection(target)
-    let [target, err] = s:modifyTarget(target, kind, modifier)
+    let [target, err] = s:modifyTarget(rawTarget, kind, modifier)
     call winrestview(view)
-    return [target, err]
-endfunction
-
-" remember last raw selection, before applying modifiers
-function! s:saveRawSelection(target)
-    let s:rawTarget = a:target
+    return [rawTarget, target, err]
 endfunction
 
 " TODO: move down
@@ -356,14 +350,11 @@ function! s:isNewSelection()
 endfunction
 
 " remember last selection and last raw selection
-function! s:saveState()
-    let s:lastRawTarget = s:rawTarget
+function! s:saveState(rawTarget, target)
+    let s:lastRawTarget = a:rawTarget
 
-    " back to normal mode, save positions, reselect
-    silent! execute "normal! \<C-\>\<C-N>"
-    let [s:lsl, s:lsc] = getpos("'<")[1:2]
-    let [s:lel, s:lec] = getpos("'>")[1:2]
-    normal! gv
+    let [s:lsl, s:lsc] = a:target.s()
+    let [s:lel, s:lec] = a:target.e()
 endfunction
 
 " clear the commandline to hide targets function calls
