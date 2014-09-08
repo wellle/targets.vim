@@ -703,16 +703,16 @@ endfunction
 function! s:selectp()
     " try to select pair
     silent! execute 'normal! va' . s:opening
-    let [s:el, s:ec] = getpos('.')[1:2]
+    let [el, ec] = getpos('.')[1:2]
     silent! normal! o
-    let [s:sl, s:sc] = getpos('.')[1:2]
+    let [sl, sc] = getpos('.')[1:2]
     silent! normal! v
 
-    if s:sc == s:ec && s:sl == s:el
+    if sc == ec && sl == el
         return [0, s:fail('selectp')]
     endif
 
-    return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
+    return [targets#target#fromValues(sl, sc, el, ec), 0]
 endfunction
 
 " pair matcher (works across multiple lines, supports seeking)
