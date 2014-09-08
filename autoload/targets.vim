@@ -95,15 +95,15 @@ function! s:findTarget(trigger, count)
         return [0, err]
     endif
 
-    call s:saveRawSelection()
+    call s:saveRawSelection(target)
     let [target, err] = s:modifyTarget(target, kind, modifier)
     call winrestview(view)
     return [target, err]
 endfunction
 
 " remember last raw selection, before applying modifiers
-function! s:saveRawSelection()
-    let [s:rsl, s:rsc, s:rel, s:rec] = [s:sl, s:sc, s:el, s:ec]
+function! s:saveRawSelection(target)
+    let s:rawTarget = a:target
 endfunction
 
 " TODO: move down
@@ -313,8 +313,6 @@ endfunction
 " initialize script local variables for the current matching
 function! s:init(mapmode)
     let s:mapmode = a:mapmode
-    let [s:rsl, s:rsc, s:rel, s:rec] = [0, 0, 0, 0]
-    let [s:sl, s:sc, s:el, s:ec] = [0, 0, 0, 0]
     let s:oldpos = getpos('.')
     let s:newSelection = 1
 
@@ -342,6 +340,7 @@ endfunction
 
 " return 0 if the selection changed since the last invocation. used for
 " growing
+" TODO: compare current with last trigger?
 function! s:isNewSelection()
     if !exists('s:lsl') " no previous invocation
         return 1
@@ -358,10 +357,7 @@ endfunction
 
 " remember last selection and last raw selection
 function! s:saveState()
-    " XXX: remember raw trigger
-    let [s:lrsl, s:lrsc, s:lrel, s:lrec] = [s:rsl, s:rsc, s:rel, s:rec]
-
-    let s:lmode = mode()
+    let s:lastRawTarget = s:rawTarget
 
     " back to normal mode, save positions, reselect
     silent! execute "normal! \<C-\>\<C-N>"
@@ -1174,8 +1170,9 @@ function! s:prepareNext()
     if s:newSelection
         return
     endif
-    if s:mapmode ==# 'x' && exists('s:lrsl') && s:lrsl > 0
-        call setpos('.', [0, s:lrsl, s:lrsc, 0])
+
+    if s:mapmode ==# 'x' && exists('s:lastRawTarget') && s:lastRawTarget.nonempty()
+        call s:lastRawTarget.cursorS()
     endif
 endfunction
 
@@ -1185,8 +1182,9 @@ function! s:prepareLast()
     if s:newSelection
         return
     endif
-    if s:mapmode ==# 'x' && exists('s:lrel') && s:lrel > 0
-        call setpos('.', [0, s:lrel, s:lrec, 0])
+
+    if s:mapmode ==# 'x' && exists('s:lastRawTarget') && s:lastRawTarget.nonempty()
+        call s:lastRawTarget.cursorE()
         return 1
     endif
 endfunction
