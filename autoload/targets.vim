@@ -620,28 +620,28 @@ endfunction
 function! s:seekselect()
     let [rl, rc] = searchpos(s:opening, '', line('.'))
     if rl > 0 " delim r found after cursor in line
-        let [s:sl, s:sc] = searchpos(s:opening, 'b', line('.'))
-        if s:sl > 0 " delim found before r in line
-            let [s:el, s:ec] = [rl, rc]
-            return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
+        let [sl, sc] = searchpos(s:opening, 'b', line('.'))
+        if sl > 0 " delim found before r in line
+            let [el, ec] = [rl, rc]
+            return [targets#target#fromValues(sl, sc, el, ec), 0]
         endif
         " no delim before cursor in line
-        let [s:el, s:ec] = searchpos(s:opening, '', line('.'))
-        if s:el > 0 " delim found after r in line
-            let [s:sl, s:sc] = [rl, rc]
-            return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
+        let [el, ec] = searchpos(s:opening, '', line('.'))
+        if el > 0 " delim found after r in line
+            let [sl, sc] = [rl, rc]
+            return [targets#target#fromValues(sl, sc, el, ec), 0]
         endif
         " no delim found after r in line
-        let [s:sl, s:sc] = searchpos(s:opening, 'bW')
-        if s:sl > 0 " delim found before r
-            let [s:el, s:ec] = [rl, rc]
-            return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
+        let [sl, sc] = searchpos(s:opening, 'bW')
+        if sl > 0 " delim found before r
+            let [el, ec] = [rl, rc]
+            return [targets#target#fromValues(sl, sc, el, ec), 0]
         endif
         " no delim found before r
-        let [s:el, s:ec] = searchpos(s:opening, 'W')
-        if s:el > 0 " delim found after r
-            let [s:sl, s:sc] = [rl, rc]
-            return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
+        let [el, ec] = searchpos(s:opening, 'W')
+        if el > 0 " delim found after r
+            let [sl, sc] = [rl, rc]
+            return [targets#target#fromValues(sl, sc, el, ec), 0]
         endif
         " no delim found after r
         return [0, s:fail('seekselect 1')]
@@ -650,22 +650,22 @@ function! s:seekselect()
     " no delim found after cursor in line
     let [ll, lc] = searchpos(s:opening, 'bc', line('.'))
     if ll > 0 " delim l found before cursor in line
-        let [s:sl, s:sc] = searchpos(s:opening, 'b', line('.'))
-        if s:sl > 0 " delim found before l in line
-            let [s:el, s:ec] = [ll, lc]
-            return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
+        let [sl, sc] = searchpos(s:opening, 'b', line('.'))
+        if sl > 0 " delim found before l in line
+            let [el, ec] = [ll, lc]
+            return [targets#target#fromValues(sl, sc, el, ec), 0]
         endif
         " no delim found before l in line
-        let [s:el, s:ec] = searchpos(s:opening, 'W')
-        if s:el > 0 " delim found after l
-            let [s:sl, s:sc] = [ll, lc]
-            return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
+        let [el, ec] = searchpos(s:opening, 'W')
+        if el > 0 " delim found after l
+            let [sl, sc] = [ll, lc]
+            return [targets#target#fromValues(sl, sc, el, ec), 0]
         endif
         " no delim found after l
-        let [s:sl, s:sc] = searchpos(s:opening, 'bW')
-        if s:sl > 0 " delim found before l
-            let [s:el, s:ec] = [ll, lc]
-            return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
+        let [sl, sc] = searchpos(s:opening, 'bW')
+        if sl > 0 " delim found before l
+            let [el, ec] = [ll, lc]
+            return [targets#target#fromValues(sl, sc, el, ec), 0]
         endif
         " no delim found before l
         return [0, s:fail('seekselect 2')]
@@ -674,26 +674,26 @@ function! s:seekselect()
     " no delim found before cursor in line
     let [rl, rc] = searchpos(s:opening, 'W')
     if rl > 0 " delim r found after cursor
-        let [s:sl, s:sc] = searchpos(s:opening, 'bW')
-        if s:sl > 0 " delim found before r
-            let [s:el, s:ec] = [rl, rc]
-            return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
+        let [sl, sc] = searchpos(s:opening, 'bW')
+        if sl > 0 " delim found before r
+            let [el, ec] = [rl, rc]
+            return [targets#target#fromValues(sl, sc, el, ec), 0]
         endif
         " no delim found before r
-        let [s:el, s:ec] = searchpos(s:opening, 'W')
-        if s:el > 0 " delim found after r
-            let [s:sl, s:sc] = [rl, rc]
-            return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
+        let [el, ec] = searchpos(s:opening, 'W')
+        if el > 0 " delim found after r
+            let [sl, sc] = [rl, rc]
+            return [targets#target#fromValues(sl, sc, el, ec), 0]
         endif
         " no delim found after r
         return [0, s:fail('seekselect 3')]
     endif
 
     " no delim found after cursor
-    let [s:el, s:ec] = searchpos(s:opening, 'bW')
-    let [s:sl, s:sc] = searchpos(s:opening, 'bW')
-    if s:sl > 0 && s:el > 0 " match found before cursor
-        return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
+    let [el, ec] = searchpos(s:opening, 'bW')
+    let [sl, sc] = searchpos(s:opening, 'bW')
+    if sl > 0 && el > 0 " match found before cursor
+        return [targets#target#fromValues(sl, sc, el, ec), 0]
     endif
 
     return [0, s:fail('seekselect 4')]
