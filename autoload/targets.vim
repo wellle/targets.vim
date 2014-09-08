@@ -584,10 +584,10 @@ function! s:select(direction)
     let oldpos = getpos('.')
 
     if a:direction ==# '>'
-        let [s:sl, s:sc, s:el, s:ec, err] = s:findSeparators('bcW', 'W', s:opening, s:closing)
+        let [sl, sc, el, ec, err] = s:findSeparators('bcW', 'W', s:opening, s:closing)
         let message = 'select 1'
     else
-        let [s:el, s:ec, s:sl, s:sc, err] = s:findSeparators('cW', 'bW', s:closing, s:opening)
+        let [el, ec, sl, sc, err] = s:findSeparators('cW', 'bW', s:closing, s:opening)
         let message = 'select 2'
     endif
 
@@ -596,20 +596,23 @@ function! s:select(direction)
         return [0, s:fail(message)]
     endif
 
-    return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
+    return [targets#target#fromValues(sl, sc, el, ec), 0]
 endfunction
 
+" TODO: inject direction and return proper target
 " find separators around cursor by searching for opening with flags1 and for
 " closing with flags2
 function! s:findSeparators(flags1, flags2, opening, closing)
     let [sl, sc] = searchpos(a:opening, a:flags1)
     if sc == 0 " no match to the left
-        return [0, 0, 0, 0, s:fail('findSeparators opening')]
+        return [0, 0, 0, 0, s:fail('findSeparators 1')]
     endif
+
     let [el, ec] = searchpos(a:closing, a:flags2)
     if ec == 0 " no match to the right
-        return [0, 0, 0, 0, s:fail('findSeparators closing')]
+        return [0, 0, 0, 0, s:fail('findSeparators 2')]
     endif
+
     return [sl, sc, el, ec, 0]
 endfunction
 
