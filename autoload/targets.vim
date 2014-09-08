@@ -732,15 +732,15 @@ function! s:seekselectp(...)
 
     " try to select around cursor
     silent! execute 'normal! v' . cnt . 'a' . trigger
-    let [s:el, s:ec] = getpos('.')[1:2]
+    let [el, ec] = getpos('.')[1:2]
     silent! normal! o
-    let [s:sl, s:sc] = getpos('.')[1:2]
+    let [sl, sc] = getpos('.')[1:2]
     silent! normal! v
 
-    if s:sc != s:ec || s:sl != s:el
+    if sc != ec || sl != el
         " found target around cursor
         let cnt = 1
-        return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
+        return [targets#target#fromValues(sl, sc, el, ec), 0]
     endif
 
     if cnt > 1
@@ -748,23 +748,23 @@ function! s:seekselectp(...)
     endif
     let cnt = 1
 
-    let [s:sl, s:sc] = searchpos(opening, '', line('.'))
-    if s:sc > 0 " found opening to the right in line
+    let [sl, sc] = searchpos(opening, '', line('.'))
+    if sc > 0 " found opening to the right in line
         return s:selectp()
     endif
 
-    let [s:sl, s:sc] = searchpos(closing, 'b', line('.'))
-    if s:sc > 0 " found closing to the left in line
+    let [sl, sc] = searchpos(closing, 'b', line('.'))
+    if sc > 0 " found closing to the left in line
         return s:selectp()
     endif
 
-    let [s:sl, s:sc] = searchpos(opening, 'W')
-    if s:sc > 0 " found opening to the right
+    let [sl, sc] = searchpos(opening, 'W')
+    if sc > 0 " found opening to the right
         return s:selectp()
     endif
 
-    let [s:sl, s:sc] = searchpos(closing, 'Wb')
-    if s:sc > 0 " found closing to the left
+    let [sl, sc] = searchpos(closing, 'Wb')
+    if sc > 0 " found closing to the left
         return s:selectp()
     endif
 
