@@ -786,13 +786,13 @@ function! s:selecta(direction)
 
     let [opening, closing] = [g:targets_argOpening, g:targets_argClosing]
     if a:direction ==# '^'
-        let [s:sl, s:sc, s:el, s:ec, err] = s:findArg(a:direction, 'W', 'bcW', 'bW', opening, closing)
+        let [sl, sc, el, ec, err] = s:findArg(a:direction, 'W', 'bcW', 'bW', opening, closing)
         let message = 'selecta 1'
     elseif a:direction ==# '>'
-        let [s:sl, s:sc, s:el, s:ec, err] = s:findArg(a:direction, 'W', 'bW', 'bW', opening, closing)
+        let [sl, sc, el, ec, err] = s:findArg(a:direction, 'W', 'bW', 'bW', opening, closing)
         let message = 'selecta 2'
     elseif a:direction ==# '<' " like '>', but backwards
-        let [s:el, s:ec, s:sl, s:sc, err] = s:findArg(a:direction, 'bW', 'W', 'W', closing, opening)
+        let [el, ec, sl, sc, err] = s:findArg(a:direction, 'bW', 'W', 'W', closing, opening)
         let message = 'selecta 3'
     else
         return [0, s:fail('selecta')]
@@ -803,7 +803,7 @@ function! s:selecta(direction)
         return [0, s:fail(message)]
     endif
 
-    return [targets#target#fromValues(s:sl, s:sc, s:el, s:ec), 0]
+    return [targets#target#fromValues(sl, sc, el, ec), 0]
 endfunction
 
 " find an argument around the cursor given a direction (see s:selecta)
