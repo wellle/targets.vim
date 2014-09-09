@@ -6,6 +6,7 @@ function! targets#target#fromValues(sl, sc, el, ec)
         \ 'ec': a:ec,
         \ 'linewise': 0,
         \
+        \ 'copy': function('targets#target#copy'),
         \ 'setS': function('targets#target#setS'),
         \ 'setE': function('targets#target#setE'),
         \ 's': function('targets#target#s'),
@@ -23,6 +24,10 @@ function! targets#target#fromValues(sl, sc, el, ec)
         \ 'nonempty': function('targets#target#nonempty'),
         \ 'select': function('targets#target#select')
         \ }
+endfunction
+
+function! targets#target#copy() dict
+    return targets#target#fromValues(self.sl, self.sc, self.el, self.ec)
 endfunction
 
 function! targets#target#setS(line, column) dict
