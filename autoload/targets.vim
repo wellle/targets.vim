@@ -102,75 +102,77 @@ endfunction
 
 " TODO: move down
 function! s:modifyTarget(target, kind, modifier)
+    let target = a:target.copy()
+
     if a:kind ==# 'p'
         if a:modifier ==# s:i
-            return s:drop(a:target)
+            return s:drop(target)
         elseif a:modifier ==# s:a
-            return [a:target, 0]
+            return [target, 0]
         elseif a:modifier ==# s:I
-            return s:shrink(a:target)
+            return s:shrink(target)
         elseif a:modifier ==# s:A
-            return s:expand(a:target)
+            return s:expand(target)
         else
             return [0, s:fail('modifyTarget p')]
         endif
 
     elseif a:kind ==# 'q'
         if a:modifier ==# s:i
-            return s:drop(a:target)
+            return s:drop(target)
         elseif a:modifier ==# s:a
-            return [a:target, 0]
+            return [target, 0]
         elseif a:modifier ==# s:I
-            return s:shrink(a:target)
+            return s:shrink(target)
         elseif a:modifier ==# s:A
-            return s:expand(a:target)
+            return s:expand(target)
         else
             return [0, s:fail('modifyTarget q')]
         endif
 
     elseif a:kind ==# 's'
         if a:modifier ==# s:i
-            return s:drop(a:target)
+            return s:drop(target)
         elseif a:modifier ==# s:a
-            return s:dropr(a:target)
+            return s:dropr(target)
         elseif a:modifier ==# s:I
-            return s:shrink(a:target)
+            return s:shrink(target)
         elseif a:modifier ==# s:A
-            return s:expand(a:target)
+            return s:expand(target)
         else
             return [0, s:fail('modifyTarget s')]
         endif
 
     elseif a:kind ==# 't'
         if a:modifier ==# s:i
-            let [target, err] = s:innert(a:target)
+            let [target, err] = s:innert(target)
             if err
                 return [0, err]
             endif
             return s:drop(target)
         elseif a:modifier ==# s:a
-            return [a:target, 0]
+            return [target, 0]
         elseif a:modifier ==# s:I
-            let [target, err] = s:innert(a:target)
+            let [target, err] = s:innert(target)
             if err
                 return [0, err]
             endif
             return s:shrink(target)
         elseif a:modifier ==# s:A
-            return s:expand(a:target)
+            return s:expand(target)
         else
             return [0, s:fail('modifyTarget t')]
         endif
 
     elseif a:kind ==# s:a
         if a:modifier ==# s:i
-            return s:drop(a:target)
+            return s:drop(target)
         elseif a:modifier ==# s:a
-            return s:dropa(a:target)
+            return s:dropa(target)
         elseif a:modifier ==# s:I
-            return s:shrink(a:target)
+            return s:shrink(target)
         elseif a:modifier ==# s:A
-            return s:expand(a:target)
+            return s:expand(target)
         else
             return [0, s:fail('modifyTarget a')]
         endif
