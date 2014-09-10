@@ -22,8 +22,15 @@ function! targets#target#fromValues(sl, sc, el, ec)
         \ 'invalid': function('targets#target#invalid'),
         \ 'empty': function('targets#target#empty'),
         \ 'nonempty': function('targets#target#nonempty'),
-        \ 'select': function('targets#target#select')
+        \ 'select': function('targets#target#select'),
+        \ 'echom': function('targets#target#echom')
         \ }
+endfunction
+
+function! targets#target#fromVisualSelection()
+    let [sl, sc] = getpos("'<")[1:2]
+    let [el, ec] = getpos("'>")[1:2]
+    return targets#target#fromValues(sl, sc, el, ec)
 endfunction
 
 function! targets#target#copy() dict
@@ -136,4 +143,8 @@ function! targets#target#select() dict
     endif
 
     call cursor(self.e())
+endfunction
+
+function! targets#target#echom() dict
+    echom '[' . self.sl self.sc . '; ' . self.el self.ec . ']'
 endfunction
