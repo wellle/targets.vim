@@ -73,6 +73,7 @@ function! targets#x(trigger, count)
     call s:saveVisualSelection()
     let [rawTarget, target, err] = s:findTarget(a:trigger, a:count)
     if err
+        call s:abortMatch('#x')
         return s:cleanUp()
     endif
     if s:handleTarget(target) == 0
