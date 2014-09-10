@@ -77,7 +77,8 @@ function! targets#x(trigger, count)
         return s:cleanUp()
     endif
     if s:handleTarget(target) == 0
-        call s:saveState(rawTarget, target)
+        let s:lastRawTarget = rawTarget
+        let s:lastTarget = target
     endif
     call s:cleanUp()
 endfunction
@@ -347,12 +348,6 @@ function! s:isNewSelection()
     endif
 
     return 0
-endfunction
-
-" remember last selection and last raw selection
-function! s:saveState(rawTarget, target)
-    let s:lastRawTarget = a:rawTarget
-    let s:lastTarget = a:target
 endfunction
 
 " clear the commandline to hide targets function calls
