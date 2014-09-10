@@ -324,12 +324,11 @@ endfunction
 
 " save old visual selection to detect new selections and reselect on fail
 function! s:saveVisualSelection()
-    let [s:vsl, s:vsc] = getpos("'<")[1:2]
-    let [s:vel, s:vec] = getpos("'>")[1:2]
+    let s:visualTarget = targets#target#fromVisualSelection()
 
     " reselect, save mode and go back to normal mode
     normal! gv
-    let s:vmode = mode()
+    let s:visualTarget.linewise = (mode() ==# 'V')
     silent! execute "normal! \<C-\>\<C-N>"
 
     let s:newSelection = s:isNewSelection()
@@ -339,13 +338,11 @@ endfunction
 " growing
 " TODO: compare current with last trigger?
 function! s:isNewSelection()
-    if !exists('s:lsl') " no previous invocation
+    if !exists('s:lastTarget') " no previous target
         return 1
     endif
-    if [s:vsl, s:vsc] != [s:lsl, s:lsc] " selection start changed
-        return 1
-    endif
-    if [s:vel, s:vec] != [s:lel, s:lec] " selection end changed
+
+    if s:lastTarget != s:visualTarget
         return 1
     endif
 
@@ -355,9 +352,7 @@ endfunction
 " remember last selection and last raw selection
 function! s:saveState(rawTarget, target)
     let s:lastRawTarget = a:rawTarget
-
-    let [s:lsl, s:lsc] = a:target.s()
-    let [s:lel, s:lec] = a:target.e()
+    let s:lastTarget = a:target
 endfunction
 
 " clear the commandline to hide targets function calls
@@ -418,11 +413,12 @@ endfunction
 
 " abort when no match was found
 function! s:abortMatch(message)
-    call setpos('.', s:oldpos)
     " get into normal mode and beep
     call feedkeys("\<C-\>\<C-N>\<Esc>", 'n')
 
     call s:prepareReselect()
+    call setpos('.', s:oldpos)
+
     " undo partial command
     call s:triggerUndo()
     " trigger reselect if called from xmap
@@ -442,9 +438,7 @@ endfunction
 " temporarily select original selection to reselect later
 function! s:prepareReselect()
     if s:mapmode ==# 'x'
-        let target = targets#target#fromValues(s:vsl, s:vsc, s:vel, s:vec)
-        let target.linewise = (s:vmode ==# 'V')
-        call s:selectRegion(target)
+        call s:selectRegion(s:visualTarget)
     endif
 endfunction
 
