@@ -187,7 +187,7 @@ endfunction
 function! s:findRawTarget(kind, which, count)
     if a:kind ==# 'p'
         if a:which ==# 'c'
-            return s:seekselectp(a:count)
+            return s:seekselectp(a:count + s:grow())
         elseif a:which ==# 'n'
             call s:nextp(a:count)
             return s:selectp()
@@ -235,7 +235,7 @@ function! s:findRawTarget(kind, which, count)
 
     elseif a:kind ==# 't'
         if a:which ==# 'c'
-            return s:seekselectt(a:count)
+            return s:seekselectt(a:count + s:grow())
         elseif a:which ==# 'n'
             call s:nextt(a:count)
             return s:selectp()
@@ -701,12 +701,10 @@ endfunction
 "          │ └── 2 ──┘
 " args (count, opening=s:opening, closing=s:closing, trigger=s:closing)
 function! s:seekselectp(...)
-    let cnt = a:1 + s:grow()
-
     if a:0 == 4
-        let [opening, closing, trigger] = [a:2, a:3, a:4]
+        let [cnt, opening, closing, trigger] = [a:1, a:2, a:3, a:4]
     else
-        let [opening, closing, trigger] = [s:opening, s:closing, s:closing]
+        let [cnt, opening, closing, trigger] = [a:1, s:opening, s:closing, s:closing]
     endif
 
     " try to select around cursor
