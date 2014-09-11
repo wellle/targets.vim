@@ -248,7 +248,7 @@ function! s:findRawTarget(kind, which, count)
 
     elseif a:kind ==# 'a'
         if a:which ==# 'c'
-            return s:seekselecta(a:count)
+            return s:seekselecta(a:count + s:grow())
         elseif a:which ==# 'n'
             return s:nextselecta(a:count)
         elseif a:which ==# 'l'
@@ -863,13 +863,11 @@ endfunction
 
 " selects and argument, supports growing and seeking
 function! s:seekselecta(count)
-    let cnt = a:count + s:grow()
-
-    if cnt > 1
+    if a:count > 1
         if s:getchar() =~# g:targets_argClosing
-            let [cnt, message] = [cnt - 2, 'seekselecta 1']
+            let [cnt, message] = [a:count - 2, 'seekselecta 1']
         else
-            let [cnt, message] = [cnt - 1, 'seekselecta 2']
+            let [cnt, message] = [a:count - 1, 'seekselecta 2']
         endif
         " find cnt closing while skipping matched openings
         let [opening, closing] = [g:targets_argOpening, g:targets_argClosing]
@@ -884,22 +882,22 @@ function! s:seekselecta(count)
         return [target, 0]
     endif
 
-    let [target, err] = s:nextselecta(cnt, line('.'))
+    let [target, err] = s:nextselecta(a:count, line('.'))
     if err == 0
         return [target, 0]
     endif
 
-    let [target, err] = s:lastselecta(cnt, line('.'))
+    let [target, err] = s:lastselecta(a:count, line('.'))
     if err == 0
         return [target, 0]
     endif
 
-    let [target, err] = s:nextselecta(cnt)
+    let [target, err] = s:nextselecta(a:count)
     if err == 0
         return [target, 0]
     endif
 
-    let [target, err] = s:lastselecta(cnt)
+    let [target, err] = s:lastselecta(a:count)
     if err == 0
         return [target, 0]
     endif
