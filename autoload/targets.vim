@@ -262,6 +262,17 @@ function! s:findRawTarget(kind, which, count)
 endfunction
 
 function! s:getDelimiters(trigger)
+    " create cache
+    if !exists('s:delimiterCache')
+        let s:delimiterCache = {}
+    endif
+
+    " check cache
+    if has_key(s:delimiterCache, a:trigger)
+        let [kind, opening, closing] = s:delimiterCache[a:trigger]
+        return [kind, opening, closing, 0]
+    endif
+
     let [kind, rawOpening, rawClosing, err] = s:getRawDelimiters(a:trigger)
     if err > 0
         return [0, 0, 0, err]
@@ -269,12 +280,14 @@ function! s:getDelimiters(trigger)
 
     let opening = escape(rawOpening, '".~\$')
     let closing = escape(rawClosing, '".~\$')
+
+    " write to cache
+    let s:delimiterCache[a:trigger] = [kind, opening, closing]
+
     return [kind, opening, closing, 0]
 endfunction
 
-" TODO: use =~# instead of iterating
 function! s:getRawDelimiters(trigger)
-    " TODO: cache
     for pair in split(g:targets_pairs)
         for trigger in split(pair, '\zs')
             if trigger ==# a:trigger
