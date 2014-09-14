@@ -24,8 +24,8 @@ call s:setup()
 
 function! targets#o(trigger)
     call s:init('o')
-    let [rawTarget, target, err] = s:findTarget(a:trigger, v:count1)
-    if err
+    let [target, rawTarget] = s:findTarget(a:trigger, v:count1)
+    if target.invalid()
         return s:cleanUp()
     endif
     call s:handleTarget(target)
@@ -71,8 +71,8 @@ endfunction
 function! targets#x(trigger, count)
     call s:init('x')
     call s:saveVisualSelection()
-    let [rawTarget, target, err] = s:findTarget(a:trigger, a:count)
-    if err
+    let [target, rawTarget] = s:findTarget(a:trigger, a:count)
+    if target.invalid()
         call s:abortMatch('#x')
         return s:cleanUp()
     endif
@@ -87,14 +87,15 @@ function! s:findTarget(trigger, count)
     let [delimiter, which, modifier] = split(a:trigger, '\zs')
     let [kind, s:opening, s:closing, err] = s:getDelimiters(delimiter)
     if err
-        return [0, 0, s:fail("failed to find delimiter")]
+        let errorTarget = targets#target#withError("failed to find delimiter")
+        return [errorTarget, errorTarget]
     endif
 
     let view = winsaveview()
     let [rawTarget, err] = s:findRawTarget(kind, which, a:count)
     let [target, err] = s:modifyTarget(rawTarget, kind, modifier)
     call winrestview(view)
-    return [rawTarget, target, err]
+    return [target, rawTarget]
 endfunction
 
 " TODO: move down
