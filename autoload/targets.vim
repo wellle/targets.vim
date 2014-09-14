@@ -147,17 +147,11 @@ function! s:modifyTarget(target, kind, modifier)
     elseif a:kind ==# 't'
         if a:modifier ==# s:i
             let [target, err] = s:innert(target)
-            if err
-                return [0, err]
-            endif
             return s:drop(target)
         elseif a:modifier ==# s:a
             return [target, 0]
         elseif a:modifier ==# s:I
             let [target, err] = s:innert(target)
-            if err
-                return [0, err]
-            endif
             return s:shrink(target)
         elseif a:modifier ==# s:A
             return s:expand(target)
@@ -992,6 +986,10 @@ endfunction
 " line │ a .  b  . c
 " out  │    └───┘
 function! s:drop(target)
+    if a:target.invalid()
+        return a:target
+    endif
+
     let [sLinewise, eLinewise] = [0, 0]
     call a:target.cursorS()
     if searchpos('\S', 'nW', line('.'))[0] == 0
@@ -1077,6 +1075,10 @@ endfunction
 " line │ a . b c . d │ a .  . d
 " out  │     └─┘     │    └┘
 function! s:shrink(target)
+    if a:target.invalid()
+        return a:target
+    endif
+
     call a:target.cursorE()
     call a:target.searchposE('\S', 'b', a:target.sl)
     if !a:target.nonempty()
