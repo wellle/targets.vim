@@ -1,5 +1,6 @@
-function! targets#target#fromValues(sl, sc, el, ec)
+function! targets#target#new(sl, sc, el, ec, error)
     return {
+        \ 'error': a:error,
         \ 'sl': a:sl,
         \ 'sc': a:sc,
         \ 'el': a:el,
@@ -27,10 +28,18 @@ function! targets#target#fromValues(sl, sc, el, ec)
         \ }
 endfunction
 
+function! targets#target#fromValues(sl, sc, el, ec)
+    return targets#target#new(a:sl, a:sc, a:el, a:ec, '')
+endfunction
+
 function! targets#target#fromVisualSelection()
     let [sl, sc] = getpos("'<")[1:2]
     let [el, ec] = getpos("'>")[1:2]
     return targets#target#fromValues(sl, sc, el, ec)
+endfunction
+
+function! targets#target#withError(error)
+    return targets#target#new(0, 0, 0, 0, a:error)
 endfunction
 
 function! targets#target#copy() dict
@@ -97,6 +106,9 @@ endfunction
 
 " TODO: combine these into single target#state function?
 function! targets#target#invalid() dict
+    if self.error != ''
+        return 1
+    endif
     if self.sl == 0 || self.el == 0
         return 1
     elseif self.sl < self.el
