@@ -93,7 +93,7 @@ function! s:findTarget(trigger, count)
 
     let view = winsaveview()
     let [rawTarget] = s:findRawTarget(kind, which, a:count)
-    let [target, err] = s:modifyTarget(rawTarget, kind, modifier)
+    let [target] = s:modifyTarget(rawTarget, kind, modifier)
     call winrestview(view)
     return [target, rawTarget]
 endfunction
@@ -101,7 +101,7 @@ endfunction
 " TODO: move down
 function! s:modifyTarget(target, kind, modifier)
     if a:target.invalid()
-        return [targets#target#withError('modifyTarget invalid'), s:fail('modifyTarget invalid')]
+        return [targets#target#withError('modifyTarget invalid')]
     endif
     let target = a:target.copy()
 
@@ -109,26 +109,26 @@ function! s:modifyTarget(target, kind, modifier)
         if a:modifier ==# s:i
             return s:drop(target)
         elseif a:modifier ==# s:a
-            return [target, 0]
+            return [target]
         elseif a:modifier ==# s:I
             return s:shrink(target)
         elseif a:modifier ==# s:A
             return s:expand(target)
         else
-            return [targets#target#withError('modifyTarget p'), s:fail('modifyTarget p')]
+            return [targets#target#withError('modifyTarget p')]
         endif
 
     elseif a:kind ==# 'q'
         if a:modifier ==# s:i
             return s:drop(target)
         elseif a:modifier ==# s:a
-            return [target, 0]
+            return [target]
         elseif a:modifier ==# s:I
             return s:shrink(target)
         elseif a:modifier ==# s:A
             return s:expand(target)
         else
-            return [targets#target#withError('modifyTarget q'), s:fail('modifyTarget q')]
+            return [targets#target#withError('modifyTarget q')]
         endif
 
     elseif a:kind ==# 's'
@@ -141,7 +141,7 @@ function! s:modifyTarget(target, kind, modifier)
         elseif a:modifier ==# s:A
             return s:expand(target)
         else
-            return [targets#target#withError('modifyTarget s'), s:fail('modifyTarget s')]
+            return [targets#target#withError('modifyTarget s')]
         endif
 
     elseif a:kind ==# 't'
@@ -149,14 +149,14 @@ function! s:modifyTarget(target, kind, modifier)
             let [target, err] = s:innert(target)
             return s:drop(target)
         elseif a:modifier ==# s:a
-            return [target, 0]
+            return [target]
         elseif a:modifier ==# s:I
             let [target, err] = s:innert(target)
             return s:shrink(target)
         elseif a:modifier ==# s:A
             return s:expand(target)
         else
-            return [targets#target#withError('modifyTarget t'), s:fail('modifyTarget t')]
+            return [targets#target#withError('modifyTarget t')]
         endif
 
     elseif a:kind ==# s:a
@@ -169,11 +169,11 @@ function! s:modifyTarget(target, kind, modifier)
         elseif a:modifier ==# s:A
             return s:expand(target)
         else
-            return [targets#target#withError('modifyTarget a'), s:fail('modifyTarget a')]
+            return [targets#target#withError('modifyTarget a')]
         endif
     endif
 
-    return [targets#target#withError('modifyTarget kind'), s:fail('modifyTarget kind')]
+    return [targets#target#withError('modifyTarget kind')]
 endfunction
 
 " TODO: move down
@@ -1014,7 +1014,7 @@ function! s:drop(target)
     endif
     call a:target.getposE()
     let a:target.linewise = sLinewise && eLinewise
-    return [a:target, 0]
+    return [a:target]
 endfunction
 
 " drop right delimiter
@@ -1025,7 +1025,7 @@ function! s:dropr(target)
     call a:target.cursorE()
     silent! execute "normal! \<BS>"
     call a:target.getposE()
-    return [a:target, 0]
+    return [a:target]
 endfunction
 
 " drop an argument separator (like a comma), prefer the right one, fall back
@@ -1091,7 +1091,7 @@ function! s:shrink(target)
         call a:target.cursorS()
         call a:target.searchposS('\S', '', a:target.el)
     endif
-    return [a:target, 0]
+    return [a:target]
 endfunction
 
 " expand selection by some whitespace
@@ -1109,7 +1109,7 @@ function! s:expand(...)
             " non whitespace or EOL after trailing whitespace found
             " not counting whitespace directly after end
             call target.setE(line, column-1)
-            return [target, 0]
+            return [target]
         endif
     endif
 
@@ -1119,14 +1119,14 @@ function! s:expand(...)
         if line > 0
             " non whitespace before leading whitespace found
             call target.setS(line, column+1)
-            return [target, 0]
+            return [target]
         endif
         " only whitespace in front of start
         " include all leading whitespace from beginning of line
         let target.sc = 1
     endif
 
-    return [target, 0]
+    return [target]
 endfunction
 
 " return 1 if count should be increased by one to grow selection on repeated
