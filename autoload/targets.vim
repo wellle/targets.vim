@@ -871,27 +871,30 @@ function! s:seekselecta(count)
     endif
 
     let [target, err] = s:selecta('>')
-    if err == 0
+    if !target.invalid() " TODO: add target.valid()?
         return [target, 0]
     endif
 
+    " TODO: get next and last and select best one instead of trying with
+    " restrictions
+
     let [target, err] = s:nextselecta(a:count, line('.'))
-    if err == 0
+    if !target.invalid()
         return [target, 0]
     endif
 
     let [target, err] = s:lastselecta(a:count, line('.'))
-    if err == 0
+    if !target.invalid()
         return [target, 0]
     endif
 
     let [target, err] = s:nextselecta(a:count)
-    if err == 0
+    if !target.invalid()
         return [target, 0]
     endif
 
     let [target, err] = s:lastselecta(a:count)
-    if err == 0
+    if !target.invalid()
         return [target, 0]
     endif
 
@@ -911,7 +914,7 @@ function! s:nextselecta(...)
 
     let char = s:getchar()
     let [target, err] = s:selecta('>')
-    if err == 0 " argument found
+    if !target.invalid()
         return [target, 0]
     endif
 
@@ -926,7 +929,7 @@ function! s:nextselecta(...)
     endif
 
     let [target, err] = s:selecta('>')
-    if err == 0 " argument found
+    if !target.invalid()
         return [target, 0]
     endif
 
@@ -942,7 +945,7 @@ function! s:lastselecta(...)
     let separator = g:targets_argSeparator
     if s:getchar() =~# separator && s:newSelection
         let [target, err] = s:selecta('<')
-        if err == 0
+        if !target.invalid()
             return [target, 0]
         endif
     endif
@@ -955,7 +958,7 @@ function! s:lastselecta(...)
 
     let char = s:getchar()
     let [target, err] = s:selecta('<')
-    if err == 0 " argument found
+    if !target.invalid()
         return [target, 0]
     endif
 
@@ -970,7 +973,7 @@ function! s:lastselecta(...)
     endif
 
     let [target, err] = s:selecta('<')
-    if err == 0 " argument found
+    if !target.invalid()
         return [target, 0]
     endif
 
