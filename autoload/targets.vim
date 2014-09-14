@@ -92,11 +92,6 @@ function! s:findTarget(trigger, count)
 
     let view = winsaveview()
     let [rawTarget, err] = s:findRawTarget(kind, which, a:count)
-    if err
-        call winrestview(view)
-        return [0, 0, err]
-    endif
-
     let [target, err] = s:modifyTarget(rawTarget, kind, modifier)
     call winrestview(view)
     return [rawTarget, target, err]
@@ -104,6 +99,9 @@ endfunction
 
 " TODO: move down
 function! s:modifyTarget(target, kind, modifier)
+    if a:target.invalid()
+        return [targets#target#withError('modifyTarget invalid'), s:fail('modifyTarget invalid')]
+    endif
     let target = a:target.copy()
 
     if a:kind ==# 'p'
@@ -116,7 +114,7 @@ function! s:modifyTarget(target, kind, modifier)
         elseif a:modifier ==# s:A
             return s:expand(target)
         else
-            return [0, s:fail('modifyTarget p')]
+            return [targets#target#withError('modifyTarget p'), s:fail('modifyTarget p')]
         endif
 
     elseif a:kind ==# 'q'
@@ -129,7 +127,7 @@ function! s:modifyTarget(target, kind, modifier)
         elseif a:modifier ==# s:A
             return s:expand(target)
         else
-            return [0, s:fail('modifyTarget q')]
+            return [targets#target#withError('modifyTarget q'), s:fail('modifyTarget q')]
         endif
 
     elseif a:kind ==# 's'
@@ -142,7 +140,7 @@ function! s:modifyTarget(target, kind, modifier)
         elseif a:modifier ==# s:A
             return s:expand(target)
         else
-            return [0, s:fail('modifyTarget s')]
+            return [targets#target#withError('modifyTarget s'), s:fail('modifyTarget s')]
         endif
 
     elseif a:kind ==# 't'
@@ -163,7 +161,7 @@ function! s:modifyTarget(target, kind, modifier)
         elseif a:modifier ==# s:A
             return s:expand(target)
         else
-            return [0, s:fail('modifyTarget t')]
+            return [targets#target#withError('modifyTarget t'), s:fail('modifyTarget t')]
         endif
 
     elseif a:kind ==# s:a
@@ -176,11 +174,11 @@ function! s:modifyTarget(target, kind, modifier)
         elseif a:modifier ==# s:A
             return s:expand(target)
         else
-            return [0, s:fail('modifyTarget a')]
+            return [targets#target#withError('modifyTarget a'), s:fail('modifyTarget a')]
         endif
     endif
 
-    return [0, s:fail('modifyTarget kind')]
+    return [targets#target#withError('modifyTarget kind'), s:fail('modifyTarget kind')]
 endfunction
 
 " TODO: move down
@@ -195,7 +193,7 @@ function! s:findRawTarget(kind, which, count)
             call s:lastp(a:count)
             return s:selectp()
         else
-            return [0, s:fail('findRawTarget p')]
+            return [targets#target#withError('findRawTarget p'), s:fail('findRawTarget p')]
         endif
 
     elseif a:kind ==# 'q'
@@ -215,7 +213,7 @@ function! s:findRawTarget(kind, which, count)
             call s:quote()
             return s:lastselect(a:count * 2)
         else
-            return [0, s:fail('findRawTarget q')]
+            return [targets#target#withError('findRawTarget q'), s:fail('findRawTarget q')]
         endif
 
     elseif a:kind ==# 's'
@@ -230,7 +228,7 @@ function! s:findRawTarget(kind, which, count)
         elseif a:which ==# 'L'
             return s:lastselect(a:count * 2)
         else
-            return [0, s:fail('findRawTarget s')]
+            return [targets#target#withError('findRawTarget s'), s:fail('findRawTarget s')]
         endif
 
     elseif a:kind ==# 't'
@@ -243,7 +241,7 @@ function! s:findRawTarget(kind, which, count)
             call s:lastt(a:count)
             return s:selectp()
         else
-            return [0, s:fail('findRawTarget t')]
+            return [targets#target#withError('findRawTarget t'), s:fail('findRawTarget t')]
         endif
 
     elseif a:kind ==# 'a'
@@ -254,11 +252,11 @@ function! s:findRawTarget(kind, which, count)
         elseif a:which ==# 'l'
             return s:lastselecta(a:count)
         else
-            return [0, s:fail('findRawTarget a')]
+            return [targets#target#withError('findRawTarget a'), s:fail('findRawTarget a')]
         endif
     endif
 
-    return [0, s:fail('findRawTarget kind')]
+    return [targets#target#withError('findRawTarget kind'), s:fail('findRawTarget kind')]
 endfunction
 
 function! s:getDelimiters(trigger)
@@ -490,7 +488,7 @@ function! s:nextselect(count)
     call s:prepareNext()
 
     if s:search(a:count, s:opening, 'W') > 0
-        return [0, s:fail('nextselect')]
+        return [targets#target#withError('nextselect'), s:fail('nextselect')]
     endif
 
     return s:select('>')
@@ -509,7 +507,7 @@ function! s:lastselect(count)
     endif
 
     if s:search(cnt, s:closing, 'bW') > 0
-        return [0, s:fail(message)]
+        return [targets#target#withError(message), s:fail(message)]
     endif
 
     return s:select('<')
@@ -572,7 +570,7 @@ function! s:select(direction)
 
     if err > 0
         call setpos('.', oldpos)
-        return [0, s:fail(message)]
+        return [targets#target#withError(message), s:fail(message)]
     endif
 
     return [targets#target#fromValues(sl, sc, el, ec), 0]
@@ -623,7 +621,7 @@ function! s:seekselect()
             return [targets#target#fromValues(sl, sc, el, ec), 0]
         endif
         " no delim found after r
-        return [0, s:fail('seekselect 1')]
+        return [targets#target#withError('seekselect 1'), s:fail('seekselect 1')]
     endif
 
     " no delim found after cursor in line
@@ -647,7 +645,7 @@ function! s:seekselect()
             return [targets#target#fromValues(sl, sc, el, ec), 0]
         endif
         " no delim found before l
-        return [0, s:fail('seekselect 2')]
+        return [targets#target#withError('seekselect 2'), s:fail('seekselect 2')]
     endif
 
     " no delim found before cursor in line
@@ -665,7 +663,7 @@ function! s:seekselect()
             return [targets#target#fromValues(sl, sc, el, ec), 0]
         endif
         " no delim found after r
-        return [0, s:fail('seekselect 3')]
+        return [targets#target#withError('seekselect 3'), s:fail('seekselect 3')]
     endif
 
     " no delim found after cursor
@@ -675,7 +673,7 @@ function! s:seekselect()
         return [targets#target#fromValues(sl, sc, el, ec), 0]
     endif
 
-    return [0, s:fail('seekselect 4')]
+    return [targets#target#withError('seekselect 4'), s:fail('seekselect 4')]
 endfunction
 
 " select a pair around the cursor
@@ -688,7 +686,7 @@ function! s:selectp()
     silent! normal! v
 
     if sc == ec && sl == el
-        return [0, s:fail('selectp')]
+        return [targets#target#withError('selectp'), s:fail('selectp')]
     endif
 
     return [targets#target#fromValues(sl, sc, el, ec), 0]
@@ -721,7 +719,7 @@ function! s:seekselectp(...)
     endif
 
     if cnt > 1
-        return [0, s:fail('seekselectp count')]
+        return [targets#target#withError('seekselectp count'), s:fail('seekselectp count')]
     endif
     let cnt = 1
 
@@ -745,7 +743,7 @@ function! s:seekselectp(...)
         return s:selectp()
     endif
 
-    return [0, s:fail('seekselectp')]
+    return [targets#target#withError('seekselectp'), s:fail('seekselectp')]
 endfunction
 
 " tag pair matcher (works across multiple lines, supports seeking)
@@ -772,12 +770,12 @@ function! s:selecta(direction)
         let [el, ec, sl, sc, err] = s:findArg(a:direction, 'bW', 'W', 'W', closing, opening)
         let message = 'selecta 3'
     else
-        return [0, s:fail('selecta')]
+        return [targets#target#withError('selecta'), s:fail('selecta')]
     endif
 
     if err > 0
         call setpos('.', oldpos)
-        return [0, s:fail(message)]
+        return [targets#target#withError(message), s:fail(message)]
     endif
 
     return [targets#target#fromValues(sl, sc, el, ec), 0]
@@ -872,7 +870,7 @@ function! s:seekselecta(count)
         " find cnt closing while skipping matched openings
         let [opening, closing] = [g:targets_argOpening, g:targets_argClosing]
         if s:findArgBoundary('W', 'W', opening, closing, s:argOuter, s:none, cnt)[2] > 0
-            return [0, s:fail(message . ' count')]
+            return [targets#target#withError(message . ' count'), s:fail(message . ' count')]
         endif
         return s:selecta('^')
     endif
@@ -902,7 +900,7 @@ function! s:seekselecta(count)
         return [target, 0]
     endif
 
-    return [0, s:fail('seekselecta seek')]
+    return [targets#target#withError('seekselecta seek'), s:fail('seekselecta seek')]
 endfunction
 
 " try to select a next argument, supports count and optional stopline
@@ -913,7 +911,7 @@ function! s:nextselecta(...)
     let cnt = a:1
     let stopline = a:0 > 1 ? a:2 : 0
     if s:search(cnt, s:argOpeningS, 'W', stopline) > 0 " no start found
-        return [0, s:fail('nextselecta 1')]
+        return [targets#target#withError('nextselecta 1'), s:fail('nextselecta 1')]
     endif
 
     let char = s:getchar()
@@ -923,13 +921,13 @@ function! s:nextselecta(...)
     endif
 
     if char !~# g:targets_argSeparator " start wasn't on comma
-        return [0, s:fail('nextselecta 2')]
+        return [targets#target#withError('nextselecta 2'), s:fail('nextselecta 2')]
     endif
 
     call setpos('.', s:oldpos)
     let opening = g:targets_argOpening
     if s:search(cnt, opening, 'W', stopline) > 0 " no start found
-        return [0, s:fail('nextselecta 3')]
+        return [targets#target#withError('nextselecta 3'), s:fail('nextselecta 3')]
     endif
 
     let [target, err] = s:selecta('>')
@@ -937,7 +935,7 @@ function! s:nextselecta(...)
         return [target, 0]
     endif
 
-    return [0, s:fail('nextselecta 4')]
+    return [targets#target#withError('nextselecta 4'), s:fail('nextselecta 4')]
 endfunction
 
 " try to select a last argument, supports count and optional stopline
@@ -957,7 +955,7 @@ function! s:lastselecta(...)
     let cnt = a:1
     let stopline = a:0 > 1 ? a:2 : 0
     if s:search(cnt, s:argClosingS, 'bW', stopline) > 0 " no start found
-        return [0, s:fail('lastselecta 1')]
+        return [targets#target#withError('lastselecta 1'), s:fail('lastselecta 1')]
     endif
 
     let char = s:getchar()
@@ -967,13 +965,13 @@ function! s:lastselecta(...)
     endif
 
     if char !~# separator " start wasn't on separator
-        return [0, s:fail('lastselecta 2')]
+        return [targets#target#withError('lastselecta 2'), s:fail('lastselecta 2')]
     endif
 
     call setpos('.', s:oldpos)
     let closing = g:targets_argClosing
     if s:search(cnt, closing, 'bW', stopline) > 0 " no start found
-        return [0, s:fail('lastselecta 3')]
+        return [targets#target#withError('lastselecta 3'), s:fail('lastselecta 3')]
     endif
 
     let [target, err] = s:selecta('<')
@@ -981,7 +979,7 @@ function! s:lastselecta(...)
         return [target, 0]
     endif
 
-    return [0, s:fail('lastselecta 4')]
+    return [targets#target#withError('lastselecta 4'), s:fail('lastselecta 4')]
 endfunction
 
 " selection modifiers
