@@ -75,14 +75,15 @@ function! s:getWhich(char)
 endfunction
 
 function! targets#x(trigger, count)
-    call s:init('x')
-    call s:saveVisualSelection()
+    call s:initX(a:trigger)
+
     let [target, rawTarget] = s:findTarget(a:trigger, a:count)
     if target.invalid()
         call s:abortMatch('#x')
         return s:cleanUp()
     endif
     if s:handleTarget(target) == 0
+        let s:lastTrigger = a:trigger
         let s:lastRawTarget = rawTarget
         let s:lastTarget = target
     endif
@@ -323,7 +324,9 @@ function! s:cleanUp()
 endfunction
 
 " save old visual selection to detect new selections and reselect on fail
-function! s:saveVisualSelection()
+function! s:initX(trigger)
+    call s:init('x')
+
     let s:visualTarget = targets#target#fromVisualSelection()
 
     " reselect, save mode and go back to normal mode
@@ -331,17 +334,24 @@ function! s:saveVisualSelection()
     let s:visualTarget.linewise = (mode() ==# 'V')
     silent! execute "normal! \<C-\>\<C-N>"
 
-    let s:newSelection = s:isNewSelection()
+    let s:newSelection = s:isNewSelection(a:trigger)
 endfunction
 
 " return 0 if the selection changed since the last invocation. used for
 " growing
 " TODO: compare current with last trigger?
-function! s:isNewSelection()
-    if !exists('s:lastTarget') " no previous target
+function! s:isNewSelection(trigger)
+    " no previous invocation or target
+    if !exists('s:lastTrigger') || !exists('s:lastTarget')
         return 1
     endif
 
+    " different trigger
+    if s:lastTrigger != a:trigger
+        return 1
+    endif
+
+    " selection changed
     if s:lastTarget != s:visualTarget
         return 1
     endif
