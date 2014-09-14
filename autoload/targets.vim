@@ -412,7 +412,7 @@ endfunction
 " most operators would like to move to the end delimiter
 " for change or delete, insert temporary character that will be operated on
 function! s:handleEmptyMatch(target)
-    if v:operator !~# "^[cd]$"
+    if s:mapmode !=# 'o' || v:operator !~# "^[cd]$"
         return s:abortMatch('handleEmptyMatch')
     endif
 
