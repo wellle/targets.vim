@@ -38,14 +38,20 @@ function! targets#e(modifier)
         return a:modifier
     endif
 
-    " TODO: wrap getchar()? handle complicated return values
-    let [delimiter, which] = [nr2char(getchar()), 'c']
+    let char1 = nr2char(getchar())
+    let [delimiter, which, chars] = [char1, 'c', char1]
     for nlNL in split(g:targets_nlNL, '\zs')
         if nlNL ==# delimiter
             " delimiter was which, get another char for delimiter
-            let [delimiter, which] = [nr2char(getchar()), delimiter]
+            let char2 = nr2char(getchar())
+            let [delimiter, which, chars] = [char2, char1, chars . char2]
         endif
     endfor
+
+    let [_, _, _, err] = s:getDelimiters(delimiter)
+    if err
+        return a:modifier . chars
+    endif
 
     if delimiter ==# "'"
         let delimiter = "''"
