@@ -352,7 +352,6 @@ endfunction
 
 " return 0 if the selection changed since the last invocation. used for
 " growing
-" TODO: compare current with last trigger?
 function! s:isNewSelection(trigger)
     " no previous invocation or target
     if !exists('s:lastTrigger') || !exists('s:lastTarget')
@@ -847,15 +846,15 @@ endfunction
 " return (line, column, err)
 function! s:findArgBoundary(...)
     let [flags1, flags2, skip, finish] = [a:1, a:2, a:3, a:4]
-    if a:0 == 6
+    if a:0 == 7
         let [all, separator, cnt] = [a:5, a:6, a:7]
     else
-        let [all, separator, cnt] = [s:argAll, g:targets_argSeparator, 2]
+        let [all, separator, cnt] = [s:argAll, g:targets_argSeparator, 1]
     endif
 
     let tl = 0
-    let [rl, rc] = searchpos(all, flags1)
     for _ in range(cnt)
+        let [rl, rc] = searchpos(all, flags1)
         while 1
             if rl == 0
                 return [0, 0, s:fail('findArgBoundary 1', a:)]
@@ -931,7 +930,7 @@ function! s:seekselecta(count)
 endfunction
 
 " try to select a next argument, supports count and optional stopline
-" args (count, stopline=0) TODO: make count optional
+" args (count, stopline=0)
 function! s:nextselecta(...)
     call s:prepareNext()
 
@@ -966,7 +965,7 @@ function! s:nextselecta(...)
 endfunction
 
 " try to select a last argument, supports count and optional stopline
-" args (count, stopline=0) TODO: make count optional
+" args (count, stopline=0)
 function! s:lastselecta(...)
     call s:prepareLast()
 
