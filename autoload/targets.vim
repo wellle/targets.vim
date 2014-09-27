@@ -24,7 +24,8 @@ call s:setup()
 
 function! targets#o(trigger)
     call s:init('o')
-    let [target, rawTarget] = s:findTarget(a:trigger, v:count1)
+    let [delimiter, which, modifier] = split(a:trigger, '\zs')
+    let [target, rawTarget] = s:findTarget(delimiter, which, modifier, v:count1)
     if target.invalid()
         return s:cleanUp()
     endif
@@ -77,7 +78,8 @@ endfunction
 function! targets#x(trigger, count)
     call s:initX(a:trigger)
 
-    let [target, rawTarget] = s:findTarget(a:trigger, a:count)
+    let [delimiter, which, modifier] = split(a:trigger, '\zs')
+    let [target, rawTarget] = s:findTarget(delimiter, which, modifier, a:count)
     if target.invalid()
         call s:abortMatch('#x')
         return s:cleanUp()
@@ -90,17 +92,16 @@ function! targets#x(trigger, count)
     call s:cleanUp()
 endfunction
 
-function! s:findTarget(trigger, count)
-    let [delimiter, which, modifier] = split(a:trigger, '\zs')
-    let [kind, s:opening, s:closing, err] = s:getDelimiters(delimiter)
+function! s:findTarget(delimiter, which, modifier, count)
+    let [kind, s:opening, s:closing, err] = s:getDelimiters(a:delimiter)
     if err
         let errorTarget = targets#target#withError("failed to find delimiter")
         return [errorTarget, errorTarget]
     endif
 
     let view = winsaveview()
-    let rawTarget = s:findRawTarget(kind, which, a:count)
-    let target = s:modifyTarget(rawTarget, kind, modifier)
+    let rawTarget = s:findRawTarget(kind, a:which, a:count)
+    let target = s:modifyTarget(rawTarget, kind, a:modifier)
     call winrestview(view)
     return [target, rawTarget]
 endfunction
