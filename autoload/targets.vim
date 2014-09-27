@@ -85,6 +85,7 @@ function! targets#x(trigger, count)
         return s:cleanUp()
     endif
     if s:handleTarget(target) == 0
+        let s:lastTrigger = a:trigger
         let s:lastRawTarget = rawTarget
         let s:lastTarget = target
     endif
@@ -326,6 +327,7 @@ function! s:init(mapmode)
     let s:mapmode = a:mapmode
     let s:oldpos = getpos('.')
     let s:newSelection = 1
+    let s:shouldGrow = 1
 
     let s:selection = &selection " remember 'selection' setting
     let &selection = 'inclusive' " and set it to inclusive
@@ -347,12 +349,13 @@ function! s:initX(trigger)
     let s:visualTarget.linewise = (mode() ==# 'V')
     silent! execute "normal! \<C-\>\<C-N>"
 
-    let s:newSelection = s:isNewSelection(a:trigger)
+    let s:newSelection = s:isNewSelection()
+    let s:shouldGrow = s:shouldGrow(a:trigger)
 endfunction
 
 " return 0 if the selection changed since the last invocation. used for
 " growing
-function! s:isNewSelection(trigger)
+function! s:isNewSelection()
     " no previous invocation or target
     if !exists('s:lastTarget')
         return 1
@@ -364,6 +367,22 @@ function! s:isNewSelection(trigger)
     endif
 
     return 0
+endfunction
+
+func! s:shouldGrow(trigger)
+    if s:newSelection
+        return 0
+    endif
+
+    if !exists('s:lastTrigger')
+        return 0
+    endif
+
+    if s:lastTrigger != a:trigger
+        return 0
+    endif
+
+    return 1
 endfunction
 
 " clear the commandline to hide targets function calls
@@ -1155,13 +1174,9 @@ endfunction
 " return 1 if count should be increased by one to grow selection on repeated
 " invocations
 function! s:grow()
-    if s:mapmode ==# 'o' || s:newSelection
+    if s:mapmode ==# 'o' || !s:shouldGrow
         return 0
     endif
-    " XXX: compare raw trigger
-    " if [s:lopening, s:lclosing] != [s:opening, s:closing] " different invocation
-    "     return 1
-    " endif
 
     " move cursor back to last raw end of selection to avoid growing being
     " confused by last modifiers
