@@ -85,7 +85,6 @@ function! targets#x(trigger, count)
         return s:cleanUp()
     endif
     if s:handleTarget(target) == 0
-        let s:lastTrigger = a:trigger
         let s:lastRawTarget = rawTarget
         let s:lastTarget = target
     endif
@@ -355,12 +354,7 @@ endfunction
 " growing
 function! s:isNewSelection(trigger)
     " no previous invocation or target
-    if !exists('s:lastTrigger') || !exists('s:lastTarget')
-        return 1
-    endif
-
-    " different trigger
-    if s:lastTrigger != a:trigger
+    if !exists('s:lastTarget')
         return 1
     endif
 
