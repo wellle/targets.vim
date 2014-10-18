@@ -279,8 +279,8 @@ function! s:getDelimiters(trigger)
         return [0, 0, 0, err]
     endif
 
-    let opening = escape(rawOpening, '".~\$')
-    let closing = escape(rawClosing, '".~\$')
+    let opening = escape(rawOpening, '.~\$')
+    let closing = escape(rawClosing, '.~\$')
 
     " write to cache
     let s:delimiterCache[a:trigger] = [kind, opening, closing]
@@ -496,9 +496,6 @@ endfunction
 " in   │ . │  . │ . │  .
 " line │ ' │  ' │ ' │  '
 " out  │ . │ .  │ . │ .
-" current problem: skipping v"an"an" doesn't work
-" also va", van", val" doesn't capture the three correct quotes when issued on
-" a quote character
 function! s:quote()
     if s:getchar() !=# s:opening
         return
