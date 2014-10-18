@@ -1123,7 +1123,7 @@ function! s:shrink(target)
 
     call a:target.cursorE()
     call a:target.searchposE('\S', 'b', a:target.sl)
-    if !a:target.state().isNonempty()
+    if a:target.state().isInvalidOrEmpty()
         " fall back to drop when there's only whitespace in between
         return s:drop(a:target)
     else

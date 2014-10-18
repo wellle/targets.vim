@@ -6,10 +6,11 @@ function! targets#state#new(state)
     return {
         \ 'state': a:state,
         \
-        \ 'isValid': function('targets#state#isValid'),
         \ 'isInvalid': function('targets#state#isInvalid'),
         \ 'isEmpty': function('targets#state#isEmpty'),
         \ 'isNonempty': function('targets#state#isNonempty'),
+        \ 'isValid': function('targets#state#isValid'),
+        \ 'isInvalidOrEmpty': function('targets#state#isInvalidOrEmpty'),
         \ }
 endfunction
 
@@ -43,6 +44,11 @@ endfunction
 
 " derived attributes
 
+" empty or nonempty
 function! targets#state#isValid() dict
     return self.state != s:invalid
+endfunction
+
+function! targets#state#isInvalidOrEmpty() dict
+    return self.state != s:nonempty
 endfunction
