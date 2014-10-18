@@ -26,7 +26,7 @@ function! targets#o(trigger)
     call s:init('o')
     let [delimiter, which, modifier] = split(a:trigger, '\zs')
     let [target, rawTarget] = s:findTarget(delimiter, which, modifier, v:count1)
-    if target.invalid()
+    if target.state().isInvalid()
         return s:cleanUp()
     endif
     call s:handleTarget(target)
@@ -80,7 +80,7 @@ function! targets#x(trigger, count)
 
     let [delimiter, which, modifier] = split(a:trigger, '\zs')
     let [target, rawTarget] = s:findTarget(delimiter, which, modifier, a:count)
-    if target.invalid()
+    if target.state().isInvalid()
         call s:abortMatch('#x')
         return s:cleanUp()
     endif
@@ -108,7 +108,7 @@ endfunction
 
 " TODO: move down
 function! s:modifyTarget(target, kind, modifier)
-    if a:target.invalid()
+    if a:target.state().isInvalid()
         return targets#target#withError('modifyTarget invalid')
     endif
     let target = a:target.copy()
@@ -392,7 +392,7 @@ endfunction
 
 " handle the match by either selecting or aborting it
 function! s:handleTarget(target)
-    if a:target.invalid()
+    if a:target.state().isInvalid()
         return s:abortMatch('handleTarget')
     elseif a:target.empty()
         return s:handleEmptyMatch(a:target)
@@ -910,7 +910,7 @@ function! s:seekselecta(count)
     endif
 
     let target = s:selecta('>')
-    if !target.invalid() " TODO: add target.valid()?
+    if target.state().isValid()
         return target
     endif
 
@@ -918,22 +918,22 @@ function! s:seekselecta(count)
     " restrictions
 
     let target = s:nextselecta(a:count, line('.'))
-    if !target.invalid()
+    if target.state().isValid()
         return target
     endif
 
     let target = s:lastselecta(a:count, line('.'))
-    if !target.invalid()
+    if target.state().isValid()
         return target
     endif
 
     let target = s:nextselecta(a:count)
-    if !target.invalid()
+    if target.state().isValid()
         return target
     endif
 
     let target = s:lastselecta(a:count)
-    if !target.invalid()
+    if target.state().isValid()
         return target
     endif
 
@@ -953,7 +953,7 @@ function! s:nextselecta(...)
 
     let char = s:getchar()
     let target = s:selecta('>')
-    if !target.invalid()
+    if target.state().isValid()
         return target
     endif
 
@@ -968,7 +968,7 @@ function! s:nextselecta(...)
     endif
 
     let target = s:selecta('>')
-    if !target.invalid()
+    if target.state().isValid()
         return target
     endif
 
@@ -984,7 +984,7 @@ function! s:lastselecta(...)
     let separator = g:targets_argSeparator
     if s:getchar() =~# separator && s:newSelection
         let target = s:selecta('<')
-        if !target.invalid()
+        if target.state().isValid()
             return target
         endif
     endif
@@ -997,7 +997,7 @@ function! s:lastselecta(...)
 
     let char = s:getchar()
     let target = s:selecta('<')
-    if !target.invalid()
+    if target.state().isValid()
         return target
     endif
 
@@ -1012,7 +1012,7 @@ function! s:lastselecta(...)
     endif
 
     let target = s:selecta('<')
-    if !target.invalid()
+    if target.state().isValid()
         return target
     endif
 
@@ -1028,7 +1028,7 @@ endfunction
 " line │ a .  b  . c
 " out  │    └───┘
 function! s:drop(target)
-    if a:target.invalid()
+    if a:target.state().isInvalid()
         return a:target
     endif
 
@@ -1117,7 +1117,7 @@ endfunction
 " line │ a . b c . d │ a .  . d
 " out  │     └─┘     │    └┘
 function! s:shrink(target)
-    if a:target.invalid()
+    if a:target.state().isInvalid()
         return a:target
     endif
 

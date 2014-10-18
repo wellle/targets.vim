@@ -20,7 +20,7 @@ function! targets#target#new(sl, sc, el, ec, error)
         \ 'getposE': function('targets#target#getposE'),
         \ 'cursorS': function('targets#target#cursorS'),
         \ 'cursorE': function('targets#target#cursorE'),
-        \ 'invalid': function('targets#target#invalid'),
+        \ 'state': function('targets#target#state'),
         \ 'empty': function('targets#target#empty'),
         \ 'nonempty': function('targets#target#nonempty'),
         \ 'select': function('targets#target#select'),
@@ -104,23 +104,22 @@ function! targets#target#cursorE() dict
     call cursor(self.e())
 endfunction
 
-" TODO: combine these into single target#state function?
-function! targets#target#invalid() dict
+function! targets#target#state() dict
     if self.error != ''
-        return 1
+        return targets#state#invalid()
     endif
     if self.sl == 0 || self.el == 0
-        return 1
+        return targets#state#invalid()
     elseif self.sl < self.el
-        return 0
+        return targets#state#nonempty()
     elseif self.sl > self.el
-        return 1
-    elseif self.sc == self.ec + 1 " empty match
-        return 0
+        return targets#state#invalid()
+    elseif self.sc == self.ec + 1
+        return targets#state#empty()
     elseif self.sc > self.ec
-        return 1
+        return targets#state#invalid()
     else
-        return 0
+        return targets#state#nonempty()
     endif
 endfunction
 
