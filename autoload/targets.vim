@@ -10,9 +10,6 @@ set cpo&vim
 
 " called once when loaded
 function! s:setup()
-    let [s:a, s:i, s:A, s:I] = split(g:targets_aiAI, '\zs')
-    let [s:n, s:l, s:N, s:L] = split(g:targets_nlNL, '\zs')
-
     let s:argOpeningS = g:targets_argOpening . '\|' . g:targets_argSeparator
     let s:argClosingS = g:targets_argClosing . '\|' . g:targets_argSeparator
     let s:argOuter    = g:targets_argOpening . '\|' . g:targets_argClosing
@@ -207,67 +204,67 @@ function! s:modifyTarget(target, kind, modifier)
     let target = a:target.copy()
 
     if a:kind ==# 'p'
-        if a:modifier ==# s:i
+        if a:modifier ==# 'i'
             return s:drop(target)
-        elseif a:modifier ==# s:a
+        elseif a:modifier ==# 'a'
             return target
-        elseif a:modifier ==# s:I
+        elseif a:modifier ==# 'I'
             return s:shrink(target)
-        elseif a:modifier ==# s:A
+        elseif a:modifier ==# 'A'
             return s:expand(target)
         else
             return targets#target#withError('modifyTarget p')
         endif
 
     elseif a:kind ==# 'q'
-        if a:modifier ==# s:i
+        if a:modifier ==# 'i'
             return s:drop(target)
-        elseif a:modifier ==# s:a
+        elseif a:modifier ==# 'a'
             return target
-        elseif a:modifier ==# s:I
+        elseif a:modifier ==# 'I'
             return s:shrink(target)
-        elseif a:modifier ==# s:A
+        elseif a:modifier ==# 'A'
             return s:expand(target)
         else
             return targets#target#withError('modifyTarget q')
         endif
 
     elseif a:kind ==# 's'
-        if a:modifier ==# s:i
+        if a:modifier ==# 'i'
             return s:drop(target)
-        elseif a:modifier ==# s:a
+        elseif a:modifier ==# 'a'
             return s:dropr(target)
-        elseif a:modifier ==# s:I
+        elseif a:modifier ==# 'I'
             return s:shrink(target)
-        elseif a:modifier ==# s:A
+        elseif a:modifier ==# 'A'
             return s:expand(target)
         else
             return targets#target#withError('modifyTarget s')
         endif
 
     elseif a:kind ==# 't'
-        if a:modifier ==# s:i
+        if a:modifier ==# 'i'
             let target = s:innert(target)
             return s:drop(target)
-        elseif a:modifier ==# s:a
+        elseif a:modifier ==# 'a'
             return target
-        elseif a:modifier ==# s:I
+        elseif a:modifier ==# 'I'
             let target = s:innert(target)
             return s:shrink(target)
-        elseif a:modifier ==# s:A
+        elseif a:modifier ==# 'A'
             return s:expand(target)
         else
             return targets#target#withError('modifyTarget t')
         endif
 
-    elseif a:kind ==# s:a
-        if a:modifier ==# s:i
+    elseif a:kind ==# 'a'
+        if a:modifier ==# 'i'
             return s:drop(target)
-        elseif a:modifier ==# s:a
+        elseif a:modifier ==# 'a'
             return s:dropa(target)
-        elseif a:modifier ==# s:I
+        elseif a:modifier ==# 'I'
             return s:shrink(target)
-        elseif a:modifier ==# s:A
+        elseif a:modifier ==# 'A'
             return s:expand(target)
         else
             return targets#target#withError('modifyTarget a')
