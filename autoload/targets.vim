@@ -394,7 +394,7 @@ endfunction
 function! s:handleTarget(target)
     if a:target.state().isInvalid()
         return s:abortMatch('handleTarget')
-    elseif a:target.empty()
+    elseif a:target.state().isEmpty()
         return s:handleEmptyMatch(a:target)
     else
         return s:selectTarget(a:target)
@@ -1123,7 +1123,7 @@ function! s:shrink(target)
 
     call a:target.cursorE()
     call a:target.searchposE('\S', 'b', a:target.sl)
-    if !a:target.nonempty()
+    if !a:target.state().isNonempty()
         " fall back to drop when there's only whitespace in between
         return s:drop(a:target)
     else
@@ -1189,7 +1189,7 @@ function! s:prepareNext()
         return
     endif
 
-    if s:mapmode ==# 'x' && exists('s:lastRawTarget') && s:lastRawTarget.nonempty()
+    if s:mapmode ==# 'x' && exists('s:lastRawTarget') && s:lastRawTarget.state().isNonempty()
         call s:lastRawTarget.cursorS()
     endif
 endfunction
@@ -1201,7 +1201,7 @@ function! s:prepareLast()
         return
     endif
 
-    if s:mapmode ==# 'x' && exists('s:lastRawTarget') && s:lastRawTarget.nonempty()
+    if s:mapmode ==# 'x' && exists('s:lastRawTarget') && s:lastRawTarget.state().isNonempty()
         call s:lastRawTarget.cursorE()
         return 1
     endif

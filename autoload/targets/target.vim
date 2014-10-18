@@ -21,8 +21,6 @@ function! targets#target#new(sl, sc, el, ec, error)
         \ 'cursorS': function('targets#target#cursorS'),
         \ 'cursorE': function('targets#target#cursorE'),
         \ 'state': function('targets#target#state'),
-        \ 'empty': function('targets#target#empty'),
-        \ 'nonempty': function('targets#target#nonempty'),
         \ 'select': function('targets#target#select'),
         \ 'echom': function('targets#target#echom')
         \ }
@@ -120,26 +118,6 @@ function! targets#target#state() dict
         return targets#state#invalid()
     else
         return targets#state#nonempty()
-    endif
-endfunction
-
-function! targets#target#empty() dict
-    if self.sl != self.el
-        return 0
-    elseif self.sc == self.ec + 1
-        return 1
-    else
-        return 0
-    endif
-endfunction
-
-function! targets#target#nonempty() dict
-    if self.sl < self.el
-        return 1
-    elseif self.sc < self.ec
-        return 1
-    else
-        return 0
     endif
 endfunction
 

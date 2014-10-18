@@ -8,8 +8,12 @@ function! targets#state#new(state)
         \
         \ 'isValid': function('targets#state#isValid'),
         \ 'isInvalid': function('targets#state#isInvalid'),
+        \ 'isEmpty': function('targets#state#isEmpty'),
+        \ 'isNonempty': function('targets#state#isNonempty'),
         \ }
 endfunction
+
+" constructors
 
 function! targets#state#invalid()
     return targets#state#new(s:invalid)
@@ -23,10 +27,22 @@ function! targets#state#empty()
     return targets#state#new(s:empty)
 endfunction
 
-function! targets#state#isValid() dict
-    return self.state != s:invalid
-endfunction
+" raw attributes
 
 function! targets#state#isInvalid() dict
     return self.state == s:invalid
+endfunction
+
+function! targets#state#isEmpty() dict
+    return self.state == s:empty
+endfunction
+
+function! targets#state#isNonempty() dict
+    return self.state == s:nonempty
+endfunction
+
+" derived attributes
+
+function! targets#state#isValid() dict
+    return self.state != s:invalid
 endfunction
