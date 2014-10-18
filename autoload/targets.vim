@@ -78,6 +78,37 @@ function! targets#x(trigger, count)
     call s:cleanUp()
 endfunction
 
+" initialize script local variables for the current matching
+function! s:init(mapmode)
+    let s:mapmode = a:mapmode
+    let s:oldpos = getpos('.')
+    let s:newSelection = 1
+    let s:shouldGrow = 1
+
+    let s:selection = &selection " remember 'selection' setting
+    let &selection = 'inclusive' " and set it to inclusive
+endfunction
+
+" save old visual selection to detect new selections and reselect on fail
+function! s:initX(trigger)
+    call s:init('x')
+
+    let s:visualTarget = targets#target#fromVisualSelection()
+
+    " reselect, save mode and go back to normal mode
+    normal! gv
+    let s:visualTarget.linewise = (mode() ==# 'V')
+    silent! execute "normal! \<C-\>\<C-N>"
+
+    let s:newSelection = s:isNewSelection()
+    let s:shouldGrow = s:shouldGrow(a:trigger)
+endfunction
+
+" clean up script variables after match
+function! s:cleanUp()
+    let &selection = s:selection " reset 'selection' setting
+endfunction
+
 function! s:findTarget(delimiter, which, modifier, count)
     let [kind, s:opening, s:closing, err] = s:getDelimiters(a:delimiter)
     if err
@@ -92,85 +123,6 @@ function! s:findTarget(delimiter, which, modifier, count)
     return [target, rawTarget]
 endfunction
 
-" TODO: move down
-function! s:modifyTarget(target, kind, modifier)
-    if a:target.state().isInvalid()
-        return targets#target#withError('modifyTarget invalid')
-    endif
-    let target = a:target.copy()
-
-    if a:kind ==# 'p'
-        if a:modifier ==# s:i
-            return s:drop(target)
-        elseif a:modifier ==# s:a
-            return target
-        elseif a:modifier ==# s:I
-            return s:shrink(target)
-        elseif a:modifier ==# s:A
-            return s:expand(target)
-        else
-            return targets#target#withError('modifyTarget p')
-        endif
-
-    elseif a:kind ==# 'q'
-        if a:modifier ==# s:i
-            return s:drop(target)
-        elseif a:modifier ==# s:a
-            return target
-        elseif a:modifier ==# s:I
-            return s:shrink(target)
-        elseif a:modifier ==# s:A
-            return s:expand(target)
-        else
-            return targets#target#withError('modifyTarget q')
-        endif
-
-    elseif a:kind ==# 's'
-        if a:modifier ==# s:i
-            return s:drop(target)
-        elseif a:modifier ==# s:a
-            return s:dropr(target)
-        elseif a:modifier ==# s:I
-            return s:shrink(target)
-        elseif a:modifier ==# s:A
-            return s:expand(target)
-        else
-            return targets#target#withError('modifyTarget s')
-        endif
-
-    elseif a:kind ==# 't'
-        if a:modifier ==# s:i
-            let target = s:innert(target)
-            return s:drop(target)
-        elseif a:modifier ==# s:a
-            return target
-        elseif a:modifier ==# s:I
-            let target = s:innert(target)
-            return s:shrink(target)
-        elseif a:modifier ==# s:A
-            return s:expand(target)
-        else
-            return targets#target#withError('modifyTarget t')
-        endif
-
-    elseif a:kind ==# s:a
-        if a:modifier ==# s:i
-            return s:drop(target)
-        elseif a:modifier ==# s:a
-            return s:dropa(target)
-        elseif a:modifier ==# s:I
-            return s:shrink(target)
-        elseif a:modifier ==# s:A
-            return s:expand(target)
-        else
-            return targets#target#withError('modifyTarget a')
-        endif
-    endif
-
-    return targets#target#withError('modifyTarget kind')
-endfunction
-
-" TODO: move down
 function! s:findRawTarget(kind, which, count)
     if a:kind ==# 'p'
         if a:which ==# 'c'
@@ -248,6 +200,83 @@ function! s:findRawTarget(kind, which, count)
     return targets#target#withError('findRawTarget kind')
 endfunction
 
+function! s:modifyTarget(target, kind, modifier)
+    if a:target.state().isInvalid()
+        return targets#target#withError('modifyTarget invalid')
+    endif
+    let target = a:target.copy()
+
+    if a:kind ==# 'p'
+        if a:modifier ==# s:i
+            return s:drop(target)
+        elseif a:modifier ==# s:a
+            return target
+        elseif a:modifier ==# s:I
+            return s:shrink(target)
+        elseif a:modifier ==# s:A
+            return s:expand(target)
+        else
+            return targets#target#withError('modifyTarget p')
+        endif
+
+    elseif a:kind ==# 'q'
+        if a:modifier ==# s:i
+            return s:drop(target)
+        elseif a:modifier ==# s:a
+            return target
+        elseif a:modifier ==# s:I
+            return s:shrink(target)
+        elseif a:modifier ==# s:A
+            return s:expand(target)
+        else
+            return targets#target#withError('modifyTarget q')
+        endif
+
+    elseif a:kind ==# 's'
+        if a:modifier ==# s:i
+            return s:drop(target)
+        elseif a:modifier ==# s:a
+            return s:dropr(target)
+        elseif a:modifier ==# s:I
+            return s:shrink(target)
+        elseif a:modifier ==# s:A
+            return s:expand(target)
+        else
+            return targets#target#withError('modifyTarget s')
+        endif
+
+    elseif a:kind ==# 't'
+        if a:modifier ==# s:i
+            let target = s:innert(target)
+            return s:drop(target)
+        elseif a:modifier ==# s:a
+            return target
+        elseif a:modifier ==# s:I
+            let target = s:innert(target)
+            return s:shrink(target)
+        elseif a:modifier ==# s:A
+            return s:expand(target)
+        else
+            return targets#target#withError('modifyTarget t')
+        endif
+
+    elseif a:kind ==# s:a
+        if a:modifier ==# s:i
+            return s:drop(target)
+        elseif a:modifier ==# s:a
+            return s:dropa(target)
+        elseif a:modifier ==# s:I
+            return s:shrink(target)
+        elseif a:modifier ==# s:A
+            return s:expand(target)
+        else
+            return targets#target#withError('modifyTarget a')
+        endif
+    endif
+
+    return targets#target#withError('modifyTarget kind')
+endfunction
+
 function! s:getDelimiters(trigger)
     " create cache
     if !exists('s:delimiterCache')
@@ -306,37 +335,6 @@ function! s:getRawDelimiters(trigger)
     else
         return [0, 0, 0, 1]
     endif
-endfunction
-
-" initialize script local variables for the current matching
-function! s:init(mapmode)
-    let s:mapmode = a:mapmode
-    let s:oldpos = getpos('.')
-    let s:newSelection = 1
-    let s:shouldGrow = 1
-
-    let s:selection = &selection " remember 'selection' setting
-    let &selection = 'inclusive' " and set it to inclusive
-endfunction
-
-" clean up script variables after match
-function! s:cleanUp()
-    let &selection = s:selection " reset 'selection' setting
-endfunction
-
-" save old visual selection to detect new selections and reselect on fail
-function! s:initX(trigger)
-    call s:init('x')
-
-    let s:visualTarget = targets#target#fromVisualSelection()
-
-    " reselect, save mode and go back to normal mode
-    normal! gv
-    let s:visualTarget.linewise = (mode() ==# 'V')
-    silent! execute "normal! \<C-\>\<C-N>"
-
-    let s:newSelection = s:isNewSelection()
-    let s:shouldGrow = s:shouldGrow(a:trigger)
 endfunction
 
 " return 0 if the selection changed since the last invocation. used for
