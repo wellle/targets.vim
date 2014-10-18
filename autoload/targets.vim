@@ -61,20 +61,6 @@ function! targets#e(modifier)
     return "\<Esc>:\<C-U>call targets#x('" . delimiter . which . a:modifier . "', " . v:count1 . ")\<CR>"
 endfunction
 
-function! s:getWhich(char)
-    if a:char ==# s:n
-        return ['n', 0]
-    elseif a:char ==# s:l
-        return ['l', 0]
-    elseif a:char ==# s:N
-        return ['N', 0]
-    elseif a:char ==# s:L
-        return ['L', 0]
-    else
-        return [0, 1]
-    endif
-endfunction
-
 function! targets#x(trigger, count)
     call s:initX(a:trigger)
 
