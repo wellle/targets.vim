@@ -557,6 +557,31 @@ letter alias. To set `c` as an alias for comma, allowing such commands as
 let g:targets_separators = ',c . ; : + - = ~ _ * # / | \ & $'
 ```
 
+### g:targets_tagTrigger
+
+Default:
+
+```vim
+let g:targets_tagTrigger = 't'
+```
+
+Defines the key you need to press to operate on tag text objects.
+
+### g:targets_argTrigger
+
+Default:
+
+```vim
+let g:targets_argTrigger = 'a'
+```
+
+Defines the key you need to press to operate on arguments. To use `,` as
+argument trigger, allowing commands as `da,` to act like `daa`, use this:
+
+```vim
+let g:targets_argTrigger = ','
+```
+
 ## Notes
 
 - [Repeating an operator-pending mapping forgets its last count.][repeatcount]
