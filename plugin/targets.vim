@@ -51,7 +51,7 @@ endfunction
 
 " tag text objects work on tags (similar to pair text objects)
 function! s:createTagTextObjects()
-    let triggerMap = "t :<C-U>call targets#o('"
+    let triggerMap = g:targets_tagTrigger . " :<C-U>call targets#o('"
     silent! execute 'onoremap <silent> <unique>' . s:i       . triggerMap . "tci')<CR>"
     silent! execute 'onoremap <silent> <unique>' . s:a       . triggerMap . "tca')<CR>"
     silent! execute 'onoremap <silent> <unique>' . s:I       . triggerMap . "tcI')<CR>"
@@ -176,7 +176,7 @@ endfunction
 "         │                      ├───────2aa─────────────┘ │
 "         │                      └───────2Aa───────────────┘
 function! s:createArgTextObjects()
-    let triggerMap = "a :<C-U>call targets#o('"
+    let triggerMap = g:targets_argTrigger . " :<C-U>call targets#o('"
     silent! execute 'onoremap <silent> <unique>' . s:i       . triggerMap . "aci')<CR>"
     silent! execute 'onoremap <silent> <unique>' . s:a       . triggerMap . "aca')<CR>"
     silent! execute 'onoremap <silent> <unique>' . s:I       . triggerMap . "acI')<CR>"
@@ -215,6 +215,12 @@ function! s:loadSettings()
     endif
     if !exists('g:targets_separators')
         let g:targets_separators = ', . ; : + - = ~ _ * # / \ | & $'
+    endif
+    if !exists('g:targets_tagTrigger')
+        let g:targets_tagTrigger = 't'
+    endif
+    if !exists('g:targets_argTrigger')
+        let g:targets_argTrigger = 'a'
     endif
     if !exists('g:targets_argOpening')
         let g:targets_argOpening = '[([]'
