@@ -582,6 +582,39 @@ argument trigger, allowing commands as `da,` to act like `daa`, use this:
 let g:targets_argTrigger = ','
 ```
 
+### g:targets_argOpening and g:targets_argClosing
+
+Default:
+
+```vim
+let g:targets_argOpening = '[([]'
+let g:targets_argClosing = '[])]'
+```
+
+Defines regular expressions that match the beginning and closing delimiter of
+an argument list respectively. If you also want to find arguments delimited by
+curly braces, try this:
+
+```vim
+let g:targets_argOpening = '[({[]'
+let g:targets_argClosing = '[]})]'
+```
+
+### g:targets_argSeparator
+
+Default:
+
+```vim
+let g:targets_argSeparator = ','
+```
+
+Defines a regular expression matching separators in an argument list. If you
+also want to find arguments separatode by semicolon, use this:
+
+```vim
+let g:targets_argSeparator = '[,;]'
+```
+
 ## Notes
 
 - [Repeating an operator-pending mapping forgets its last count.][repeatcount]
