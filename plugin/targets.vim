@@ -38,14 +38,18 @@ function! s:createPairTextObjects()
         silent! execute 'onoremap <silent> <unique>' . s:a       . triggerMap . "ca')<CR>"
         silent! execute 'onoremap <silent> <unique>' . s:I       . triggerMap . "cI')<CR>"
         silent! execute 'onoremap <silent> <unique>' . s:A       . triggerMap . "cA')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:i . s:n . triggerMap . "ni')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:a . s:n . triggerMap . "na')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:I . s:n . triggerMap . "nI')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:A . s:n . triggerMap . "nA')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:i . s:l . triggerMap . "li')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:a . s:l . triggerMap . "la')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:I . s:l . triggerMap . "lI')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:A . s:l . triggerMap . "lA')<CR>"
+        if s:n != ' '
+            silent! execute 'onoremap <silent> <unique>' . s:i . s:n . triggerMap . "ni')<CR>"
+            silent! execute 'onoremap <silent> <unique>' . s:a . s:n . triggerMap . "na')<CR>"
+            silent! execute 'onoremap <silent> <unique>' . s:I . s:n . triggerMap . "nI')<CR>"
+            silent! execute 'onoremap <silent> <unique>' . s:A . s:n . triggerMap . "nA')<CR>"
+        endif
+        if s:l != ' '
+            silent! execute 'onoremap <silent> <unique>' . s:i . s:l . triggerMap . "li')<CR>"
+            silent! execute 'onoremap <silent> <unique>' . s:a . s:l . triggerMap . "la')<CR>"
+            silent! execute 'onoremap <silent> <unique>' . s:I . s:l . triggerMap . "lI')<CR>"
+            silent! execute 'onoremap <silent> <unique>' . s:A . s:l . triggerMap . "lA')<CR>"
+        endif
     endfor
 endfunction
 
@@ -56,14 +60,18 @@ function! s:createTagTextObjects()
     silent! execute 'onoremap <silent> <unique>' . s:a       . triggerMap . "tca')<CR>"
     silent! execute 'onoremap <silent> <unique>' . s:I       . triggerMap . "tcI')<CR>"
     silent! execute 'onoremap <silent> <unique>' . s:A       . triggerMap . "tcA')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:i . s:n . triggerMap . "tni')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:a . s:n . triggerMap . "tna')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:I . s:n . triggerMap . "tnI')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:A . s:n . triggerMap . "tnA')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:i . s:l . triggerMap . "tli')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:a . s:l . triggerMap . "tla')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:I . s:l . triggerMap . "tlI')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:A . s:l . triggerMap . "tlA')<CR>"
+    if s:n != ' '
+        silent! execute 'onoremap <silent> <unique>' . s:i . s:n . triggerMap . "tni')<CR>"
+        silent! execute 'onoremap <silent> <unique>' . s:a . s:n . triggerMap . "tna')<CR>"
+        silent! execute 'onoremap <silent> <unique>' . s:I . s:n . triggerMap . "tnI')<CR>"
+        silent! execute 'onoremap <silent> <unique>' . s:A . s:n . triggerMap . "tnA')<CR>"
+    endif
+    if s:l != ' '
+        silent! execute 'onoremap <silent> <unique>' . s:i . s:l . triggerMap . "tli')<CR>"
+        silent! execute 'onoremap <silent> <unique>' . s:a . s:l . triggerMap . "tla')<CR>"
+        silent! execute 'onoremap <silent> <unique>' . s:I . s:l . triggerMap . "tlI')<CR>"
+        silent! execute 'onoremap <silent> <unique>' . s:A . s:l . triggerMap . "tlA')<CR>"
+    endif
 endfunction
 
 " quote text objects expand into quote (by counting quote signs)
@@ -97,22 +105,30 @@ function! s:createQuoteTextObjects()
         silent! execute 'onoremap <silent> <unique>' . s:a       . triggerMap . "ca')<CR>"
         silent! execute 'onoremap <silent> <unique>' . s:I       . triggerMap . "cI')<CR>"
         silent! execute 'onoremap <silent> <unique>' . s:A       . triggerMap . "cA')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:i . s:n . triggerMap . "ni')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:a . s:n . triggerMap . "na')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:I . s:n . triggerMap . "nI')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:A . s:n . triggerMap . "nA')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:i . s:l . triggerMap . "li')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:a . s:l . triggerMap . "la')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:I . s:l . triggerMap . "lI')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:A . s:l . triggerMap . "lA')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:i . s:N . triggerMap . "Ni')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:a . s:N . triggerMap . "Na')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:I . s:N . triggerMap . "NI')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:A . s:N . triggerMap . "NA')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:i . s:L . triggerMap . "Li')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:a . s:L . triggerMap . "La')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:I . s:L . triggerMap . "LI')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:A . s:L . triggerMap . "LA')<CR>"
+        if s:n != ' '
+            silent! execute 'onoremap <silent> <unique>' . s:i . s:n . triggerMap . "ni')<CR>"
+            silent! execute 'onoremap <silent> <unique>' . s:a . s:n . triggerMap . "na')<CR>"
+            silent! execute 'onoremap <silent> <unique>' . s:I . s:n . triggerMap . "nI')<CR>"
+            silent! execute 'onoremap <silent> <unique>' . s:A . s:n . triggerMap . "nA')<CR>"
+        endif
+        if s:l != ' '
+            silent! execute 'onoremap <silent> <unique>' . s:i . s:l . triggerMap . "li')<CR>"
+            silent! execute 'onoremap <silent> <unique>' . s:a . s:l . triggerMap . "la')<CR>"
+            silent! execute 'onoremap <silent> <unique>' . s:I . s:l . triggerMap . "lI')<CR>"
+            silent! execute 'onoremap <silent> <unique>' . s:A . s:l . triggerMap . "lA')<CR>"
+        endif
+        if s:N != ' '
+            silent! execute 'onoremap <silent> <unique>' . s:i . s:N . triggerMap . "Ni')<CR>"
+            silent! execute 'onoremap <silent> <unique>' . s:a . s:N . triggerMap . "Na')<CR>"
+            silent! execute 'onoremap <silent> <unique>' . s:I . s:N . triggerMap . "NI')<CR>"
+            silent! execute 'onoremap <silent> <unique>' . s:A . s:N . triggerMap . "NA')<CR>"
+        endif
+        if s:L != ' '
+            silent! execute 'onoremap <silent> <unique>' . s:i . s:L . triggerMap . "Li')<CR>"
+            silent! execute 'onoremap <silent> <unique>' . s:a . s:L . triggerMap . "La')<CR>"
+            silent! execute 'onoremap <silent> <unique>' . s:I . s:L . triggerMap . "LI')<CR>"
+            silent! execute 'onoremap <silent> <unique>' . s:A . s:L . triggerMap . "LA')<CR>"
+        endif
     endfor
 endfunction
 
@@ -143,22 +159,30 @@ function! s:createSeparatorTextObjects()
         silent! execute 'onoremap <silent> <unique>' . s:a       . triggerMap . "ca')<CR>"
         silent! execute 'onoremap <silent> <unique>' . s:I       . triggerMap . "cI')<CR>"
         silent! execute 'onoremap <silent> <unique>' . s:A       . triggerMap . "cA')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:i . s:n . triggerMap . "ni')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:a . s:n . triggerMap . "na')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:I . s:n . triggerMap . "nI')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:A . s:n . triggerMap . "nA')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:i . s:l . triggerMap . "li')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:a . s:l . triggerMap . "la')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:I . s:l . triggerMap . "lI')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:A . s:l . triggerMap . "lA')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:i . s:N . triggerMap . "Ni')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:a . s:N . triggerMap . "Na')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:I . s:N . triggerMap . "NI')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:A . s:N . triggerMap . "NA')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:i . s:L . triggerMap . "Li')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:a . s:L . triggerMap . "La')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:I . s:L . triggerMap . "LI')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:A . s:L . triggerMap . "LA')<CR>"
+        if s:n != ' '
+            silent! execute 'onoremap <silent> <unique>' . s:i . s:n . triggerMap . "ni')<CR>"
+            silent! execute 'onoremap <silent> <unique>' . s:a . s:n . triggerMap . "na')<CR>"
+            silent! execute 'onoremap <silent> <unique>' . s:I . s:n . triggerMap . "nI')<CR>"
+            silent! execute 'onoremap <silent> <unique>' . s:A . s:n . triggerMap . "nA')<CR>"
+        endif
+        if s:l != ' '
+            silent! execute 'onoremap <silent> <unique>' . s:i . s:l . triggerMap . "li')<CR>"
+            silent! execute 'onoremap <silent> <unique>' . s:a . s:l . triggerMap . "la')<CR>"
+            silent! execute 'onoremap <silent> <unique>' . s:I . s:l . triggerMap . "lI')<CR>"
+            silent! execute 'onoremap <silent> <unique>' . s:A . s:l . triggerMap . "lA')<CR>"
+        endif
+        if s:N != ' '
+            silent! execute 'onoremap <silent> <unique>' . s:i . s:N . triggerMap . "Ni')<CR>"
+            silent! execute 'onoremap <silent> <unique>' . s:a . s:N . triggerMap . "Na')<CR>"
+            silent! execute 'onoremap <silent> <unique>' . s:I . s:N . triggerMap . "NI')<CR>"
+            silent! execute 'onoremap <silent> <unique>' . s:A . s:N . triggerMap . "NA')<CR>"
+        endif
+        if s:L != ' '
+            silent! execute 'onoremap <silent> <unique>' . s:i . s:L . triggerMap . "Li')<CR>"
+            silent! execute 'onoremap <silent> <unique>' . s:a . s:L . triggerMap . "La')<CR>"
+            silent! execute 'onoremap <silent> <unique>' . s:I . s:L . triggerMap . "LI')<CR>"
+            silent! execute 'onoremap <silent> <unique>' . s:A . s:L . triggerMap . "LA')<CR>"
+        endif
     endfor
 endfunction
 
@@ -181,14 +205,18 @@ function! s:createArgTextObjects()
     silent! execute 'onoremap <silent> <unique>' . s:a       . triggerMap . "aca')<CR>"
     silent! execute 'onoremap <silent> <unique>' . s:I       . triggerMap . "acI')<CR>"
     silent! execute 'onoremap <silent> <unique>' . s:A       . triggerMap . "acA')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:i . s:n . triggerMap . "ani')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:a . s:n . triggerMap . "ana')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:I . s:n . triggerMap . "anI')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:A . s:n . triggerMap . "anA')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:i . s:l . triggerMap . "ali')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:a . s:l . triggerMap . "ala')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:I . s:l . triggerMap . "alI')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:A . s:l . triggerMap . "alA')<CR>"
+    if s:n != ' '
+        silent! execute 'onoremap <silent> <unique>' . s:i . s:n . triggerMap . "ani')<CR>"
+        silent! execute 'onoremap <silent> <unique>' . s:a . s:n . triggerMap . "ana')<CR>"
+        silent! execute 'onoremap <silent> <unique>' . s:I . s:n . triggerMap . "anI')<CR>"
+        silent! execute 'onoremap <silent> <unique>' . s:A . s:n . triggerMap . "anA')<CR>"
+    endif
+    if s:l != ' '
+        silent! execute 'onoremap <silent> <unique>' . s:i . s:l . triggerMap . "ali')<CR>"
+        silent! execute 'onoremap <silent> <unique>' . s:a . s:l . triggerMap . "ala')<CR>"
+        silent! execute 'onoremap <silent> <unique>' . s:I . s:l . triggerMap . "alI')<CR>"
+        silent! execute 'onoremap <silent> <unique>' . s:A . s:l . triggerMap . "alA')<CR>"
+    endif
 endfunction
 
 " add expression mappings for `A` and `I` in visual mode #23 unless
