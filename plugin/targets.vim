@@ -11,6 +11,18 @@ let g:loaded_targets = '0.3.0' " version number
 let s:save_cpoptions = &cpoptions
 set cpo&vim
 
+function! s:addMapping1(mapping, aiAI)
+    if a:aiAI !=# ' '
+        silent! execute 'onoremap <silent> <unique>' . a:aiAI . a:mapping
+    endif
+endfunction
+
+function! s:addMapping2(mapping, aiAI, nlNL)
+    if a:aiAI !=# ' ' && a:nlNL !=# ' '
+        silent! execute 'onoremap <silent> <unique>' . a:aiAI . a:nlNL . a:mapping
+    endif
+endfunction
+
 " pair text objects (multi line objects with single line seek)
 " cursor  │                        .........
 " line    │ a ( bbbbbb ) ( ccccc ) ( ddddd ) ( eeeee ) ( ffffff ) g
@@ -34,36 +46,36 @@ function! s:createPairTextObjects()
             continue
         endif
         let triggerMap = trigger . " :<C-U>call targets#o('" . trigger
-        silent! execute 'onoremap <silent> <unique>' . s:i       . triggerMap . "ci')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:a       . triggerMap . "ca')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:I       . triggerMap . "cI')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:A       . triggerMap . "cA')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:i . s:n . triggerMap . "ni')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:a . s:n . triggerMap . "na')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:I . s:n . triggerMap . "nI')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:A . s:n . triggerMap . "nA')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:i . s:l . triggerMap . "li')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:a . s:l . triggerMap . "la')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:I . s:l . triggerMap . "lI')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:A . s:l . triggerMap . "lA')<CR>"
+        call s:addMapping1(triggerMap . "ci')<CR>", s:i)
+        call s:addMapping1(triggerMap . "ca')<CR>", s:a)
+        call s:addMapping1(triggerMap . "cI')<CR>", s:I)
+        call s:addMapping1(triggerMap . "cA')<CR>", s:A)
+        call s:addMapping2(triggerMap . "ni')<CR>", s:i, s:n)
+        call s:addMapping2(triggerMap . "na')<CR>", s:a, s:n)
+        call s:addMapping2(triggerMap . "nI')<CR>", s:I, s:n)
+        call s:addMapping2(triggerMap . "nA')<CR>", s:A, s:n)
+        call s:addMapping2(triggerMap . "li')<CR>", s:i, s:l)
+        call s:addMapping2(triggerMap . "la')<CR>", s:a, s:l)
+        call s:addMapping2(triggerMap . "lI')<CR>", s:I, s:l)
+        call s:addMapping2(triggerMap . "lA')<CR>", s:A, s:l)
     endfor
 endfunction
 
 " tag text objects work on tags (similar to pair text objects)
 function! s:createTagTextObjects()
     let triggerMap = g:targets_tagTrigger . " :<C-U>call targets#o('"
-    silent! execute 'onoremap <silent> <unique>' . s:i       . triggerMap . "tci')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:a       . triggerMap . "tca')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:I       . triggerMap . "tcI')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:A       . triggerMap . "tcA')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:i . s:n . triggerMap . "tni')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:a . s:n . triggerMap . "tna')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:I . s:n . triggerMap . "tnI')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:A . s:n . triggerMap . "tnA')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:i . s:l . triggerMap . "tli')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:a . s:l . triggerMap . "tla')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:I . s:l . triggerMap . "tlI')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:A . s:l . triggerMap . "tlA')<CR>"
+    call s:addMapping1(triggerMap . "tci')<CR>", s:i)
+    call s:addMapping1(triggerMap . "tca')<CR>", s:a)
+    call s:addMapping1(triggerMap . "tcI')<CR>", s:I)
+    call s:addMapping1(triggerMap . "tcA')<CR>", s:A)
+    call s:addMapping2(triggerMap . "tni')<CR>", s:i, s:n)
+    call s:addMapping2(triggerMap . "tna')<CR>", s:a, s:n)
+    call s:addMapping2(triggerMap . "tnI')<CR>", s:I, s:n)
+    call s:addMapping2(triggerMap . "tnA')<CR>", s:A, s:n)
+    call s:addMapping2(triggerMap . "tli')<CR>", s:i, s:l)
+    call s:addMapping2(triggerMap . "tla')<CR>", s:a, s:l)
+    call s:addMapping2(triggerMap . "tlI')<CR>", s:I, s:l)
+    call s:addMapping2(triggerMap . "tlA')<CR>", s:A, s:l)
 endfunction
 
 " quote text objects expand into quote (by counting quote signs)
@@ -93,26 +105,26 @@ function! s:createQuoteTextObjects()
         else
             let triggerMap = trigger . " :<C-U>call targets#o('" . trigger
         endif
-        silent! execute 'onoremap <silent> <unique>' . s:i       . triggerMap . "ci')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:a       . triggerMap . "ca')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:I       . triggerMap . "cI')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:A       . triggerMap . "cA')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:i . s:n . triggerMap . "ni')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:a . s:n . triggerMap . "na')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:I . s:n . triggerMap . "nI')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:A . s:n . triggerMap . "nA')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:i . s:l . triggerMap . "li')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:a . s:l . triggerMap . "la')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:I . s:l . triggerMap . "lI')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:A . s:l . triggerMap . "lA')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:i . s:N . triggerMap . "Ni')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:a . s:N . triggerMap . "Na')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:I . s:N . triggerMap . "NI')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:A . s:N . triggerMap . "NA')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:i . s:L . triggerMap . "Li')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:a . s:L . triggerMap . "La')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:I . s:L . triggerMap . "LI')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:A . s:L . triggerMap . "LA')<CR>"
+        call s:addMapping1(triggerMap . "ci')<CR>", s:i)
+        call s:addMapping1(triggerMap . "ca')<CR>", s:a)
+        call s:addMapping1(triggerMap . "cI')<CR>", s:I)
+        call s:addMapping1(triggerMap . "cA')<CR>", s:A)
+        call s:addMapping2(triggerMap . "ni')<CR>", s:i, s:n)
+        call s:addMapping2(triggerMap . "na')<CR>", s:a, s:n)
+        call s:addMapping2(triggerMap . "nI')<CR>", s:I, s:n)
+        call s:addMapping2(triggerMap . "nA')<CR>", s:A, s:n)
+        call s:addMapping2(triggerMap . "li')<CR>", s:i, s:l)
+        call s:addMapping2(triggerMap . "la')<CR>", s:a, s:l)
+        call s:addMapping2(triggerMap . "lI')<CR>", s:I, s:l)
+        call s:addMapping2(triggerMap . "lA')<CR>", s:A, s:l)
+        call s:addMapping2(triggerMap . "Ni')<CR>", s:i, s:N)
+        call s:addMapping2(triggerMap . "Na')<CR>", s:a, s:N)
+        call s:addMapping2(triggerMap . "NI')<CR>", s:I, s:N)
+        call s:addMapping2(triggerMap . "NA')<CR>", s:A, s:N)
+        call s:addMapping2(triggerMap . "Li')<CR>", s:i, s:L)
+        call s:addMapping2(triggerMap . "La')<CR>", s:a, s:L)
+        call s:addMapping2(triggerMap . "LI')<CR>", s:I, s:L)
+        call s:addMapping2(triggerMap . "LA')<CR>", s:A, s:L)
     endfor
 endfunction
 
@@ -139,26 +151,26 @@ function! s:createSeparatorTextObjects()
             let trigger = '\|'
         endif
         let triggerMap = trigger . " :<C-U>call targets#o('" . trigger
-        silent! execute 'onoremap <silent> <unique>' . s:i       . triggerMap . "ci')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:a       . triggerMap . "ca')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:I       . triggerMap . "cI')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:A       . triggerMap . "cA')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:i . s:n . triggerMap . "ni')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:a . s:n . triggerMap . "na')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:I . s:n . triggerMap . "nI')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:A . s:n . triggerMap . "nA')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:i . s:l . triggerMap . "li')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:a . s:l . triggerMap . "la')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:I . s:l . triggerMap . "lI')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:A . s:l . triggerMap . "lA')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:i . s:N . triggerMap . "Ni')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:a . s:N . triggerMap . "Na')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:I . s:N . triggerMap . "NI')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:A . s:N . triggerMap . "NA')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:i . s:L . triggerMap . "Li')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:a . s:L . triggerMap . "La')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:I . s:L . triggerMap . "LI')<CR>"
-        silent! execute 'onoremap <silent> <unique>' . s:A . s:L . triggerMap . "LA')<CR>"
+        call s:addMapping1(triggerMap . "ci')<CR>", s:i)
+        call s:addMapping1(triggerMap . "ca')<CR>", s:a)
+        call s:addMapping1(triggerMap . "cI')<CR>", s:I)
+        call s:addMapping1(triggerMap . "cA')<CR>", s:A)
+        call s:addMapping2(triggerMap . "ni')<CR>", s:i, s:n)
+        call s:addMapping2(triggerMap . "na')<CR>", s:a, s:n)
+        call s:addMapping2(triggerMap . "nI')<CR>", s:I, s:n)
+        call s:addMapping2(triggerMap . "nA')<CR>", s:A, s:n)
+        call s:addMapping2(triggerMap . "li')<CR>", s:i, s:l)
+        call s:addMapping2(triggerMap . "la')<CR>", s:a, s:l)
+        call s:addMapping2(triggerMap . "lI')<CR>", s:I, s:l)
+        call s:addMapping2(triggerMap . "lA')<CR>", s:A, s:l)
+        call s:addMapping2(triggerMap . "Ni')<CR>", s:i, s:N)
+        call s:addMapping2(triggerMap . "Na')<CR>", s:a, s:N)
+        call s:addMapping2(triggerMap . "NI')<CR>", s:I, s:N)
+        call s:addMapping2(triggerMap . "NA')<CR>", s:A, s:N)
+        call s:addMapping2(triggerMap . "Li')<CR>", s:i, s:L)
+        call s:addMapping2(triggerMap . "La')<CR>", s:a, s:L)
+        call s:addMapping2(triggerMap . "LI')<CR>", s:I, s:L)
+        call s:addMapping2(triggerMap . "LA')<CR>", s:A, s:L)
     endfor
 endfunction
 
@@ -177,18 +189,18 @@ endfunction
 "         │                      └───────2Aa───────────────┘
 function! s:createArgTextObjects()
     let triggerMap = g:targets_argTrigger . " :<C-U>call targets#o('"
-    silent! execute 'onoremap <silent> <unique>' . s:i       . triggerMap . "aci')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:a       . triggerMap . "aca')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:I       . triggerMap . "acI')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:A       . triggerMap . "acA')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:i . s:n . triggerMap . "ani')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:a . s:n . triggerMap . "ana')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:I . s:n . triggerMap . "anI')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:A . s:n . triggerMap . "anA')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:i . s:l . triggerMap . "ali')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:a . s:l . triggerMap . "ala')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:I . s:l . triggerMap . "alI')<CR>"
-    silent! execute 'onoremap <silent> <unique>' . s:A . s:l . triggerMap . "alA')<CR>"
+    call s:addMapping1(triggerMap . "aci')<CR>", s:i)
+    call s:addMapping1(triggerMap . "aca')<CR>", s:a)
+    call s:addMapping1(triggerMap . "acI')<CR>", s:I)
+    call s:addMapping1(triggerMap . "acA')<CR>", s:A)
+    call s:addMapping2(triggerMap . "ani')<CR>", s:i, s:n)
+    call s:addMapping2(triggerMap . "ana')<CR>", s:a, s:n)
+    call s:addMapping2(triggerMap . "anI')<CR>", s:I, s:n)
+    call s:addMapping2(triggerMap . "anA')<CR>", s:A, s:n)
+    call s:addMapping2(triggerMap . "ali')<CR>", s:i, s:l)
+    call s:addMapping2(triggerMap . "ala')<CR>", s:a, s:l)
+    call s:addMapping2(triggerMap . "alI')<CR>", s:I, s:l)
+    call s:addMapping2(triggerMap . "alA')<CR>", s:A, s:l)
 endfunction
 
 " add expression mappings for `A` and `I` in visual mode #23 unless
