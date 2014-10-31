@@ -325,9 +325,9 @@ function! s:getRawDelimiters(trigger)
         endfor
     endfor
 
-    if a:trigger ==# g:targets_tagTrigger
+    if a:trigger ==# 't'
         return ['t', 't', 0, 0] " TODO: set tag patterns here and remove special tag functions?
-    elseif a:trigger ==# g:targets_argTrigger
+    elseif a:trigger ==# 'a'
         return ['a', 0, 0, 0]
     else
         return [0, 0, 0, 1]
