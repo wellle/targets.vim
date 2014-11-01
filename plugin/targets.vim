@@ -63,19 +63,20 @@ endfunction
 
 " tag text objects work on tags (similar to pair text objects)
 function! s:createTagTextObjects()
-    let triggerMap = g:targets_tagTrigger . " :<C-U>call targets#o('"
-    call s:addMapping1(triggerMap . "tci')<CR>", s:i)
-    call s:addMapping1(triggerMap . "tca')<CR>", s:a)
-    call s:addMapping1(triggerMap . "tcI')<CR>", s:I)
-    call s:addMapping1(triggerMap . "tcA')<CR>", s:A)
-    call s:addMapping2(triggerMap . "tni')<CR>", s:i, s:n)
-    call s:addMapping2(triggerMap . "tna')<CR>", s:a, s:n)
-    call s:addMapping2(triggerMap . "tnI')<CR>", s:I, s:n)
-    call s:addMapping2(triggerMap . "tnA')<CR>", s:A, s:n)
-    call s:addMapping2(triggerMap . "tli')<CR>", s:i, s:l)
-    call s:addMapping2(triggerMap . "tla')<CR>", s:a, s:l)
-    call s:addMapping2(triggerMap . "tlI')<CR>", s:I, s:l)
-    call s:addMapping2(triggerMap . "tlA')<CR>", s:A, s:l)
+    let trigger = g:targets_tagTrigger
+    let triggerMap = trigger . " :<C-U>call targets#o('" . trigger
+    call s:addMapping1(triggerMap . "ci')<CR>", s:i)
+    call s:addMapping1(triggerMap . "ca')<CR>", s:a)
+    call s:addMapping1(triggerMap . "cI')<CR>", s:I)
+    call s:addMapping1(triggerMap . "cA')<CR>", s:A)
+    call s:addMapping2(triggerMap . "ni')<CR>", s:i, s:n)
+    call s:addMapping2(triggerMap . "na')<CR>", s:a, s:n)
+    call s:addMapping2(triggerMap . "nI')<CR>", s:I, s:n)
+    call s:addMapping2(triggerMap . "nA')<CR>", s:A, s:n)
+    call s:addMapping2(triggerMap . "li')<CR>", s:i, s:l)
+    call s:addMapping2(triggerMap . "la')<CR>", s:a, s:l)
+    call s:addMapping2(triggerMap . "lI')<CR>", s:I, s:l)
+    call s:addMapping2(triggerMap . "lA')<CR>", s:A, s:l)
 endfunction
 
 " quote text objects expand into quote (by counting quote signs)
@@ -188,19 +189,20 @@ endfunction
 "         │                      ├───────2aa─────────────┘ │
 "         │                      └───────2Aa───────────────┘
 function! s:createArgTextObjects()
-    let triggerMap = g:targets_argTrigger . " :<C-U>call targets#o('"
-    call s:addMapping1(triggerMap . "aci')<CR>", s:i)
-    call s:addMapping1(triggerMap . "aca')<CR>", s:a)
-    call s:addMapping1(triggerMap . "acI')<CR>", s:I)
-    call s:addMapping1(triggerMap . "acA')<CR>", s:A)
-    call s:addMapping2(triggerMap . "ani')<CR>", s:i, s:n)
-    call s:addMapping2(triggerMap . "ana')<CR>", s:a, s:n)
-    call s:addMapping2(triggerMap . "anI')<CR>", s:I, s:n)
-    call s:addMapping2(triggerMap . "anA')<CR>", s:A, s:n)
-    call s:addMapping2(triggerMap . "ali')<CR>", s:i, s:l)
-    call s:addMapping2(triggerMap . "ala')<CR>", s:a, s:l)
-    call s:addMapping2(triggerMap . "alI')<CR>", s:I, s:l)
-    call s:addMapping2(triggerMap . "alA')<CR>", s:A, s:l)
+    let trigger = g:targets_argTrigger
+    let triggerMap = trigger . " :<C-U>call targets#o('" . trigger
+    call s:addMapping1(triggerMap . "ci')<CR>", s:i)
+    call s:addMapping1(triggerMap . "ca')<CR>", s:a)
+    call s:addMapping1(triggerMap . "cI')<CR>", s:I)
+    call s:addMapping1(triggerMap . "cA')<CR>", s:A)
+    call s:addMapping2(triggerMap . "ni')<CR>", s:i, s:n)
+    call s:addMapping2(triggerMap . "na')<CR>", s:a, s:n)
+    call s:addMapping2(triggerMap . "nI')<CR>", s:I, s:n)
+    call s:addMapping2(triggerMap . "nA')<CR>", s:A, s:n)
+    call s:addMapping2(triggerMap . "li')<CR>", s:i, s:l)
+    call s:addMapping2(triggerMap . "la')<CR>", s:a, s:l)
+    call s:addMapping2(triggerMap . "lI')<CR>", s:I, s:l)
+    call s:addMapping2(triggerMap . "lA')<CR>", s:A, s:l)
 endfunction
 
 " add expression mappings for `A` and `I` in visual mode #23 unless
