@@ -429,7 +429,9 @@ endfunction
 " abort when no match was found
 function! s:abortMatch(message)
     " get into normal mode and beep
-    call feedkeys("\<C-\>\<C-N>\<Esc>", 'n')
+    if getcmdwintype() ==# ""
+        call feedkeys("\<C-\>\<C-N>\<Esc>", 'n')
+    endif
 
     call s:prepareReselect()
     call setpos('.', s:oldpos)
