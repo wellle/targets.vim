@@ -94,8 +94,12 @@ function! s:initX(trigger)
 
     " reselect, save mode and go back to normal mode
     normal! gv
-    let s:visualTarget.linewise = (mode() ==# 'V')
-    silent! execute "normal! \<C-\>\<C-N>"
+    if mode() ==# 'V'
+        let s:visualTarget.linewise = 1
+        normal! V
+    else
+        normal! v
+    endif
 
     let s:newSelection = s:isNewSelection()
     let s:shouldGrow = s:shouldGrow(a:trigger)
@@ -425,7 +429,9 @@ endfunction
 " abort when no match was found
 function! s:abortMatch(message)
     " get into normal mode and beep
-    call feedkeys("\<C-\>\<C-N>\<Esc>", 'n')
+    if getcmdwintype() ==# ""
+        call feedkeys("\<C-\>\<C-N>\<Esc>", 'n')
+    endif
 
     call s:prepareReselect()
     call setpos('.', s:oldpos)
