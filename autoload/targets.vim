@@ -84,6 +84,9 @@ function! s:init(mapmode)
 
     let s:selection = &selection " remember 'selection' setting
     let &selection = 'inclusive' " and set it to inclusive
+
+    let s:virtualedit = &virtualedit " remember 'virtualedit' setting
+    let &virtualedit = ''            " and set it to default
 endfunction
 
 " save old visual selection to detect new selections and reselect on fail
@@ -107,7 +110,9 @@ endfunction
 
 " clean up script variables after match
 function! s:cleanUp()
-    let &selection = s:selection " reset 'selection' setting
+    " reset remembered settings
+    let &selection = s:selection
+    let &virtualedit = s:virtualedit
 endfunction
 
 function! s:findTarget(delimiter, which, modifier, count)
