@@ -434,7 +434,7 @@ endfunction
 " abort when no match was found
 function! s:abortMatch(message)
     " get into normal mode and beep
-    if getcmdwintype() ==# ""
+    if !exists("*getcmdwintype") || getcmdwintype() ==# ""
         call feedkeys("\<C-\>\<C-N>\<Esc>", 'n')
     endif
 
