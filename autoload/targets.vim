@@ -38,13 +38,16 @@ function! targets#e(modifier)
 
     let char1 = nr2char(getchar())
     let [delimiter, which, chars] = [char1, 'c', char1]
-    for nlNL in split(g:targets_nlNL, '\zs')
-        if nlNL ==# delimiter
+    let i = 0
+    while i < 4
+        if g:targets_nlNL[i] ==# delimiter
             " delimiter was which, get another char for delimiter
             let char2 = nr2char(getchar())
-            let [delimiter, which, chars] = [char2, char1, chars . char2]
+            let [delimiter, which, chars] = [char2, 'nlNL'[i], chars . char2]
+            break
         endif
-    endfor
+        let i = i + 1
+    endwhile
 
     let [_, _, _, err] = s:getDelimiters(delimiter)
     if err
