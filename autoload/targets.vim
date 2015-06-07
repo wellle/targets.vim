@@ -29,6 +29,15 @@ function! targets#o(trigger)
     call s:handleTarget(target)
     call s:clearCommandLine()
     call s:cleanUp()
+    if v:version < 704
+        let cmd = v:operator.modifier.(which ==# 'c' ? '' : which).delimiter
+        if v:operator ==# 'c'
+            let cmd = cmd."\<C-r>.\<ESC>"
+        endif
+        if v:operator !=# 'y' || match(&cpoptions, 'y') !=# -1
+            silent! call repeat#set(cmd, v:count)
+        endif
+    endif
 endfunction
 
 function! targets#e(modifier)
