@@ -29,16 +29,8 @@ function! targets#o(trigger, count)
     endif
     call s:handleTarget(target)
     call s:clearCommandLine()
+    call s:prepareRepeat(delimiter, which, modifier)
     call s:cleanUp()
-    if v:version < 704
-        let cmd = v:operator.modifier.(which ==# 'c' ? '' : which).delimiter
-        if v:operator ==# 'c'
-            let cmd = cmd."\<C-r>.\<ESC>"
-        endif
-        if v:operator !=# 'y' || match(&cpoptions, 'y') !=# -1
-            silent! call repeat#set(cmd, v:count)
-        endif
-    endif
 endfunction
 
 function! targets#e(modifier)
@@ -482,6 +474,28 @@ function! s:triggerReselect()
     if s:mapmode ==# 'x'
         call feedkeys("gv", 'n')
     endif
+endfunction
+
+" set up repeat.vim for older Vim versions
+function! s:prepareRepeat(delimiter, which, modifier)
+    if v:version >= 704 " skip recent versions
+        return
+    endif
+
+    if v:operator ==# 'y' && match(&cpoptions, 'y') ==# -1 " skip yank unless set up
+        return
+    endif
+
+    let cmd = v:operator . a:modifier
+    if a:which !=# 'c'
+        let cmd .= a:which
+    endif
+    let cmd .= a:delimiter
+    if v:operator ==# 'c'
+        let cmd .= "\<C-r>.\<ESC>"
+    endif
+
+    silent! call repeat#set(cmd, v:count)
 endfunction
 
 " undo last operation if it created a new undo position
