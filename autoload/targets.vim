@@ -19,7 +19,8 @@ endfunction
 
 call s:setup()
 
-function! targets#o(trigger)
+" a:count is unused here, but added for consistency with targets#x
+function! targets#o(trigger, count)
     call s:init('o')
     let [delimiter, which, modifier] = split(a:trigger, '\zs')
     let [target, rawTarget] = s:findTarget(delimiter, which, modifier, v:count1)

@@ -45,48 +45,38 @@ function! s:createPairTextObjects(mapping_type)
         if trigger ==# ' '
             continue
         endif
-        if a:mapping_type ==# 'x'
-            let rest_of_mapping = "', v:count1)<CR>"
-        else
-            let rest_of_mapping = "')<CR>"
-        endif
         let triggerMap = trigger . " :<C-U>call targets#" . a:mapping_type . "('" . trigger
-        call s:addMapping1(a:mapping_type, triggerMap . "ci" . rest_of_mapping, s:i)
-        call s:addMapping1(a:mapping_type, triggerMap . "ca" . rest_of_mapping, s:a)
-        call s:addMapping1(a:mapping_type, triggerMap . "cI" . rest_of_mapping, s:I)
-        call s:addMapping1(a:mapping_type, triggerMap . "cA" . rest_of_mapping, s:A)
-        call s:addMapping2(a:mapping_type, triggerMap . "ni" . rest_of_mapping, s:i, s:n)
-        call s:addMapping2(a:mapping_type, triggerMap . "na" . rest_of_mapping, s:a, s:n)
-        call s:addMapping2(a:mapping_type, triggerMap . "nI" . rest_of_mapping, s:I, s:n)
-        call s:addMapping2(a:mapping_type, triggerMap . "nA" . rest_of_mapping, s:A, s:n)
-        call s:addMapping2(a:mapping_type, triggerMap . "li" . rest_of_mapping, s:i, s:l)
-        call s:addMapping2(a:mapping_type, triggerMap . "la" . rest_of_mapping, s:a, s:l)
-        call s:addMapping2(a:mapping_type, triggerMap . "lI" . rest_of_mapping, s:I, s:l)
-        call s:addMapping2(a:mapping_type, triggerMap . "lA" . rest_of_mapping, s:A, s:l)
+        call s:addMapping1(a:mapping_type, triggerMap . "ci', v:count1)<CR>", s:i)
+        call s:addMapping1(a:mapping_type, triggerMap . "ca', v:count1)<CR>", s:a)
+        call s:addMapping1(a:mapping_type, triggerMap . "cI', v:count1)<CR>", s:I)
+        call s:addMapping1(a:mapping_type, triggerMap . "cA', v:count1)<CR>", s:A)
+        call s:addMapping2(a:mapping_type, triggerMap . "ni', v:count1)<CR>", s:i, s:n)
+        call s:addMapping2(a:mapping_type, triggerMap . "na', v:count1)<CR>", s:a, s:n)
+        call s:addMapping2(a:mapping_type, triggerMap . "nI', v:count1)<CR>", s:I, s:n)
+        call s:addMapping2(a:mapping_type, triggerMap . "nA', v:count1)<CR>", s:A, s:n)
+        call s:addMapping2(a:mapping_type, triggerMap . "li', v:count1)<CR>", s:i, s:l)
+        call s:addMapping2(a:mapping_type, triggerMap . "la', v:count1)<CR>", s:a, s:l)
+        call s:addMapping2(a:mapping_type, triggerMap . "lI', v:count1)<CR>", s:I, s:l)
+        call s:addMapping2(a:mapping_type, triggerMap . "lA', v:count1)<CR>", s:A, s:l)
     endfor
 endfunction
 
 " tag text objects work on tags (similar to pair text objects)
 function! s:createTagTextObjects(mapping_type)
     let trigger = g:targets_tagTrigger
-    if a:mapping_type ==# 'x'
-        let rest_of_mapping = "', v:count1)<CR>"
-    else
-        let rest_of_mapping = "')<CR>"
-    endif
     let triggerMap = trigger . " :<C-U>call targets#" . a:mapping_type . "('" . trigger
-    call s:addMapping1(a:mapping_type, triggerMap . "ci" . rest_of_mapping, s:i)
-    call s:addMapping1(a:mapping_type, triggerMap . "ca" . rest_of_mapping, s:a)
-    call s:addMapping1(a:mapping_type, triggerMap . "cI" . rest_of_mapping, s:I)
-    call s:addMapping1(a:mapping_type, triggerMap . "cA" . rest_of_mapping, s:A)
-    call s:addMapping2(a:mapping_type, triggerMap . "ni" . rest_of_mapping, s:i, s:n)
-    call s:addMapping2(a:mapping_type, triggerMap . "na" . rest_of_mapping, s:a, s:n)
-    call s:addMapping2(a:mapping_type, triggerMap . "nI" . rest_of_mapping, s:I, s:n)
-    call s:addMapping2(a:mapping_type, triggerMap . "nA" . rest_of_mapping, s:A, s:n)
-    call s:addMapping2(a:mapping_type, triggerMap . "li" . rest_of_mapping, s:i, s:l)
-    call s:addMapping2(a:mapping_type, triggerMap . "la" . rest_of_mapping, s:a, s:l)
-    call s:addMapping2(a:mapping_type, triggerMap . "lI" . rest_of_mapping, s:I, s:l)
-    call s:addMapping2(a:mapping_type, triggerMap . "lA" . rest_of_mapping, s:A, s:l)
+    call s:addMapping1(a:mapping_type, triggerMap . "ci', v:count1)<CR>", s:i)
+    call s:addMapping1(a:mapping_type, triggerMap . "ca', v:count1)<CR>", s:a)
+    call s:addMapping1(a:mapping_type, triggerMap . "cI', v:count1)<CR>", s:I)
+    call s:addMapping1(a:mapping_type, triggerMap . "cA', v:count1)<CR>", s:A)
+    call s:addMapping2(a:mapping_type, triggerMap . "ni', v:count1)<CR>", s:i, s:n)
+    call s:addMapping2(a:mapping_type, triggerMap . "na', v:count1)<CR>", s:a, s:n)
+    call s:addMapping2(a:mapping_type, triggerMap . "nI', v:count1)<CR>", s:I, s:n)
+    call s:addMapping2(a:mapping_type, triggerMap . "nA', v:count1)<CR>", s:A, s:n)
+    call s:addMapping2(a:mapping_type, triggerMap . "li', v:count1)<CR>", s:i, s:l)
+    call s:addMapping2(a:mapping_type, triggerMap . "la', v:count1)<CR>", s:a, s:l)
+    call s:addMapping2(a:mapping_type, triggerMap . "lI', v:count1)<CR>", s:I, s:l)
+    call s:addMapping2(a:mapping_type, triggerMap . "lA', v:count1)<CR>", s:A, s:l)
 endfunction
 
 " quote text objects expand into quote (by counting quote signs)
@@ -116,31 +106,26 @@ function! s:createQuoteTextObjects(mapping_type)
         else
             let triggerMap = trigger . " :<C-U>call targets#" . a:mapping_type . "('" . trigger
         endif
-        if a:mapping_type ==# 'x'
-            let rest_of_mapping = "', v:count1)<CR>"
-        else
-            let rest_of_mapping = "')<CR>"
-        endif
-        call s:addMapping1(a:mapping_type, triggerMap . "ci" . rest_of_mapping, s:i)
-        call s:addMapping1(a:mapping_type, triggerMap . "ca" . rest_of_mapping, s:a)
-        call s:addMapping1(a:mapping_type, triggerMap . "cI" . rest_of_mapping, s:I)
-        call s:addMapping1(a:mapping_type, triggerMap . "cA" . rest_of_mapping, s:A)
-        call s:addMapping2(a:mapping_type, triggerMap . "ni" . rest_of_mapping, s:i, s:n)
-        call s:addMapping2(a:mapping_type, triggerMap . "na" . rest_of_mapping, s:a, s:n)
-        call s:addMapping2(a:mapping_type, triggerMap . "nI" . rest_of_mapping, s:I, s:n)
-        call s:addMapping2(a:mapping_type, triggerMap . "nA" . rest_of_mapping, s:A, s:n)
-        call s:addMapping2(a:mapping_type, triggerMap . "li" . rest_of_mapping, s:i, s:l)
-        call s:addMapping2(a:mapping_type, triggerMap . "la" . rest_of_mapping, s:a, s:l)
-        call s:addMapping2(a:mapping_type, triggerMap . "lI" . rest_of_mapping, s:I, s:l)
-        call s:addMapping2(a:mapping_type, triggerMap . "lA" . rest_of_mapping, s:A, s:l)
-        call s:addMapping2(a:mapping_type, triggerMap . "Ni" . rest_of_mapping, s:i, s:N)
-        call s:addMapping2(a:mapping_type, triggerMap . "Na" . rest_of_mapping, s:a, s:N)
-        call s:addMapping2(a:mapping_type, triggerMap . "NI" . rest_of_mapping, s:I, s:N)
-        call s:addMapping2(a:mapping_type, triggerMap . "NA" . rest_of_mapping, s:A, s:N)
-        call s:addMapping2(a:mapping_type, triggerMap . "Li" . rest_of_mapping, s:i, s:L)
-        call s:addMapping2(a:mapping_type, triggerMap . "La" . rest_of_mapping, s:a, s:L)
-        call s:addMapping2(a:mapping_type, triggerMap . "LI" . rest_of_mapping, s:I, s:L)
-        call s:addMapping2(a:mapping_type, triggerMap . "LA" . rest_of_mapping, s:A, s:L)
+        call s:addMapping1(a:mapping_type, triggerMap . "ci', v:count1)<CR>", s:i)
+        call s:addMapping1(a:mapping_type, triggerMap . "ca', v:count1)<CR>", s:a)
+        call s:addMapping1(a:mapping_type, triggerMap . "cI', v:count1)<CR>", s:I)
+        call s:addMapping1(a:mapping_type, triggerMap . "cA', v:count1)<CR>", s:A)
+        call s:addMapping2(a:mapping_type, triggerMap . "ni', v:count1)<CR>", s:i, s:n)
+        call s:addMapping2(a:mapping_type, triggerMap . "na', v:count1)<CR>", s:a, s:n)
+        call s:addMapping2(a:mapping_type, triggerMap . "nI', v:count1)<CR>", s:I, s:n)
+        call s:addMapping2(a:mapping_type, triggerMap . "nA', v:count1)<CR>", s:A, s:n)
+        call s:addMapping2(a:mapping_type, triggerMap . "li', v:count1)<CR>", s:i, s:l)
+        call s:addMapping2(a:mapping_type, triggerMap . "la', v:count1)<CR>", s:a, s:l)
+        call s:addMapping2(a:mapping_type, triggerMap . "lI', v:count1)<CR>", s:I, s:l)
+        call s:addMapping2(a:mapping_type, triggerMap . "lA', v:count1)<CR>", s:A, s:l)
+        call s:addMapping2(a:mapping_type, triggerMap . "Ni', v:count1)<CR>", s:i, s:N)
+        call s:addMapping2(a:mapping_type, triggerMap . "Na', v:count1)<CR>", s:a, s:N)
+        call s:addMapping2(a:mapping_type, triggerMap . "NI', v:count1)<CR>", s:I, s:N)
+        call s:addMapping2(a:mapping_type, triggerMap . "NA', v:count1)<CR>", s:A, s:N)
+        call s:addMapping2(a:mapping_type, triggerMap . "Li', v:count1)<CR>", s:i, s:L)
+        call s:addMapping2(a:mapping_type, triggerMap . "La', v:count1)<CR>", s:a, s:L)
+        call s:addMapping2(a:mapping_type, triggerMap . "LI', v:count1)<CR>", s:I, s:L)
+        call s:addMapping2(a:mapping_type, triggerMap . "LA', v:count1)<CR>", s:A, s:L)
     endfor
 endfunction
 
@@ -166,32 +151,27 @@ function! s:createSeparatorTextObjects(mapping_type)
         elseif trigger ==# '|'
             let trigger = '\|'
         endif
-        if a:mapping_type ==# 'x'
-            let rest_of_mapping = "', v:count1)<CR>"
-        else
-            let rest_of_mapping = "')<CR>"
-        endif
         let triggerMap = trigger . " :<C-U>call targets#" . a:mapping_type . "('" . trigger
-        call s:addMapping1(a:mapping_type, triggerMap . "ci" . rest_of_mapping, s:i)
-        call s:addMapping1(a:mapping_type, triggerMap . "ca" . rest_of_mapping, s:a)
-        call s:addMapping1(a:mapping_type, triggerMap . "cI" . rest_of_mapping, s:I)
-        call s:addMapping1(a:mapping_type, triggerMap . "cA" . rest_of_mapping, s:A)
-        call s:addMapping2(a:mapping_type, triggerMap . "ni" . rest_of_mapping, s:i, s:n)
-        call s:addMapping2(a:mapping_type, triggerMap . "na" . rest_of_mapping, s:a, s:n)
-        call s:addMapping2(a:mapping_type, triggerMap . "nI" . rest_of_mapping, s:I, s:n)
-        call s:addMapping2(a:mapping_type, triggerMap . "nA" . rest_of_mapping, s:A, s:n)
-        call s:addMapping2(a:mapping_type, triggerMap . "li" . rest_of_mapping, s:i, s:l)
-        call s:addMapping2(a:mapping_type, triggerMap . "la" . rest_of_mapping, s:a, s:l)
-        call s:addMapping2(a:mapping_type, triggerMap . "lI" . rest_of_mapping, s:I, s:l)
-        call s:addMapping2(a:mapping_type, triggerMap . "lA" . rest_of_mapping, s:A, s:l)
-        call s:addMapping2(a:mapping_type, triggerMap . "Ni" . rest_of_mapping, s:i, s:N)
-        call s:addMapping2(a:mapping_type, triggerMap . "Na" . rest_of_mapping, s:a, s:N)
-        call s:addMapping2(a:mapping_type, triggerMap . "NI" . rest_of_mapping, s:I, s:N)
-        call s:addMapping2(a:mapping_type, triggerMap . "NA" . rest_of_mapping, s:A, s:N)
-        call s:addMapping2(a:mapping_type, triggerMap . "Li" . rest_of_mapping, s:i, s:L)
-        call s:addMapping2(a:mapping_type, triggerMap . "La" . rest_of_mapping, s:a, s:L)
-        call s:addMapping2(a:mapping_type, triggerMap . "LI" . rest_of_mapping, s:I, s:L)
-        call s:addMapping2(a:mapping_type, triggerMap . "LA" . rest_of_mapping, s:A, s:L)
+        call s:addMapping1(a:mapping_type, triggerMap . "ci', v:count1)<CR>", s:i)
+        call s:addMapping1(a:mapping_type, triggerMap . "ca', v:count1)<CR>", s:a)
+        call s:addMapping1(a:mapping_type, triggerMap . "cI', v:count1)<CR>", s:I)
+        call s:addMapping1(a:mapping_type, triggerMap . "cA', v:count1)<CR>", s:A)
+        call s:addMapping2(a:mapping_type, triggerMap . "ni', v:count1)<CR>", s:i, s:n)
+        call s:addMapping2(a:mapping_type, triggerMap . "na', v:count1)<CR>", s:a, s:n)
+        call s:addMapping2(a:mapping_type, triggerMap . "nI', v:count1)<CR>", s:I, s:n)
+        call s:addMapping2(a:mapping_type, triggerMap . "nA', v:count1)<CR>", s:A, s:n)
+        call s:addMapping2(a:mapping_type, triggerMap . "li', v:count1)<CR>", s:i, s:l)
+        call s:addMapping2(a:mapping_type, triggerMap . "la', v:count1)<CR>", s:a, s:l)
+        call s:addMapping2(a:mapping_type, triggerMap . "lI', v:count1)<CR>", s:I, s:l)
+        call s:addMapping2(a:mapping_type, triggerMap . "lA', v:count1)<CR>", s:A, s:l)
+        call s:addMapping2(a:mapping_type, triggerMap . "Ni', v:count1)<CR>", s:i, s:N)
+        call s:addMapping2(a:mapping_type, triggerMap . "Na', v:count1)<CR>", s:a, s:N)
+        call s:addMapping2(a:mapping_type, triggerMap . "NI', v:count1)<CR>", s:I, s:N)
+        call s:addMapping2(a:mapping_type, triggerMap . "NA', v:count1)<CR>", s:A, s:N)
+        call s:addMapping2(a:mapping_type, triggerMap . "Li', v:count1)<CR>", s:i, s:L)
+        call s:addMapping2(a:mapping_type, triggerMap . "La', v:count1)<CR>", s:a, s:L)
+        call s:addMapping2(a:mapping_type, triggerMap . "LI', v:count1)<CR>", s:I, s:L)
+        call s:addMapping2(a:mapping_type, triggerMap . "LA', v:count1)<CR>", s:A, s:L)
     endfor
 endfunction
 
@@ -210,24 +190,19 @@ endfunction
 "         │                      └───────2Aa───────────────┘
 function! s:createArgTextObjects(mapping_type)
     let trigger = g:targets_argTrigger
-    if a:mapping_type ==# 'x'
-        let rest_of_mapping = "', v:count1)<CR>"
-    else
-        let rest_of_mapping = "')<CR>"
-    endif
     let triggerMap = trigger . " :<C-U>call targets#" . a:mapping_type . "('" . trigger
-    call s:addMapping1(a:mapping_type, triggerMap . "ci" . rest_of_mapping, s:i)
-    call s:addMapping1(a:mapping_type, triggerMap . "ca" . rest_of_mapping, s:a)
-    call s:addMapping1(a:mapping_type, triggerMap . "cI" . rest_of_mapping, s:I)
-    call s:addMapping1(a:mapping_type, triggerMap . "cA" . rest_of_mapping, s:A)
-    call s:addMapping2(a:mapping_type, triggerMap . "ni" . rest_of_mapping, s:i, s:n)
-    call s:addMapping2(a:mapping_type, triggerMap . "na" . rest_of_mapping, s:a, s:n)
-    call s:addMapping2(a:mapping_type, triggerMap . "nI" . rest_of_mapping, s:I, s:n)
-    call s:addMapping2(a:mapping_type, triggerMap . "nA" . rest_of_mapping, s:A, s:n)
-    call s:addMapping2(a:mapping_type, triggerMap . "li" . rest_of_mapping, s:i, s:l)
-    call s:addMapping2(a:mapping_type, triggerMap . "la" . rest_of_mapping, s:a, s:l)
-    call s:addMapping2(a:mapping_type, triggerMap . "lI" . rest_of_mapping, s:I, s:l)
-    call s:addMapping2(a:mapping_type, triggerMap . "lA" . rest_of_mapping, s:A, s:l)
+    call s:addMapping1(a:mapping_type, triggerMap . "ci', v:count1)<CR>", s:i)
+    call s:addMapping1(a:mapping_type, triggerMap . "ca', v:count1)<CR>", s:a)
+    call s:addMapping1(a:mapping_type, triggerMap . "cI', v:count1)<CR>", s:I)
+    call s:addMapping1(a:mapping_type, triggerMap . "cA', v:count1)<CR>", s:A)
+    call s:addMapping2(a:mapping_type, triggerMap . "ni', v:count1)<CR>", s:i, s:n)
+    call s:addMapping2(a:mapping_type, triggerMap . "na', v:count1)<CR>", s:a, s:n)
+    call s:addMapping2(a:mapping_type, triggerMap . "nI', v:count1)<CR>", s:I, s:n)
+    call s:addMapping2(a:mapping_type, triggerMap . "nA', v:count1)<CR>", s:A, s:n)
+    call s:addMapping2(a:mapping_type, triggerMap . "li', v:count1)<CR>", s:i, s:l)
+    call s:addMapping2(a:mapping_type, triggerMap . "la', v:count1)<CR>", s:a, s:l)
+    call s:addMapping2(a:mapping_type, triggerMap . "lI', v:count1)<CR>", s:I, s:l)
+    call s:addMapping2(a:mapping_type, triggerMap . "lA', v:count1)<CR>", s:A, s:l)
 endfunction
 
 " add expression mappings for `A` and `I` in visual mode #23 unless
