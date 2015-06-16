@@ -19,7 +19,8 @@ endfunction
 
 call s:setup()
 
-function! targets#o(trigger)
+" a:count is unused here, but added for consistency with targets#x
+function! targets#o(trigger, count)
     call s:init('o')
     let [delimiter, which, modifier] = split(a:trigger, '\zs')
     let [target, rawTarget] = s:findTarget(delimiter, which, modifier, v:count1)
@@ -28,6 +29,7 @@ function! targets#o(trigger)
     endif
     call s:handleTarget(target)
     call s:clearCommandLine()
+    call s:prepareRepeat(delimiter, which, modifier)
     call s:cleanUp()
 endfunction
 
@@ -472,6 +474,28 @@ function! s:triggerReselect()
     if s:mapmode ==# 'x'
         call feedkeys("gv", 'n')
     endif
+endfunction
+
+" set up repeat.vim for older Vim versions
+function! s:prepareRepeat(delimiter, which, modifier)
+    if v:version >= 704 " skip recent versions
+        return
+    endif
+
+    if v:operator ==# 'y' && match(&cpoptions, 'y') ==# -1 " skip yank unless set up
+        return
+    endif
+
+    let cmd = v:operator . a:modifier
+    if a:which !=# 'c'
+        let cmd .= a:which
+    endif
+    let cmd .= a:delimiter
+    if v:operator ==# 'c'
+        let cmd .= "\<C-r>.\<ESC>"
+    endif
+
+    silent! call repeat#set(cmd, v:count)
 endfunction
 
 " undo last operation if it created a new undo position
