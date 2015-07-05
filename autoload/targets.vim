@@ -305,8 +305,8 @@ function! s:getDelimiters(trigger)
         return [0, 0, 0, err]
     endif
 
-    let opening = escape(rawOpening, '.~\$')
-    let closing = escape(rawClosing, '.~\$')
+    let opening = s:modifyDelimiter(kind, rawOpening)
+    let closing = s:modifyDelimiter(kind, rawClosing)
 
     " write to cache
     let s:delimiterCache[a:trigger] = [kind, opening, closing]
@@ -346,6 +346,15 @@ function! s:getRawDelimiters(trigger)
     else
         return [0, 0, 0, 1]
     endif
+endfunction
+
+function! s:modifyDelimiter(kind, delimiter)
+    let delimiter = escape(copy(a:delimiter), '.~\$')
+    if a:kind ==# 'q'
+        let qe = &quoteescape ==# '\' ? '\\' : &quoteescape
+        let delimiter = '[^'.qe.']\zs'.delimiter.'\|^'.delimiter
+    endif
+    return delimiter
 endfunction
 
 " return 0 if the selection changed since the last invocation. used for
