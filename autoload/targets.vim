@@ -349,7 +349,7 @@ function! s:getRawDelimiters(trigger)
 endfunction
 
 function! s:modifyDelimiter(kind, delimiter)
-    let delimiter = escape(copy(a:delimiter), '.~\$')
+    let delimiter = escape(a:delimiter, '.~\$')
     if a:kind ==# 'q' && &quoteescape !=# ''
         let qe = &quoteescape ==# '\' ? '\\' : &quoteescape
         let delimiter = '[^'.qe.']\zs'.delimiter.'\|^'.delimiter
