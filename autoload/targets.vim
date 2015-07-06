@@ -351,7 +351,11 @@ endfunction
 function! s:modifyDelimiter(kind, delimiter)
     let delimiter = escape(a:delimiter, '.~\$')
     if a:kind ==# 'q' && &quoteescape !=# ''
-        let qe = &quoteescape ==# '\' ? '\\' : &quoteescape
+        let qe = escape(&quoteescape, '\')
+        let closeBracketPos = match(qe, ']')
+        if closeBracketPos != -1
+            let qe = ']'.strpart(qe, 0, closeBracketPos).strpart(qe, closeBracketPos+1)
+        endif
         let delimiter = '[^'.qe.']\zs'.delimiter.'\|^'.delimiter
     endif
     return delimiter
