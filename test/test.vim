@@ -185,10 +185,28 @@ function s:testModifiers()
     write! test5.out
 endfunction
 
+function s:testEmpty()
+    edit! test6.in
+    normal gg0
+
+    normal ci"foo
+
+    normal +
+
+    normal ci(foo
+
+    normal +
+
+    normal ci,foo
+
+    write! test6.out
+endfunction
+
 call s:testBasic()
 call s:testMultiline()
 call s:testSeeking()
 call s:testVisual()
 call s:testModifiers()
+call s:testEmpty()
 
 quit!
