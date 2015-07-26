@@ -352,7 +352,11 @@ function! s:modifyDelimiter(kind, delimiter)
     let delimiter = escape(a:delimiter, '.~\$')
     if a:kind ==# 'q' && &quoteescape !=# ''
         let escapedqe = escape(&quoteescape, ']^-\')
-        let delimiter = '[' . escapedqe . ']\@1<!' . delimiter
+        let optimizeIfPossible = '1'
+        if v:version < 704
+            let optimizeIfPossible = ''
+        endif
+        let delimiter = '[' . escapedqe . ']\@'.optimizeIfPossible.'<!' . delimiter
     endif
     return delimiter
 endfunction
