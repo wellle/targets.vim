@@ -350,11 +350,17 @@ endfunction
 
 function! s:modifyDelimiter(kind, delimiter)
     let delimiter = escape(a:delimiter, '.~\$')
-    if a:kind ==# 'q' && &quoteescape !=# ''
-        let escapedqe = escape(&quoteescape, ']^-\')
-        let delimiter = '[' . escapedqe . ']\@1<!' . delimiter
+    if a:kind !=# 'q' || &quoteescape ==# ''
+        return delimiter
     endif
-    return delimiter
+
+    let escapedqe = escape(&quoteescape, ']^-\')
+    let lookbehind = '[' . escapedqe . ']'
+    if v:version >= 704
+        return lookbehind . '\@1<!' . delimiter
+    else
+        return lookbehind . '\@<!'  . delimiter
+    endif
 endfunction
 
 " return 0 if the selection changed since the last invocation. used for
