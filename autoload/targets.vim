@@ -842,11 +842,13 @@ function! s:seekselectp(...)
     call s:nextp(cnt)
     let next = s:selectp()
 
-    call setpos('.', oldpos)
+    return s:bestSeekTarget([last, around, next], oldpos, min, max, 'seekselectp')
+endfunction
 
+function! s:bestSeekTarget(targets, oldpos, min, max, message)
     let bestScore = 0
-    for target in [last, around, next]
-        let range = target.range(oldpos, min, max)
+    for target in a:targets
+        let range = target.range(a:oldpos, a:min, a:max)
         let score = get(s:rangeScores, range)
         if bestScore < score
             let bestScore = score
@@ -858,7 +860,7 @@ function! s:seekselectp(...)
         return best
     endif
 
-    return targets#target#withError('seekselectp')
+    return targets#target#withError(a:message)
 endfunction
 
 " tag pair matcher (works across multiple lines, supports seeking)
