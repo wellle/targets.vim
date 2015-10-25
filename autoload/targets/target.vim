@@ -21,6 +21,7 @@ function! targets#target#new(sl, sc, el, ec, error)
         \ 'cursorS': function('targets#target#cursorS'),
         \ 'cursorE': function('targets#target#cursorE'),
         \ 'state': function('targets#target#state'),
+        \ 'range': function('targets#target#range'),
         \ 'select': function('targets#target#select'),
         \ 'echom': function('targets#target#echom')
         \ }
@@ -118,6 +119,45 @@ function! targets#target#state() dict
         return targets#state#invalid()
     else
         return targets#state#nonempty()
+    endif
+endfunction
+
+function! targets#target#range(cursor, min, max) dict
+    if self.error != ''
+        return ''
+    endif
+
+    let positionS = s:position(self.sl, self.sc, a:cursor, a:min, a:max, 'l')
+    let positionE = s:position(self.el, self.ec, a:cursor, a:min, a:max, 'r')
+    return positionS . positionE
+endfunction
+
+function! s:position(line, column, cursor, min, max, tie)
+    let cursorLine = a:cursor[1]
+
+    if a:line == cursorLine " cursor line
+        let cursorColumn = a:cursor[2]
+        if a:column == cursorColumn " same column
+            return a:tie
+        elseif a:column < cursorColumn " left of cursor
+            return 'l'
+        else " a:column > cursorColumn " right of cursor
+            return 'r'
+        endif
+
+    elseif a:line < cursorLine
+        if a:line >= a:min " above on screen
+            return 'a'
+        else " above off screen
+            return 'A'
+        endif
+
+    else " a:line > cursorLine
+        if a:line <= a:max " below on screen
+            return 'b'
+        else " below off screen
+            return 'B'
+        endif
     endif
 endfunction
 
