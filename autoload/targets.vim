@@ -379,7 +379,7 @@ function! s:isNewSelection()
     return 0
 endfunction
 
-func! s:shouldGrow(trigger)
+function! s:shouldGrow(trigger)
     if s:newSelection
         return 0
     endif
@@ -667,26 +667,22 @@ function! s:seekselect()
     if rl > 0 " delim r found after cursor in line
         let [sl, sc] = searchpos(s:opening, 'b', line('.'))
         if sl > 0 " delim found before r in line
-            let [el, ec] = [rl, rc]
-            return targets#target#fromValues(sl, sc, el, ec)
+            return targets#target#fromValues(sl, sc, rl, rc)
         endif
         " no delim before cursor in line
         let [el, ec] = searchpos(s:opening, '', line('.'))
         if el > 0 " delim found after r in line
-            let [sl, sc] = [rl, rc]
-            return targets#target#fromValues(sl, sc, el, ec)
+            return targets#target#fromValues(rl, rc, el, ec)
         endif
         " no delim found after r in line
         let [sl, sc] = searchpos(s:opening, 'bW')
         if sl > 0 " delim found before r
-            let [el, ec] = [rl, rc]
-            return targets#target#fromValues(sl, sc, el, ec)
+            return targets#target#fromValues(sl, sc, rl, rc)
         endif
         " no delim found before r
         let [el, ec] = searchpos(s:opening, 'W')
         if el > 0 " delim found after r
-            let [sl, sc] = [rl, rc]
-            return targets#target#fromValues(sl, sc, el, ec)
+            return targets#target#fromValues(rl, rc, el, ec)
         endif
         " no delim found after r
         return targets#target#withError('seekselect 1')
@@ -697,20 +693,17 @@ function! s:seekselect()
     if ll > 0 " delim l found before cursor in line
         let [sl, sc] = searchpos(s:opening, 'b', line('.'))
         if sl > 0 " delim found before l in line
-            let [el, ec] = [ll, lc]
-            return targets#target#fromValues(sl, sc, el, ec)
+            return targets#target#fromValues(sl, sc, ll, lc)
         endif
         " no delim found before l in line
         let [el, ec] = searchpos(s:opening, 'W')
         if el > 0 " delim found after l
-            let [sl, sc] = [ll, lc]
-            return targets#target#fromValues(sl, sc, el, ec)
+            return targets#target#fromValues(ll, lc, el, ec)
         endif
         " no delim found after l
         let [sl, sc] = searchpos(s:opening, 'bW')
         if sl > 0 " delim found before l
-            let [el, ec] = [ll, lc]
-            return targets#target#fromValues(sl, sc, el, ec)
+            return targets#target#fromValues(sl, sc, ll, lc)
         endif
         " no delim found before l
         return targets#target#withError('seekselect 2')
@@ -721,14 +714,12 @@ function! s:seekselect()
     if rl > 0 " delim r found after cursor
         let [sl, sc] = searchpos(s:opening, 'bW')
         if sl > 0 " delim found before r
-            let [el, ec] = [rl, rc]
-            return targets#target#fromValues(sl, sc, el, ec)
+            return targets#target#fromValues(sl, sc, rl, rc)
         endif
         " no delim found before r
         let [el, ec] = searchpos(s:opening, 'W')
         if el > 0 " delim found after r
-            let [sl, sc] = [rl, rc]
-            return targets#target#fromValues(sl, sc, el, ec)
+            return targets#target#fromValues(rl, rc, el, ec)
         endif
         " no delim found after r
         return targets#target#withError('seekselect 3')
