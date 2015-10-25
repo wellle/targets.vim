@@ -778,9 +778,16 @@ function! s:seekselect()
 endfunction
 
 " select a pair around the cursor
-function! s:selectp()
+" args(count=1, trigger=s:opening)
+function! s:selectp(...)
+    if a:0 == 2
+        let [cnt, trigger] = [a:1, a:2]
+    else
+        let [cnt, trigger] = [1, s:opening]
+    endif
+
     " try to select pair
-    silent! execute 'normal! va' . s:opening
+    silent! execute 'normal! v' . cnt . 'a' . trigger
     let [el, ec] = getpos('.')[1:2]
     silent! normal! o
     let [sl, sc] = getpos('.')[1:2]
@@ -806,17 +813,10 @@ function! s:seekselectp(...)
         let [cnt, opening, closing, trigger] = [a:1, s:opening, s:closing, s:closing]
     endif
 
-    " try to select around cursor
-    silent! execute 'normal! v' . cnt . 'a' . trigger
-    let [el, ec] = getpos('.')[1:2]
-    silent! normal! o
-    let [sl, sc] = getpos('.')[1:2]
-    silent! normal! v
-
-    if sc != ec || sl != el
+    let target = s:selectp(cnt, trigger)
+    if target.state().isValid()
         " found target around cursor
-        let cnt = 1
-        return targets#target#fromValues(sl, sc, el, ec)
+        return target
     endif
 
     if cnt > 1
