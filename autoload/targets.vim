@@ -15,6 +15,15 @@ function! s:setup()
     let s:argOuter    = g:targets_argOpening . '\|' . g:targets_argClosing
     let s:argAll      = s:argOpeningS        . '\|' . g:targets_argClosing
     let s:none        = 'a^' " matches nothing
+
+    let s:rangeScores = {}
+    let ranges = split('lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA')
+    let rangesN = len(ranges)
+    let i = 0
+    while i < rangesN
+        let s:rangeScores[ranges[i]] = rangesN - i
+        let i = i + 1
+    endwhile
 endfunction
 
 call s:setup()
@@ -835,19 +844,19 @@ function! s:seekselectp(...)
 
     call setpos('.', oldpos)
 
-    let rangeAround = around.range(oldpos, min, max)
-    let rangeLast = last.range(oldpos, min, max)
-    let rangeNext = next.range(oldpos, min, max)
-
-    for range in split('lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA')
-        if range == rangeAround
-            return around
-        elseif range == rangeLast
-            return last
-        elseif range == rangeNext
-            return next
+    let bestScore = 0
+    for target in [last, around, next]
+        let range = target.range(oldpos, min, max)
+        let score = get(s:rangeScores, range)
+        if bestScore < score
+            let bestScore = score
+            let best = target
         endif
     endfor
+
+    if bestScore > 0
+        return best
+    endif
 
     return targets#target#withError('seekselectp')
 endfunction
