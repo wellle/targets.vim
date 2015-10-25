@@ -17,7 +17,10 @@ function! s:setup()
     let s:none        = 'a^' " matches nothing
 
     let s:rangeScores = {}
-    let ranges = split('lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA')
+    if !exists('g:targets_seek_ranges')
+        let g:targets_seek_ranges = 'lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA'
+    endif
+    let ranges = split(g:targets_seek_ranges)
     let rangesN = len(ranges)
     let i = 0
     while i < rangesN
