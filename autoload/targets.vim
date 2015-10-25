@@ -661,74 +661,116 @@ function! s:findSeparators(flags1, flags2, opening, closing)
     return [sl, sc, el, ec, 0]
 endfunction
 
+" seekoptions
+" l - left of cursor in current line
+" r - right of cursor in current line
+" a - above cursor on screen
+" b - below cursor on screen
+" A - above cursor off screen
+" B - below cursor off screen
+
+" .  - cursor
+" () - target
+" /  - line break
+" |  - screen edge
+
+"     A  a  l r  b  B
+
+" lr   |  / (.) /  |   around cursor, current line
+" lb   |  / (.  /) |   around cursor, multiline down, on screen
+" ar   | (/  .) /  |   around cursor, multiline up, on screen
+" ab   | (/  .  /) |   around cursor, multiline both, on screen
+" lB   |  / (.  /  |)  around cursor, multiline down, partially off screen
+" Ar  (|  /  .) /  |   around cursor, multiline up, partially off screen
+" aB   | (/  .  /  |)  around cursor, multiline both, partially off screen bottom
+" Ab  (|  /  .  /) |   around cursor, multiline both, partially off screen top
+" AB  (|  /  .  /  |)  around cursor, multiline both, partially off screen both
+
+" rr   |  /  .()/  |   after cursor, current line
+" rb   |  /  .( /) |   after cursor, multiline, on screen
+" rB   |  /  .( /  |)  after cursor, multiline, partially off screen
+" bb   |  /  .  /()|   after cursor below, on screen
+" bB   |  /  .  /( |)  after cursor below, partially off screen
+" BB   |  /  .  /  |() after cursor below, off screen
+
+" ll   |  /().  /  |   before cursor, current line
+" al   | (/ ).  /  |   before cursor, multiline, on screen
+" Al  (|  / ).  /  |   before cursor, multiline, partially off screen
+" aa   |()/  .  /  |   before cursor above, on screen
+" Aa  (| )/  .  /  |   before cursor above, partially off screen
+" AA ()|  /  .  /  |   before cursor above, off screen
+
+"      └───────────┘ visible screen
+"         └─────┘ current line
+
 " select pair of delimiters around cursor (multi line, supports seeking)
 function! s:seekselect()
     let [rl, rc] = searchpos(s:opening, '', line('.'))
-    if rl > 0 " delim r found after cursor in line
+    if rl > 0 " delim r found right of cursor in line
         let [sl, sc] = searchpos(s:opening, 'b', line('.'))
-        if sl > 0 " delim found before r in line
+        if sl > 0 " delim found left of cursor in line (lr)
             return targets#target#fromValues(sl, sc, rl, rc)
         endif
-        " no delim before cursor in line
+        " no delim left of cursor in line
         let [el, ec] = searchpos(s:opening, '', line('.'))
-        if el > 0 " delim found after r in line
+        if el > 0 " delim found right of r in line (rr)
             return targets#target#fromValues(rl, rc, el, ec)
         endif
-        " no delim found after r in line
+        " no delim found right of r in line
         let [sl, sc] = searchpos(s:opening, 'bW')
-        if sl > 0 " delim found before r
+        if sl > 0 " delim found above cursor (ar|Ar)
             return targets#target#fromValues(sl, sc, rl, rc)
         endif
-        " no delim found before r
+        " no delim found above cursor
         let [el, ec] = searchpos(s:opening, 'W')
-        if el > 0 " delim found after r
+        if el > 0 " delim found below cursor (rb|rB)
             return targets#target#fromValues(rl, rc, el, ec)
         endif
-        " no delim found after r
+        " no delim found below cursor
         return targets#target#withError('seekselect 1')
     endif
 
-    " no delim found after cursor in line
+    " no delim found right of cursor in line
     let [ll, lc] = searchpos(s:opening, 'bc', line('.'))
-    if ll > 0 " delim l found before cursor in line
+    if ll > 0 " delim l found left of cursor in line
         let [sl, sc] = searchpos(s:opening, 'b', line('.'))
-        if sl > 0 " delim found before l in line
+        if sl > 0 " delim found left of l in line (ll)
             return targets#target#fromValues(sl, sc, ll, lc)
         endif
-        " no delim found before l in line
+        " no delim found left of l in line
         let [el, ec] = searchpos(s:opening, 'W')
-        if el > 0 " delim found after l
+        if el > 0 " delim found below cursor (lb|lB)
             return targets#target#fromValues(ll, lc, el, ec)
         endif
-        " no delim found after l
+        " no delim found below cursor
         let [sl, sc] = searchpos(s:opening, 'bW')
-        if sl > 0 " delim found before l
+        if sl > 0 " delim found above cursor (al|Al)
             return targets#target#fromValues(sl, sc, ll, lc)
         endif
-        " no delim found before l
+        " no delim found above cursor
         return targets#target#withError('seekselect 2')
     endif
 
-    " no delim found before cursor in line
+    " no delim found left of cursor in line
     let [rl, rc] = searchpos(s:opening, 'W')
-    if rl > 0 " delim r found after cursor
+    if rl > 0 " delim r found below cursor
         let [sl, sc] = searchpos(s:opening, 'bW')
-        if sl > 0 " delim found before r
+        if sl > 0 " delim found above cursor (ab|aB|Ab|AB)
             return targets#target#fromValues(sl, sc, rl, rc)
         endif
-        " no delim found before r
+        " no delim found above cursor
         let [el, ec] = searchpos(s:opening, 'W')
-        if el > 0 " delim found after r
+        if el > 0 " delim found after r (bb|bB|BB)
             return targets#target#fromValues(rl, rc, el, ec)
         endif
         " no delim found after r
         return targets#target#withError('seekselect 3')
     endif
 
-    " no delim found after cursor
+    " no delim found below cursor
     let [el, ec] = searchpos(s:opening, 'bW')
     let [sl, sc] = searchpos(s:opening, 'bW')
-    if sl > 0 && el > 0 " match found before cursor
+    if sl > 0 && el > 0 " match found before cursor (aa|aA|AA)
         return targets#target#fromValues(sl, sc, el, ec)
     endif
 
