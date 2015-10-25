@@ -564,10 +564,13 @@ endfunction
 " in   │     ...
 " line │  '  '  '  '
 " out  │        1  2
-function! s:nextselect(count)
+" args (count=1)
+function! s:nextselect(...)
+    let cnt = a:0 == 1 ? a:1 : 1
+
     call s:prepareNext()
 
-    if s:search(a:count, s:opening, 'W') > 0
+    if s:search(cnt, s:opening, 'W') > 0
         return targets#target#withError('nextselect')
     endif
 
@@ -578,12 +581,15 @@ endfunction
 " in   │     ...
 " line │  '  '  '  '
 " out  │ 2  1
-function! s:lastselect(count)
+" args (count=1)
+function! s:lastselect(...)
+    let cnt = a:0 == 1 ? a:1 : 1
+
     " if started on closing, but not when skipping
     if !s:prepareLast() && s:getchar() ==# s:closing
-        let [cnt, message] = [a:count - 1, 'lastselect 1']
+        let [cnt, message] = [cnt - 1, 'lastselect 1']
     else
-        let [cnt, message] = [a:count, 'lastselect 2']
+        let [cnt, message] = [cnt, 'lastselect 2']
     endif
 
     if s:search(cnt, s:closing, 'bW') > 0
@@ -717,80 +723,25 @@ endfunction
 
 " select pair of delimiters around cursor (multi line, supports seeking)
 function! s:seekselect()
-    let [rl, rc] = searchpos(s:opening, '', line('.'))
-    if rl > 0 " delim r found right of cursor in line
-        let [sl, sc] = searchpos(s:opening, 'b', line('.'))
-        if sl > 0 " delim found left of cursor in line (lr)
-            return targets#target#fromValues(sl, sc, rl, rc)
-        endif
-        " no delim left of cursor in line
-        let [el, ec] = searchpos(s:opening, '', line('.'))
-        if el > 0 " delim found right of r in line (rr)
-            return targets#target#fromValues(rl, rc, el, ec)
-        endif
-        " no delim found right of r in line
-        let [sl, sc] = searchpos(s:opening, 'bW')
-        if sl > 0 " delim found above cursor (ar|Ar)
-            return targets#target#fromValues(sl, sc, rl, rc)
-        endif
-        " no delim found above cursor
-        let [el, ec] = searchpos(s:opening, 'W')
-        if el > 0 " delim found below cursor (rb|rB)
-            return targets#target#fromValues(rl, rc, el, ec)
-        endif
-        " no delim found below cursor
-        return targets#target#withError('seekselect 1')
-    endif
+    let min = line('w0')
+    let max = line('w$')
+    let oldpos = getpos('.')
 
-    " no delim found right of cursor in line
-    let [ll, lc] = searchpos(s:opening, 'bc', line('.'))
-    if ll > 0 " delim l found left of cursor in line
-        let [sl, sc] = searchpos(s:opening, 'b', line('.'))
-        if sl > 0 " delim found left of l in line (ll)
-            return targets#target#fromValues(sl, sc, ll, lc)
-        endif
-        " no delim found left of l in line
-        let [el, ec] = searchpos(s:opening, 'W')
-        if el > 0 " delim found below cursor (lb|lB)
-            return targets#target#fromValues(ll, lc, el, ec)
-        endif
-        " no delim found below cursor
-        let [sl, sc] = searchpos(s:opening, 'bW')
-        if sl > 0 " delim found above cursor (al|Al)
-            return targets#target#fromValues(sl, sc, ll, lc)
-        endif
-        " no delim found above cursor
-        return targets#target#withError('seekselect 2')
-    endif
+    let around = s:select('>')
 
-    " no delim found left of cursor in line
-    let [rl, rc] = searchpos(s:opening, 'W')
-    if rl > 0 " delim r found below cursor
-        let [sl, sc] = searchpos(s:opening, 'bW')
-        if sl > 0 " delim found above cursor (ab|aB|Ab|AB)
-            return targets#target#fromValues(sl, sc, rl, rc)
-        endif
-        " no delim found above cursor
-        let [el, ec] = searchpos(s:opening, 'W')
-        if el > 0 " delim found after r (bb|bB|BB)
-            return targets#target#fromValues(rl, rc, el, ec)
-        endif
-        " no delim found after r
-        return targets#target#withError('seekselect 3')
-    endif
+    call setpos('.', oldpos)
 
-    " no delim found below cursor
-    let [el, ec] = searchpos(s:opening, 'bW')
-    let [sl, sc] = searchpos(s:opening, 'bW')
-    if sl > 0 && el > 0 " match found before cursor (aa|aA|AA)
-        return targets#target#fromValues(sl, sc, el, ec)
-    endif
+    let last = s:lastselect()
 
-    return targets#target#withError('seekselect 4')
+    call setpos('.', oldpos)
+
+    let next = s:nextselect()
+
+    return s:bestSeekTarget([around, next, last], oldpos, min, max, 'seekselect')
 endfunction
 
 " select a pair around the cursor
-" args(count=1, trigger=s:opening)
+" args (count=1, trigger=s:opening)
 function! s:selectp(...)
     if a:0 == 2
         let [cnt, trigger] = [a:1, a:2]
@@ -845,7 +796,7 @@ function! s:seekselectp(...)
     call s:nextp(cnt)
     let next = s:selectp()
 
-    return s:bestSeekTarget([last, around, next], oldpos, min, max, 'seekselectp')
+    return s:bestSeekTarget([around, next, last], oldpos, min, max, 'seekselectp')
 endfunction
 
 function! s:bestSeekTarget(targets, oldpos, min, max, message)
