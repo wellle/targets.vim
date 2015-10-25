@@ -813,36 +813,41 @@ function! s:seekselectp(...)
         let [cnt, opening, closing, trigger] = [a:1, s:opening, s:closing, s:closing]
     endif
 
-    let target = s:selectp(cnt, trigger)
-    if target.state().isValid()
-        " found target around cursor
-        return target
+    let min = line('w0')
+    let max = line('w$')
+    let oldpos = getpos('.')
+
+    let around = s:selectp(cnt, trigger)
+
+    if cnt > 1 " don't seek with count
+        return around
     endif
 
-    if cnt > 1
-        return targets#target#withError('seekselectp count')
-    endif
-    let cnt = 1
+    call setpos('.', oldpos)
 
-    let [sl, sc] = searchpos(opening, '', line('.'))
-    if sc > 0 " found opening to the right in line
-        return s:selectp()
-    endif
+    call s:lastp(cnt)
+    let last = s:selectp()
 
-    let [sl, sc] = searchpos(closing, 'b', line('.'))
-    if sc > 0 " found closing to the left in line
-        return s:selectp()
-    endif
+    call setpos('.', oldpos)
 
-    let [sl, sc] = searchpos(opening, 'W')
-    if sc > 0 " found opening to the right
-        return s:selectp()
-    endif
+    call s:nextp(cnt)
+    let next = s:selectp()
 
-    let [sl, sc] = searchpos(closing, 'Wb')
-    if sc > 0 " found closing to the left
-        return s:selectp()
-    endif
+    call setpos('.', oldpos)
+
+    let rangeAround = around.range(oldpos, min, max)
+    let rangeLast = last.range(oldpos, min, max)
+    let rangeNext = next.range(oldpos, min, max)
+
+    for range in split('lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA')
+        if range == rangeAround
+            return around
+        elseif range == rangeLast
+            return last
+        elseif range == rangeNext
+            return next
+        endif
+    endfor
 
     return targets#target#withError('seekselectp')
 endfunction
