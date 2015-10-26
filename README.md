@@ -476,6 +476,12 @@ g:targets_nlNL
 g:targets_pairs
 g:targets_quotes
 g:targets_separators
+g:targets_tagTrigger
+g:targets_argTrigger
+g:targets_argOpening
+g:targets_argClosing
+g:targets_argSeparator
+g:targets_seekRanges
 ```
 
 ### g:targets_aiAI
@@ -613,6 +619,126 @@ also want to find arguments separatode by semicolon, use this:
 
 ```vim
 let g:targets_argSeparator = '[,;]'
+```
+
+### g:targets_seekRanges
+
+Default:
+
+```vim
+let g:targets_seekRanges = 'lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA'
+```
+
+Defines a priority ordered, space separated list of range types which can be
+used to customize seeking behavior. When using a command like `cib` to change
+inside a block, targets.vim considers the three targets:
+
+  - smallest target around cursor
+  - next target after cursor
+  - last target before cursor
+
+For each of those that were found, we detect what range type it has. A range
+type depends on the relative position of the start and end of the target,
+relative to the current cursor position and the currently visible lines.
+
+The possibly relative positions are:
+
+  - `l`: left of cursor in current line
+  - `r`: right of cursor in current line
+  - `a`: above cursor on screen
+  - `b`: below cursor on screen
+  - `A`: above cursor off screen
+  - `B`: below cursor off screen
+
+All possibly ranges are listed below, denoted by two characters: one for the
+relative start and one for the relative end position of the target. For
+example, `lr` means "from left of cursor to right of cursor in cursor line".
+
+Next to each range type is a pictogram of an example. They are made of these
+symbols:
+
+  - `.`: current cursor position
+  - `(`: start of target
+  - `)`: end of target
+  - `/`: line break before and after cursor line
+  - `|`: screen edge between hidden and visible lines
+
+#### Ranges around cursor:
+
+```
+lr   |  / (.) /  |   around cursor, current line
+lb   |  / (.  /) |   around cursor, multiline down, on screen
+ar   | (/  .) /  |   around cursor, multiline up, on screen
+ab   | (/  .  /) |   around cursor, multiline both, on screen
+lB   |  / (.  /  |)  around cursor, multiline down, partially off screen
+Ar  (|  /  .) /  |   around cursor, multiline up, partially off screen
+aB   | (/  .  /  |)  around cursor, multiline both, partially off screen bottom
+Ab  (|  /  .  /) |   around cursor, multiline both, partially off screen top
+AB  (|  /  .  /  |)  around cursor, multiline both, partially off screen both
+```
+
+#### Ranges after (right of/below) cursor
+
+```
+rr   |  /  .()/  |   after cursor, current line
+rb   |  /  .( /) |   after cursor, multiline, on screen
+rB   |  /  .( /  |)  after cursor, multiline, partially off screen
+bb   |  /  .  /()|   after cursor below, on screen
+bB   |  /  .  /( |)  after cursor below, partially off screen
+BB   |  /  .  /  |() after cursor below, off screen
+```
+
+#### Ranges before (left of/above) cursor
+
+```
+ll   |  /().  /  |   before cursor, current line
+al   | (/ ).  /  |   before cursor, multiline, on screen
+Al  (|  / ).  /  |   before cursor, multiline, partially off screen
+aa   |()/  .  /  |   before cursor above, on screen
+Aa  (| )/  .  /  |   before cursor above, partially off screen
+AA ()|  /  .  /  |   before cursor above, off screen
+```
+
+Pictogram legend:
+
+```
+    A  a  l r  b  B  relative positions
+     └───────────┘   visible screen
+        └─────┘      current line
+```
+
+Given the range types of our targets, we then pick the one that appears first
+in `g:targets_seekRanges`. If none is found, the selection fails.
+
+The default setting generally prefers targets around the cursor, with one
+exception: If the target around the cursor is not contained in the current
+cursor line, but the next or last target are, then prefer those.
+
+Some other useful example settings (or build your own!):
+
+Never seek backwards:
+```vim
+let g:targets_seekRanges = 'lr rr lb ar ab lB Ar aB Ab AB rb rB bb bB BB'
+```
+
+Only seek if next/last targets touch current line:
+```vim
+let g:targets_seekRanges = 'lr rr ll lb ar ab lB Ar aB Ab AB rb rB al Al'
+```
+]
+Only consider targets fully visible on screen:
+```vim
+let g:targets_seekRanges = 'lr lb ar ab rr rb bb ll al aa'
+```
+
+Only consider targets around cursor:
+```vim
+let g:targets_seekRanges = 'lr lb ar ab lB Ar aB Ab AB'
+```
+
+Only consider targets fully contained in current line:
+```vim
+let g:targets_seekRanges = 'lr rr ll'
 ```
 
 ## Notes
