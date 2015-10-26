@@ -958,22 +958,21 @@ function! s:seekselecta(count)
 
     call setpos('.', oldpos)
 
-    let last = s:lastselecta(a:count)
+    let last = s:lastselecta()
 
     call setpos('.', oldpos)
 
-    let next = s:nextselecta(a:count)
+    let next = s:nextselecta()
 
     return s:bestSeekTarget([around, next, last], oldpos, min, max, 'seekselecta')
 endfunction
 
 " try to select a next argument, supports count and optional stopline
-" args (count, stopline=0)
+" args (count=1, stopline=0)
 function! s:nextselecta(...)
+    let [cnt, stopline] = [a:0 > 0 ? a:1 : 1, a:0 > 1 ? a:2 : 0]
     call s:prepareNext()
 
-    let cnt = a:1
-    let stopline = a:0 > 1 ? a:2 : 0
     if s:search(cnt, s:argOpeningS, 'W', stopline) > 0 " no start found
         return targets#target#withError('nextselecta 1')
     endif
@@ -1003,8 +1002,10 @@ function! s:nextselecta(...)
 endfunction
 
 " try to select a last argument, supports count and optional stopline
-" args (count, stopline=0)
+" args (count=1, stopline=0)
 function! s:lastselecta(...)
+    let [cnt, stopline] = [a:0 > 0 ? a:1 : 1, a:0 > 1 ? a:2 : 0]
+
     call s:prepareLast()
 
     " special case to handle vala when invoked on a separator
@@ -1016,8 +1017,6 @@ function! s:lastselecta(...)
         endif
     endif
 
-    let cnt = a:1
-    let stopline = a:0 > 1 ? a:2 : 0
     if s:search(cnt, s:argClosingS, 'bW', stopline) > 0 " no start found
         return targets#target#withError('lastselecta 1')
     endif
