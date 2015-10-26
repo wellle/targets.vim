@@ -17,10 +17,10 @@ function! s:setup()
     let s:none        = 'a^' " matches nothing
 
     let s:rangeScores = {}
-    if !exists('g:targets_seek_ranges')
-        let g:targets_seek_ranges = 'lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA'
+    if !exists('g:targets_seekRanges')
+        let g:targets_seekRanges = 'lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA'
     endif
-    let ranges = split(g:targets_seek_ranges)
+    let ranges = split(g:targets_seekRanges)
     let rangesN = len(ranges)
     let i = 0
     while i < rangesN
@@ -998,9 +998,9 @@ endfunction
 "   A - above cursor off screen
 "   B - below cursor off screen
 
-" All possibly ranges are listed below, denoted by two characters, one for the
-" relative start and for the end position each. For example, `lr` means "from
-" left of cursor to right of cursor".
+" All possibly ranges are listed below, denoted by two characters: one for the
+" relative start and for the relative end position each of the target. For
+" example, `lr` means "from left of cursor to right of cursor in cursor line".
 
 " Next to each range type is a pictogram of an example. They are made of these
 " symbols:
