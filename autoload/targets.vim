@@ -946,35 +946,25 @@ function! s:seekselecta(count)
         return s:selecta('^')
     endif
 
-    let target = s:selecta('>')
-    if target.state().isValid()
-        return target
+    let min = line('w0')
+    let max = line('w$')
+    let oldpos = getpos('.')
+
+    let around = s:selecta('>')
+
+    if a:count > 1 " don't seek with count
+        return around
     endif
 
-    " TODO: get next and last and select best one instead of trying with
-    " restrictions
+    call setpos('.', oldpos)
 
-    let target = s:nextselecta(a:count, line('.'))
-    if target.state().isValid()
-        return target
-    endif
+    let last = s:lastselecta(a:count)
 
-    let target = s:lastselecta(a:count, line('.'))
-    if target.state().isValid()
-        return target
-    endif
+    call setpos('.', oldpos)
 
-    let target = s:nextselecta(a:count)
-    if target.state().isValid()
-        return target
-    endif
+    let next = s:nextselecta(a:count)
 
-    let target = s:lastselecta(a:count)
-    if target.state().isValid()
-        return target
-    endif
-
-    return targets#target#withError('seekselecta seek')
+    return s:bestSeekTarget([around, next, last], oldpos, min, max, 'seekselecta')
 endfunction
 
 " try to select a next argument, supports count and optional stopline
