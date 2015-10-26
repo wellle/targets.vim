@@ -679,48 +679,6 @@ function! s:findSeparators(flags1, flags2, opening, closing)
     return [sl, sc, el, ec, 0]
 endfunction
 
-" seekoptions
-" l - left of cursor in current line
-" r - right of cursor in current line
-" a - above cursor on screen
-" b - below cursor on screen
-" A - above cursor off screen
-" B - below cursor off screen
-
-" .  - cursor
-" () - target
-" /  - line break
-" |  - screen edge
-
-"     A  a  l r  b  B
-
-" lr   |  / (.) /  |   around cursor, current line
-" lb   |  / (.  /) |   around cursor, multiline down, on screen
-" ar   | (/  .) /  |   around cursor, multiline up, on screen
-" ab   | (/  .  /) |   around cursor, multiline both, on screen
-" lB   |  / (.  /  |)  around cursor, multiline down, partially off screen
-" Ar  (|  /  .) /  |   around cursor, multiline up, partially off screen
-" aB   | (/  .  /  |)  around cursor, multiline both, partially off screen bottom
-" Ab  (|  /  .  /) |   around cursor, multiline both, partially off screen top
-" AB  (|  /  .  /  |)  around cursor, multiline both, partially off screen both
-
-" rr   |  /  .()/  |   after cursor, current line
-" rb   |  /  .( /) |   after cursor, multiline, on screen
-" rB   |  /  .( /  |)  after cursor, multiline, partially off screen
-" bb   |  /  .  /()|   after cursor below, on screen
-" bB   |  /  .  /( |)  after cursor below, partially off screen
-" BB   |  /  .  /  |() after cursor below, off screen
-
-" ll   |  /().  /  |   before cursor, current line
-" al   | (/ ).  /  |   before cursor, multiline, on screen
-" Al  (|  / ).  /  |   before cursor, multiline, partially off screen
-" aa   |()/  .  /  |   before cursor above, on screen
-" Aa  (| )/  .  /  |   before cursor above, partially off screen
-" AA ()|  /  .  /  |   before cursor above, off screen
-
-"      └───────────┘ visible screen
-"         └─────┘ current line
-
 " select pair of delimiters around cursor (multi line, supports seeking)
 function! s:seekselect()
     let min = line('w0')
@@ -797,24 +755,6 @@ function! s:seekselectp(...)
     let next = s:selectp()
 
     return s:bestSeekTarget([around, next, last], oldpos, min, max, 'seekselectp')
-endfunction
-
-function! s:bestSeekTarget(targets, oldpos, min, max, message)
-    let bestScore = 0
-    for target in a:targets
-        let range = target.range(a:oldpos, a:min, a:max)
-        let score = get(s:rangeScores, range)
-        if bestScore < score
-            let bestScore = score
-            let best = target
-        endif
-    endfor
-
-    if bestScore > 0
-        return best
-    endif
-
-    return targets#target#withError(a:message)
 endfunction
 
 " tag pair matcher (works across multiple lines, supports seeking)
@@ -1043,6 +983,79 @@ function! s:lastselecta(...)
     endif
 
     return targets#target#withError('lastselecta 4')
+endfunction
+
+" select best of given targets according to s:rangeScores
+" detects for each given target what range type it has, depending on the
+" relative positions of the start and end of the target relative to the cursor
+" position and the currently visible lines
+
+" The possibly relative positions are:
+"   l - left of cursor in current line
+"   r - right of cursor in current line
+"   a - above cursor on screen
+"   b - below cursor on screen
+"   A - above cursor off screen
+"   B - below cursor off screen
+
+" All possibly ranges are listed below, denoted by two characters, one for the
+" relative start and for the end position each. For example, `lr` means "from
+" left of cursor to right of cursor".
+
+" Next to each range type is a pictogram of an example. They are made of these
+" symbols:
+"    .  - current cursor position
+"   ( ) - start and end of target
+"    /  - line break before and after cursor line
+"    |  - screen edge between hidden and visible lines
+
+" ranges around cursor:
+"   lr   |  / (.) /  |   around cursor, current line
+"   lb   |  / (.  /) |   around cursor, multiline down, on screen
+"   ar   | (/  .) /  |   around cursor, multiline up, on screen
+"   ab   | (/  .  /) |   around cursor, multiline both, on screen
+"   lB   |  / (.  /  |)  around cursor, multiline down, partially off screen
+"   Ar  (|  /  .) /  |   around cursor, multiline up, partially off screen
+"   aB   | (/  .  /  |)  around cursor, multiline both, partially off screen bottom
+"   Ab  (|  /  .  /) |   around cursor, multiline both, partially off screen top
+"   AB  (|  /  .  /  |)  around cursor, multiline both, partially off screen both
+
+" ranges after (right of/below) cursor
+"   rr   |  /  .()/  |   after cursor, current line
+"   rb   |  /  .( /) |   after cursor, multiline, on screen
+"   rB   |  /  .( /  |)  after cursor, multiline, partially off screen
+"   bb   |  /  .  /()|   after cursor below, on screen
+"   bB   |  /  .  /( |)  after cursor below, partially off screen
+"   BB   |  /  .  /  |() after cursor below, off screen
+
+" ranges before (left of/above) cursor
+"   ll   |  /().  /  |   before cursor, current line
+"   al   | (/ ).  /  |   before cursor, multiline, on screen
+"   Al  (|  / ).  /  |   before cursor, multiline, partially off screen
+"   aa   |()/  .  /  |   before cursor above, on screen
+"   Aa  (| )/  .  /  |   before cursor above, partially off screen
+"   AA ()|  /  .  /  |   before cursor above, off screen
+
+"     A  a  l r  b  B  relative positions
+"      └───────────┘   visible screen
+"         └─────┘      current line
+
+function! s:bestSeekTarget(targets, oldpos, min, max, message)
+    let bestScore = 0
+    for target in a:targets
+        let range = target.range(a:oldpos, a:min, a:max)
+        let score = get(s:rangeScores, range)
+        if bestScore < score
+            let bestScore = score
+            let best = target
+        endif
+    endfor
+
+    if bestScore > 0
+        return best
+    endif
+
+    return targets#target#withError(a:message)
 endfunction
 
 " selection modifiers
