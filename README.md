@@ -476,6 +476,12 @@ g:targets_nlNL
 g:targets_pairs
 g:targets_quotes
 g:targets_separators
+g:targets_tagTrigger
+g:targets_argTrigger
+g:targets_argOpening
+g:targets_argClosing
+g:targets_argSeparator
+g:targets_seekRanges
 ```
 
 ### g:targets_aiAI
@@ -614,6 +620,51 @@ also want to find arguments separatode by semicolon, use this:
 ```vim
 let g:targets_argSeparator = '[,;]'
 ```
+
+### g:targets_seekRanges
+
+Default:
+
+```vim
+let g:targets_seekRanges = 'lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA'
+```
+
+Defines a priority ordered, space separated list of range types which can be
+used to customize seeking behavior.
+
+The default setting generally prefers targets around the cursor, with one
+exception: If the target around the cursor is not contained in the current
+cursor line, but the next or last target are, then prefer those.
+
+Some other useful example settings:
+
+Never seek backwards:
+```vim
+let g:targets_seekRanges = 'lr rr lb ar ab lB Ar aB Ab AB rb rB bb bB BB'
+```
+
+Only seek if next/last targets touch current line:
+```vim
+let g:targets_seekRanges = 'lr rr ll lb ar ab lB Ar aB Ab AB rb rB al Al'
+```
+]
+Only consider targets fully visible on screen:
+```vim
+let g:targets_seekRanges = 'lr lb ar ab rr rb bb ll al aa'
+```
+
+Only consider targets around cursor:
+```vim
+let g:targets_seekRanges = 'lr lb ar ab lB Ar aB Ab AB'
+```
+
+Only consider targets fully contained in current line:
+```vim
+let g:targets_seekRanges = 'lr rr ll'
+```
+
+If you want to build your own, or are just curious what those cryptic letters
+mean, check out the full documentation in our [Cheat Sheet][cheatsheet].
 
 ## Notes
 

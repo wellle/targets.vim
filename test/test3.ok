@@ -8,9 +8,13 @@ D (D) c
 
 a (E) E
 
-a (F) e
+a ( b
+F (F) c
+d ) e
 
-a (G) e
+a ( b
+c (G) G
+d ) e
 
 a ( b ) H (H) d
 

@@ -15,6 +15,18 @@ function! s:setup()
     let s:argOuter    = g:targets_argOpening . '\|' . g:targets_argClosing
     let s:argAll      = s:argOpeningS        . '\|' . g:targets_argClosing
     let s:none        = 'a^' " matches nothing
+
+    let s:rangeScores = {}
+    if !exists('g:targets_seekRanges')
+        let g:targets_seekRanges = 'lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA'
+    endif
+    let ranges = split(g:targets_seekRanges)
+    let rangesN = len(ranges)
+    let i = 0
+    while i < rangesN
+        let s:rangeScores[ranges[i]] = rangesN - i
+        let i = i + 1
+    endwhile
 endfunction
 
 call s:setup()
@@ -379,7 +391,7 @@ function! s:isNewSelection()
     return 0
 endfunction
 
-func! s:shouldGrow(trigger)
+function! s:shouldGrow(trigger)
     if s:newSelection
         return 0
     endif
@@ -552,10 +564,13 @@ endfunction
 " in   │     ...
 " line │  '  '  '  '
 " out  │        1  2
-function! s:nextselect(count)
+" args (count=1)
+function! s:nextselect(...)
+    let cnt = a:0 == 1 ? a:1 : 1
+
     call s:prepareNext()
 
-    if s:search(a:count, s:opening, 'W') > 0
+    if s:search(cnt, s:opening, 'W') > 0
         return targets#target#withError('nextselect')
     endif
 
@@ -566,12 +581,15 @@ endfunction
 " in   │     ...
 " line │  '  '  '  '
 " out  │ 2  1
-function! s:lastselect(count)
+" args (count=1)
+function! s:lastselect(...)
+    let cnt = a:0 == 1 ? a:1 : 1
+
     " if started on closing, but not when skipping
     if !s:prepareLast() && s:getchar() ==# s:closing
-        let [cnt, message] = [a:count - 1, 'lastselect 1']
+        let [cnt, message] = [cnt - 1, 'lastselect 1']
     else
-        let [cnt, message] = [a:count, 'lastselect 2']
+        let [cnt, message] = [cnt, 'lastselect 2']
     endif
 
     if s:search(cnt, s:closing, 'bW') > 0
@@ -663,91 +681,34 @@ endfunction
 
 " select pair of delimiters around cursor (multi line, supports seeking)
 function! s:seekselect()
-    let [rl, rc] = searchpos(s:opening, '', line('.'))
-    if rl > 0 " delim r found after cursor in line
-        let [sl, sc] = searchpos(s:opening, 'b', line('.'))
-        if sl > 0 " delim found before r in line
-            let [el, ec] = [rl, rc]
-            return targets#target#fromValues(sl, sc, el, ec)
-        endif
-        " no delim before cursor in line
-        let [el, ec] = searchpos(s:opening, '', line('.'))
-        if el > 0 " delim found after r in line
-            let [sl, sc] = [rl, rc]
-            return targets#target#fromValues(sl, sc, el, ec)
-        endif
-        " no delim found after r in line
-        let [sl, sc] = searchpos(s:opening, 'bW')
-        if sl > 0 " delim found before r
-            let [el, ec] = [rl, rc]
-            return targets#target#fromValues(sl, sc, el, ec)
-        endif
-        " no delim found before r
-        let [el, ec] = searchpos(s:opening, 'W')
-        if el > 0 " delim found after r
-            let [sl, sc] = [rl, rc]
-            return targets#target#fromValues(sl, sc, el, ec)
-        endif
-        " no delim found after r
-        return targets#target#withError('seekselect 1')
-    endif
+    let min = line('w0')
+    let max = line('w$')
+    let oldpos = getpos('.')
 
-    " no delim found after cursor in line
-    let [ll, lc] = searchpos(s:opening, 'bc', line('.'))
-    if ll > 0 " delim l found before cursor in line
-        let [sl, sc] = searchpos(s:opening, 'b', line('.'))
-        if sl > 0 " delim found before l in line
-            let [el, ec] = [ll, lc]
-            return targets#target#fromValues(sl, sc, el, ec)
-        endif
-        " no delim found before l in line
-        let [el, ec] = searchpos(s:opening, 'W')
-        if el > 0 " delim found after l
-            let [sl, sc] = [ll, lc]
-            return targets#target#fromValues(sl, sc, el, ec)
-        endif
-        " no delim found after l
-        let [sl, sc] = searchpos(s:opening, 'bW')
-        if sl > 0 " delim found before l
-            let [el, ec] = [ll, lc]
-            return targets#target#fromValues(sl, sc, el, ec)
-        endif
-        " no delim found before l
-        return targets#target#withError('seekselect 2')
-    endif
+    let around = s:select('>')
 
-    " no delim found before cursor in line
-    let [rl, rc] = searchpos(s:opening, 'W')
-    if rl > 0 " delim r found after cursor
-        let [sl, sc] = searchpos(s:opening, 'bW')
-        if sl > 0 " delim found before r
-            let [el, ec] = [rl, rc]
-            return targets#target#fromValues(sl, sc, el, ec)
-        endif
-        " no delim found before r
-        let [el, ec] = searchpos(s:opening, 'W')
-        if el > 0 " delim found after r
-            let [sl, sc] = [rl, rc]
-            return targets#target#fromValues(sl, sc, el, ec)
-        endif
-        " no delim found after r
-        return targets#target#withError('seekselect 3')
-    endif
+    call setpos('.', oldpos)
 
-    " no delim found after cursor
-    let [el, ec] = searchpos(s:opening, 'bW')
-    let [sl, sc] = searchpos(s:opening, 'bW')
-    if sl > 0 && el > 0 " match found before cursor
-        return targets#target#fromValues(sl, sc, el, ec)
-    endif
+    let last = s:lastselect()
 
-    return targets#target#withError('seekselect 4')
+    call setpos('.', oldpos)
+
+    let next = s:nextselect()
+
+    return s:bestSeekTarget([around, next, last], oldpos, min, max, 'seekselect')
 endfunction
 
 " select a pair around the cursor
-function! s:selectp()
+" args (count=1, trigger=s:opening)
+function! s:selectp(...)
+    if a:0 == 2
+        let [cnt, trigger] = [a:1, a:2]
+    else
+        let [cnt, trigger] = [1, s:opening]
+    endif
+
     " try to select pair
-    silent! execute 'normal! va' . s:opening
+    silent! execute 'normal! v' . cnt . 'a' . trigger
     let [el, ec] = getpos('.')[1:2]
     silent! normal! o
     let [sl, sc] = getpos('.')[1:2]
@@ -773,45 +734,27 @@ function! s:seekselectp(...)
         let [cnt, opening, closing, trigger] = [a:1, s:opening, s:closing, s:closing]
     endif
 
-    " try to select around cursor
-    silent! execute 'normal! v' . cnt . 'a' . trigger
-    let [el, ec] = getpos('.')[1:2]
-    silent! normal! o
-    let [sl, sc] = getpos('.')[1:2]
-    silent! normal! v
+    let min = line('w0')
+    let max = line('w$')
+    let oldpos = getpos('.')
 
-    if sc != ec || sl != el
-        " found target around cursor
-        let cnt = 1
-        return targets#target#fromValues(sl, sc, el, ec)
+    let around = s:selectp(cnt, trigger)
+
+    if cnt > 1 " don't seek with count
+        return around
     endif
 
-    if cnt > 1
-        return targets#target#withError('seekselectp count')
-    endif
-    let cnt = 1
+    call setpos('.', oldpos)
 
-    let [sl, sc] = searchpos(opening, '', line('.'))
-    if sc > 0 " found opening to the right in line
-        return s:selectp()
-    endif
+    call s:lastp(cnt)
+    let last = s:selectp()
 
-    let [sl, sc] = searchpos(closing, 'b', line('.'))
-    if sc > 0 " found closing to the left in line
-        return s:selectp()
-    endif
+    call setpos('.', oldpos)
 
-    let [sl, sc] = searchpos(opening, 'W')
-    if sc > 0 " found opening to the right
-        return s:selectp()
-    endif
+    call s:nextp(cnt)
+    let next = s:selectp()
 
-    let [sl, sc] = searchpos(closing, 'Wb')
-    if sc > 0 " found closing to the left
-        return s:selectp()
-    endif
-
-    return targets#target#withError('seekselectp')
+    return s:bestSeekTarget([around, next, last], oldpos, min, max, 'seekselectp')
 endfunction
 
 " tag pair matcher (works across multiple lines, supports seeking)
@@ -943,44 +886,33 @@ function! s:seekselecta(count)
         return s:selecta('^')
     endif
 
-    let target = s:selecta('>')
-    if target.state().isValid()
-        return target
+    let min = line('w0')
+    let max = line('w$')
+    let oldpos = getpos('.')
+
+    let around = s:selecta('>')
+
+    if a:count > 1 " don't seek with count
+        return around
     endif
 
-    " TODO: get next and last and select best one instead of trying with
-    " restrictions
+    call setpos('.', oldpos)
 
-    let target = s:nextselecta(a:count, line('.'))
-    if target.state().isValid()
-        return target
-    endif
+    let last = s:lastselecta()
 
-    let target = s:lastselecta(a:count, line('.'))
-    if target.state().isValid()
-        return target
-    endif
+    call setpos('.', oldpos)
 
-    let target = s:nextselecta(a:count)
-    if target.state().isValid()
-        return target
-    endif
+    let next = s:nextselecta()
 
-    let target = s:lastselecta(a:count)
-    if target.state().isValid()
-        return target
-    endif
-
-    return targets#target#withError('seekselecta seek')
+    return s:bestSeekTarget([around, next, last], oldpos, min, max, 'seekselecta')
 endfunction
 
 " try to select a next argument, supports count and optional stopline
-" args (count, stopline=0)
+" args (count=1, stopline=0)
 function! s:nextselecta(...)
+    let [cnt, stopline] = [a:0 > 0 ? a:1 : 1, a:0 > 1 ? a:2 : 0]
     call s:prepareNext()
 
-    let cnt = a:1
-    let stopline = a:0 > 1 ? a:2 : 0
     if s:search(cnt, s:argOpeningS, 'W', stopline) > 0 " no start found
         return targets#target#withError('nextselecta 1')
     endif
@@ -1010,8 +942,10 @@ function! s:nextselecta(...)
 endfunction
 
 " try to select a last argument, supports count and optional stopline
-" args (count, stopline=0)
+" args (count=1, stopline=0)
 function! s:lastselecta(...)
+    let [cnt, stopline] = [a:0 > 0 ? a:1 : 1, a:0 > 1 ? a:2 : 0]
+
     call s:prepareLast()
 
     " special case to handle vala when invoked on a separator
@@ -1023,8 +957,6 @@ function! s:lastselecta(...)
         endif
     endif
 
-    let cnt = a:1
-    let stopline = a:0 > 1 ? a:2 : 0
     if s:search(cnt, s:argClosingS, 'bW', stopline) > 0 " no start found
         return targets#target#withError('lastselecta 1')
     endif
@@ -1051,6 +983,79 @@ function! s:lastselecta(...)
     endif
 
     return targets#target#withError('lastselecta 4')
+endfunction
+
+" select best of given targets according to s:rangeScores
+" detects for each given target what range type it has, depending on the
+" relative positions of the start and end of the target relative to the cursor
+" position and the currently visible lines
+
+" The possibly relative positions are:
+"   l - left of cursor in current line
+"   r - right of cursor in current line
+"   a - above cursor on screen
+"   b - below cursor on screen
+"   A - above cursor off screen
+"   B - below cursor off screen
+
+" All possibly ranges are listed below, denoted by two characters: one for the
+" relative start and for the relative end position each of the target. For
+" example, `lr` means "from left of cursor to right of cursor in cursor line".
+
+" Next to each range type is a pictogram of an example. They are made of these
+" symbols:
+"    .  - current cursor position
+"   ( ) - start and end of target
+"    /  - line break before and after cursor line
+"    |  - screen edge between hidden and visible lines
+
+" ranges around cursor:
+"   lr   |  / (.) /  |   around cursor, current line
+"   lb   |  / (.  /) |   around cursor, multiline down, on screen
+"   ar   | (/  .) /  |   around cursor, multiline up, on screen
+"   ab   | (/  .  /) |   around cursor, multiline both, on screen
+"   lB   |  / (.  /  |)  around cursor, multiline down, partially off screen
+"   Ar  (|  /  .) /  |   around cursor, multiline up, partially off screen
+"   aB   | (/  .  /  |)  around cursor, multiline both, partially off screen bottom
+"   Ab  (|  /  .  /) |   around cursor, multiline both, partially off screen top
+"   AB  (|  /  .  /  |)  around cursor, multiline both, partially off screen both
+
+" ranges after (right of/below) cursor
+"   rr   |  /  .()/  |   after cursor, current line
+"   rb   |  /  .( /) |   after cursor, multiline, on screen
+"   rB   |  /  .( /  |)  after cursor, multiline, partially off screen
+"   bb   |  /  .  /()|   after cursor below, on screen
+"   bB   |  /  .  /( |)  after cursor below, partially off screen
+"   BB   |  /  .  /  |() after cursor below, off screen
+
+" ranges before (left of/above) cursor
+"   ll   |  /().  /  |   before cursor, current line
+"   al   | (/ ).  /  |   before cursor, multiline, on screen
+"   Al  (|  / ).  /  |   before cursor, multiline, partially off screen
+"   aa   |()/  .  /  |   before cursor above, on screen
+"   Aa  (| )/  .  /  |   before cursor above, partially off screen
+"   AA ()|  /  .  /  |   before cursor above, off screen
+
+"     A  a  l r  b  B  relative positions
+"      └───────────┘   visible screen
+"         └─────┘      current line
+
+function! s:bestSeekTarget(targets, oldpos, min, max, message)
+    let bestScore = 0
+    for target in a:targets
+        let range = target.range(a:oldpos, a:min, a:max)
+        let score = get(s:rangeScores, range)
+        if bestScore < score
+            let bestScore = score
+            let best = target
+        endif
+    endfor
+
+    if bestScore > 0
+        return best
+    endif
+
+    return targets#target#withError(a:message)
 endfunction
 
 " selection modifiers
