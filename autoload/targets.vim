@@ -39,7 +39,7 @@ function! targets#o(trigger, count)
     if target.state().isInvalid()
         return s:cleanUp()
     endif
-    call s:handleTarget(target)
+    call s:handleTarget(target, rawTarget)
     call s:clearCommandLine()
     call s:prepareRepeat(delimiter, which, modifier)
     call s:cleanUp()
@@ -84,7 +84,7 @@ function! targets#x(trigger, count)
         call s:abortMatch('#x')
         return s:cleanUp()
     endif
-    if s:handleTarget(target) == 0
+    if s:handleTarget(target, rawTarget) == 0
         let s:lastTrigger = a:trigger
         let s:lastRawTarget = rawTarget
         let s:lastTarget = target
@@ -413,23 +413,33 @@ function! s:clearCommandLine()
 endfunction
 
 " handle the match by either selecting or aborting it
-function! s:handleTarget(target)
+function! s:handleTarget(target, rawTarget)
     if a:target.state().isInvalid()
         return s:abortMatch('handleTarget')
     elseif a:target.state().isEmpty()
         return s:handleEmptyMatch(a:target)
     else
-        return s:selectTarget(a:target)
+        return s:selectTarget(a:target, a:rawTarget)
     endif
 endfunction
 
 " select a proper match
-function! s:selectTarget(target)
+function! s:selectTarget(target, rawTarget)
     " add old position to jump list
-    call setpos('.', s:oldpos)
-    normal! m'
+    if s:addToJumplist(a:rawTarget)
+        call setpos('.', s:oldpos)
+        normal! m'
+    endif
 
     call s:selectRegion(a:target)
+endfunction
+
+function! s:addToJumplist(target)
+    if !g:targets_addJumplist
+        return 0
+    else
+        return g:targets_addJumplist - a:target.contains(s:oldpos)
+    endif
 endfunction
 
 " visually select a given match. used for match or old selection
@@ -709,7 +719,7 @@ function! s:selectp(...)
     endif
 
     " try to select pair
-    silent! execute 'normal! v' . cnt . 'a' . trigger
+    silent! execute 'keepjumps normal! v' . cnt . 'a' . trigger
     let [el, ec] = getpos('.')[1:2]
     silent! normal! o
     let [sl, sc] = getpos('.')[1:2]
@@ -860,7 +870,7 @@ function! s:findArgBoundary(...)
                 endif
                 break
             elseif char =~# skip
-                silent! normal! %
+                silent! keepjumps normal! %
             else
                 return [0, 0, s:fail('findArgBoundary 2')]
             endif

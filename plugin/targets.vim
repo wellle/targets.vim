@@ -253,6 +253,9 @@ function! s:loadSettings()
     if !exists('g:targets_argSeparator')
         let g:targets_argSeparator = ','
     endif
+    if !exists('g:targets_addJumplist')
+        let g:targets_addJumplist = 2
+    endif
 
     let [s:a, s:i, s:A, s:I] = split(g:targets_aiAI, '\zs')
     let [s:n, s:l, s:N, s:L] = split(g:targets_nlNL, '\zs')
