@@ -510,6 +510,7 @@ Available options: ~
     |g:targets_argClosing|
     |g:targets_argSeparator|
     |g:targets_seekRanges|
+    |g:targets_addJumplist|
 
 ------------------------------------------------------------------------------
                                                               *g:targets_aiAI*
@@ -696,6 +697,27 @@ Only consider targets around cursor:
 
 Only consider targets fully contained in current line:
     let g:targets_seekRanges = 'lr rr ll' ~
+
+                                                      *g:targets_addJumplist*
+
+Default:
+    let g:targets_addJumplist = 2 ~
+
+Controls whether or not to add the cursor position prior to selecting the text
+object to the jumplist. The possible settings are:
+
+Always adds to the jumplist:
+    let g:targets_addJumplist = 2 ~
+
+Adds to the jumplist if the old cursor position was not inside the "around"
+version of the text object being used. For example, if the cursor is on an open
+parenthesis and the command `yi(` is issued then the old cursor position will
+not be added to the jump list because the opening parenthesis is contained in
+the `a(` text object:
+    let g:targets_addJumplist = 1 ~
+
+Never add to the jumplist:
+    let g:targets_addJumplist = 0 ~
 
 ==============================================================================
 NOTES                                                          *targets-notes*

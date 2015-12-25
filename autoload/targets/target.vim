@@ -23,6 +23,7 @@ function! targets#target#new(sl, sc, el, ec, error)
         \ 'state': function('targets#target#state'),
         \ 'range': function('targets#target#range'),
         \ 'select': function('targets#target#select'),
+        \ 'contains': function('targets#target#contains'),
         \ 'echom': function('targets#target#echom')
         \ }
 endfunction
@@ -172,6 +173,17 @@ function! targets#target#select() dict
     endif
 
     call cursor(self.e())
+endfunction
+
+function! targets#target#contains(cursor) dict
+    let cursorLine = a:cursor[1]
+    let cursorColumn = a:cursor[2]
+
+    if self.sl == self.el
+        return self.sc <= cursorColumn && cursorColumn <= self.ec && self.sl == cursorLine
+    else
+        return self.sl <= cursorLine && cursorLine <= self.el
+    endif
 endfunction
 
 function! targets#target#echom() dict

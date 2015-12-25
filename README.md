@@ -482,6 +482,7 @@ g:targets_argOpening
 g:targets_argClosing
 g:targets_argSeparator
 g:targets_seekRanges
+g:targets_addJumplist
 ```
 
 ### g:targets_aiAI
@@ -665,6 +666,21 @@ let g:targets_seekRanges = 'lr rr ll'
 
 If you want to build your own, or are just curious what those cryptic letters
 mean, check out the full documentation in our [Cheat Sheet][cheatsheet].
+
+### g:targets_addJumplist
+
+Default:
+
+```vim
+let g:targets_addJumplist = 2
+```
+
+Controls whether or not to add the cursor position prior to selecting the text
+object to the jumplist. The settings are:
+
+- 2 - Always adds to the jumplist.
+- 1 - Only add to the jumplist if the cursor was not inside the text object.
+- 0 - Never add to the jump list.
 
 ## Notes
 
