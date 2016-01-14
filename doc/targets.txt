@@ -609,7 +609,7 @@ also want to find arguments separatode by semicolon, use this:
                                                         *g:targets_seekRanges*
 
 Default:
-    let g:targets_seekRanges = 'lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA' ~
+    let g:targets_seekRanges = 'cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA' ~
 
 Defines a priority ordered, space separated list of range types which can be
 used to customize seeking behavior. When using a command like `cib` to change
@@ -678,24 +678,25 @@ in `g:targets_seekRanges`. If none is found, the selection fails.
 
 The default setting generally prefers targets around the cursor, with one
 exception: If the target around the cursor is not contained in the current
-cursor line, but the next or last target are, then prefer those.
+cursor line, but the next or last target are, then prefer those. Targets
+beginning or ending on the cursor are preferred over everything else.
 
 Some other useful example settings (or build your own!):
 
 Never seek backwards:
-    let g:targets_seekRanges = 'lr rr lb ar ab lB Ar aB Ab AB rb rB bb bB BB' ~
+    let g:targets_seekRanges = 'cr cb cB lc ac Ac lr rr lb ar ab lB Ar aB Ab AB rb rB bb bB BB' ~
 
 Only seek if next/last targets touch current line:
-    let g:targets_seekRanges = 'lr rr ll lb ar ab lB Ar aB Ab AB rb rB al Al' ~
+    let g:targets_seekRanges = 'cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb rB al Al' ~
 
 Only consider targets fully visible on screen:
-    let g:targets_seekRanges = 'lr lb ar ab rr rb bb ll al aa' ~
+    let g:targets_seekRanges = 'cr cb cB lc ac Ac lr lb ar ab rr rb bb ll al aa' ~
 
 Only consider targets around cursor:
-    let g:targets_seekRanges = 'lr lb ar ab lB Ar aB Ab AB' ~
+    let g:targets_seekRanges = 'cr cb cB lc ac Ac lr lb ar ab lB Ar aB Ab AB' ~
 
 Only consider targets fully contained in current line:
-    let g:targets_seekRanges = 'lr rr ll' ~
+    let g:targets_seekRanges = 'cr cb cB lc ac Ac lr rr ll' ~
 
 ==============================================================================
 NOTES                                                          *targets-notes*
