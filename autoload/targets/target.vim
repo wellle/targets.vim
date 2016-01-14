@@ -127,8 +127,8 @@ function! targets#target#range(cursor, min, max) dict
         return ''
     endif
 
-    let positionS = s:position(self.sl, self.sc, a:cursor, a:min, a:max, 'l')
-    let positionE = s:position(self.el, self.ec, a:cursor, a:min, a:max, 'r')
+    let positionS = s:position(self.sl, self.sc, a:cursor, a:min, a:max, 'c')
+    let positionE = s:position(self.el, self.ec, a:cursor, a:min, a:max, 'c')
     return positionS . positionE
 endfunction
 

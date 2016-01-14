@@ -18,7 +18,7 @@ function! s:setup()
 
     let s:rangeScores = {}
     if !exists('g:targets_seekRanges')
-        let g:targets_seekRanges = 'lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA'
+        let g:targets_seekRanges = 'cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA'
     endif
     let ranges = split(g:targets_seekRanges)
     let rangesN = len(ranges)
@@ -659,7 +659,8 @@ function! s:select(direction)
         return targets#target#withError(message)
     endif
 
-    return targets#target#fromValues(sl, sc, el, ec)
+    let target = targets#target#fromValues(sl, sc, el, ec)
+    return target
 endfunction
 
 " TODO: inject direction and return proper target
@@ -991,6 +992,7 @@ endfunction
 " position and the currently visible lines
 
 " The possibly relative positions are:
+"   c - on cursor position
 "   l - left of cursor in current line
 "   r - right of cursor in current line
 "   a - above cursor on screen
@@ -1008,6 +1010,14 @@ endfunction
 "   ( ) - start and end of target
 "    /  - line break before and after cursor line
 "    |  - screen edge between hidden and visible lines
+
+" ranges on cursor:
+"   cr   |  /  () /  |   starting on cursor, current line
+"   cb   |  /  (  /) |   starting on cursor, multiline down, on screen
+"   cB   |  /  (  /  |)  starting on cursor, multiline down, partially off screen
+"   lc   |  / ()  /  |   ending on cursor, current line
+"   ac   | (/  )  /  |   ending on cursor, multiline up, on screen
+"   Ac  (|  /  )  /  |   ending on cursor, multiline up, partially off screen
 
 " ranges around cursor:
 "   lr   |  / (.) /  |   around cursor, current line
