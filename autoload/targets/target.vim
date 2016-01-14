@@ -23,7 +23,7 @@ function! targets#target#new(sl, sc, el, ec, error)
         \ 'state': function('targets#target#state'),
         \ 'range': function('targets#target#range'),
         \ 'select': function('targets#target#select'),
-        \ 'echom': function('targets#target#echom')
+        \ 'string': function('targets#target#string')
         \ }
 endfunction
 
@@ -174,6 +174,10 @@ function! targets#target#select() dict
     call cursor(self.e())
 endfunction
 
-function! targets#target#echom() dict
-    echom '[' . self.sl self.sc . '; ' . self.el self.ec . ']'
+function! targets#target#string() dict
+    if self.error != ''
+        return '[err:' . self.error . ']'
+    endif
+
+    return '[' . self.sl . ' ' . self.sc . '; ' . self.el . ' ' . self.ec . ']'
 endfunction
