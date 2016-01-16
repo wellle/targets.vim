@@ -578,6 +578,95 @@ function! s:quote()
     endif
 endfunction
 
+" returns [direction, error]
+function! s:quoteDir()
+    let oldpos = getpos('.')
+    let [direction, error] = s:quoteDirInternal(oldpos[2])
+    call setpos('.', oldpos)
+    return [direction, error]
+endfunction
+
+" doesn't restore old position
+"    .    () rep
+"         --1 good multiline around if final
+"   (     b-0 good multiline below single if final
+"    (    o-0 good multiline below single on if final
+"     (   a-0 good multiline above if final
+" ( )     bb1 bad after last if final
+"  ( )    bo1 good end on cursor select to left
+"   ( )   ba1 good around cursor select around
+"    ( )  oa1 good start on cursor select to right
+"     ( ) aa1 bad before first
+" ) (     bb0 good multiline below multi if final
+"  ) (    ob0 good multiline below multi on if final
+"   ) (   ab0 bad between pairs
+function! s:quoteDirInternal(oldcolumn)
+    let column = 0
+    let positions = ['-', '-']
+    let index = 1 " write into opening first (will be toggled first)
+
+    silent! normal! 0
+    let [_, column] = searchpos(s:opening, 'c', line('.'))
+    while column != 0
+        let index = !index " 0 <-> 1
+        if column < a:oldcolumn
+            let positions[index] = 'b' " before
+        elseif column == a:oldcolumn
+            let positions[index] = 'o' " on
+        else
+            let positions[index] = 'a' " after
+        endif
+
+        let rep = positions[0] . positions[1] . index
+        if rep == 'bo1'
+            call s:debug('good end on cursor select to left')
+            return ['<', '']
+        elseif rep == 'ba1'
+            call s:debug('good around cursor select around')
+            return ['>', '']
+        elseif rep == 'oa1'
+            call s:debug('good start on cursor select to right')
+            return ['>', '']
+        elseif rep == 'aa1'
+            call s:debug('bad before first')
+            return ['', '']
+        elseif rep == 'ab0'
+            call s:debug('bad between pairs')
+            return ['', '']
+        else
+            " call s:debug('not final ' . rep)
+        endif
+
+        let [_, column] = searchpos(s:opening, '', line('.'))
+    endwhile
+
+    let rep = positions[0] . positions[1] . index
+    if rep == '--1'
+        call s:debug('good multiline around')
+        return ['>', '']
+    elseif rep == 'b-0'
+        call s:debug('good multiline below single')
+        return ['>', '']
+    elseif rep == 'o-0'
+        call s:debug('good multiline below single on')
+        return ['>', '']
+    elseif rep == 'a-0'
+        call s:debug('good multiline above')
+        return ['<', '']
+    elseif rep == 'bb1'
+        call s:debug('bad after last')
+        return ['', '']
+    elseif rep == 'bb0'
+        call s:debug('good multiline below multi')
+        return ['>', '']
+    elseif rep == 'ob0'
+        call s:debug('good multiline below multi on')
+        return ['>', '']
+    else
+        return ['', 'quoteDir not found ' . rep]
+    endif
+endfunction
+
 " find `count` next delimiter (multi line)
 " in   │     ...
 " line │  '  '  '  '
