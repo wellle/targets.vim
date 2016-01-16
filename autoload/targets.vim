@@ -158,10 +158,10 @@ function! s:findRawTarget(kind, which, count)
         if a:which ==# 'c'
             return s:seekselectp(a:count + s:grow())
         elseif a:which ==# 'n'
-            call s:nextp(a:count)
+            call s:search(a:count, s:opening, 'W')
             return s:selectp()
         elseif a:which ==# 'l'
-            call s:lastp(a:count)
+            call s:search(a:count, s:closing, 'bW')
             return s:selectp()
         else
             return targets#target#withError('findRawTarget p')
@@ -199,12 +199,12 @@ function! s:findRawTarget(kind, which, count)
 
     elseif a:kind ==# 't'
         if a:which ==# 'c'
-            return s:seekselectt(a:count + s:grow())
+            return s:seekselectp(a:count + s:grow(), '<\a', '</\a', 't')
         elseif a:which ==# 'n'
-            call s:nextt(a:count)
+            call s:search(a:count, '<\a', 'W')
             return s:selectp()
         elseif a:which ==# 'l'
-            call s:lastt(a:count)
+            call s:search(a:count, '</\a\zs', 'bW')
             return s:selectp()
         else
             return targets#target#withError('findRawTarget t')
@@ -331,7 +331,7 @@ endfunction
 function! s:getRawDelimiters(trigger)
     " check more specific ones first for #145
     if a:trigger ==# g:targets_tagTrigger
-        return ['t', 't', 0, 0] " TODO: set tag patterns here and remove special tag functions?
+        return ['t', 't', 0, 0]
     elseif a:trigger ==# g:targets_argTrigger
         return ['a', 0, 0, 0]
     endif
@@ -652,38 +652,6 @@ function! s:lastselect(count)
     return s:select('<')
 endfunction
 
-" find `count` next opening delimiter (multi line)
-" in   │ ....
-" line │ ( ) ( ) ( ( ) ) ( )
-" out  │     1   2 3     4
-function! s:nextp(count)
-    return s:search(a:count, s:opening, 'W')
-endfunction
-
-" find `count` last closing delimiter (multi line)
-" in   │               ....
-" line │ ( ) ( ) ( ( ) ) ( )
-" out  │   4   3     2 1
-function! s:lastp(count)
-    return s:search(a:count, s:closing, 'bW')
-endfunction
-
-" find `count` next opening tag delimiter (multi line)
-" in   │ .........
-" line │ <a> </a> <b> </b> <c> <d> </d> </c> <e> </e>
-" out  │          1        2   3             4
-function! s:nextt(count)
-    return s:search(a:count, '<\a', 'W')
-endfunction
-
-" find `count` last closing tag delimiter (multi line)
-" in   │                                    .........
-" line │ <a> </a> <b> </b> <c> <d> </d> </c> <e> </e>
-" out  │     4        3            2    1
-function! s:lastt(count)
-    return s:search(a:count, '</\a\zs', 'bW')
-endfunction
-
 " match selectors
 " ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
@@ -798,20 +766,15 @@ function! s:seekselectp(...)
 
     call setpos('.', oldpos)
 
-    call s:lastp(cnt)
+    call s:search(cnt, s:closing, 'bW')
     let last = s:selectp()
 
     call setpos('.', oldpos)
 
-    call s:nextp(cnt)
+    call s:search(cnt, s:opening, 'W')
     let next = s:selectp()
 
     return s:bestSeekTarget([around, next, last], oldpos, min, max, 'seekselectp')
-endfunction
-
-" tag pair matcher (works across multiple lines, supports seeking)
-function! s:seekselectt(count)
-    return s:seekselectp(a:count, '<\a', '</\a', 't')
 endfunction
 
 " select an argument around the cursor
