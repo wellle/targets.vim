@@ -659,7 +659,9 @@ endfunction
 function! s:select(direction)
     let oldpos = getpos('.')
 
-    if a:direction ==# '>'
+    if a:direction ==# ''
+        return targets#target#withError('select without direction')
+    elseif a:direction ==# '>'
         let [sl, sc, el, ec, err] = s:findSeparators('bcW', 'W', s:opening, s:closing)
         let message = 'select 1'
     else
