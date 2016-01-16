@@ -573,31 +573,34 @@ function! s:quote()
     endif
 endfunction
 
-" returns [direction, error]
+" returns [direction, skip, error]
 function! s:quoteDir()
     let oldpos = getpos('.')
-    let [direction, error] = s:quoteDirInternal(oldpos[2])
+    let [direction, skipL, skipR, error, rep] = s:quoteDirInternal(oldpos[2])
+
     call setpos('.', oldpos)
-    return [direction, error]
+    return [direction, skipL, skipR, error]
 endfunction
 
 " doesn't restore old position
-"    .    () rep
-"         --1 good multiline around if final
-"   (     b-0 good multiline below single if final
-"    (    o-0 good multiline below single on if final
-"     (   a-0 good multiline above if final
-" ( )     bb1 bad after last if final
-"  ( )    bo1 good end on cursor select to left
-"   ( )   ba1 good around cursor select around
-"    ( )  oa1 good start on cursor select to right
-"     ( ) aa1 bad before first
-" ) (     bb0 good multiline below multi if final
-"  ) (    ob0 good multiline below multi on if final
-"   ) (   ab0 bad between pairs
+" cursor  rep dir skips description
+"    .    ()
+"         xx1  >   0 0  good multiline around if final
+"   (     bx0  >   0 0  good multiline below single if final
+"    (    ox0  >   0 0  good multiline below single on if final
+"     (   ax0  <   0 0  good multiline above if final
+" ( )     bb1           bad after last if final
+"  ( )    bo1  <   1 0  good end on cursor select to left
+"   ( )   ba1  >   1 1  good around cursor select around
+"    ( )  oa1  >   0 1  good start on cursor select to right
+"     ( ) aa1           bad before first
+" ) (     bb0  >   1 0  good multiline below multi if final
+"  ) (    ob0  >   0 0  good multiline below multi on if final
+"   ) (   ab0           bad between pairs
+" returns [dir, skipL, skipR, error, rep]
 function! s:quoteDirInternal(oldcolumn)
     let column = 0
-    let positions = ['-', '-']
+    let positions = ['x', 'x']
     let index = 1 " write into opening first (will be toggled first)
 
     silent! normal! 0
@@ -615,19 +618,19 @@ function! s:quoteDirInternal(oldcolumn)
         let rep = positions[0] . positions[1] . index
         if rep == 'bo1'
             call s:debug('good end on cursor select to left')
-            return ['<', '']
+            return ['<', 1, 0, '', rep]
         elseif rep == 'ba1'
             call s:debug('good around cursor select around')
-            return ['>', '']
+            return ['>', 1, 1, '', rep]
         elseif rep == 'oa1'
             call s:debug('good start on cursor select to right')
-            return ['>', '']
+            return ['>', 0, 1, '', rep]
         elseif rep == 'aa1'
             call s:debug('bad before first')
-            return ['', '']
+            return ['', 0, 0, '', rep]
         elseif rep == 'ab0'
             call s:debug('bad between pairs')
-            return ['', '']
+            return ['', 0, 0, '', rep]
         else
             " call s:debug('not final ' . rep)
         endif
@@ -636,29 +639,29 @@ function! s:quoteDirInternal(oldcolumn)
     endwhile
 
     let rep = positions[0] . positions[1] . index
-    if rep == '--1'
+    if rep == 'xx1'
         call s:debug('good multiline around')
-        return ['>', '']
-    elseif rep == 'b-0'
+        return ['>', 0, 0, '', rep]
+    elseif rep == 'bx0'
         call s:debug('good multiline below single')
-        return ['>', '']
-    elseif rep == 'o-0'
+        return ['>', 0, 0, '', rep]
+    elseif rep == 'ox0'
         call s:debug('good multiline below single on')
-        return ['>', '']
-    elseif rep == 'a-0'
+        return ['>', 0, 0, '', rep]
+    elseif rep == 'ax0'
         call s:debug('good multiline above')
-        return ['<', '']
+        return ['<', 0, 0, '', rep]
     elseif rep == 'bb1'
         call s:debug('bad after last')
-        return ['', '']
+        return ['', 0, 0, '', rep]
     elseif rep == 'bb0'
         call s:debug('good multiline below multi')
-        return ['>', '']
+        return ['>', 1, 0, '', rep]
     elseif rep == 'ob0'
         call s:debug('good multiline below multi on')
-        return ['>', '']
+        return ['>', 0, 0, '', rep]
     else
-        return ['', 'quoteDir not found ' . rep]
+        return ['', 0, 0, 'quoteDir not found ' . rep]
     endif
 endfunction
 
