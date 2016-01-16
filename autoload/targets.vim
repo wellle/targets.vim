@@ -716,11 +716,8 @@ endfunction
 " select a pair around the cursor
 " args (count=1, trigger=s:opening)
 function! s:selectp(...)
-    if a:0 == 2
-        let [cnt, trigger] = [a:1, a:2]
-    else
-        let [cnt, trigger] = [1, s:opening]
-    endif
+    let cnt     = a:0 >= 1 ? a:1 : 1
+    let trigger = a:0 >= 2 ? a:2 : s:opening
 
     " try to select pair
     silent! execute 'keepjumps normal! v' . cnt . 'a' . trigger
@@ -743,11 +740,10 @@ endfunction
 "          │ └── 2 ──┘
 " args (count, opening=s:opening, closing=s:closing, trigger=s:closing)
 function! s:seekselectp(...)
-    if a:0 == 4
-        let [cnt, opening, closing, trigger] = [a:1, a:2, a:3, a:4]
-    else
-        let [cnt, opening, closing, trigger] = [a:1, s:opening, s:closing, s:closing]
-    endif
+    let cnt     =            a:1 " required
+    let opening = a:0 >= 2 ? a:2 : s:opening
+    let closing = a:0 >= 3 ? a:3 : s:closing
+    let trigger = a:0 >= 4 ? a:4 : s:closing
 
     let min = line('w0')
     let max = line('w$')
@@ -843,12 +839,13 @@ endfunction
 " separator=g:targets_argSeparator, cnt=2)
 " return (line, column, err)
 function! s:findArgBoundary(...)
-    let [flags1, flags2, skip, finish] = [a:1, a:2, a:3, a:4]
-    if a:0 == 7
-        let [all, separator, cnt] = [a:5, a:6, a:7]
-    else
-        let [all, separator, cnt] = [s:argAll, g:targets_argSeparator, 1]
-    endif
+    let flags1    =            a:1 " required
+    let flags2    =            a:2
+    let skip      =            a:3
+    let finish    =            a:4
+    let all       = a:0 >= 5 ? a:5 : s:argAll
+    let separator = a:0 >= 6 ? a:6 : g:targets_argSeparator
+    let cnt       = a:0 >= 7 ? a:7 : 1
 
     let tl = 0
     for _ in range(cnt)
@@ -920,7 +917,8 @@ endfunction
 " try to select a next argument, supports count and optional stopline
 " args (count=1, stopline=0)
 function! s:nextselecta(...)
-    let [cnt, stopline] = [a:0 > 0 ? a:1 : 1, a:0 > 1 ? a:2 : 0]
+    let cnt      = a:0 >= 1 ? a:1 : 1
+    let stopline = a:0 >= 2 ? a:2 : 0
 
     if s:search(cnt, s:argOpeningS, 'W', stopline) > 0 " no start found
         return targets#target#withError('nextselecta 1')
@@ -953,7 +951,8 @@ endfunction
 " try to select a last argument, supports count and optional stopline
 " args (count=1, stopline=0)
 function! s:lastselecta(...)
-    let [cnt, stopline] = [a:0 > 0 ? a:1 : 1, a:0 > 1 ? a:2 : 0]
+    let cnt      = a:0 >= 1 ? a:1 : 1
+    let stopline = a:0 >= 2 ? a:2 : 0
 
     " special case to handle vala when invoked on a separator
     let separator = g:targets_argSeparator
@@ -1241,12 +1240,10 @@ endfunction
 " search for pattern using flags and a count, optional stopline
 " args (cnt, pattern, flags, stopline=0)
 function! s:search(...)
-    let [cnt, pattern, flags] = [a:1, a:2, a:3]
-    if a:0 == 4
-        let stopline = a:4
-    elseif a:0 == 3
-        let stopline = 0
-    endif
+    let cnt      =            a:1 " required
+    let pattern  =            a:2
+    let flags    =            a:3
+    let stopline = a:0 >= 4 ? a:4 : 0
 
     for _ in range(cnt)
         let line = searchpos(pattern, flags, stopline)[0]
@@ -1259,11 +1256,9 @@ endfunction
 " return 1 and send a message to s:debug
 " args (message, parameters=nil)
 function! s:fail(...)
-    if a:0 == 2
-        call s:debug('fail ' . a:1 . ' ' . string(a:2))
-    else
-        call s:debug('fail ' . a:1)
-    endif
+    let message = 'fail ' . a:1
+    let message .= a:0 >= 2 ? ' ' . string(a:2) : ''
+    call s:debug(message)
     return 1
 endfunction
 
