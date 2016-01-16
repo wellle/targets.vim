@@ -167,7 +167,7 @@ function! s:findRawTarget(kind, which, count)
     elseif a:kind ==# 'q'
         if a:which ==# 'c'
             call s:quote()
-            return s:seekselect()
+            return s:seekselect('>', 0, 0)
         elseif a:which ==# 'n'
             call s:quote()
             return s:nextselect(a:count)
@@ -186,7 +186,7 @@ function! s:findRawTarget(kind, which, count)
 
     elseif a:kind ==# 's'
         if a:which ==# 'c'
-            return s:seekselect()
+            return s:seekselect('>', 0, 0)
         elseif a:which ==# 'n'
             return s:nextselect(a:count)
         elseif a:which ==# 'l'
@@ -788,20 +788,20 @@ function! s:findSeparators(flags1, flags2, opening, closing)
 endfunction
 
 " select pair of delimiters around cursor (multi line, supports seeking)
-function! s:seekselect()
+function! s:seekselect(dir, skipL, skipR)
     let min = line('w0')
     let max = line('w$')
     let oldpos = getpos('.')
 
-    let around = s:select('>')
+    let around = s:select(a:dir)
 
     call setpos('.', oldpos)
 
-    let last = s:lastselect()
+    let last = s:lastselect(1 + a:skipL)
 
     call setpos('.', oldpos)
 
-    let next = s:nextselect()
+    let next = s:nextselect(1 + a:skipR)
 
     return s:bestSeekTarget([around, next, last], oldpos, min, max, 'seekselect')
 endfunction
