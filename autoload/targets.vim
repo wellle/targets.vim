@@ -90,7 +90,6 @@ function! targets#x(trigger, count)
     endif
     if s:handleTarget(target, rawTarget) == 0
         let s:lastTrigger = a:trigger
-        let s:lastRawTarget = rawTarget
         let s:lastTarget = target
     endif
     call s:cleanUp()
@@ -164,8 +163,6 @@ function! s:findRawTarget(kind, which, count)
             return targets#target#withError('findRawTarget p')
         endif
 
-    " TODO: there is something wrong when skipping to the right from the first
-    " quote on a line
     elseif a:kind ==# 'q'
         let [dir, skipL, skipR, error] = s:quoteDir()
         if error !=# ''
@@ -634,40 +631,17 @@ function! s:quoteDirInternal(oldcolumn)
     endif
 endfunction
 
-" find `count` next delimiter (multi line)
-" in   │     ...
-" line │  '  '  '  '
-" out  │        1  2
-" args (count=1)
-function! s:nextselect(...)
-    let cnt = a:0 == 1 ? a:1 : 1
-
-    call s:prepareNext()
-
-    if s:search(cnt, s:opening, 'W') > 0
+function! s:nextselect(count)
+    if s:search(a:count, s:opening, 'W') > 0
         return targets#target#withError('nextselect')
     endif
 
     return s:select('>')
 endfunction
 
-" find `count` last delimiter, move in front of it (multi line)
-" in   │     ...
-" line │  '  '  '  '
-" out  │ 2  1
-" args (count=1)
-function! s:lastselect(...)
-    let cnt = a:0 == 1 ? a:1 : 1
-
-    " if started on closing, but not when skipping
-    if !s:prepareLast() && s:getchar() ==# s:closing
-        let [cnt, message] = [cnt - 1, 'lastselect 1']
-    else
-        let [cnt, message] = [cnt, 'lastselect 2']
-    endif
-
-    if s:search(cnt, s:closing, 'bW') > 0
-        return targets#target#withError(message)
+function! s:lastselect(count)
+    if s:search(a:count, s:closing, 'bW') > 0
+        return targets#target#withError('lastselect')
     endif
 
     return s:select('<')
@@ -678,7 +652,6 @@ endfunction
 " line │ ( ) ( ) ( ( ) ) ( )
 " out  │     1   2 3     4
 function! s:nextp(count)
-    call s:prepareNext()
     return s:search(a:count, s:opening, 'W')
 endfunction
 
@@ -687,7 +660,6 @@ endfunction
 " line │ ( ) ( ) ( ( ) ) ( )
 " out  │   4   3     2 1
 function! s:lastp(count)
-    call s:prepareLast()
     return s:search(a:count, s:closing, 'bW')
 endfunction
 
@@ -696,7 +668,6 @@ endfunction
 " line │ <a> </a> <b> </b> <c> <d> </d> </c> <e> </e>
 " out  │          1        2   3             4
 function! s:nextt(count)
-    call s:prepareNext()
     return s:search(a:count, '<\a', 'W')
 endfunction
 
@@ -705,7 +676,6 @@ endfunction
 " line │ <a> </a> <b> </b> <c> <d> </d> </c> <e> </e>
 " out  │     4        3            2    1
 function! s:lastt(count)
-    call s:prepareLast()
     return s:search(a:count, '</\a\zs', 'bW')
 endfunction
 
@@ -988,7 +958,6 @@ endfunction
 " args (count=1, stopline=0)
 function! s:nextselecta(...)
     let [cnt, stopline] = [a:0 > 0 ? a:1 : 1, a:0 > 1 ? a:2 : 0]
-    call s:prepareNext()
 
     if s:search(cnt, s:argOpeningS, 'W', stopline) > 0 " no start found
         return targets#target#withError('nextselecta 1')
@@ -1022,8 +991,6 @@ endfunction
 " args (count=1, stopline=0)
 function! s:lastselecta(...)
     let [cnt, stopline] = [a:0 > 0 ? a:1 : 1, a:0 > 1 ? a:2 : 0]
-
-    call s:prepareLast()
 
     " special case to handle vala when invoked on a separator
     let separator = g:targets_argSeparator
@@ -1300,36 +1267,7 @@ function! s:grow()
         return 0
     endif
 
-    " move cursor back to last raw end of selection to avoid growing being
-    " confused by last modifiers
-    call s:prepareNext()
-
     return 1
-endfunction
-
-" if in visual mode, move cursor to start of last raw selection
-" also used in s:grow to move to last raw end
-function! s:prepareNext()
-    if s:newSelection
-        return
-    endif
-
-    if s:mapmode ==# 'x' && exists('s:lastRawTarget') && s:lastRawTarget.state().isNonempty()
-        call s:lastRawTarget.cursorS()
-    endif
-endfunction
-
-" if in visual mode, move cursor to end of last raw selection
-" returns whether or not the cursor was moved
-function! s:prepareLast()
-    if s:newSelection
-        return
-    endif
-
-    if s:mapmode ==# 'x' && exists('s:lastRawTarget') && s:lastRawTarget.state().isNonempty()
-        call s:lastRawTarget.cursorE()
-        return 1
-    endif
 endfunction
 
 " returns the character under the cursor
