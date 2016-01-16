@@ -164,22 +164,19 @@ function! s:findRawTarget(kind, which, count)
             return targets#target#withError('findRawTarget p')
         endif
 
+    " TODO: there is something wrong when skipping to the right from the first
+    " quote on a line
     elseif a:kind ==# 'q'
+        let [dir, skipL, skipR, error] = s:quoteDir()
+        if error !=# ''
+            return targets#target#withError('findRawTarget quoteDir')
+        endif
         if a:which ==# 'c'
-            call s:quote()
-            return s:seekselect('>', 0, 0)
+            return s:seekselect(dir, skipL, skipR)
         elseif a:which ==# 'n'
-            call s:quote()
-            return s:nextselect(a:count)
+            return s:nextselect(a:count * 2 + skipR - 1)
         elseif a:which ==# 'l'
-            call s:quote()
-            return s:lastselect(a:count)
-        elseif a:which ==# 'N'
-            call s:quote()
-            return s:nextselect(a:count * 2)
-        elseif a:which ==# 'L'
-            call s:quote()
-            return s:lastselect(a:count * 2)
+            return s:lastselect(a:count * 2 + skipL - 1)
         else
             return targets#target#withError('findRawTarget q')
         endif
