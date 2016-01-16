@@ -200,11 +200,54 @@ function s:testEmpty()
     write! test6.out
 endfunction
 
+function s:testQuotes()
+    edit! test7.in
+    normal gg0
+
+    normal ci"A
+    normal +
+    normal cin"A
+    normal +
+    normal c2in"B
+
+    normal +fx
+    normal ci"D
+    normal +fx
+    normal cin"D
+    normal +fx
+    normal c2in"E
+    normal +fx
+    normal cil"C
+    normal +fx
+    normal c2il"B
+
+    normal +fx
+    normal ci"X
+    normal +fx
+    normal cin"D
+    normal +fx
+    normal c2in"E
+    normal +fx
+    normal cil"C
+    normal +fx
+    normal c2il"B
+
+    normal +fx
+    normal ci"C
+    normal +fx
+    normal cil"C
+    normal +fx
+    normal c2il"B
+
+    write! test7.out
+endfunction
+
 call s:testBasic()
 call s:testMultiline()
 call s:testSeeking()
 call s:testVisual()
 call s:testModifiers()
 call s:testEmpty()
+call s:testQuotes()
 
 quit!
