@@ -168,23 +168,23 @@ function! s:findRawTarget(kind, which, count)
         endif
 
     elseif a:kind ==# 'q'
-        let [dir, skipL, skipR, error] = s:quoteDir()
+        let [dir, rateL, skipL, rateR, skipR, error] = s:quoteDir()
         if error !=# ''
             return targets#target#withError('findRawTarget quoteDir')
         endif
         if a:which ==# 'c'
-            return s:seekselect(dir, skipL, skipR)
+            return s:seekselect(dir, rateL - skipL, rateR - skipR)
         elseif a:which ==# 'n'
-            return s:nextselect(a:count * 2 + skipR - 1)
+            return s:nextselect(a:count * rateR - skipR)
         elseif a:which ==# 'l'
-            return s:lastselect(a:count * 2 + skipL - 1)
+            return s:lastselect(a:count * rateL - skipL)
         else
             return targets#target#withError('findRawTarget q')
         endif
 
     elseif a:kind ==# 's'
         if a:which ==# 'c'
-            return s:seekselect('>', 0, 0)
+            return s:seekselect('>', 1, 1)
         elseif a:which ==# 'n'
             return s:nextselect(a:count)
         elseif a:which ==# 'l'
@@ -544,30 +544,31 @@ function! targets#undo(lastseq)
     endif
 endfunction
 
-" returns [direction, skip, error]
+" returns [direction, rateL, skipL, rateR, skipR, error]
 function! s:quoteDir()
     let oldpos = getpos('.')
-    let [direction, skipL, skipR, error, rep] = s:quoteDirInternal(oldpos[2])
+    let [direction, rateL, skipL, rateR, skipR, error, rep] = s:quoteDirInternal(oldpos[2])
+    echom 'rep' rep 'rateL' rateL 'skipL' skipL 'rateR' rateR 'skipR' skipR
 
     call setpos('.', oldpos)
-    return [direction, skipL, skipR, error]
+    return [direction, rateL, skipL, rateR, skipR, error]
 endfunction
 
 " doesn't restore old position
-" cursor  rep dir skips description
+" cursor  rep dir rates/skips description
 "    .    ()
-"         xx1  >   0 0  good multiline around if final
-"   (     bx0  >   0 0  good multiline below single if final
-"    (    ox0  >   0 0  good multiline below single on if final
-"     (   ax0  <   0 0  good multiline above if final
-" ( )     bb1           bad after last if final
-"  ( )    bo1  <   1 0  good end on cursor select to left
-"   ( )   ba1  >   1 1  good around cursor select around
-"    ( )  oa1  >   0 1  good start on cursor select to right
-"     ( ) aa1           bad before first
-" ) (     bb0  >   1 0  good multiline below multi if final
-"  ) (    ob0  >   0 0  good multiline below multi on if final
-"   ) (   ab0           bad between pairs
+"         xx1  >    1/0 1/0   good multiline around if final
+"   (     bx0  >    1/0 1/0   good multiline below single if final
+"    (    ox0  >    1/1 1/0   good multiline below single on if final
+"     (   ax0  <    1/0 1/0   good multiline above if final
+" ( )     bb1       2/1 2/1   bad after last if final
+"  ( )    bo1  <    2/0 2/1   good end on cursor select to left
+"   ( )   ba1  >    2/0 2/0   good around cursor select around
+"    ( )  oa1  >    2/1 2/0   good start on cursor select to right
+"     ( ) aa1       2/1 2/1   bad before first
+" ) (     bb0  >    2/0 1/0   good multiline below multi if final
+"  ) (    ob0  >    2/1 1/0   good multiline below multi on if final
+"   ) (   ab0       2/1 2/1   bad between pairs
 " returns [dir, skipL, skipR, error, rep]
 function! s:quoteDirInternal(oldcolumn)
     let column = 0
@@ -589,19 +590,19 @@ function! s:quoteDirInternal(oldcolumn)
         let rep = positions[0] . positions[1] . index
         if rep == 'bo1'
             call s:debug('good end on cursor select to left')
-            return ['<', 1, 0, '', rep]
+            return ['<', 2, 0, 2, 1, '', rep]
         elseif rep == 'ba1'
             call s:debug('good around cursor select around')
-            return ['>', 1, 1, '', rep]
+            return ['>', 2, 0, 2, 0, '', rep]
         elseif rep == 'oa1'
             call s:debug('good start on cursor select to right')
-            return ['>', 0, 1, '', rep]
+            return ['>', 2, 1, 2, 0, '', rep]
         elseif rep == 'aa1'
             call s:debug('bad before first')
-            return ['', 0, 0, '', rep]
+            return ['', 2, 1, 2, 1, '', rep]
         elseif rep == 'ab0'
             call s:debug('bad between pairs')
-            return ['', 0, 0, '', rep]
+            return ['', 2, 1, 2, 1, '', rep]
         else
             " call s:debug('not final ' . rep)
         endif
@@ -612,31 +613,32 @@ function! s:quoteDirInternal(oldcolumn)
     let rep = positions[0] . positions[1] . index
     if rep == 'xx1'
         call s:debug('good multiline around')
-        return ['>', 0, 0, '', rep]
+        return ['>', 1, 0, 1, 0, '', rep]
     elseif rep == 'bx0'
         call s:debug('good multiline below single')
-        return ['>', 0, 0, '', rep]
+        return ['>', 1, 0, 1, 0, '', rep]
     elseif rep == 'ox0'
         call s:debug('good multiline below single on')
-        return ['>', 0, 0, '', rep]
+        return ['>', 1, 1, 1, 0, '', rep]
     elseif rep == 'ax0'
         call s:debug('good multiline above')
-        return ['<', 0, 0, '', rep]
+        return ['<', 1, 0, 1, 0, '', rep]
     elseif rep == 'bb1'
         call s:debug('bad after last')
-        return ['', 0, 0, '', rep]
+        return ['', 2, 1, 2, 1, '', rep]
     elseif rep == 'bb0'
         call s:debug('good multiline below multi')
-        return ['>', 1, 0, '', rep]
+        return ['>', 2, 0, 1, 0, '', rep]
     elseif rep == 'ob0'
         call s:debug('good multiline below multi on')
-        return ['>', 0, 0, '', rep]
+        return ['>', 2, 1, 1, 0, '', rep]
     else
-        return ['', 0, 0, 'quoteDir not found ' . rep]
+        return ['', 1, 0, 1, 0, 'quoteDir not found ' . rep]
     endif
 endfunction
 
 function! s:nextselect(count)
+    " echom 'nextselect' a:count
     if s:search(a:count, s:opening, 'W') > 0
         return targets#target#withError('nextselect')
     endif
@@ -645,6 +647,7 @@ function! s:nextselect(count)
 endfunction
 
 function! s:lastselect(count)
+    " echom 'lastselect' a:count
     if s:search(a:count, s:closing, 'bW') > 0
         return targets#target#withError('lastselect')
     endif
@@ -675,7 +678,8 @@ function! s:select(direction)
 endfunction
 
 " select pair of delimiters around cursor (multi line, supports seeking)
-function! s:seekselect(dir, skipL, skipR)
+function! s:seekselect(dir, countL, countR)
+    " echom 'seekselect' a:dir 'countL' a:countL 'countR' a:countR
     let min = line('w0')
     let max = line('w$')
     let oldpos = getpos('.')
@@ -684,11 +688,11 @@ function! s:seekselect(dir, skipL, skipR)
 
     call setpos('.', oldpos)
 
-    let last = s:lastselect(1 + a:skipL)
+    let last = s:lastselect(a:countL)
 
     call setpos('.', oldpos)
 
-    let next = s:nextselect(1 + a:skipR)
+    let next = s:nextselect(a:countR)
 
     return s:bestSeekTarget([around, next, last], oldpos, min, max, 'seekselect')
 endfunction

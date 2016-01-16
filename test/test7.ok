@@ -1,0 +1,16 @@
+x "A" "b" c
+x "A" "b" c
+x "a" "B" c
+a "b" "c" x "D" "e" f
+a "b" "c" x "D" "e" f
+a "b" "c" x "d" "E" f
+a "b" "C" x "d" "e" f
+a "B" "c" x "d" "e" f
+a "b" "c" "X" "d" "e" f
+a "b" "c" "x" "D" "e" f
+a "b" "c" "x" "d" "E" f
+a "b" "C" "x" "d" "e" f
+a "B" "c" "x" "d" "e" f
+a "b" "C" x
+a "b" "C" x
+a "B" "c" x
