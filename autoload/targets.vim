@@ -542,34 +542,6 @@ function! targets#undo(lastseq)
     endif
 endfunction
 
-" position modifiers
-" ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-
-" move the cursor inside of a proper quote when positioned on a delimiter
-" (move one character to the left when over an odd number of quotation mark)
-" the number of delimiters to the left of the cursor is counted to decide
-" if this is an opening or closing quote delimiter
-" in   │ . │  . │ . │  .
-" line │ ' │  ' │ ' │  '
-" out  │ . │ .  │ . │ .
-function! s:quote()
-    if s:getchar() !=# s:opening
-        return
-    endif
-
-    let oldpos = getpos('.')
-    let closing = 1
-    let line = 1
-    while line != 0
-        let line = searchpos(s:opening, 'b', line('.'))[0]
-        let closing = !closing
-    endwhile
-    call setpos('.', oldpos)
-    if closing " cursor is on closing delimiter
-        silent! normal! h
-    endif
-endfunction
-
 " returns [direction, skip, error]
 function! s:quoteDir()
     let oldpos = getpos('.')
