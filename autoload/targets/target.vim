@@ -28,6 +28,9 @@ function! targets#target#new(sl, sc, el, ec, error)
 endfunction
 
 function! targets#target#fromValues(sl, sc, el, ec)
+    if a:sl == 0 || a:sc == 0 || a:el == 0 || a:ec == 0
+        return targets#target#withError("zero found")
+    endif
     return targets#target#new(a:sl, a:sc, a:el, a:ec, '')
 endfunction
 
