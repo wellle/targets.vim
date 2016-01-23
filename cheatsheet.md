@@ -158,6 +158,7 @@ relative to the current cursor position and the currently visible lines.
 
 The possibly relative positions are:
 
+  - `c`: on cursor position
   - `l`: left of cursor in current line
   - `r`: right of cursor in current line
   - `a`: above cursor on screen
@@ -177,6 +178,17 @@ symbols:
   - `)`: end of target
   - `/`: line break before and after cursor line
   - `|`: screen edge between hidden and visible lines
+
+#### Ranges on cursor:
+
+```
+cr   |  /  () /  |   starting on cursor, current line
+cb   |  /  (  /) |   starting on cursor, multiline down, on screen
+cB   |  /  (  /  |)  starting on cursor, multiline down, partially off screen
+lc   |  / ()  /  |   ending on cursor, current line
+ac   | (/  )  /  |   ending on cursor, multiline up, on screen
+Ac  (|  /  )  /  |   ending on cursor, multiline up, partially off screen
+```
 
 #### Ranges around cursor:
 
@@ -227,31 +239,32 @@ in `g:targets_seekRanges`. If none is found, the selection fails.
 
 The default setting generally prefers targets around the cursor, with one
 exception: If the target around the cursor is not contained in the current
-cursor line, but the next or last target are, then prefer those.
+cursor line, but the next or last target are, then prefer those. Targets
+beginning or ending on the cursor are preferred over everything else.
 
-Some other useful example settings (or build your own!):
+Some other useful example settings:
 
 Never seek backwards:
 ```vim
-let g:targets_seekRanges = 'lr rr lb ar ab lB Ar aB Ab AB rb rB bb bB BB'
+let g:targets_seekRanges = 'cr cb cB lc ac Ac lr rr lb ar ab lB Ar aB Ab AB rb rB bb bB BB'
 ```
 
 Only seek if next/last targets touch current line:
 ```vim
-let g:targets_seekRanges = 'lr rr ll lb ar ab lB Ar aB Ab AB rb rB al Al'
+let g:targets_seekRanges = 'cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb rB al Al'
 ```
-]
+
 Only consider targets fully visible on screen:
 ```vim
-let g:targets_seekRanges = 'lr lb ar ab rr rb bb ll al aa'
+let g:targets_seekRanges = 'cr cb cB lc ac Ac lr lb ar ab rr rb bb ll al aa'
 ```
 
 Only consider targets around cursor:
 ```vim
-let g:targets_seekRanges = 'lr lb ar ab lB Ar aB Ab AB'
+let g:targets_seekRanges = 'cr cb cB lc ac Ac lr lb ar ab lB Ar aB Ab AB'
 ```
 
 Only consider targets fully contained in current line:
 ```vim
-let g:targets_seekRanges = 'lr rr ll'
+let g:targets_seekRanges = 'cr cb cB lc ac Ac lr rr ll'
 ```
