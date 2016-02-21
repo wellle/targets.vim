@@ -2,8 +2,6 @@
 
 Author:  Christian Wellenbrock <christian.wellenbrock@gmail.com>
 License: MIT license
-Updated: 2014-11-01
-Version: 0.3.4
 
                            ____
                            \___\_.::::::::::.____
