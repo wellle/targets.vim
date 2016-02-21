@@ -17,14 +17,20 @@ function! s:setup()
     let s:none        = 'a^' " matches nothing
 
     let s:rangeScores = {}
-    if !exists('g:targets_seekRanges')
-        let g:targets_seekRanges = 'cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA'
-    endif
     let ranges = split(g:targets_seekRanges)
     let rangesN = len(ranges)
     let i = 0
     while i < rangesN
         let s:rangeScores[ranges[i]] = rangesN - i
+        let i = i + 1
+    endwhile
+
+    let s:rangeJumps = {}
+    let ranges = split(g:targets_jumpRanges)
+    let rangesN = len(ranges)
+    let i = 0
+    while i < rangesN
+        let s:rangeJumps[ranges[i]] = 1
         let i = i + 1
     endwhile
 endfunction
@@ -435,11 +441,10 @@ function! s:selectTarget(target, rawTarget)
 endfunction
 
 function! s:addToJumplist(target)
-    if !g:targets_addJumplist
-        return 0
-    else
-        return g:targets_addJumplist - a:target.contains(s:oldpos)
-    endif
+    let min = line('w0')
+    let max = line('w$')
+    let range = a:target.range(s:oldpos, min, max)
+    return get(s:rangeJumps, range)
 endfunction
 
 " visually select a given match. used for match or old selection

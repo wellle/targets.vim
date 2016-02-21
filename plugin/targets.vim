@@ -253,8 +253,11 @@ function! s:loadSettings()
     if !exists('g:targets_argSeparator')
         let g:targets_argSeparator = ','
     endif
-    if !exists('g:targets_addJumplist')
-        let g:targets_addJumplist = 2
+    if !exists('g:targets_seekRanges')
+        let g:targets_seekRanges = 'cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA'
+    endif
+    if !exists('g:targets_jumpRanges')
+        let g:targets_jumpRanges = 'bb bB BB aa Aa AA'
     endif
 
     let [s:a, s:i, s:A, s:I] = split(g:targets_aiAI, '\zs')
