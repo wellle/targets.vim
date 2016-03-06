@@ -2,8 +2,6 @@
 
 Author:  Christian Wellenbrock <christian.wellenbrock@gmail.com>
 License: MIT license
-Updated: 2014-11-01
-Version: 0.3.4
 
                            ____
                            \___\_.::::::::::.____
@@ -510,6 +508,7 @@ Available options: ~
     |g:targets_argClosing|
     |g:targets_argSeparator|
     |g:targets_seekRanges|
+    |g:targets_jumpRanges|
 
 ------------------------------------------------------------------------------
                                                               *g:targets_aiAI*
@@ -697,6 +696,32 @@ Only consider targets around cursor:
 
 Only consider targets fully contained in current line:
     let g:targets_seekRanges = 'cr cb cB lc ac Ac lr rr ll' ~
+
+                                                        *g:targets_jumpRanges*
+
+Default:
+    let g:targets_jumpRanges = 'bb bB BB aa Aa AA' ~
+
+Defines an unordered, space separated list of range types which can be used to
+customize the jumplist behavior (see documentation on seek ranges). It
+controls whether or not to add the cursor position prior to selecting the text
+object to the jumplist.
+
+The default setting adds the previous cursor position to the jumplist if the
+target that was operated on doesn't intersect the cursor line. That means it
+adds a jumplist entry if the target ends above the cursor line or starts below
+the cursor line.
+
+Some other useful example settings (or build your own!):
+
+Never add cursor position to jumplist:
+    let g:targets_jumpRanges = '' ~
+
+Always add cursor position to jumplist:
+    let g:targets_jumpRanges = 'cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA' ~
+
+Only add to jumplist if cursor was not inside the target:
+    let g:targets_jumpRanges = 'rr rb rB bb bB BB ll al Al aa Aa AA' ~
 
 ==============================================================================
 NOTES                                                          *targets-notes*

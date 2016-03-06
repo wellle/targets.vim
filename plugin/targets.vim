@@ -1,13 +1,11 @@
 " targets.vim Provides additional text objects
 " Author:  Christian Wellenbrock <christian.wellenbrock@gmail.com>
 " License: MIT license
-" Updated: 2014-11-01
-" Version: 0.3.4
 
 if exists("g:loaded_targets") || &cp || v:version < 700
     finish
 endif
-let g:loaded_targets = '0.3.4' " version number
+let g:loaded_targets = '0.4.2' " version number
 let s:save_cpoptions = &cpoptions
 set cpo&vim
 
@@ -252,6 +250,12 @@ function! s:loadSettings()
     endif
     if !exists('g:targets_argSeparator')
         let g:targets_argSeparator = ','
+    endif
+    if !exists('g:targets_seekRanges')
+        let g:targets_seekRanges = 'cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA'
+    endif
+    if !exists('g:targets_jumpRanges')
+        let g:targets_jumpRanges = 'bb bB BB aa Aa AA'
     endif
 
     let [s:a, s:i, s:A, s:I] = split(g:targets_aiAI, '\zs')

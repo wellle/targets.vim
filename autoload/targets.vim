@@ -1,8 +1,6 @@
 " targets.vim Provides additional text objects
 " Author:  Christian Wellenbrock <christian.wellenbrock@gmail.com>
 " License: MIT license
-" Updated: 2014-11-01
-" Version: 0.3.4
 
 " save cpoptions
 let s:save_cpoptions = &cpoptions
@@ -17,14 +15,20 @@ function! s:setup()
     let s:none        = 'a^' " matches nothing
 
     let s:rangeScores = {}
-    if !exists('g:targets_seekRanges')
-        let g:targets_seekRanges = 'cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA'
-    endif
     let ranges = split(g:targets_seekRanges)
     let rangesN = len(ranges)
     let i = 0
     while i < rangesN
         let s:rangeScores[ranges[i]] = rangesN - i
+        let i = i + 1
+    endwhile
+
+    let s:rangeJumps = {}
+    let ranges = split(g:targets_jumpRanges)
+    let rangesN = len(ranges)
+    let i = 0
+    while i < rangesN
+        let s:rangeJumps[ranges[i]] = 1
         let i = i + 1
     endwhile
 endfunction
@@ -39,7 +43,7 @@ function! targets#o(trigger, count)
     if target.state().isInvalid()
         return s:cleanUp()
     endif
-    call s:handleTarget(target)
+    call s:handleTarget(target, rawTarget)
     call s:clearCommandLine()
     call s:prepareRepeat(delimiter, which, modifier)
     call s:cleanUp()
@@ -84,7 +88,7 @@ function! targets#x(trigger, count)
         call s:abortMatch('#x')
         return s:cleanUp()
     endif
-    if s:handleTarget(target) == 0
+    if s:handleTarget(target, rawTarget) == 0
         let s:lastTrigger = a:trigger
         let s:lastRawTarget = rawTarget
         let s:lastTarget = target
@@ -413,23 +417,32 @@ function! s:clearCommandLine()
 endfunction
 
 " handle the match by either selecting or aborting it
-function! s:handleTarget(target)
+function! s:handleTarget(target, rawTarget)
     if a:target.state().isInvalid()
         return s:abortMatch('handleTarget')
     elseif a:target.state().isEmpty()
         return s:handleEmptyMatch(a:target)
     else
-        return s:selectTarget(a:target)
+        return s:selectTarget(a:target, a:rawTarget)
     endif
 endfunction
 
 " select a proper match
-function! s:selectTarget(target)
+function! s:selectTarget(target, rawTarget)
     " add old position to jump list
-    call setpos('.', s:oldpos)
-    normal! m'
+    if s:addToJumplist(a:rawTarget)
+        call setpos('.', s:oldpos)
+        normal! m'
+    endif
 
     call s:selectRegion(a:target)
+endfunction
+
+function! s:addToJumplist(target)
+    let min = line('w0')
+    let max = line('w$')
+    let range = a:target.range(s:oldpos, min, max)
+    return get(s:rangeJumps, range)
 endfunction
 
 " visually select a given match. used for match or old selection
@@ -709,7 +722,7 @@ function! s:selectp(...)
     endif
 
     " try to select pair
-    silent! execute 'normal! v' . cnt . 'a' . trigger
+    silent! execute 'keepjumps normal! v' . cnt . 'a' . trigger
     let [el, ec] = getpos('.')[1:2]
     silent! normal! o
     let [sl, sc] = getpos('.')[1:2]
@@ -860,7 +873,7 @@ function! s:findArgBoundary(...)
                 endif
                 break
             elseif char =~# skip
-                silent! normal! %
+                silent! keepjumps normal! %
             else
                 return [0, 0, s:fail('findArgBoundary 2')]
             endif

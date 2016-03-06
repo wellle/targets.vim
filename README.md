@@ -482,6 +482,7 @@ g:targets_argOpening
 g:targets_argClosing
 g:targets_argSeparator
 g:targets_seekRanges
+g:targets_jumpRanges
 ```
 
 ### g:targets_aiAI
@@ -666,6 +667,41 @@ let g:targets_seekRanges = 'cr cb cB lc ac Ac lr rr ll'
 
 If you want to build your own, or are just curious what those cryptic letters
 mean, check out the full documentation in our [Cheat Sheet][cheatsheet].
+
+### g:targets_jumpRanges
+
+Default:
+
+```vim
+let g:targets_jumpRanges = 'bb bB BB aa Aa AA' ~
+```
+
+Defines an unordered, space separated list of range types which can be used to
+customize the jumplist behavior (see documentation on seek ranges). It
+controls whether or not to add the cursor position prior to selecting the text
+object to the jumplist.
+
+The default setting adds the previous cursor position to the jumplist if the
+target that was operated on doesn't intersect the cursor line. That means it
+adds a jumplist entry if the target ends above the cursor line or starts below
+the cursor line.
+
+Some other useful example settings (or build your own!):
+
+Never add cursor position to jumplist:
+```vim
+let g:targets_jumpRanges = '' ~
+```
+
+Always add cursor position to jumplist:
+```vim
+let g:targets_jumpRanges = 'cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA' ~
+```
+
+Only add to jumplist if cursor was not inside the target:
+```vim
+let g:targets_jumpRanges = 'rr rb rB bb bB BB ll al Al aa Aa AA' ~
+```
 
 ## Notes
 
