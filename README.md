@@ -454,7 +454,7 @@ Use your favorite plugin manager.
 - [Vundle][vundle]
 
     ```vim
-    Bundle 'wellle/targets.vim'
+    Plugin 'wellle/targets.vim'
     ```
 
 - [Pathogen][pathogen]
