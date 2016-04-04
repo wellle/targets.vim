@@ -548,7 +548,7 @@ endfunction
 function! s:quoteDir()
     let oldpos = getpos('.')
     let [direction, rateL, skipL, rateR, skipR, error, rep] = s:quoteDirInternal(oldpos[2])
-    echom 'rep' rep 'rateL' rateL 'skipL' skipL 'rateR' rateR 'skipR' skipR
+    " echom 'rep' rep 'rateL' rateL 'skipL' skipL 'rateR' rateR 'skipR' skipR
 
     call setpos('.', oldpos)
     return [direction, rateL, skipL, rateR, skipR, error]
