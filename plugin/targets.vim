@@ -120,13 +120,12 @@ function! s:createQuoteTextObjects(mapType)
 endfunction
 
 " separator text objects expand to the right
-" cursor  │                   ........
-" line    │ a , bbbbb , ccccc , ddddd , eeeee , fffff , g
-" command │   ││└IL,┘│││└Il,┘│││└ I,┘│││└In,┘│││└IN,┘│ │
-"         │   │└─iL,─┤│├─il,─┤│├─ i,─┤│├─in,─┤│├─iN,─┤ │
-"         │   ├──aL,─┘├┼─al,─┘├┼─ a,─┘├┼─an,─┘├┼─aN,─┘ │
-"         │   └──AL,──┼┘      └┼─ A,──┼┘      └┼─AN,───┘
-"         │           └─ Al, ──┘      └─ An, ──┘
+" cursor  │              .............
+" line    │ a ' bbbbbbb ' c ' dddddd ' e ' fffffff ' g ~
+" command │   ││└ Il' ┘│││  ││└ I' ┘│││  ││└ In' ┘│││
+"         │   │└─ il' ─┘││  │└─ i' ─┘││  │└─ in' ─┘││
+"         │   ├── al' ──┘│  ├── a' ──┘│  ├── an' ──┘│
+"         │   └── Al' ───┘  └── A' ───┘  └── An' ───┘
 " cursor  │ .........        │       ..........
 " line    │ a , bbbb , c , d │ a , b , cccc , d
 " command │   ││└I,┘│ │      │       ││└I,┘│ │

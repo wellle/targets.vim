@@ -57,14 +57,12 @@ Available mappings
 Chart for a list of quotes
 
 ```
-                      ..........
-a ' bbbbbbb ' ccccccc ' dddddd ' eeeeeee ' fffffff ' g
-  ││└ IL' ┘│││└ Il' ┘│││└ I' ┘│││└ In' ┘│││└ IN' ┘│││
-  │└─ iL' ─┘│├─ il' ─┘│├─ i' ─┘│├─ in' ─┘│├─ iN' ─┘││
-  ├── aL' ──┤│        ├┼─ a' ──┤│        ├┼─ aN' ──┘│
-  └── AL' ──┼┘        ├┼─ A' ──┼┘        ├┼─ AN' ───┘
-            ├── al' ──┘│       ├── an' ──┘│
-            └── Al' ───┘       └── An' ───┘
+             .............
+a ' bbbbbbb ' c ' dddddd ' e ' fffffff ' g
+  ││└ Il' ┘│││  ││└ I' ┘│││  ││└ In' ┘│││
+  │└─ il' ─┘││  │└─ i' ─┘││  │└─ in' ─┘││
+  ├── al' ──┘│  ├── a' ──┘│  ├── an' ──┘│
+  └── Al' ───┘  └── A' ───┘  └── An' ───┘
 ```
 
 ## Separator mappings

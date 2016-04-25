@@ -258,12 +258,12 @@ IN' IN" IN` IL' IL" IL`            *IN`* *IN'* *INquote* *IL`* *IL'* *ILquote*
                                                          *targets-quote-chart*
 The following chart summarizes all quote mappings:
 
-                          ..........
-    a ' bbbbbbb ' ccccccc ' dddddd ' eeeeeee ' fffffff ' g ~
-      ││└ IL' ┘│││└ Il' ┘│││└ I' ┘│││└ In' ┘│││└ IN' ┘│ │
-      │└─ iL' ─┘│├─ il' ─┘│├─ i' ─┘│├─ in' ─┘│├─ iN' ─┘ │
-      └── aL' ──┼┘        └┼─ a' ──┼┘        └┼─ aN' ───┘
-                └── al' ───┘       └── an' ───┘
+                 .............
+    a ' bbbbbbb ' c ' dddddd ' e ' fffffff ' g ~
+      ││└ Il' ┘│││  ││└ I' ┘│││  ││└ In' ┘│││
+      │└─ il' ─┘││  │└─ i' ─┘││  │└─ in' ─┘││
+      ├── al' ──┘│  ├── a' ──┘│  ├── an' ──┘│
+      └── Al' ───┘  └── A' ───┘  └── An' ───┘
 
 ------------------------------------------------------------------------------
 QUOTE SEEK                                                *targets-quote-seek*
