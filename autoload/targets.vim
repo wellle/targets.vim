@@ -85,7 +85,7 @@ function! targets#x(trigger, count)
     let [delimiter, which, modifier] = split(a:trigger, '\zs')
     let [target, rawTarget] = s:findTarget(delimiter, which, modifier, a:count)
     if target.state().isInvalid()
-        call s:abortMatch('#x')
+        call s:abortMatch('#x: ' . target.error)
         return s:cleanUp()
     endif
     if s:handleTarget(target, rawTarget) == 0
@@ -179,7 +179,7 @@ function! s:findRawTarget(kind, which, count)
         elseif a:which ==# 'l'
             return s:lastselect(a:count * rateL - skipL)
         else
-            return targets#target#withError('findRawTarget q')
+            return targets#target#withError('findRawTarget q: ' . a:which)
         endif
 
     elseif a:kind ==# 's'
@@ -227,7 +227,7 @@ endfunction
 
 function! s:modifyTarget(target, kind, modifier)
     if a:target.state().isInvalid()
-        return targets#target#withError('modifyTarget invalid')
+        return targets#target#withError('modifyTarget invalid: ' . a:target.error)
     endif
     let target = a:target.copy()
 
