@@ -64,11 +64,11 @@ Supported trigger characters:
     < >       (work on angle brackets)
         t     (work on tags)
 
+Pair text objects work over multiple lines and support |targets-pair-seek|.
+
 We borrowed the aliases `r` and `a` from the |surround| plugin by Tim Pope.
 The following examples will use parentheses, but they all work for each listed
 trigger character accordingly.
-
-Pair text objects work over multiple lines.
 
 i( i) ib i[ i] it                    *it_t* *i(_t* *i)_t* *ib_t* *i[_t* *i]_t*
 i{ i} iB i< i>                              *i{_t* *i}_t* *iB_t* *i<_t* *i>_t*
@@ -76,7 +76,7 @@ i{ i} iB i< i>                              *i{_t* *i}_t* *iB_t* *i<_t* *i>_t*
     to allow seeking for the next pair in the current line to the right or
     left when the cursor is not inside a pair. This behavior is similar to
     Vim's seeking behavior of `di'` when not inside of quotes, but it works
-    both ways. See |targets-pair-seek|. Accepts a [count] to select multiple
+    both ways. Accepts a [count] to select multiple
     blocks.
 
               ............
@@ -87,7 +87,7 @@ i{ i} iB i< i>                              *i{_t* *i}_t* *iB_t* *i<_t* *i>_t*
 a( a) ab a[ a] at                    *at_t* *a(_t* *a)_t* *ab_t* *a[_t* *a]_t*
 a{ a} aB a< a>                              *a{_t* *a}_t* *aB_t* *a<_t* *a>_t*
     Select a pair. Overrides Vim's default text object to allow seeking.
-    Supports |targets-pair-seek|. Accepts [count].
+    Accepts [count].
 
               ............
         a ( b ( cccccccc ) d ) e ~
@@ -98,7 +98,7 @@ I( I) Ib I[ I] It                                *It* *I(* *I)* *Ib* *I[* *I]*
 I{ I} IB I< I>                                        *I{* *I}* *IB* *I<* *I>*
     Select contents of pair characters. Like inside of parentheses, but
     exclude whitespace at both ends. Useful for changing contents while
-    preserving spacing. Supports |targets-pair-seek|. Accepts [count].
+    preserving spacing. Accepts [count].
 
               ............
         a ( b ( cccccccc ) d ) e ~
@@ -109,7 +109,7 @@ A( A) Ab A[ A] At                                *At* *A(* *A)* *Ab* *A[* *A]*
 A{ A} AB A< A>                                        *A{* *A}* *AB* *A<* *A>*
     Select around pair characters. Like a pair, but include whitespace at one
     side of the pair. Prefers to select trailing whitespace, falls back to
-    select leading whitespace. Supports |targets-pair-seek|. Accepts [count].
+    select leading whitespace. Accepts [count].
 
               ............
         a ( b ( cccccccc ) d ) e ~
@@ -183,21 +183,30 @@ Supported trigger characters:
     "         (work on double quotes)
     `         (work on back ticks)
 
+These quote text objects try to be smarter than the default ones. They count
+the quotation marks from the beginning of the line to decide which of these
+are the beginning of a quote and which ones are the end.
+
+If you type `ci,` on the `,` in the example below, it will automatically skip
+and change `world` instead of changing the false quote `,` between the two
+proper quotes `hello` and `world`.
+
+    join("hello", "world") ~
+         └─────┘  └─────┘     proper quotes
+               └──┘           false quotes
+
+
+Quote text objects work over multiple lines and support |targets-quote-seek|.
+
 The following examples will use single quotes, but they all work for each
 listed quoting character accordingly.
 
-Quote text objects work over multiple lines.
-
-When the cursor is positioned on a quotation mark, the quote text objects
-count the numbers of quotation marks from the beginning of the line to choose
-the properly quoted text to the left or right of the cursor.
-
 i' i" i`                                              *i`_t* *i'_t* *iquote_t*
     Select inside quote. This overrides Vim's default text object to allow
-    seeking in both directions. See |targets-quote-seek|.
+    seeking in both directions.
 
           ............
-        a ' bbbbbbbb ' c ' d ~
+        a ' bbbbbbbb ' c ' d ' e~
            └── i' ──┘
 
 a' a" a`                                              *a`_t* *a'_t* *aquote_t*
@@ -206,25 +215,24 @@ a' a" a`                                              *a`_t* *a'_t* *aquote_t*
     surrounding whitespace.
 
           ............
-        a ' bbbbbbbb ' c ' d ~
+        a ' bbbbbbbb ' c ' d ' e~
           └─── a' ───┘
 
 I' I" I`                                                    *I`* *I'* *Iquote*
     Select contents of a quote. Like inside quote, but exclude whitespace at
-    both ends. Useful for changing contents while preserving spacing. Supports
-    |targets-quote-seek|.
+    both ends. Useful for changing contents while preserving spacing.
 
           ............
-        a ' bbbbbbbb ' c ' d ~
+        a ' bbbbbbbb ' c ' d ' e~
             └─ I' ─┘
 
 A' A" A`                                                    *A`* *A'* *Aquote*
     Select around a quote. Like a quote, but include whitespace in one
     direction. Prefers to select trailing whitespace, falls back to select
-    leading whitespace.  Supports |targets-quote-seek|.
+    leading whitespace.
 
           ............
-        a ' bbbbbbbb ' c ' d ~
+        a ' bbbbbbbb ' c ' d ' e~
           └─── A' ────┘
 
 ------------------------------------------------------------------------------
@@ -276,14 +284,15 @@ Supported separators:
 
     , . ; : + - = ~ _ * # / | \ & $ ~
 
+Separator text objects work over multiple lines and support
+|targets-separator-seek|.
+
 The following examples will use commas, but they all work for each listed
 separator character accordingly.
 
-Separator text objects work over multiple lines.
-
 i, i. i; i: i+ i- i= i~             *i,* *i.* *i;* *i:* *i+* *i-* *i=* *i~*
 i_ i/ i| i\ i& i$ i# i*             *i_* *i/* *i|* *i\* *i&* *i$* *i#* *istar*
-    Select inside separators. Supports |targets-separator-seek|.
+    Select inside separators.
 
               ...........
         a , b , cccccccc , d , e ~
@@ -294,7 +303,7 @@ a_ a/ a| a\ a& a$ a# a*             *a_* *a/* *a|* *a\* *ar* *a$* *a#* *astar*
     Select an item in a list separated by the separator character. This
     includes the leading separator, but excludes the trailing one. This leaves
     a proper list separated by the separator character after deletion. See
-    |targets-examples|. Supports |targets-separator-seek|.
+    |targets-examples|.
 
               ...........
         a , b , cccccccc , d , e ~
@@ -304,7 +313,7 @@ I, I. I; I: I+ I- I= I~             *I,* *I.* *I;* *I:* *I+* *I-* *I=* *I~*
 I_ I/ I| I\ I& I$ I# I*             *I_* *I/* *I|* *I\* *I&* *I$* *I#* *Istar*
     Select contents between separators. Like inside separators, but exclude
     whitespace at both ends. Useful for changing contents while preserving
-    spacing. Supports |targets-separator-seek|.
+    spacing.
 
               ...........
         a , b , cccccccc , d , e ~
@@ -313,8 +322,7 @@ I_ I/ I| I\ I& I$ I# I*             *I_* *I/* *I|* *I\* *I&* *I$* *I#* *Istar*
 A, A. A; A: A+ A- A= A~             *A,* *A.* *A;* *A:* *A+* *A-* *A=* *A~*
 A_ A/ A| A\ A& A$ A# A*             *A_* *A/* *A|* *A\* *A&* *A$* *A#* *Astar*
     Select around a pair of separators. This includes both separators and a
-    surrounding whitespace, similar to `a'` and `A(`. Supports
-    |targets-separator-seek|.
+    surrounding whitespace, similar to `a'` and `A(`.
 
               ...........
         a , b , cccccccc , d , e ~
@@ -411,10 +419,11 @@ These text objects are similar to separator text objects, but are specialized
 for arguments surrounded by braces and commas. They also take matching braces
 into account to capture only valid arguments.
 
-Argument text objects work over multiple lines.
+Argument text objects work over multiple lines and support
+|targets-argument-seek|.
 
 ia                                                                        *ia*
-    Select inside argument. Supports |targets-argument-seek|. Accepts a
+    Select inside argument. Accepts a
     [count] to select bigger nested arguments.
 
               ...........
@@ -424,7 +433,7 @@ ia                                                                        *ia*
 aa                                                                        *aa*
     Select an argument in a list of arguments. This includes a separator if
     present, but excludes surrounding braces. This leaves a proper of
-    arguments after deletion. Supports |targets-argument-seek|. Accepts a
+    arguments after deletion. Accepts a
     [count] to select bigger nested arguments.
 
               ...........
@@ -434,7 +443,7 @@ aa                                                                        *aa*
 Ia                                                                        *Ia*
     Select contents of an argument. Like inside argument, but exclude
     whitespace at both ends. Useful for changing contents while preserving
-    spacing. Supports |targets-argument-seek|. Accepts a [count] to select
+    spacing. Accepts a [count] to select
     bigger nested arguments.
 
               ...........
@@ -443,8 +452,8 @@ Ia                                                                        *Ia*
 
 Aa                                                                        *Aa*
     Select around an argument. This includes both delimiters and a surrounding
-    whitespace, similar to `a'` and `A(`. Supports |targets-argument-seek|.
-    Accepts a [count] to select bigger nested arguments.
+    whitespace, similar to `a'` and `A(`. Accepts a [count] to select bigger
+    nested arguments.
 
               ...........
         a , b ( cccccccc , d ) e ~
