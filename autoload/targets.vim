@@ -108,6 +108,9 @@ function! s:init(mapmode)
 
     let s:virtualedit = &virtualedit " remember 'virtualedit' setting
     let &virtualedit = ''            " and set it to default
+
+    let s:whichwrap = &whichwrap " remember 'whichwrap' setting
+    let &whichwrap = 'b,s' " and set it to default
 endfunction
 
 " save old visual selection to detect new selections and reselect on fail
@@ -134,6 +137,7 @@ function! s:cleanUp()
     " reset remembered settings
     let &selection = s:selection
     let &virtualedit = s:virtualedit
+    let &whichwrap = s:whichwrap
 endfunction
 
 function! s:findTarget(delimiter, which, modifier, count)
