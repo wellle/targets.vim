@@ -35,7 +35,7 @@ leave a proper comma separated list behind.
 
 ## Overview
 
-We distinguish between three kinds of text objects that behave slightly
+We distinguish between four kinds of text objects that behave slightly
 differently:
 
 - Pair text objects
