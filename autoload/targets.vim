@@ -1187,14 +1187,18 @@ function! s:shrink(target)
         return a:target
     endif
 
-    call a:target.cursorE()
-    call a:target.searchposE('\S', 'b', a:target.sl)
+    call a:target.cursorS()
+    call a:target.searchposS('\S', '', a:target.el)
     if a:target.state().isInvalidOrEmpty()
         " fall back to drop when there's only whitespace in between
         return s:drop(a:target)
+    elseif a:target.sl == a:target.el && a:target.sc == a:target.ec
+        call a:target.cursorE()
+        call a:target.searchposE('\s', 'b', a:target.sl)
+        return a:target
     else
-        call a:target.cursorS()
-        call a:target.searchposS('\S', '', a:target.el)
+        call a:target.cursorE()
+        call a:target.searchposE('\S', 'b', a:target.sl)
     endif
     return a:target
 endfunction
