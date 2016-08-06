@@ -85,12 +85,11 @@ function! targets#x(trigger, count)
     let [delimiter, which, modifier] = split(a:trigger, '\zs')
     let [target, rawTarget] = s:findTarget(delimiter, which, modifier, a:count)
     if target.state().isInvalid()
-        call s:abortMatch('#x')
+        call s:abortMatch('#x: ' . target.error)
         return s:cleanUp()
     endif
     if s:handleTarget(target, rawTarget) == 0
         let s:lastTrigger = a:trigger
-        let s:lastRawTarget = rawTarget
         let s:lastTarget = target
     endif
     call s:cleanUp()
@@ -159,38 +158,33 @@ function! s:findRawTarget(kind, which, count)
         if a:which ==# 'c'
             return s:seekselectp(a:count + s:grow())
         elseif a:which ==# 'n'
-            call s:nextp(a:count)
+            call s:search(a:count, s:opening, 'W')
             return s:selectp()
         elseif a:which ==# 'l'
-            call s:lastp(a:count)
+            call s:search(a:count, s:closing, 'bW')
             return s:selectp()
         else
             return targets#target#withError('findRawTarget p')
         endif
 
     elseif a:kind ==# 'q'
+        let [dir, rateL, skipL, rateR, skipR, error] = s:quoteDir()
+        if error !=# ''
+            return targets#target#withError('findRawTarget quoteDir')
+        endif
         if a:which ==# 'c'
-            call s:quote()
-            return s:seekselect()
+            return s:seekselect(dir, rateL - skipL, rateR - skipR)
         elseif a:which ==# 'n'
-            call s:quote()
-            return s:nextselect(a:count)
+            return s:nextselect(a:count * rateR - skipR)
         elseif a:which ==# 'l'
-            call s:quote()
-            return s:lastselect(a:count)
-        elseif a:which ==# 'N'
-            call s:quote()
-            return s:nextselect(a:count * 2)
-        elseif a:which ==# 'L'
-            call s:quote()
-            return s:lastselect(a:count * 2)
+            return s:lastselect(a:count * rateL - skipL)
         else
-            return targets#target#withError('findRawTarget q')
+            return targets#target#withError('findRawTarget q: ' . a:which)
         endif
 
     elseif a:kind ==# 's'
         if a:which ==# 'c'
-            return s:seekselect()
+            return s:seekselect('>', 1, 1)
         elseif a:which ==# 'n'
             return s:nextselect(a:count)
         elseif a:which ==# 'l'
@@ -205,12 +199,12 @@ function! s:findRawTarget(kind, which, count)
 
     elseif a:kind ==# 't'
         if a:which ==# 'c'
-            return s:seekselectt(a:count + s:grow())
+            return s:seekselectp(a:count + s:grow(), '<\a', '</\a', 't')
         elseif a:which ==# 'n'
-            call s:nextt(a:count)
+            call s:search(a:count, '<\a', 'W')
             return s:selectp()
         elseif a:which ==# 'l'
-            call s:lastt(a:count)
+            call s:search(a:count, '</\a\zs', 'bW')
             return s:selectp()
         else
             return targets#target#withError('findRawTarget t')
@@ -233,7 +227,7 @@ endfunction
 
 function! s:modifyTarget(target, kind, modifier)
     if a:target.state().isInvalid()
-        return targets#target#withError('modifyTarget invalid')
+        return targets#target#withError('modifyTarget invalid: ' . a:target.error)
     endif
     let target = a:target.copy()
 
@@ -337,7 +331,7 @@ endfunction
 function! s:getRawDelimiters(trigger)
     " check more specific ones first for #145
     if a:trigger ==# g:targets_tagTrigger
-        return ['t', 't', 0, 0] " TODO: set tag patterns here and remove special tag functions?
+        return ['t', 't', 0, 0]
     elseif a:trigger ==# g:targets_argTrigger
         return ['a', 0, 0, 0]
     endif
@@ -550,107 +544,115 @@ function! targets#undo(lastseq)
     endif
 endfunction
 
-" position modifiers
-" ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-
-" move the cursor inside of a proper quote when positioned on a delimiter
-" (move one character to the left when over an odd number of quotation mark)
-" the number of delimiters to the left of the cursor is counted to decide
-" if this is an opening or closing quote delimiter
-" in   │ . │  . │ . │  .
-" line │ ' │  ' │ ' │  '
-" out  │ . │ .  │ . │ .
-function! s:quote()
-    if s:getchar() !=# s:opening
-        return
-    endif
-
+" returns [direction, rateL, skipL, rateR, skipR, error]
+function! s:quoteDir()
     let oldpos = getpos('.')
-    let closing = 1
-    let line = 1
-    while line != 0
-        let line = searchpos(s:opening, 'b', line('.'))[0]
-        let closing = !closing
-    endwhile
+    let [direction, rateL, skipL, rateR, skipR, error, rep] = s:quoteDirInternal(oldpos[2])
+    " echom 'rep' rep 'rateL' rateL 'skipL' skipL 'rateR' rateR 'skipR' skipR
+
     call setpos('.', oldpos)
-    if closing " cursor is on closing delimiter
-        silent! normal! h
+    return [direction, rateL, skipL, rateR, skipR, error]
+endfunction
+
+" doesn't restore old position
+" cursor  rep dir rates/skips description
+"    .    ()
+"         xx1  >    1/0 1/0   good multiline around if final
+"   (     bx0  >    1/0 1/0   good multiline below single if final
+"    (    ox0  >    1/1 1/0   good multiline below single on if final
+"     (   ax0  <    1/0 1/0   good multiline above if final
+" ( )     bb1       2/1 2/1   bad after last if final
+"  ( )    bo1  <    2/0 2/1   good end on cursor select to left
+"   ( )   ba1  >    2/0 2/0   good around cursor select around
+"    ( )  oa1  >    2/1 2/0   good start on cursor select to right
+"     ( ) aa1       2/1 2/1   bad before first
+" ) (     bb0  >    2/0 1/0   good multiline below multi if final
+"  ) (    ob0  >    2/1 1/0   good multiline below multi on if final
+"   ) (   ab0       2/1 2/1   bad between pairs
+" returns [dir, skipL, skipR, error, rep]
+function! s:quoteDirInternal(oldcolumn)
+    let column = 0
+    let positions = ['x', 'x']
+    let index = 1 " write into opening first (will be toggled first)
+
+    silent! normal! 0
+    let [_, column] = searchpos(s:opening, 'c', line('.'))
+    while column != 0
+        let index = !index " 0 <-> 1
+        if column < a:oldcolumn
+            let positions[index] = 'b' " before
+        elseif column == a:oldcolumn
+            let positions[index] = 'o' " on
+        else
+            let positions[index] = 'a' " after
+        endif
+
+        let rep = positions[0] . positions[1] . index
+        if rep == 'bo1'
+            call s:debug('good end on cursor select to left')
+            return ['<', 2, 0, 2, 1, '', rep]
+        elseif rep == 'ba1'
+            call s:debug('good around cursor select around')
+            return ['>', 2, 0, 2, 0, '', rep]
+        elseif rep == 'oa1'
+            call s:debug('good start on cursor select to right')
+            return ['>', 2, 1, 2, 0, '', rep]
+        elseif rep == 'aa1'
+            call s:debug('bad before first')
+            return ['', 2, 1, 2, 1, '', rep]
+        elseif rep == 'ab0'
+            call s:debug('bad between pairs')
+            return ['', 2, 1, 2, 1, '', rep]
+        else
+            " call s:debug('not final ' . rep)
+        endif
+
+        let [_, column] = searchpos(s:opening, '', line('.'))
+    endwhile
+
+    let rep = positions[0] . positions[1] . index
+    if rep == 'xx1'
+        call s:debug('good multiline around')
+        return ['>', 1, 0, 1, 0, '', rep]
+    elseif rep == 'bx0'
+        call s:debug('good multiline below single')
+        return ['>', 1, 0, 1, 0, '', rep]
+    elseif rep == 'ox0'
+        call s:debug('good multiline below single on')
+        return ['>', 1, 1, 1, 0, '', rep]
+    elseif rep == 'ax0'
+        call s:debug('good multiline above')
+        return ['<', 1, 0, 1, 0, '', rep]
+    elseif rep == 'bb1'
+        call s:debug('bad after last')
+        return ['', 2, 1, 2, 1, '', rep]
+    elseif rep == 'bb0'
+        call s:debug('good multiline below multi')
+        return ['>', 2, 0, 1, 0, '', rep]
+    elseif rep == 'ob0'
+        call s:debug('good multiline below multi on')
+        return ['>', 2, 1, 1, 0, '', rep]
+    else
+        return ['', 1, 0, 1, 0, 'quoteDir not found ' . rep]
     endif
 endfunction
 
-" find `count` next delimiter (multi line)
-" in   │     ...
-" line │  '  '  '  '
-" out  │        1  2
-" args (count=1)
-function! s:nextselect(...)
-    let cnt = a:0 == 1 ? a:1 : 1
-
-    call s:prepareNext()
-
-    if s:search(cnt, s:opening, 'W') > 0
+function! s:nextselect(count)
+    " echom 'nextselect' a:count
+    if s:search(a:count, s:opening, 'W') > 0
         return targets#target#withError('nextselect')
     endif
 
     return s:select('>')
 endfunction
 
-" find `count` last delimiter, move in front of it (multi line)
-" in   │     ...
-" line │  '  '  '  '
-" out  │ 2  1
-" args (count=1)
-function! s:lastselect(...)
-    let cnt = a:0 == 1 ? a:1 : 1
-
-    " if started on closing, but not when skipping
-    if !s:prepareLast() && s:getchar() ==# s:closing
-        let [cnt, message] = [cnt - 1, 'lastselect 1']
-    else
-        let [cnt, message] = [cnt, 'lastselect 2']
-    endif
-
-    if s:search(cnt, s:closing, 'bW') > 0
-        return targets#target#withError(message)
+function! s:lastselect(count)
+    " echom 'lastselect' a:count
+    if s:search(a:count, s:closing, 'bW') > 0
+        return targets#target#withError('lastselect')
     endif
 
     return s:select('<')
-endfunction
-
-" find `count` next opening delimiter (multi line)
-" in   │ ....
-" line │ ( ) ( ) ( ( ) ) ( )
-" out  │     1   2 3     4
-function! s:nextp(count)
-    call s:prepareNext()
-    return s:search(a:count, s:opening, 'W')
-endfunction
-
-" find `count` last closing delimiter (multi line)
-" in   │               ....
-" line │ ( ) ( ) ( ( ) ) ( )
-" out  │   4   3     2 1
-function! s:lastp(count)
-    call s:prepareLast()
-    return s:search(a:count, s:closing, 'bW')
-endfunction
-
-" find `count` next opening tag delimiter (multi line)
-" in   │ .........
-" line │ <a> </a> <b> </b> <c> <d> </d> </c> <e> </e>
-" out  │          1        2   3             4
-function! s:nextt(count)
-    call s:prepareNext()
-    return s:search(a:count, '<\a', 'W')
-endfunction
-
-" find `count` last closing tag delimiter (multi line)
-" in   │                                    .........
-" line │ <a> </a> <b> </b> <c> <d> </d> </c> <e> </e>
-" out  │     4        3            2    1
-function! s:lastt(count)
-    call s:prepareLast()
-    return s:search(a:count, '</\a\zs', 'bW')
 endfunction
 
 " match selectors
@@ -662,57 +664,35 @@ endfunction
 " line    │ ' ' b ' '
 " matcher │   └───┘
 function! s:select(direction)
-    let oldpos = getpos('.')
-
-    if a:direction ==# '>'
-        let [sl, sc, el, ec, err] = s:findSeparators('bcW', 'W', s:opening, s:closing)
-        let message = 'select 1'
+    if a:direction ==# ''
+        return targets#target#withError('select without direction')
+    elseif a:direction ==# '>'
+        let [sl, sc] = searchpos(s:opening, 'bcW') " search left for opening
+        let [el, ec] = searchpos(s:closing, 'W')   " then right for closing
+        return targets#target#fromValues(sl, sc, el, ec)
     else
-        let [el, ec, sl, sc, err] = s:findSeparators('cW', 'bW', s:closing, s:opening)
-        let message = 'select 2'
+        let [el, ec] = searchpos(s:closing, 'cW') " search right for closing
+        let [sl, sc] = searchpos(s:opening, 'bW') " then left for opening
+        return targets#target#fromValues(sl, sc, el, ec)
     endif
-
-    if err > 0
-        call setpos('.', oldpos)
-        return targets#target#withError(message)
-    endif
-
-    let target = targets#target#fromValues(sl, sc, el, ec)
-    return target
-endfunction
-
-" TODO: inject direction and return proper target
-" find separators around cursor by searching for opening with flags1 and for
-" closing with flags2
-function! s:findSeparators(flags1, flags2, opening, closing)
-    let [sl, sc] = searchpos(a:opening, a:flags1)
-    if sc == 0 " no match to the left
-        return [0, 0, 0, 0, s:fail('findSeparators 1')]
-    endif
-
-    let [el, ec] = searchpos(a:closing, a:flags2)
-    if ec == 0 " no match to the right
-        return [0, 0, 0, 0, s:fail('findSeparators 2')]
-    endif
-
-    return [sl, sc, el, ec, 0]
 endfunction
 
 " select pair of delimiters around cursor (multi line, supports seeking)
-function! s:seekselect()
+function! s:seekselect(dir, countL, countR)
+    " echom 'seekselect' a:dir 'countL' a:countL 'countR' a:countR
     let min = line('w0')
     let max = line('w$')
     let oldpos = getpos('.')
 
-    let around = s:select('>')
+    let around = s:select(a:dir)
 
     call setpos('.', oldpos)
 
-    let last = s:lastselect()
+    let last = s:lastselect(a:countL)
 
     call setpos('.', oldpos)
 
-    let next = s:nextselect()
+    let next = s:nextselect(a:countR)
 
     return s:bestSeekTarget([around, next, last], oldpos, min, max, 'seekselect')
 endfunction
@@ -720,11 +700,8 @@ endfunction
 " select a pair around the cursor
 " args (count=1, trigger=s:opening)
 function! s:selectp(...)
-    if a:0 == 2
-        let [cnt, trigger] = [a:1, a:2]
-    else
-        let [cnt, trigger] = [1, s:opening]
-    endif
+    let cnt     = a:0 >= 1 ? a:1 : 1
+    let trigger = a:0 >= 2 ? a:2 : s:opening
 
     " try to select pair
     silent! execute 'keepjumps normal! v' . cnt . 'a' . trigger
@@ -747,11 +724,10 @@ endfunction
 "          │ └── 2 ──┘
 " args (count, opening=s:opening, closing=s:closing, trigger=s:closing)
 function! s:seekselectp(...)
-    if a:0 == 4
-        let [cnt, opening, closing, trigger] = [a:1, a:2, a:3, a:4]
-    else
-        let [cnt, opening, closing, trigger] = [a:1, s:opening, s:closing, s:closing]
-    endif
+    let cnt     =            a:1 " required
+    let opening = a:0 >= 2 ? a:2 : s:opening
+    let closing = a:0 >= 3 ? a:3 : s:closing
+    let trigger = a:0 >= 4 ? a:4 : s:closing
 
     let min = line('w0')
     let max = line('w$')
@@ -765,20 +741,15 @@ function! s:seekselectp(...)
 
     call setpos('.', oldpos)
 
-    call s:lastp(cnt)
+    call s:search(cnt, s:closing, 'bW')
     let last = s:selectp()
 
     call setpos('.', oldpos)
 
-    call s:nextp(cnt)
+    call s:search(cnt, s:opening, 'W')
     let next = s:selectp()
 
     return s:bestSeekTarget([around, next, last], oldpos, min, max, 'seekselectp')
-endfunction
-
-" tag pair matcher (works across multiple lines, supports seeking)
-function! s:seekselectt(count)
-    return s:seekselectp(a:count, '<\a', '</\a', 't')
 endfunction
 
 " select an argument around the cursor
@@ -852,12 +823,13 @@ endfunction
 " separator=g:targets_argSeparator, cnt=2)
 " return (line, column, err)
 function! s:findArgBoundary(...)
-    let [flags1, flags2, skip, finish] = [a:1, a:2, a:3, a:4]
-    if a:0 == 7
-        let [all, separator, cnt] = [a:5, a:6, a:7]
-    else
-        let [all, separator, cnt] = [s:argAll, g:targets_argSeparator, 1]
-    endif
+    let flags1    =            a:1 " required
+    let flags2    =            a:2
+    let skip      =            a:3
+    let finish    =            a:4
+    let all       = a:0 >= 5 ? a:5 : s:argAll
+    let separator = a:0 >= 6 ? a:6 : g:targets_argSeparator
+    let cnt       = a:0 >= 7 ? a:7 : 1
 
     let tl = 0
     for _ in range(cnt)
@@ -929,8 +901,8 @@ endfunction
 " try to select a next argument, supports count and optional stopline
 " args (count=1, stopline=0)
 function! s:nextselecta(...)
-    let [cnt, stopline] = [a:0 > 0 ? a:1 : 1, a:0 > 1 ? a:2 : 0]
-    call s:prepareNext()
+    let cnt      = a:0 >= 1 ? a:1 : 1
+    let stopline = a:0 >= 2 ? a:2 : 0
 
     if s:search(cnt, s:argOpeningS, 'W', stopline) > 0 " no start found
         return targets#target#withError('nextselecta 1')
@@ -963,9 +935,8 @@ endfunction
 " try to select a last argument, supports count and optional stopline
 " args (count=1, stopline=0)
 function! s:lastselecta(...)
-    let [cnt, stopline] = [a:0 > 0 ? a:1 : 1, a:0 > 1 ? a:2 : 0]
-
-    call s:prepareLast()
+    let cnt      = a:0 >= 1 ? a:1 : 1
+    let stopline = a:0 >= 2 ? a:2 : 0
 
     " special case to handle vala when invoked on a separator
     let separator = g:targets_argSeparator
@@ -1242,36 +1213,7 @@ function! s:grow()
         return 0
     endif
 
-    " move cursor back to last raw end of selection to avoid growing being
-    " confused by last modifiers
-    call s:prepareNext()
-
     return 1
-endfunction
-
-" if in visual mode, move cursor to start of last raw selection
-" also used in s:grow to move to last raw end
-function! s:prepareNext()
-    if s:newSelection
-        return
-    endif
-
-    if s:mapmode ==# 'x' && exists('s:lastRawTarget') && s:lastRawTarget.state().isNonempty()
-        call s:lastRawTarget.cursorS()
-    endif
-endfunction
-
-" if in visual mode, move cursor to end of last raw selection
-" returns whether or not the cursor was moved
-function! s:prepareLast()
-    if s:newSelection
-        return
-    endif
-
-    if s:mapmode ==# 'x' && exists('s:lastRawTarget') && s:lastRawTarget.state().isNonempty()
-        call s:lastRawTarget.cursorE()
-        return 1
-    endif
 endfunction
 
 " returns the character under the cursor
@@ -1282,12 +1224,10 @@ endfunction
 " search for pattern using flags and a count, optional stopline
 " args (cnt, pattern, flags, stopline=0)
 function! s:search(...)
-    let [cnt, pattern, flags] = [a:1, a:2, a:3]
-    if a:0 == 4
-        let stopline = a:4
-    elseif a:0 == 3
-        let stopline = 0
-    endif
+    let cnt      =            a:1 " required
+    let pattern  =            a:2
+    let flags    =            a:3
+    let stopline = a:0 >= 4 ? a:4 : 0
 
     for _ in range(cnt)
         let line = searchpos(pattern, flags, stopline)[0]
@@ -1300,11 +1240,9 @@ endfunction
 " return 1 and send a message to s:debug
 " args (message, parameters=nil)
 function! s:fail(...)
-    if a:0 == 2
-        call s:debug('fail ' . a:1 . ' ' . string(a:2))
-    else
-        call s:debug('fail ' . a:1)
-    endif
+    let message = 'fail ' . a:1
+    let message .= a:0 >= 2 ? ' ' . string(a:2) : ''
+    call s:debug(message)
     return 1
 endfunction
 

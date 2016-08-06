@@ -54,10 +54,11 @@ Supported trigger characters:
 - `<` `>` (work on angle brackets)
 - `t` (work on tags)
 
+Pair text objects work over multiple lines and support seeking. See below for
+details about seeking.
+
 The following examples will use parentheses, but they all work for each listed
 trigger character accordingly.
-
-Pair text objects work over multiple lines.
 
 #### In Pair
 
@@ -67,8 +68,7 @@ Pair text objects work over multiple lines.
 - This overrides Vim's default text object to allow seeking for the next pair
   in the current line to the right or left when the cursor is not inside a
   pair. This behavior is similar to Vim's seeking behavior of `di'` when not
-  inside of quotes, but it works both ways. See below for details about
-  seeking.
+  inside of quotes, but it works both ways.
 - Accepts a count to select multiple blocks.
 
 ```
@@ -100,7 +100,6 @@ a ( b ( cccccccc ) d ) e
 - Select contents of pair characters.
 - Like inside of parentheses, but exclude whitespace at both ends. Useful for
   changing contents while preserving spacing.
-- Supports seeking.
 - Accepts a count.
 
 ```
@@ -117,7 +116,6 @@ a ( b ( cccccccc ) d ) e
 - Select around pair characters.
 - Like a pair, but include whitespace at one side of the pair. Prefers to
   select trailing whitespace, falls back to select leading whitespace.
-- Supports seeking.
 - Accepts a count.
 
 ```
@@ -157,15 +155,25 @@ Supported trigger characters:
 - `"`     (work on double quotes)
 - `` ` `` (work on back ticks)
 
+These quote text objects try to be smarter than the default ones. They count
+the quotation marks from the beginning of the line to decide which of these are
+the beginning of a quote and which ones are the end.
+
+If you type `ci,` on the `,` in the example below, it will automatically skip
+and change `world` instead of changing the false quote `,` between the two
+proper quotes `hello` and `world`.
+
+```
+buffer │ join("hello", "world")
+proper │      └─────┘  └─────┘
+false  │            └──┘
+```
+
+Quote text objects work over multiple lines and support seeking. See below for
+details about seeking.
+
 The following examples will use single quotes, but they all work for each
 mentioned separator character accordingly.
-
-
-Quote text objects work over multiple lines.
-
-When the cursor is positioned on a quotation mark, the quote text objects count
-the numbers of quotation marks from the beginning of the line to choose the
-properly quoted text to the left or right of the cursor.
 
 #### In Quote
 
@@ -173,11 +181,10 @@ properly quoted text to the left or right of the cursor.
 
 - Select inside quote.
 - This overrides Vim's default text object to allow seeking in both directions.
-  See below for details about seeking.
 
 ```
   ............
-a ' bbbbbbbb ' c ' d
+a ' bbbbbbbb ' c ' d ' e
    └── i' ──┘
 ```
 
@@ -191,7 +198,7 @@ a ' bbbbbbbb ' c ' d
 
 ```
   ............
-a ' bbbbbbbb ' c ' d
+a ' bbbbbbbb ' c ' d ' e
   └─── a' ───┘
 ```
 
@@ -202,11 +209,10 @@ a ' bbbbbbbb ' c ' d
 - Select contents of a quote.
 - Like inside quote, but exclude whitespace at both ends. Useful for changing
   contents while preserving spacing.
-- Supports seeking.
 
 ```
   ............
-a ' bbbbbbbb ' c ' d
+a ' bbbbbbbb ' c ' d ' e
     └─ I' ─┘
 ```
 
@@ -217,11 +223,10 @@ a ' bbbbbbbb ' c ' d
 - Select around a quote.
 - Like a quote, but include whitespace in one direction. Prefers to select
   trailing whitespace, falls back to select leading whitespace.
-- Supports seeking.
 
 ```
   ............
-a ' bbbbbbbb ' c ' d
+a ' bbbbbbbb ' c ' d ' e
   └─── A' ────┘
 ```
 
@@ -262,17 +267,16 @@ Supported separators:
 , . ; : + - = ~ _ * # / | \ & $
 ```
 
+Separator text objects work over multiple lines and support seeking.
+
 The following examples will use commas, but they all work for each listed
 separator character accordingly.
-
-Separator text objects work over multiple lines.
 
 #### In Separator
 
 `i, i. i; i: i+ i- i= i~ i_ i* i# i/ i| i\ i& i$`
 
 - Select inside separators. Similar to in quote.
-- Supports seeking.
 
 ```
       ...........
@@ -288,7 +292,6 @@ a , b , cccccccc , d , e
 - Includes the leading separator, but excludes the trailing one. This leaves
   a proper list separated by the separator character after deletion. See the
   examples above.
-- Supports seeking.
 
 ```
       ...........
@@ -303,7 +306,6 @@ a , b , cccccccc , d , e
 - Select contents between separators.
 - Like inside separators, but exclude whitespace at both ends. Useful for
   changing contents while preserving spacing.
-- Supports seeking.
 
 ```
       ...........
@@ -318,7 +320,6 @@ a , b , cccccccc , d , e
 - Select around a pair of separators.
 - Includes both separators and a surrounding whitespace, similar to `a'` and
   `A(`.
-- Supports seeking.
 
 ```
       ...........
@@ -356,14 +357,13 @@ These text objects are similar to separator text objects, but are specialized
 for arguments surrounded by braces and commas. They also take matching braces
 into account to capture only valid arguments.
 
-Argument text objects work over multiple lines.
+Argument text objects work over multiple lines and support seeking.
 
 #### In Argument
 
 `ia`
 
 - Select inside arguments. Similar to in quote.
-- Supports seeking.
 - Accepts a count.
 
 ```
@@ -379,7 +379,6 @@ a , b ( cccccccc , d ) e
 - Select an argument in a list of arguments.
 - Includes a separator if preset, but excludes surrounding braces. This leaves
   a proper argument list after deletion.
-- Supports seeking.
 - Accepts a count.
 
 ```
@@ -395,7 +394,6 @@ a , b ( cccccccc , d ) e
 - Select content of an argument.
 - Like inside separators, but exclude whitespace at both ends. Useful for
   changing contents while preserving spacing.
-- Supports seeking.
 - Accepts a count.
 
 ```
@@ -411,7 +409,6 @@ a , b ( cccccccc , d ) e
 - Select around an argument.
 - Includes both delimiters and a surrounding whitespace, similar to `a'` and
   `A(`.
-- Supports seeking.
 - Accepts a count.
 
 ```

@@ -7,3 +7,4 @@ all:
 	@git diff --no-index test4.ok test4.out && echo "test4 OK" || echo "test4 failed"
 	@git diff --no-index test5.ok test5.out && echo "test5 OK" || echo "test5 failed"
 	@git diff --no-index test6.ok test6.out && echo "test6 OK" || echo "test6 failed"
+	@git diff --no-index test7.ok test7.out && echo "test7 OK" || echo "test7 failed"

@@ -5,7 +5,7 @@
 if exists("g:loaded_targets") || &cp || v:version < 700
     finish
 endif
-let g:loaded_targets = '0.4.4' " version number
+let g:loaded_targets = '0.4.5' " version number
 let s:save_cpoptions = &cpoptions
 set cpo&vim
 
@@ -116,25 +116,16 @@ function! s:createQuoteTextObjects(mapType)
         call s:addMapping2(a:mapType, triggerMap . "la', v:count1)<CR>", s:a, s:l)
         call s:addMapping2(a:mapType, triggerMap . "lI', v:count1)<CR>", s:I, s:l)
         call s:addMapping2(a:mapType, triggerMap . "lA', v:count1)<CR>", s:A, s:l)
-        call s:addMapping2(a:mapType, triggerMap . "Ni', v:count1)<CR>", s:i, s:N)
-        call s:addMapping2(a:mapType, triggerMap . "Na', v:count1)<CR>", s:a, s:N)
-        call s:addMapping2(a:mapType, triggerMap . "NI', v:count1)<CR>", s:I, s:N)
-        call s:addMapping2(a:mapType, triggerMap . "NA', v:count1)<CR>", s:A, s:N)
-        call s:addMapping2(a:mapType, triggerMap . "Li', v:count1)<CR>", s:i, s:L)
-        call s:addMapping2(a:mapType, triggerMap . "La', v:count1)<CR>", s:a, s:L)
-        call s:addMapping2(a:mapType, triggerMap . "LI', v:count1)<CR>", s:I, s:L)
-        call s:addMapping2(a:mapType, triggerMap . "LA', v:count1)<CR>", s:A, s:L)
     endfor
 endfunction
 
 " separator text objects expand to the right
-" cursor  |                   ........
-" line    │ a , bbbbb , ccccc , ddddd , eeeee , fffff , g
-" command │   ││└IL,┘│││└Il,┘│││└ I,┘│││└In,┘│││└IN,┘│ │
-"         │   │└─iL,─┤│├─il,─┤│├─ i,─┤│├─in,─┤│├─iN,─┤ │
-"         │   ├──aL,─┘├┼─al,─┘├┼─ a,─┘├┼─an,─┘├┼─aN,─┘ │
-"         │   └──AL,──┼┘      └┼─ A,──┼┘      └┼─AN,───┘
-"         │           └─ Al, ──┘      └─ An, ──┘
+" cursor  │              .............
+" line    │ a ' bbbbbbb ' c ' dddddd ' e ' fffffff ' g ~
+" command │   ││└ Il' ┘│││  ││└ I' ┘│││  ││└ In' ┘│││
+"         │   │└─ il' ─┘││  │└─ i' ─┘││  │└─ in' ─┘││
+"         │   ├── al' ──┘│  ├── a' ──┘│  ├── an' ──┘│
+"         │   └── Al' ───┘  └── A' ───┘  └── An' ───┘
 " cursor  │ .........        │       ..........
 " line    │ a , bbbb , c , d │ a , b , cccc , d
 " command │   ││└I,┘│ │      │       ││└I,┘│ │
@@ -174,7 +165,7 @@ function! s:createSeparatorTextObjects(mapType)
 endfunction
 
 " argument text objects expand to the right
-" cursor  |                          .........
+" cursor  │                          .........
 " line    │ a ( bbbbbb , ccccccc , d ( eeeeee , fffffff ) , gggggg ) h
 " command │   ││├2Ila┘│││└─Ila─┘││││ ││├─Ia─┘│││└─Ina─┘│││││└2Ina┘│ │
 "         │   │└┼2ila─┘│├──ila──┤│││ │└┼─ia──┘│├──ina──┤│││├─2ina─┤ │
