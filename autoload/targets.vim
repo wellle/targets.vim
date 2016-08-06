@@ -335,6 +335,13 @@ function! s:getDelimiters(trigger)
 endfunction
 
 function! s:getRawDelimiters(trigger)
+    " check more specific ones first for #145
+    if a:trigger ==# g:targets_tagTrigger
+        return ['t', 't', 0, 0] " TODO: set tag patterns here and remove special tag functions?
+    elseif a:trigger ==# g:targets_argTrigger
+        return ['a', 0, 0, 0]
+    endif
+
     for pair in split(g:targets_pairs)
         for trigger in split(pair, '\zs')
             if trigger ==# a:trigger
@@ -359,13 +366,7 @@ function! s:getRawDelimiters(trigger)
         endfor
     endfor
 
-    if a:trigger ==# g:targets_tagTrigger
-        return ['t', 't', 0, 0] " TODO: set tag patterns here and remove special tag functions?
-    elseif a:trigger ==# g:targets_argTrigger
-        return ['a', 0, 0, 0]
-    else
-        return [0, 0, 0, 1]
-    endif
+    return [0, 0, 0, 1]
 endfunction
 
 function! s:modifyDelimiter(kind, delimiter)
