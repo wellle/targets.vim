@@ -264,12 +264,13 @@ endfunction
 
 call s:loadSettings()
 
-" create the text objects (current total count: 528)
-call s:createPairTextObjects('o')
+" create the text objects (current total count: 544)
+" more specific ones first for #145
 call s:createTagTextObjects('o')
+call s:createArgTextObjects('o')
+call s:createPairTextObjects('o')
 call s:createQuoteTextObjects('o')
 call s:createSeparatorTextObjects('o')
-call s:createArgTextObjects('o')
 call s:addVisualMappings()
 
 let &cpoptions = s:save_cpoptions
