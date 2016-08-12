@@ -610,7 +610,7 @@ Default:
     let g:targets_argSeparator = ',' ~
 
 Defines a regular expression matching separators in an argument list. If you
-also want to find arguments separatode by semicolon, use this:
+also want to find arguments separated by semicolon, use this:
 
     let g:targets_argSeparator = '[,;]' ~
 
@@ -742,10 +742,10 @@ Works since Vim 7.4.160
 ==============================================================================
 ISSUES                                                        *targets-issues*
 
-Empty matches can't be selected because it is no possible to visually select
+Empty matches can't be selected because it is not possible to visually select
 zero-character ranges.
 
-Forcing to motion to work linewise by inserting `V` in `dVan(` doesn't work
+Forcing motion to work linewise by inserting `V` in `dVan(` doesn't work
 for operator-pending mappings. See |o_V|.
 
 Report issues or submit pull requests to:
