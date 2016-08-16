@@ -160,8 +160,7 @@ the quotation marks from the beginning of the line to decide which of these are
 the beginning of a quote and which ones are the end.
 
 If you type `ci,` on the `,` in the example below, it will automatically skip
-and change `world` instead of changing the false quote `,` between the two
-proper quotes `hello` and `world`.
+and change `world` instead of changing `,` between `hello` and `world`.
 
 ```
 buffer │ join("hello", "world")
@@ -613,7 +612,7 @@ let g:targets_argSeparator = ','
 ```
 
 Defines a regular expression matching separators in an argument list. If you
-also want to find arguments separatode by semicolon, use this:
+also want to find arguments separated by semicolon, use this:
 
 ```vim
 let g:targets_argSeparator = '[,;]'
@@ -709,7 +708,7 @@ let g:targets_jumpRanges = 'rr rb rB bb bB BB ll al Al aa Aa AA' ~
 
 - [Empty matches can't be selected because it is not possible to visually select
   zero-character ranges.][emptyrange]
-- Forcing to motion to work linewise by inserting `V` in `dVan(` doesn't work
+- Forcing motion to work linewise by inserting `V` in `dVan(` doesn't work
   for operator-pending mappings. [See `:h o_v`][o_v].
 - Report issues or submit pull requests to
   [github.com/wellle/targets.vim][targets].
