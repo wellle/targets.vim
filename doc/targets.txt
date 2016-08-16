@@ -187,7 +187,7 @@ These quote text objects try to be smarter than the default ones. They count
 the quotation marks from the beginning of the line to decide which of these
 are the beginning of a quote and which ones are the end.
 
-If you type `ci,` on the `,` in the example below, it will automatically skip
+If you type `ci"` on the `,` in the example below, it will automatically skip
 and change `world` instead of changing the false quote `,` between the two
 proper quotes `hello` and `world`.
 
