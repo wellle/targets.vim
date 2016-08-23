@@ -631,6 +631,7 @@ type depends on the relative position of the start and end of the target,
 relative to the current cursor position and the currently visible lines.
 
 The possibly relative positions are:
+    c    on cursor position ~
     l    left of cursor in current line ~
     r    right of cursor in current line ~
     a    above cursor on screen ~
@@ -648,6 +649,14 @@ symbols:
    ( )   start and end of target ~
     /    line break before and after cursor line ~
     |    screen edge between hidden and visible lines ~
+
+Ranges on cursor:
+  cr   |  /  () /  |   starting on cursor, current line ~
+  cb   |  /  (  /) |   starting on cursor, multiline down, on screen ~
+  cB   |  /  (  /  |)  starting on cursor, multiline down, partially off screen ~
+  lc   |  / ()  /  |   ending on cursor, current line ~
+  ac   | (/  )  /  |   ending on cursor, multiline up, on screen ~
+  Ac  (|  /  )  /  |   ending on cursor, multiline up, partially off screen ~
 
 Ranges around cursor:
   lr   |  / (.) /  |   around cursor, current line ~
