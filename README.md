@@ -353,6 +353,12 @@ Use your favorite plugin manager.
     Bundle 'wellle/targets.vim'
     ```
 
+- [Vim-plug][vim-plug]
+
+    ```vim
+    Plug 'wellle/targets.vim'
+    ```
+
 - [Pathogen][pathogen]
 
     ```sh
@@ -479,6 +485,7 @@ next word or paragraph.
 [surround]: https://github.com/tpope/vim-surround
 [neobundle]: https://github.com/Shougo/neobundle.vim
 [vundle]: https://github.com/gmarik/vundle
+[vim-plug]: https://github.com/junegunn/vim-plug
 [pathogen]: https://github.com/tpope/vim-pathogen
 [repeatcount]: https://groups.google.com/forum/?fromgroups#!topic/vim_dev/G4SSgcRVN7g
 [emptyrange]: https://groups.google.com/forum/#!topic/vim_use/qialxUwdcMc
