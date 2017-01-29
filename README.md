@@ -642,6 +642,11 @@ beginning or ending on the cursor are preferred over everything else.
 
 Some other useful example settings:
 
+Prefer multiline targets around cursor over distant targets within cursor line:
+```vim
+let g:targets_seekRanges = 'cr cb cB lc ac Ac lr lb ar ab lB Ar aB Ab AB rr ll rb al rB Al bb aa bB Aa BB AA'
+```
+
 Never seek backwards:
 ```vim
 let g:targets_seekRanges = 'cr cb cB lc ac Ac lr rr lb ar ab lB Ar aB Ab AB rb rB bb bB BB'
