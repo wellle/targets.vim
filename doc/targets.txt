@@ -298,7 +298,7 @@ i_ i/ i| i\ i& i$ i# i*             *i_* *i/* *i|* *i\* *i&* *i$* *i#* *istar*
                └── i, ──┘
 
 a, a. a; a: a+ a- a= a~             *a,* *a.* *a;* *a:* *a+* *a-* *a=* *a~*
-a_ a/ a| a\ a& a$ a# a*             *a_* *a/* *a|* *a\* *ar* *a$* *a#* *astar*
+a_ a/ a| a\ a& a$ a# a*             *a_* *a/* *a|* *a\* *a&* *a$* *a#* *astar*
     Select an item in a list separated by the separator character. This
     includes the leading separator, but excludes the trailing one. This leaves
     a proper list separated by the separator character after deletion. See
