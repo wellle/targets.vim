@@ -242,6 +242,19 @@ function s:testQuotes()
     write! test7.out
 endfunction
 
+function s:testReselect()
+    edit! test8.in
+    normal gg0
+
+    " select a word, then try to select a block, which fails
+    " should still be selecting word, so the first word should be changed
+    normal viw
+    normal ab
+    normal cfoo
+
+    write! test8.out
+endfunction
+
 call s:testBasic()
 call s:testMultiline()
 call s:testSeeking()
@@ -249,5 +262,6 @@ call s:testVisual()
 call s:testModifiers()
 call s:testEmpty()
 call s:testQuotes()
+call s:testReselect()
 
 quit!

@@ -37,18 +37,21 @@ call s:setup()
 
 " a:count is unused here, but added for consistency with targets#x
 function! targets#o(trigger, count)
-    call s:init('o')
+    call s:init()
+    let mapmode = 'o'
     let [delimiter, which, modifier] = split(a:trigger, '\zs')
-    let [target, rawTarget] = s:findTarget(delimiter, which, modifier, v:count1)
+    let [target, rawTarget] = s:findTarget(mapmode, delimiter, which, modifier, v:count1)
     if target.state().isInvalid()
         return s:cleanUp()
     endif
-    call s:handleTarget(target, rawTarget)
+    call s:handleTarget(mapmode, target, rawTarget)
     call s:clearCommandLine()
     call s:prepareRepeat(delimiter, which, modifier)
     call s:cleanUp()
 endfunction
 
+" 'e' is for expression; return expression to execute, used for visual
+" mappings to not break non-targets visual mappings
 function! targets#e(modifier)
     if mode() !=? 'v'
         return a:modifier
@@ -79,16 +82,18 @@ function! targets#e(modifier)
     return "\<Esc>:\<C-U>call targets#x('" . delimiter . which . a:modifier . "', " . v:count1 . ")\<CR>"
 endfunction
 
+" 'x' is for visual (as in :xnoremap, not in select mode)
 function! targets#x(trigger, count)
     call s:initX(a:trigger)
+    let mapmode = 'x'
 
     let [delimiter, which, modifier] = split(a:trigger, '\zs')
-    let [target, rawTarget] = s:findTarget(delimiter, which, modifier, a:count)
+    let [target, rawTarget] = s:findTarget(mapmode, delimiter, which, modifier, a:count)
     if target.state().isInvalid()
-        call s:abortMatch('#x: ' . target.error)
+        call s:abortMatch(mapmode, '#x: ' . target.error)
         return s:cleanUp()
     endif
-    if s:handleTarget(target, rawTarget) == 0
+    if s:handleTarget(mapmode, target, rawTarget) == 0
         let s:lastTrigger = a:trigger
         let s:lastTarget = target
     endif
@@ -96,8 +101,7 @@ function! targets#x(trigger, count)
 endfunction
 
 " initialize script local variables for the current matching
-function! s:init(mapmode)
-    let s:mapmode = a:mapmode
+function! s:init()
     let s:oldpos = getpos('.')
     let s:newSelection = 1
     let s:shouldGrow = 1
@@ -114,7 +118,7 @@ endfunction
 
 " save old visual selection to detect new selections and reselect on fail
 function! s:initX(trigger)
-    call s:init('x')
+    call s:init()
 
     let s:visualTarget = targets#target#fromVisualSelection()
 
@@ -139,7 +143,7 @@ function! s:cleanUp()
     let &whichwrap = s:whichwrap
 endfunction
 
-function! s:findTarget(delimiter, which, modifier, count)
+function! s:findTarget(mapmode, delimiter, which, modifier, count)
     let [kind, s:opening, s:closing, err] = s:getDelimiters(a:delimiter)
     if err
         let errorTarget = targets#target#withError("failed to find delimiter")
@@ -147,16 +151,16 @@ function! s:findTarget(delimiter, which, modifier, count)
     endif
 
     let view = winsaveview()
-    let rawTarget = s:findRawTarget(kind, a:which, a:count)
+    let rawTarget = s:findRawTarget(a:mapmode, kind, a:which, a:count)
     let target = s:modifyTarget(rawTarget, kind, a:modifier)
     call winrestview(view)
     return [target, rawTarget]
 endfunction
 
-function! s:findRawTarget(kind, which, count)
+function! s:findRawTarget(mapmode, kind, which, count)
     if a:kind ==# 'p'
         if a:which ==# 'c'
-            return s:seekselectp(a:count + s:grow())
+            return s:seekselectp(a:count + s:grow(a:mapmode))
         elseif a:which ==# 'n'
             call s:search(a:count, s:opening, 'W')
             return s:selectp()
@@ -199,7 +203,7 @@ function! s:findRawTarget(kind, which, count)
 
     elseif a:kind ==# 't'
         if a:which ==# 'c'
-            return s:seekselectp(a:count + s:grow(), '<\a', '</\a', 't')
+            return s:seekselectp(a:count + s:grow(a:mapmode), '<\a', '</\a', 't')
         elseif a:which ==# 'n'
             call s:search(a:count, '<\a', 'W')
             return s:selectp()
@@ -212,7 +216,7 @@ function! s:findRawTarget(kind, which, count)
 
     elseif a:kind ==# 'a'
         if a:which ==# 'c'
-            return s:seekselecta(a:count + s:grow())
+            return s:seekselecta(a:count + s:grow(a:mapmode))
         elseif a:which ==# 'n'
             return s:nextselecta(a:count)
         elseif a:which ==# 'l'
@@ -416,11 +420,11 @@ function! s:clearCommandLine()
 endfunction
 
 " handle the match by either selecting or aborting it
-function! s:handleTarget(target, rawTarget)
+function! s:handleTarget(mapmode, target, rawTarget)
     if a:target.state().isInvalid()
-        return s:abortMatch('handleTarget')
+        return s:abortMatch(a:mapmode, 'handleTarget')
     elseif a:target.state().isEmpty()
-        return s:handleEmptyMatch(a:target)
+        return s:handleEmptyMatch(a:mapmode, a:target)
     else
         return s:selectTarget(a:target, a:rawTarget)
     endif
@@ -458,9 +462,9 @@ endfunction
 " empty matches can't visually be selected
 " most operators would like to move to the end delimiter
 " for change or delete, insert temporary character that will be operated on
-function! s:handleEmptyMatch(target)
-    if s:mapmode !=# 'o' || v:operator !~# "^[cd]$"
-        return s:abortMatch('handleEmptyMatch')
+function! s:handleEmptyMatch(mapmode, target)
+    if a:mapmode !=# 'o' || v:operator !~# "^[cd]$"
+        return s:abortMatch(a:mapmode, 'handleEmptyMatch')
     endif
 
     " move cursor to delimiter after zero width match
@@ -476,19 +480,19 @@ function! s:handleEmptyMatch(target)
 endfunction
 
 " abort when no match was found
-function! s:abortMatch(message)
+function! s:abortMatch(mapmode, message)
     " get into normal mode and beep
     if !exists("*getcmdwintype") || getcmdwintype() ==# ""
         call feedkeys("\<C-\>\<C-N>\<Esc>", 'n')
     endif
 
-    call s:prepareReselect()
+    call s:prepareReselect(a:mapmode)
     call setpos('.', s:oldpos)
 
     " undo partial command
     call s:triggerUndo()
     " trigger reselect if called from xmap
-    call s:triggerReselect()
+    call s:triggerReselect(a:mapmode)
 
     return s:fail(a:message)
 endfunction
@@ -502,15 +506,15 @@ function! s:triggerUndo()
 endfunction
 
 " temporarily select original selection to reselect later
-function! s:prepareReselect()
-    if s:mapmode ==# 'x'
+function! s:prepareReselect(mapmode)
+    if a:mapmode ==# 'x'
         call s:selectRegion(s:visualTarget)
     endif
 endfunction
 
 " feed keys to reselect the last visual selection if called with mapmode x
-function! s:triggerReselect()
-    if s:mapmode ==# 'x'
+function! s:triggerReselect(mapmode)
+    if a:mapmode ==# 'x'
         call feedkeys("gv", 'n')
     endif
 endfunction
@@ -1230,8 +1234,8 @@ endfunction
 
 " return 1 if count should be increased by one to grow selection on repeated
 " invocations
-function! s:grow()
-    if s:mapmode ==# 'o' || !s:shouldGrow
+function! s:grow(mapmode)
+    if a:mapmode ==# 'o' || !s:shouldGrow
         return 0
     endif
 
