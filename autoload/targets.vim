@@ -39,12 +39,13 @@ call s:setup()
 function! targets#o(trigger, count)
     call s:init()
     let mapmode = 'o'
+    let oldpos = getpos('.')
     let [delimiter, which, modifier] = split(a:trigger, '\zs')
-    let [target, rawTarget] = s:findTarget(mapmode, delimiter, which, modifier, v:count1)
+    let [target, rawTarget] = s:findTarget(mapmode, oldpos, delimiter, which, modifier, v:count1)
     if target.state().isInvalid()
         return s:cleanUp()
     endif
-    call s:handleTarget(mapmode, target, rawTarget)
+    call s:handleTarget(mapmode, oldpos, target, rawTarget)
     call s:clearCommandLine()
     call s:prepareRepeat(delimiter, which, modifier)
     call s:cleanUp()
@@ -86,14 +87,15 @@ endfunction
 function! targets#x(trigger, count)
     call s:initX(a:trigger)
     let mapmode = 'x'
+    let oldpos = getpos('.')
 
     let [delimiter, which, modifier] = split(a:trigger, '\zs')
-    let [target, rawTarget] = s:findTarget(mapmode, delimiter, which, modifier, a:count)
+    let [target, rawTarget] = s:findTarget(mapmode, oldpos, delimiter, which, modifier, a:count)
     if target.state().isInvalid()
-        call s:abortMatch(mapmode, '#x: ' . target.error)
+        call s:abortMatch(mapmode, oldpos, '#x: ' . target.error)
         return s:cleanUp()
     endif
-    if s:handleTarget(mapmode, target, rawTarget) == 0
+    if s:handleTarget(mapmode, oldpos, target, rawTarget) == 0
         let s:lastTrigger = a:trigger
         let s:lastTarget = target
     endif
@@ -102,7 +104,6 @@ endfunction
 
 " initialize script local variables for the current matching
 function! s:init()
-    let s:oldpos = getpos('.')
     let s:newSelection = 1
     let s:shouldGrow = 1
 
@@ -143,7 +144,7 @@ function! s:cleanUp()
     let &whichwrap = s:whichwrap
 endfunction
 
-function! s:findTarget(mapmode, delimiter, which, modifier, count)
+function! s:findTarget(mapmode, oldpos, delimiter, which, modifier, count)
     let [kind, s:opening, s:closing, err] = s:getDelimiters(a:delimiter)
     if err
         let errorTarget = targets#target#withError("failed to find delimiter")
@@ -151,13 +152,13 @@ function! s:findTarget(mapmode, delimiter, which, modifier, count)
     endif
 
     let view = winsaveview()
-    let rawTarget = s:findRawTarget(a:mapmode, kind, a:which, a:count)
+    let rawTarget = s:findRawTarget(a:mapmode, a:oldpos, kind, a:which, a:count)
     let target = s:modifyTarget(rawTarget, kind, a:modifier)
     call winrestview(view)
     return [target, rawTarget]
 endfunction
 
-function! s:findRawTarget(mapmode, kind, which, count)
+function! s:findRawTarget(mapmode, oldpos, kind, which, count)
     if a:kind ==# 'p'
         if a:which ==# 'c'
             return s:seekselectp(a:count + s:grow(a:mapmode))
@@ -216,11 +217,11 @@ function! s:findRawTarget(mapmode, kind, which, count)
 
     elseif a:kind ==# 'a'
         if a:which ==# 'c'
-            return s:seekselecta(a:count + s:grow(a:mapmode))
+            return s:seekselecta(a:oldpos, a:count + s:grow(a:mapmode))
         elseif a:which ==# 'n'
-            return s:nextselecta(a:count)
+            return s:nextselecta(a:oldpos, a:count)
         elseif a:which ==# 'l'
-            return s:lastselecta(a:count)
+            return s:lastselecta(a:oldpos, a:count)
         else
             return targets#target#withError('findRawTarget a')
         endif
@@ -420,31 +421,31 @@ function! s:clearCommandLine()
 endfunction
 
 " handle the match by either selecting or aborting it
-function! s:handleTarget(mapmode, target, rawTarget)
+function! s:handleTarget(mapmode, oldpos, target, rawTarget)
     if a:target.state().isInvalid()
-        return s:abortMatch(a:mapmode, 'handleTarget')
+        return s:abortMatch(a:mapmode, a:oldpos, 'handleTarget')
     elseif a:target.state().isEmpty()
-        return s:handleEmptyMatch(a:mapmode, a:target)
+        return s:handleEmptyMatch(a:mapmode, a:oldpos, a:target)
     else
-        return s:selectTarget(a:target, a:rawTarget)
+        return s:selectTarget(a:oldpos, a:target, a:rawTarget)
     endif
 endfunction
 
 " select a proper match
-function! s:selectTarget(target, rawTarget)
+function! s:selectTarget(oldpos, target, rawTarget)
     " add old position to jump list
-    if s:addToJumplist(a:rawTarget)
-        call setpos('.', s:oldpos)
+    if s:addToJumplist(a:oldpos, a:rawTarget)
+        call setpos('.', a:oldpos)
         normal! m'
     endif
 
     call s:selectRegion(a:target)
 endfunction
 
-function! s:addToJumplist(target)
+function! s:addToJumplist(oldpos, target)
     let min = line('w0')
     let max = line('w$')
-    let range = a:target.range(s:oldpos, min, max)
+    let range = a:target.range(a:oldpos, min, max)
     return get(s:rangeJumps, range)
 endfunction
 
@@ -462,9 +463,9 @@ endfunction
 " empty matches can't visually be selected
 " most operators would like to move to the end delimiter
 " for change or delete, insert temporary character that will be operated on
-function! s:handleEmptyMatch(mapmode, target)
+function! s:handleEmptyMatch(mapmode, oldpos, target)
     if a:mapmode !=# 'o' || v:operator !~# "^[cd]$"
-        return s:abortMatch(a:mapmode, 'handleEmptyMatch')
+        return s:abortMatch(a:mapmode, a:oldpos, 'handleEmptyMatch')
     endif
 
     " move cursor to delimiter after zero width match
@@ -480,14 +481,14 @@ function! s:handleEmptyMatch(mapmode, target)
 endfunction
 
 " abort when no match was found
-function! s:abortMatch(mapmode, message)
+function! s:abortMatch(mapmode, oldpos, message)
     " get into normal mode and beep
     if !exists("*getcmdwintype") || getcmdwintype() ==# ""
         call feedkeys("\<C-\>\<C-N>\<Esc>", 'n')
     endif
 
     call s:prepareReselect(a:mapmode)
-    call setpos('.', s:oldpos)
+    call setpos('.', a:oldpos)
 
     " undo partial command
     call s:triggerUndo()
@@ -866,7 +867,7 @@ function! s:findArgBoundary(...)
 endfunction
 
 " selects and argument, supports growing and seeking
-function! s:seekselecta(count)
+function! s:seekselecta(oldpos, count)
     if a:count > 1
         if s:getchar() =~# g:targets_argClosing
             let [cnt, message] = [a:count - 2, 'seekselecta 1']
@@ -893,20 +894,21 @@ function! s:seekselecta(count)
 
     call setpos('.', oldpos)
 
-    let last = s:lastselecta()
+    let last = s:lastselecta(a:oldpos)
 
     call setpos('.', oldpos)
 
-    let next = s:nextselecta()
+    let next = s:nextselecta(a:oldpos)
 
     return s:bestSeekTarget([around, next, last], oldpos, min, max, 'seekselecta')
 endfunction
 
 " try to select a next argument, supports count and optional stopline
-" args (count=1, stopline=0)
+" args (oldpos, count=1, stopline=0)
 function! s:nextselecta(...)
-    let cnt      = a:0 >= 1 ? a:1 : 1
-    let stopline = a:0 >= 2 ? a:2 : 0
+    let oldpos   =            a:1 " required
+    let cnt      = a:0 >= 2 ? a:2 : 1
+    let stopline = a:0 >= 3 ? a:3 : 0
 
     if s:search(cnt, s:argOpeningS, 'W', stopline) > 0 " no start found
         return targets#target#withError('nextselecta 1')
@@ -922,7 +924,7 @@ function! s:nextselecta(...)
         return targets#target#withError('nextselecta 2')
     endif
 
-    call setpos('.', s:oldpos)
+    call setpos('.', oldpos)
     let opening = g:targets_argOpening
     if s:search(cnt, opening, 'W', stopline) > 0 " no start found
         return targets#target#withError('nextselecta 3')
@@ -937,10 +939,11 @@ function! s:nextselecta(...)
 endfunction
 
 " try to select a last argument, supports count and optional stopline
-" args (count=1, stopline=0)
+" args (oldpos, count=1, stopline=0)
 function! s:lastselecta(...)
-    let cnt      = a:0 >= 1 ? a:1 : 1
-    let stopline = a:0 >= 2 ? a:2 : 0
+    let oldpos   =            a:1 " required
+    let cnt      = a:0 >= 2 ? a:2 : 1
+    let stopline = a:0 >= 3 ? a:3 : 0
 
     " special case to handle vala when invoked on a separator
     let separator = g:targets_argSeparator
@@ -965,7 +968,7 @@ function! s:lastselecta(...)
         return targets#target#withError('lastselecta 2')
     endif
 
-    call setpos('.', s:oldpos)
+    call setpos('.', a:oldpos)
     let closing = g:targets_argClosing
     if s:search(cnt, closing, 'bW', stopline) > 0 " no start found
         return targets#target#withError('lastselecta 3')

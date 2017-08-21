@@ -112,20 +112,20 @@ function! s:testMultiline()
 
     execute "normal /comment 1\<CR>"
     set autoindent
-    execute "normal cin{foo\<Esc>"
+    execute "normal cin{foo\<Esc>''A bar"
     set autoindent&
 
     execute "normal /comment 2\<CR>"
-    execute "normal din{"
+    execute "normal din{''A bar"
 
     execute "normal /comment 3\<CR>"
-    execute "normal cin;foo\<Esc>"
+    execute "normal cin;foo\<Esc>''A bar"
 
     execute "normal /comment 4\<CR>"
-    execute "normal cin`foo\<Esc>"
+    execute "normal cin`foo\<Esc>''A bar"
 
     execute "normal /comment 5\<CR>"
-    execute "normal cI{foo\<Esc>"
+    execute "normal cI{foo\<Esc>''A bar"
 
     write! test2.out
 endfunction
