@@ -103,6 +103,7 @@ function! targets#x(trigger, count)
     if s:handleTarget(context, target, rawTarget) == 0
         let s:lastTrigger = a:trigger
         let s:lastTarget = target
+        let s:lastRawTarget = rawTarget
     endif
     call s:cleanUp()
 endfunction
@@ -1246,6 +1247,10 @@ function! s:grow(context)
     if a:context.mapmode ==# 'o' || !s:shouldGrow
         return 0
     endif
+
+    " move cursor to boundary of last raw target
+    " to handle expansion in tight boundaries like (((x)))
+    call s:lastRawTarget.cursorE()
 
     return 1
 endfunction
