@@ -130,41 +130,43 @@ function! targets#target#state() dict
     endif
 endfunction
 
+" returns range characters and min distance to cursor (lines; characters)
 function! targets#target#range(cursor, min, max) dict
     if self.error != ''
-        return ''
+        return ['', 1/0, 1/0]
     endif
 
-    let positionS = s:position(self.sl, self.sc, a:cursor, a:min, a:max, 'c')
-    let positionE = s:position(self.el, self.ec, a:cursor, a:min, a:max, 'c')
-    return positionS . positionE
+    let [positionS, linesS, charsS] = s:position(self.sl, self.sc, a:cursor, a:min, a:max)
+    let [positionE, linesE, charsE] = s:position(self.el, self.ec, a:cursor, a:min, a:max)
+    return [positionS . positionE, min([linesS, linesE]), min([charsS, charsE])]
 endfunction
 
-function! s:position(line, column, cursor, min, max, tie)
+" returns position character and distances to cursor (lines; characters)
+function! s:position(line, column, cursor, min, max)
     let cursorLine = a:cursor[1]
 
     if a:line == cursorLine " cursor line
         let cursorColumn = a:cursor[2]
         if a:column == cursorColumn " same column
-            return a:tie
+            return ['c', 0, 0]
         elseif a:column < cursorColumn " left of cursor
-            return 'l'
+            return ['l', 0, cursorColumn - a:column]
         else " a:column > cursorColumn " right of cursor
-            return 'r'
+            return ['r', 0, a:column - cursorColumn]
         endif
 
     elseif a:line < cursorLine
         if a:line >= a:min " above on screen
-            return 'a'
+            return ['a', cursorLine - a:line, 1/0]
         else " above off screen
-            return 'A'
+            return ['A', cursorLine - a:line, 1/0]
         endif
 
     else " a:line > cursorLine
         if a:line <= a:max " below on screen
-            return 'b'
+            return ['b', a:line - cursorLine, 1/0]
         else " below off screen
-            return 'B'
+            return ['B', a:line - cursorLine, 1/0]
         endif
     endif
 endfunction

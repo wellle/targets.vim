@@ -225,19 +225,51 @@ function! s:findTarget(context, delimiter, which, modifier, count)
 endfunction
 
 function! s:findRawTarget(context, kind, which, count)
+    " TODO: inject into this function? or add to context?
+    let min = line('w0')
+    let max = line('w$')
+    let oldpos = getpos('.')
+
     if a:kind ==# 'p'
+        let argsList = [[s:opening, s:closing]]
+        " let argsList = [['(', ')'], ['{', '}'], ['[', ']']]
+
         if a:which ==# 'c'
-            return s:seekselectp(a:count + s:grow(a:context))
+            let cnt = a:count + s:grow(a:context)
+            " need to update as s:grow might move cursor, how can we fix that
+            " nicely? do it outside and early?
+            let oldpos = getpos('.')
+
+            if cnt == 1 " seek
+                let gen = s:newMultiGen(oldpos, min, max)
+                for args in argsList
+                    let g = s:newGen('P', oldpos, args[0], args[1], args[1])
+                    call gen.add(g.child('C'), g.child('N'), g.child('L'))
+                endfor
+                return gen.next()
+            endif
+
+            " don't seek
+            let gen = s:newMultiGen(oldpos, min, max)
+            for args in argsList
+                call gen.add(s:newGen('PC', oldpos, args[0], args[1], args[1]))
+            endfor
+            return gen.nextN(cnt)
+
         elseif a:which ==# 'n'
-            if s:search(a:count, s:opening, 'W') > 0
-                return targets#target#withError('findRawTarget pn')
-            endif
-            return s:selectp()
+            let gen = s:newMultiGen(oldpos, min, max)
+            for args in argsList
+                call gen.add(s:newGen('PN', oldpos, args[0], args[1], args[1]))
+            endfor
+            return gen.nextN(a:count)
+
         elseif a:which ==# 'l'
-            if s:search(a:count, s:closing, 'bW') > 0
-                return targets#target#withError('findRawTarget pl')
-            endif
-            return s:selectp()
+            let gen = s:newMultiGen(oldpos, min, max)
+            for args in argsList
+                call gen.add(s:newGen('PL', oldpos, args[0], args[1], args[1]))
+            endfor
+            return gen.nextN(a:count)
+
         else
             return targets#target#withError('findRawTarget p')
         endif
@@ -275,12 +307,12 @@ function! s:findRawTarget(context, kind, which, count)
             if s:search(a:count, '<\a', 'W') > 0
                 return targets#target#withError('findRawTarget tn')
             endif
-            return s:selectp()
+            return s:selectp(1, s:opening)
         elseif a:which ==# 'l'
             if s:search(a:count, '</\a\zs', 'bW') > 0
                 return targets#target#withError('findRawTarget tn')
             endif
-            return s:selectp()
+            return s:selectp(1, s:opening)
         else
             return targets#target#withError('findRawTarget t')
         endif
@@ -515,7 +547,7 @@ endfunction
 function! s:addToJumplist(context, target)
     let min = line('w0')
     let max = line('w$')
-    let range = a:target.range(a:context.oldpos, min, max)
+    let range = a:target.range(a:context.oldpos, min, max)[0]
     return get(s:rangeJumps, range)
 endfunction
 
@@ -701,17 +733,14 @@ function! s:seekselect(dir, countL, countR)
 
     let next = s:nextselect(a:countR)
 
-    return s:bestSeekTarget([around, next, last], oldpos, min, max, 'seekselect')
+    return s:bestTarget([around, next, last], oldpos, min, max, 'seekselect')[0]
 endfunction
 
 " select a pair around the cursor
-" args (count=1, trigger=s:opening)
-function! s:selectp(...)
-    let cnt     = a:0 >= 1 ? a:1 : 1
-    let trigger = a:0 >= 2 ? a:2 : s:opening
-
+" args (count, trigger)
+function! s:selectp(count, trigger)
     " try to select pair
-    silent! execute 'keepjumps normal! v' . cnt . 'a' . trigger
+    silent! execute 'keepjumps normal! v' . a:count . 'a' . a:trigger
     let [el, ec] = getpos('.')[1:2]
     silent! normal! o
     let [sl, sc] = getpos('.')[1:2]
@@ -729,36 +758,31 @@ endfunction
 " line     │ ( ( a ) )
 " modifier │ │ └─1─┘ │
 "          │ └── 2 ──┘
-" args (count, opening=s:opening, closing=s:closing, trigger=s:closing)
-function! s:seekselectp(...)
-    let cnt     =            a:1 " required
-    let opening = a:0 >= 2 ? a:2 : s:opening
-    let closing = a:0 >= 3 ? a:3 : s:closing
-    let trigger = a:0 >= 4 ? a:4 : s:closing
-
+" args (count, opening, closing, trigger)
+function! s:seekselectp(count, opening, closing, trigger)
     let min = line('w0')
     let max = line('w$')
     let oldpos = getpos('.')
 
-    let around = s:selectp(cnt, trigger)
+    let around = s:selectp(a:count, a:trigger)
 
-    if cnt > 1 " don't seek with count
+    if a:count > 1 " don't seek with count
         return around
     endif
 
     let targets = [around]
 
     call setpos('.', oldpos)
-    if s:search(1, s:closing, 'bW') == 0
-        let targets = add(targets, s:selectp())
+    if s:search(1, a:closing, 'bW') == 0
+        let targets = add(targets, s:selectp(1, a:opening))
     endif
 
     call setpos('.', oldpos)
-    if s:search(1, s:opening, 'W') == 0
-        let targets = add(targets, s:selectp())
+    if s:search(1, a:opening, 'W') == 0
+        let targets = add(targets, s:selectp(1, a:opening))
     endif
 
-    return s:bestSeekTarget(targets, oldpos, min, max, 'seekselectp')
+    return s:bestTarget(targets, oldpos, min, max, 'seekselectp')[0]
 endfunction
 
 " select an argument around the cursor
@@ -906,7 +930,7 @@ function! s:seekselecta(context, count)
 
     let next = s:nextselecta(a:context)
 
-    return s:bestSeekTarget([around, next, last], oldpos, min, max, 'seekselecta')
+    return s:bestTarget([around, next, last], oldpos, min, max, 'seekselecta')[0]
 endfunction
 
 " try to select a next argument, supports count and optional stopline
@@ -1052,22 +1076,27 @@ endfunction
 "      └───────────┘   visible screen
 "         └─────┘      current line
 
-function! s:bestSeekTarget(targets, oldpos, min, max, message)
-    let bestScore = 0
-    for target in a:targets
-        let range = target.range(a:oldpos, a:min, a:max)
+" returns best target (and its index) according to range score and distance to cursor
+function! s:bestTarget(targets, oldpos, min, max, message)
+    let [bestScore, minLines, minChars] = [0, 1/0, 1/0] " 1/0 = maxint
+
+    let cnt = len(a:targets)
+    for idx in range(cnt)
+        let target = a:targets[idx]
+        let [range, lines, chars] = target.range(a:oldpos, a:min, a:max)
         let score = get(s:rangeScores, range)
-        if bestScore < score
-            let bestScore = score
-            let best = target
+        if (score > bestScore) ||
+                    \ (score == bestScore && lines < minLines) ||
+                    \ (score == bestScore && lines == minLines && chars < minChars)
+            let [bestScore, minLines, minChars, best, bestIdx] = [score, lines, chars, target, idx]
         endif
     endfor
 
-    if bestScore > 0
-        return best
+    if exists('best')
+        return [best, bestIdx]
     endif
 
-    return targets#target#withError(a:message)
+    return [targets#target#withError(a:message), -1]
 endfunction
 
 " selection modifiers
@@ -1278,6 +1307,157 @@ endfunction
 
 function! s:count(char, text)
     return len(split(a:text, a:char, 1)) - 1
+endfunction
+
+" TODO: move to new file and rename functions accordingly
+
+function! s:newGen(funcNameSuffix, oldpos, opening, trigger, closing)
+    let gen = {
+        \ 'oldpos': a:oldpos,
+        \ 'opening': a:opening,
+        \ 'closing': a:closing,
+        \ 'trigger': a:trigger,
+        \ 'funcNameSuffix': a:funcNameSuffix,
+        \
+        \ 'init': function('s:geninit'),
+        \ 'child': function('s:genchild'),
+        \ 'target': function('s:gentarget'),
+        \ 'nextN': function('s:gennextN'),
+        \ }
+    call gen.init(a:funcNameSuffix)
+    return gen
+endfunction
+
+function! s:genchild(funcNameSuffix) dict
+    let gen = {
+        \ 'oldpos': self.oldpos,
+        \ 'opening': self.opening,
+        \ 'closing': self.closing,
+        \ 'trigger': self.trigger,
+        \
+        \ 'init': function('s:geninit'),
+        \ 'child': function('s:genchild'),
+        \ 'target': function('s:gentarget'),
+        \ 'nextN': function('s:gennextN'),
+        \ }
+    call gen.init(self.funcNameSuffix . a:funcNameSuffix)
+    return gen
+endfunction
+
+function! s:geninit(funcNameSuffix) dict
+    if len(a:funcNameSuffix) == 2
+        let self.next = function('s:gennext' . a:funcNameSuffix)
+    endif
+endfunction
+
+function! s:gentarget() dict
+    if exists('self.currentTarget')
+        return self.currentTarget
+    endif
+
+    return targets#target#withError('no target')
+endfunction
+
+function! s:gennextN(n) dict
+    for i in range(1, a:n)
+        call self.next()
+    endfor
+    return self.target()
+endfunction
+
+" TODO: use some templating here to avoid repetition?
+
+function! s:gennextPC() dict
+    if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
+        return self.currentTarget
+    endif
+
+    call setpos('.', self.oldpos)
+
+    let cnt = 1
+    if exists('self.called')
+        let cnt = 2
+    endif
+
+    let self.currentTarget = s:selectp(cnt, self.trigger)
+
+    let self.oldpos = getpos('.')
+    let self.called = 1
+
+    return self.currentTarget
+endfunction
+
+function! s:gennextPN() dict
+    if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
+        return self.currentTarget
+    endif
+
+    call setpos('.', self.oldpos)
+
+    if s:search(1, self.opening, 'W') > 0
+        let self.currentTarget = targets#target#withError('no target')
+    else
+        let self.oldpos = getpos('.')
+        let self.currentTarget = s:selectp(1, self.trigger)
+    endif
+
+    return self.currentTarget
+endfunction
+
+function! s:gennextPL() dict
+    if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
+        return self.currentTarget
+    endif
+
+    call setpos('.', self.oldpos)
+
+    if s:search(1, self.closing, 'bW') > 0
+        let self.currentTarget = targets#target#withError('no target')
+    else
+        let self.oldpos = getpos('.')
+        let self.currentTarget = s:selectp(1, self.trigger)
+    endif
+
+    return self.currentTarget
+endfunction
+
+function! s:newMultiGen(oldpos, min, max)
+    return {
+                \ 'gens': [],
+                \ 'oldpos': a:oldpos,
+                \ 'min': a:min,
+                \ 'max': a:max,
+                \
+                \ 'add': function('s:multigenadd'),
+                \ 'next': function('s:multigennext'),
+                \ 'nextN': function('s:gennextN'),
+                \ 'target': function('s:gentarget')
+                \ }
+endfunction
+
+function! s:multigenadd(...) dict
+    for gen in a:000
+        call add(self.gens, gen)
+    endfor
+endfunction
+
+function! s:multigennext() dict
+    if !exists('self.called')
+        for gen in self.gens
+            call gen.next()
+        endfor
+    endif
+
+    let self.called = 1
+
+    let targets = []
+    for gen in self.gens
+        call add(targets, gen.target())
+    endfor
+
+    let [self.currentTarget, idx] = s:bestTarget(targets, self.oldpos, self.min, self.max, 'multigen')
+    call self.gens[idx].next()
+    return self.currentTarget
 endfunction
 
 " return 1 and send a message to s:debug
