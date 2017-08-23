@@ -880,8 +880,10 @@ function! s:seekselecta(context, count)
         endif
         " find cnt closing while skipping matched openings
         let [opening, closing] = [s:argOpening, s:argClosing]
-        if s:findArgBoundary('W', 'W', opening, closing, s:argOuter, s:none, cnt)[2] > 0
-            return targets#target#withError(message . ' count')
+        if cnt > 0
+            if s:findArgBoundary('W', 'W', opening, closing, s:argOuter, s:none, cnt)[2] > 0
+                return targets#target#withError(message . ' count')
+            endif
         endif
         return s:selecta('^')
     endif
