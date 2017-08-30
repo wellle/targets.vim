@@ -275,27 +275,27 @@ function! s:findRawTarget(context, kind, which, count)
         endif
 
     elseif a:kind ==# 'q'
-        let [dir, rate, skipL, skipR, error] = s:quoteDir()
+        let [dir, rate, skipL, skipR, error] = s:quoteDir(s:opening)
         if error !=# ''
             return targets#target#withError('findRawTarget quoteDir')
         endif
         if a:which ==# 'c'
-            return s:seekselect(dir, rate - skipL, rate - skipR)
+            return s:seekselect(s:opening, s:closing, dir, rate - skipL, rate - skipR)
         elseif a:which ==# 'n'
-            return s:nextselect(a:count * rate - skipR)
+            return s:nextselect(s:opening, s:closing, a:count * rate - skipR)
         elseif a:which ==# 'l'
-            return s:lastselect(a:count * rate - skipL)
+            return s:lastselect(s:opening, s:closing, a:count * rate - skipL)
         else
             return targets#target#withError('findRawTarget q: ' . a:which)
         endif
 
     elseif a:kind ==# 's'
         if a:which ==# 'c'
-            return s:seekselect('>', 1, 1)
+            return s:seekselect(s:opening, s:closing, '>', 1, 1)
         elseif a:which ==# 'n'
-            return s:nextselect(a:count)
+            return s:nextselect(s:opening, s:closing, a:count)
         elseif a:which ==# 'l'
-            return s:lastselect(a:count)
+            return s:lastselect(s:opening, s:closing, a:count)
         else
             return targets#target#withError('findRawTarget s')
         endif
@@ -652,7 +652,7 @@ function! targets#undo(lastseq)
 endfunction
 
 " returns [dir, rate, skipL, skipR, error]
-function! s:quoteDir()
+function! s:quoteDir(delimiter)
     let line = getline('.')
     let col = col('.')
 
@@ -662,9 +662,9 @@ function! s:quoteDir()
     let right = line[col :]
 
     " how many delitimers left, on and right of cursor
-    let lc = s:count(s:opening, left)
-    let cc = s:count(s:opening, cursor)
-    let rc = s:count(s:opening, right)
+    let lc = s:count(a:delimiter, left)
+    let cc = s:count(a:delimiter, cursor)
+    let rc = s:count(a:delimiter, right)
 
     " truncate counts
     let lc = lc == 0 ? 0 : lc % 2 == 0 ? 2 : 1
@@ -676,22 +676,22 @@ function! s:quoteDir()
     return [dir, rate, skipL, skipR, error]
 endfunction
 
-function! s:nextselect(count)
+function! s:nextselect(opening, closing, count)
     " echom 'nextselect' a:count
-    if s:search(a:count, s:opening, 'W') > 0
+    if s:search(a:count, a:opening, 'W') > 0
         return targets#target#withError('nextselect')
     endif
 
-    return s:select('>')
+    return s:select(a:opening, a:closing, '>')
 endfunction
 
-function! s:lastselect(count)
+function! s:lastselect(opening, closing, count)
     " echom 'lastselect' a:count
-    if s:search(a:count, s:closing, 'bW') > 0
+    if s:search(a:count, a:closing, 'bW') > 0
         return targets#target#withError('lastselect')
     endif
 
-    return s:select('<')
+    return s:select(a:opening, a:closing, '<')
 endfunction
 
 " match selectors
@@ -702,36 +702,36 @@ endfunction
 " cursor  │   ....
 " line    │ ' ' b ' '
 " matcher │   └───┘
-function! s:select(direction)
+function! s:select(opening, closing, direction)
     if a:direction ==# ''
         return targets#target#withError('select without direction')
     elseif a:direction ==# '>'
-        let [sl, sc] = searchpos(s:opening, 'bcW') " search left for opening
-        let [el, ec] = searchpos(s:closing, 'W')   " then right for closing
+        let [sl, sc] = searchpos(a:opening, 'bcW') " search left for opening
+        let [el, ec] = searchpos(a:closing, 'W')   " then right for closing
         return targets#target#fromValues(sl, sc, el, ec)
     else
-        let [el, ec] = searchpos(s:closing, 'cW') " search right for closing
-        let [sl, sc] = searchpos(s:opening, 'bW') " then left for opening
+        let [el, ec] = searchpos(a:closing, 'cW') " search right for closing
+        let [sl, sc] = searchpos(a:opening, 'bW') " then left for opening
         return targets#target#fromValues(sl, sc, el, ec)
     endif
 endfunction
 
 " select pair of delimiters around cursor (multi line, supports seeking)
-function! s:seekselect(dir, countL, countR)
+function! s:seekselect(opening, closing, dir, countL, countR)
     " echom 'seekselect' a:dir 'countL' a:countL 'countR' a:countR
     let min = line('w0')
     let max = line('w$')
     let oldpos = getpos('.')
 
-    let around = s:select(a:dir)
+    let around = s:select(a:opening, a:closing, a:dir)
 
     call setpos('.', oldpos)
 
-    let last = s:lastselect(a:countL)
+    let last = s:lastselect(a:opening, a:closing, a:countL)
 
     call setpos('.', oldpos)
 
-    let next = s:nextselect(a:countR)
+    let next = s:nextselect(a:opening, a:closing, a:countR)
 
     return s:bestTarget([around, next, last], oldpos, min, max, 'seekselect')[0]
 endfunction
