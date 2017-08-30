@@ -231,8 +231,11 @@ function! s:findRawTarget(context, kind, which, count)
     let oldpos = getpos('.')
 
     if a:kind ==# 'p'
-        let argsList = [[s:opening, s:closing]]
-        " let argsList = [['(', ')'], ['{', '}'], ['[', ']']]
+        let argsList = [{'opening': s:opening, 'closing': s:closing, 'trigger': s:closing}]
+        " let argsList = [
+        "             \ {'opening': '(', 'closing': ')', 'trigger': ')'},
+        "             \ {'opening': '{', 'closing': '}', 'trigger': '}'},
+        "             \ {'opening': '[', 'closing': ']', 'trigger': ']'}]
 
         if a:which ==# 'c'
             let cnt = a:count + s:grow(a:context)
@@ -243,7 +246,7 @@ function! s:findRawTarget(context, kind, which, count)
             if cnt == 1 " seek
                 let gen = s:newMultiGen(oldpos, min, max)
                 for args in argsList
-                    let g = s:newGen('P', oldpos, args[0], args[1], args[1])
+                    let g = s:newGen('P', oldpos, args)
                     call gen.add(g.child('C'), g.child('N'), g.child('L'))
                 endfor
                 return gen.next()
@@ -252,21 +255,21 @@ function! s:findRawTarget(context, kind, which, count)
             " don't seek
             let gen = s:newMultiGen(oldpos, min, max)
             for args in argsList
-                call gen.add(s:newGen('PC', oldpos, args[0], args[1], args[1]))
+                call gen.add(s:newGen('PC', oldpos, args))
             endfor
             return gen.nextN(cnt)
 
         elseif a:which ==# 'n'
             let gen = s:newMultiGen(oldpos, min, max)
             for args in argsList
-                call gen.add(s:newGen('PN', oldpos, args[0], args[1], args[1]))
+                call gen.add(s:newGen('PN', oldpos, args))
             endfor
             return gen.nextN(a:count)
 
         elseif a:which ==# 'l'
             let gen = s:newMultiGen(oldpos, min, max)
             for args in argsList
-                call gen.add(s:newGen('PL', oldpos, args[0], args[1], args[1]))
+                call gen.add(s:newGen('PL', oldpos, args))
             endfor
             return gen.nextN(a:count)
 
@@ -1311,12 +1314,10 @@ endfunction
 
 " TODO: move to new file and rename functions accordingly
 
-function! s:newGen(funcNameSuffix, oldpos, opening, trigger, closing)
+function! s:newGen(funcNameSuffix, oldpos, args)
     let gen = {
         \ 'oldpos': a:oldpos,
-        \ 'opening': a:opening,
-        \ 'closing': a:closing,
-        \ 'trigger': a:trigger,
+        \ 'args': a:args,
         \ 'funcNameSuffix': a:funcNameSuffix,
         \
         \ 'init': function('s:geninit'),
@@ -1331,9 +1332,7 @@ endfunction
 function! s:genchild(funcNameSuffix) dict
     let gen = {
         \ 'oldpos': self.oldpos,
-        \ 'opening': self.opening,
-        \ 'closing': self.closing,
-        \ 'trigger': self.trigger,
+        \ 'args': self.args,
         \
         \ 'init': function('s:geninit'),
         \ 'child': function('s:genchild'),
@@ -1379,10 +1378,10 @@ function! s:gennextPC() dict
         let cnt = 2
     endif
 
-    let self.currentTarget = s:selectp(cnt, self.trigger)
+    let self.currentTarget = s:selectp(cnt, self.args.trigger)
 
     let self.oldpos = getpos('.')
-    let self.called = 1
+    let self.called = 1 " group these somehow? self.internal.called
 
     return self.currentTarget
 endfunction
@@ -1394,11 +1393,11 @@ function! s:gennextPN() dict
 
     call setpos('.', self.oldpos)
 
-    if s:search(1, self.opening, 'W') > 0
+    if s:search(1, self.args.opening, 'W') > 0
         let self.currentTarget = targets#target#withError('no target')
     else
         let self.oldpos = getpos('.')
-        let self.currentTarget = s:selectp(1, self.trigger)
+        let self.currentTarget = s:selectp(1, self.args.trigger)
     endif
 
     return self.currentTarget
@@ -1411,11 +1410,11 @@ function! s:gennextPL() dict
 
     call setpos('.', self.oldpos)
 
-    if s:search(1, self.closing, 'bW') > 0
+    if s:search(1, self.args.closing, 'bW') > 0
         let self.currentTarget = targets#target#withError('no target')
     else
         let self.oldpos = getpos('.')
-        let self.currentTarget = s:selectp(1, self.trigger)
+        let self.currentTarget = s:selectp(1, self.args.trigger)
     endif
 
     return self.currentTarget
