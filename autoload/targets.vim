@@ -37,18 +37,25 @@ call s:setup()
 
 " a:count is unused here, but added for consistency with targets#x
 function! targets#o(trigger, count)
-    call s:init('o')
+    call s:init()
+    let context = {
+        \ 'mapmode': 'o',
+        \ 'oldpos': getpos('.'),
+        \ }
+
     let [delimiter, which, modifier] = split(a:trigger, '\zs')
-    let [target, rawTarget] = s:findTarget(delimiter, which, modifier, v:count1)
+    let [target, rawTarget] = s:findTarget(context, delimiter, which, modifier, v:count1)
     if target.state().isInvalid()
         return s:cleanUp()
     endif
-    call s:handleTarget(target, rawTarget)
+    call s:handleTarget(context, target, rawTarget)
     call s:clearCommandLine()
     call s:prepareRepeat(delimiter, which, modifier)
     call s:cleanUp()
 endfunction
 
+" 'e' is for expression; return expression to execute, used for visual
+" mappings to not break non-targets visual mappings
 function! targets#e(modifier)
     if mode() !=? 'v'
         return a:modifier
@@ -79,26 +86,30 @@ function! targets#e(modifier)
     return "\<Esc>:\<C-U>call targets#x('" . delimiter . which . a:modifier . "', " . v:count1 . ")\<CR>"
 endfunction
 
+" 'x' is for visual (as in :xnoremap, not in select mode)
 function! targets#x(trigger, count)
     call s:initX(a:trigger)
+    let context = {
+        \ 'mapmode': 'x',
+        \ 'oldpos': getpos('.'),
+        \ }
 
     let [delimiter, which, modifier] = split(a:trigger, '\zs')
-    let [target, rawTarget] = s:findTarget(delimiter, which, modifier, a:count)
+    let [target, rawTarget] = s:findTarget(context, delimiter, which, modifier, a:count)
     if target.state().isInvalid()
-        call s:abortMatch('#x: ' . target.error)
+        call s:abortMatch(context, '#x: ' . target.error)
         return s:cleanUp()
     endif
-    if s:handleTarget(target, rawTarget) == 0
+    if s:handleTarget(context, target, rawTarget) == 0
         let s:lastTrigger = a:trigger
         let s:lastTarget = target
+        let s:lastRawTarget = rawTarget
     endif
     call s:cleanUp()
 endfunction
 
 " initialize script local variables for the current matching
-function! s:init(mapmode)
-    let s:mapmode = a:mapmode
-    let s:oldpos = getpos('.')
+function! s:init()
     let s:newSelection = 1
     let s:shouldGrow = 1
 
@@ -114,7 +125,7 @@ endfunction
 
 " save old visual selection to detect new selections and reselect on fail
 function! s:initX(trigger)
-    call s:init('x')
+    call s:init()
 
     let s:visualTarget = targets#target#fromVisualSelection()
 
@@ -139,7 +150,7 @@ function! s:cleanUp()
     let &whichwrap = s:whichwrap
 endfunction
 
-function! s:findTarget(delimiter, which, modifier, count)
+function! s:findTarget(context, delimiter, which, modifier, count)
     let [kind, s:opening, s:closing, err] = s:getDelimiters(a:delimiter)
     if err
         let errorTarget = targets#target#withError("failed to find delimiter")
@@ -147,16 +158,16 @@ function! s:findTarget(delimiter, which, modifier, count)
     endif
 
     let view = winsaveview()
-    let rawTarget = s:findRawTarget(kind, a:which, a:count)
+    let rawTarget = s:findRawTarget(a:context, kind, a:which, a:count)
     let target = s:modifyTarget(rawTarget, kind, a:modifier)
     call winrestview(view)
     return [target, rawTarget]
 endfunction
 
-function! s:findRawTarget(kind, which, count)
+function! s:findRawTarget(context, kind, which, count)
     if a:kind ==# 'p'
         if a:which ==# 'c'
-            return s:seekselectp(a:count + s:grow())
+            return s:seekselectp(a:count + s:grow(a:context))
         elseif a:which ==# 'n'
             call s:search(a:count, s:opening, 'W')
             return s:selectp()
@@ -199,7 +210,7 @@ function! s:findRawTarget(kind, which, count)
 
     elseif a:kind ==# 't'
         if a:which ==# 'c'
-            return s:seekselectp(a:count + s:grow(), '<\a', '</\a', 't')
+            return s:seekselectp(a:count + s:grow(a:context), '<\a', '</\a', 't')
         elseif a:which ==# 'n'
             call s:search(a:count, '<\a', 'W')
             return s:selectp()
@@ -212,11 +223,11 @@ function! s:findRawTarget(kind, which, count)
 
     elseif a:kind ==# 'a'
         if a:which ==# 'c'
-            return s:seekselecta(a:count + s:grow())
+            return s:seekselecta(a:context, a:count + s:grow(a:context))
         elseif a:which ==# 'n'
-            return s:nextselecta(a:count)
+            return s:nextselecta(a:context, a:count)
         elseif a:which ==# 'l'
-            return s:lastselecta(a:count)
+            return s:lastselecta(a:context, a:count)
         else
             return targets#target#withError('findRawTarget a')
         endif
@@ -416,31 +427,31 @@ function! s:clearCommandLine()
 endfunction
 
 " handle the match by either selecting or aborting it
-function! s:handleTarget(target, rawTarget)
+function! s:handleTarget(context, target, rawTarget)
     if a:target.state().isInvalid()
-        return s:abortMatch('handleTarget')
+        return s:abortMatch(a:context, 'handleTarget')
     elseif a:target.state().isEmpty()
-        return s:handleEmptyMatch(a:target)
+        return s:handleEmptyMatch(a:context, a:target)
     else
-        return s:selectTarget(a:target, a:rawTarget)
+        return s:selectTarget(a:context, a:target, a:rawTarget)
     endif
 endfunction
 
 " select a proper match
-function! s:selectTarget(target, rawTarget)
+function! s:selectTarget(context, target, rawTarget)
     " add old position to jump list
-    if s:addToJumplist(a:rawTarget)
-        call setpos('.', s:oldpos)
+    if s:addToJumplist(a:context, a:rawTarget)
+        call setpos('.', a:context.oldpos)
         normal! m'
     endif
 
     call s:selectRegion(a:target)
 endfunction
 
-function! s:addToJumplist(target)
+function! s:addToJumplist(context, target)
     let min = line('w0')
     let max = line('w$')
-    let range = a:target.range(s:oldpos, min, max)
+    let range = a:target.range(a:context.oldpos, min, max)
     return get(s:rangeJumps, range)
 endfunction
 
@@ -458,9 +469,9 @@ endfunction
 " empty matches can't visually be selected
 " most operators would like to move to the end delimiter
 " for change or delete, insert temporary character that will be operated on
-function! s:handleEmptyMatch(target)
-    if s:mapmode !=# 'o' || v:operator !~# "^[cd]$"
-        return s:abortMatch('handleEmptyMatch')
+function! s:handleEmptyMatch(context, target)
+    if a:context.mapmode !=# 'o' || v:operator !~# "^[cd]$"
+        return s:abortMatch(a:context, 'handleEmptyMatch')
     endif
 
     " move cursor to delimiter after zero width match
@@ -476,19 +487,19 @@ function! s:handleEmptyMatch(target)
 endfunction
 
 " abort when no match was found
-function! s:abortMatch(message)
+function! s:abortMatch(context, message)
     " get into normal mode and beep
     if !exists("*getcmdwintype") || getcmdwintype() ==# ""
         call feedkeys("\<C-\>\<C-N>\<Esc>", 'n')
     endif
 
-    call s:prepareReselect()
-    call setpos('.', s:oldpos)
+    call s:prepareReselect(a:context)
+    call setpos('.', a:context.oldpos)
 
     " undo partial command
     call s:triggerUndo()
     " trigger reselect if called from xmap
-    call s:triggerReselect()
+    call s:triggerReselect(a:context)
 
     return s:fail(a:message)
 endfunction
@@ -502,15 +513,15 @@ function! s:triggerUndo()
 endfunction
 
 " temporarily select original selection to reselect later
-function! s:prepareReselect()
-    if s:mapmode ==# 'x'
+function! s:prepareReselect(context)
+    if a:context.mapmode ==# 'x'
         call s:selectRegion(s:visualTarget)
     endif
 endfunction
 
 " feed keys to reselect the last visual selection if called with mapmode x
-function! s:triggerReselect()
-    if s:mapmode ==# 'x'
+function! s:triggerReselect(context)
+    if a:context.mapmode ==# 'x'
         call feedkeys("gv", 'n')
     endif
 endfunction
@@ -862,7 +873,7 @@ function! s:findArgBoundary(...)
 endfunction
 
 " selects and argument, supports growing and seeking
-function! s:seekselecta(count)
+function! s:seekselecta(context, count)
     if a:count > 1
         if s:getchar() =~# g:targets_argClosing
             let [cnt, message] = [a:count - 2, 'seekselecta 1']
@@ -889,20 +900,21 @@ function! s:seekselecta(count)
 
     call setpos('.', oldpos)
 
-    let last = s:lastselecta()
+    let last = s:lastselecta(a:context.oldpos)
 
     call setpos('.', oldpos)
 
-    let next = s:nextselecta()
+    let next = s:nextselecta(a:context.oldpos)
 
     return s:bestSeekTarget([around, next, last], oldpos, min, max, 'seekselecta')
 endfunction
 
 " try to select a next argument, supports count and optional stopline
-" args (count=1, stopline=0)
+" args (context, count=1, stopline=0)
 function! s:nextselecta(...)
-    let cnt      = a:0 >= 1 ? a:1 : 1
-    let stopline = a:0 >= 2 ? a:2 : 0
+    let context  =            a:1 " required
+    let cnt      = a:0 >= 2 ? a:2 : 1
+    let stopline = a:0 >= 3 ? a:3 : 0
 
     if s:search(cnt, s:argOpeningS, 'W', stopline) > 0 " no start found
         return targets#target#withError('nextselecta 1')
@@ -918,7 +930,7 @@ function! s:nextselecta(...)
         return targets#target#withError('nextselecta 2')
     endif
 
-    call setpos('.', s:oldpos)
+    call setpos('.', context.oldpos)
     let opening = g:targets_argOpening
     if s:search(cnt, opening, 'W', stopline) > 0 " no start found
         return targets#target#withError('nextselecta 3')
@@ -933,10 +945,11 @@ function! s:nextselecta(...)
 endfunction
 
 " try to select a last argument, supports count and optional stopline
-" args (count=1, stopline=0)
+" args (context, count=1, stopline=0)
 function! s:lastselecta(...)
-    let cnt      = a:0 >= 1 ? a:1 : 1
-    let stopline = a:0 >= 2 ? a:2 : 0
+    let context  =            a:1 " required
+    let cnt      = a:0 >= 2 ? a:2 : 1
+    let stopline = a:0 >= 3 ? a:3 : 0
 
     " special case to handle vala when invoked on a separator
     let separator = g:targets_argSeparator
@@ -961,7 +974,7 @@ function! s:lastselecta(...)
         return targets#target#withError('lastselecta 2')
     endif
 
-    call setpos('.', s:oldpos)
+    call setpos('.', context.oldpos)
     let closing = g:targets_argClosing
     if s:search(cnt, closing, 'bW', stopline) > 0 " no start found
         return targets#target#withError('lastselecta 3')
@@ -1230,10 +1243,14 @@ endfunction
 
 " return 1 if count should be increased by one to grow selection on repeated
 " invocations
-function! s:grow()
-    if s:mapmode ==# 'o' || !s:shouldGrow
+function! s:grow(context)
+    if a:context.mapmode ==# 'o' || !s:shouldGrow
         return 0
     endif
+
+    " move cursor to boundary of last raw target
+    " to handle expansion in tight boundaries like (((x)))
+    call s:lastRawTarget.cursorE()
 
     return 1
 endfunction
