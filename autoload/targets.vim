@@ -265,7 +265,7 @@ function! s:modifyTarget(target, kind, modifier)
         elseif a:modifier ==# 'I'
             return s:shrink(target)
         elseif a:modifier ==# 'A'
-            return s:expand(target)
+            return s:expands(target)
         else
             return targets#target#withError('modifyTarget s')
         endif
@@ -1206,6 +1206,28 @@ function! s:expand(...)
     return target
 endfunction
 
+" expand separator selection by one whitespace if there are two
+" in   │   ┌───┐   │  ┌───┐   │   ┌───┐  │  ┌───┐  │ ┌───┐
+" line │ a . b . c │ a. b . c │ a . b .c │ a. c .c │ . a .c
+" out  │   └────┘  │  └───┘   │   └───┘  │  └───┘  │ └───┘
+" args (target, direction=<try right, then left>)
+function! s:expands(target)
+    call a:target.cursorE()
+    let [eline, ecolumn] = searchpos('\S\|$', '', line('.'))
+    if eline > 0 && ecolumn-1 > a:target.ec
+
+        call a:target.cursorS()
+        let [sline, scolumn] = searchpos('\S', 'b', line('.'))
+        if sline > 0 && scolumn+1 < a:target.sc
+
+            call a:target.setE(eline, ecolumn-1)
+            return a:target
+        endif
+    endif
+
+    return a:target
+endfunction
+
 " return 1 if count should be increased by one to grow selection on repeated
 " invocations
 function! s:grow()
@@ -1244,6 +1266,10 @@ function! s:fail(...)
     let message .= a:0 >= 2 ? ' ' . string(a:2) : ''
     call s:debug(message)
     return 1
+endfunction
+
+function! s:print(...)
+    echom string(a:)
 endfunction
 
 " useful for debugging
