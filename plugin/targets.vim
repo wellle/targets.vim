@@ -15,9 +15,9 @@ function! s:addMapping1(mapType, mapping, aiAI)
     endif
 endfunction
 
-function! s:addMapping2(mapType, mapping, aiAI, nlNL)
-    if a:aiAI !=# ' ' && a:nlNL !=# ' '
-        silent! execute a:mapType . 'noremap <silent> <unique>' . a:aiAI . a:nlNL . a:mapping
+function! s:addMapping2(mapType, mapping, aiAI, nl)
+    if a:aiAI !=# ' ' && a:nl !=# ' '
+        silent! execute a:mapType . 'noremap <silent> <unique>' . a:aiAI . a:nl . a:mapping
     endif
 endfunction
 
@@ -153,14 +153,6 @@ function! s:createSeparatorTextObjects(mapType)
         call s:addMapping2(a:mapType, triggerMap . "la', v:count1)<CR>", s:a, s:l)
         call s:addMapping2(a:mapType, triggerMap . "lI', v:count1)<CR>", s:I, s:l)
         call s:addMapping2(a:mapType, triggerMap . "lA', v:count1)<CR>", s:A, s:l)
-        call s:addMapping2(a:mapType, triggerMap . "Ni', v:count1)<CR>", s:i, s:N)
-        call s:addMapping2(a:mapType, triggerMap . "Na', v:count1)<CR>", s:a, s:N)
-        call s:addMapping2(a:mapType, triggerMap . "NI', v:count1)<CR>", s:I, s:N)
-        call s:addMapping2(a:mapType, triggerMap . "NA', v:count1)<CR>", s:A, s:N)
-        call s:addMapping2(a:mapType, triggerMap . "Li', v:count1)<CR>", s:i, s:L)
-        call s:addMapping2(a:mapType, triggerMap . "La', v:count1)<CR>", s:a, s:L)
-        call s:addMapping2(a:mapType, triggerMap . "LI', v:count1)<CR>", s:I, s:L)
-        call s:addMapping2(a:mapType, triggerMap . "LA', v:count1)<CR>", s:A, s:L)
     endfor
 endfunction
 
@@ -215,8 +207,12 @@ function! s:loadSettings()
     if !exists('g:targets_aiAI')
         let g:targets_aiAI = 'aiAI'
     endif
-    if !exists('g:targets_nlNL')
-        let g:targets_nlNL = 'nlNL'
+    if !exists('g:targets_nl')
+        if exists('g:targets_nlNL')
+            let g:targets_nl = g:targets_nlNL[0:2] " legacy fallback
+        else
+            let g:targets_nl = 'nl'
+        endif
     endif
     if !exists('g:targets_pairs')
         let g:targets_pairs = '()b {}B [] <>'
@@ -250,7 +246,7 @@ function! s:loadSettings()
     endif
 
     let [s:a, s:i, s:A, s:I] = split(g:targets_aiAI, '\zs')
-    let [s:n, s:l, s:N, s:L] = split(g:targets_nlNL, '\zs')
+    let [s:n, s:l] = split(g:targets_nl, '\zs')
 endfunction
 
 call s:loadSettings()

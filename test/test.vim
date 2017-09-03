@@ -57,10 +57,10 @@ function! s:testBasic()
 
         for op in [ 'c', 'd', 'y', 'v' ]
             for cnt in [ '', '1', '2' ]
-                for LlnN in [ 'l', '', 'n' ]
+                for ln in [ 'l', '', 'n' ]
                     for iaIA in [ 'I', 'i', 'a', 'A' ]
                         execute "normal \"lpfx"
-                        call s:execute(op, cnt . iaIA . LlnN . del)
+                        call s:execute(op, cnt . iaIA . ln . del)
                     endfor
                 endfor
             endfor
@@ -76,10 +76,10 @@ function! s:testBasic()
 
         for op in [ 'c', 'd', 'y', 'v' ]
             for cnt in [ '', '1', '2' ]
-                for LlnN in [ 'L', 'l', '', 'n', 'N' ]
+                for ln in [ 'l', '', 'n' ]
                     for iaIA in [ 'I', 'i', 'a', 'A' ]
                         execute "normal \"lpfx"
-                        call s:execute(op, cnt . iaIA . LlnN . del)
+                        call s:execute(op, cnt . iaIA . ln . del)
                     endfor
                 endfor
             endfor
