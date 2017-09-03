@@ -325,12 +325,48 @@ function! s:findRawTarget(context, kind, which, count)
         endif
 
     elseif a:kind ==# 's'
+        let argsList = [{'delimiter': s:opening}]
+        " let argsList = [
+        "             \ {'delimiter': ','},
+        "             \ {'delimiter': ';'},
+        "             \ {'delimiter': '+'}]
+
         if a:which ==# 'c'
-            return s:seekselect(s:opening, s:closing, '>', 1, 1)
+            let cnt = a:count + s:grow(a:context)
+            " need to update as s:grow might move cursor, how can we fix that
+            " nicely? do it outside and early?
+            let oldpos = getpos('.')
+
+            if cnt == 1 " seek
+                let gen = s:newMultiGen(oldpos, min, max)
+                for args in argsList
+                    let g = s:newGen('S', oldpos, args)
+                    call gen.add(g.child('C'), g.child('N'), g.child('L'))
+                endfor
+                return gen.next()
+            endif
+
+            " don't seek
+            let gen = s:newMultiGen(oldpos, min, max)
+            for args in argsList
+                call gen.add(s:newGen('SC', oldpos, args))
+            endfor
+            return gen.nextN(cnt)
+
         elseif a:which ==# 'n'
-            return s:nextselect(s:opening, s:closing, a:count)
+            let gen = s:newMultiGen(oldpos, min, max)
+            for args in argsList
+                call gen.add(s:newGen('SN', oldpos, args))
+            endfor
+            return gen.nextN(a:count)
+
         elseif a:which ==# 'l'
-            return s:lastselect(s:opening, s:closing, a:count)
+            let gen = s:newMultiGen(oldpos, min, max)
+            for args in argsList
+                call gen.add(s:newGen('SL', oldpos, args))
+            endfor
+            return gen.nextN(a:count)
+
         else
             return targets#target#withError('findRawTarget s')
         endif
@@ -1535,6 +1571,69 @@ function! s:gennextQL() dict
     call self.currentTarget.cursorE() " keep going from right end
     let self.oldpos = getpos('.')
 
+    return self.currentTarget
+endfunction
+
+" separators
+
+function! s:gennextSC() dict
+    if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
+        return self.currentTarget
+    endif
+
+    call setpos('.', self.oldpos)
+
+    if exists('self.called')
+        let self.currentTarget = targets#target#withError('only one current separator')
+        return self.currentTarget
+    endif
+
+    let self.currentTarget = s:select(self.args.delimiter, self.args.delimiter, '>')
+
+    let self.oldpos = getpos('.')
+    let self.called = 1
+
+    return self.currentTarget
+endfunction
+
+function! s:gennextSN() dict
+    if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
+        return self.currentTarget
+    endif
+
+    call setpos('.', self.oldpos)
+
+    if s:search(1, self.args.delimiter, 'W') > 0
+        let self.currentTarget = targets#target#withError('no target')
+    else
+        let self.oldpos = getpos('.')
+        let self.currentTarget = s:select(self.args.delimiter, self.args.delimiter, '>')
+    endif
+
+    return self.currentTarget
+endfunction
+
+function! s:gennextSL() dict
+    if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
+        return self.currentTarget
+    endif
+
+    call setpos('.', self.oldpos)
+
+    if exists('self.called')
+        let flags = 'bW'
+    else
+        let flags = 'cbW' " allow separator under cursor on first iteration
+    endif
+
+    if s:search(1, self.args.delimiter, flags) > 0
+        let self.currentTarget = targets#target#withError('no target')
+    else
+        let self.oldpos = getpos('.')
+        let self.currentTarget = s:select(self.args.delimiter, self.args.delimiter, '<')
+    endif
+
+    let self.called = 1
     return self.currentTarget
 endfunction
 

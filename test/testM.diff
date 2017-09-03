@@ -1,0 +1,346 @@
+diff --git a/testM.ok b/testM.out
+index 5402b95..bc06e86 100644
+--- a/testM.ok
++++ b/testM.out
+@@ -2,7 +2,7 @@
+ "test1.in" 28L, 1059C
+ Warning: terminal cannot highlight
+ "test1.out"
+-"test1.out" [New] 4492L, 265934C written
++"test1.out" [New] 4492L, 266203C written
+ "test2.in"
+ "test2.in" 25L, 263C
+ /comment 1
+@@ -107,13 +107,13 @@ Warning: terminal cannot highlight
+ /010
+ 3 more lines
+ /010
+-3 more lines
++4 more lines
+ /010
+-3 more lines
++4 more lines
+ /010
+-3 more lines
++4 more lines
+ /010
+-3 more lines
++4 more lines
+ /010
+ 3 more lines
+ /010
+@@ -181,13 +181,13 @@ Warning: terminal cannot highlight
+ /001
+ 3 more lines
+ /001
+-3 more lines
++4 more lines
+ /001
+-3 more lines
++4 more lines
+ /001
+-3 more lines
++4 more lines
+ /001
+-3 more lines
++4 more lines
+ /001
+ 3 more lines
+ /001
+@@ -255,13 +255,13 @@ Warning: terminal cannot highlight
+ /201
+ 3 more lines
+ /201
+-3 more lines
++4 more lines
+ /201
+-3 more lines
++4 more lines
+ /201
+-3 more lines
++4 more lines
+ /201
+-3 more lines
++4 more lines
+ /201
+ 3 more lines
+ /201
+@@ -329,13 +329,13 @@ Warning: terminal cannot highlight
+ /100
+ 3 more lines
+ /100
+-3 more lines
++4 more lines
+ /100
+-3 more lines
++4 more lines
+ /100
+-3 more lines
++4 more lines
+ /100
+-3 more lines
++4 more lines
+ /100
+ 3 more lines
+ /100
+@@ -403,13 +403,13 @@ Warning: terminal cannot highlight
+ /102
+ 3 more lines
+ /102
+-3 more lines
++4 more lines
+ /102
+-3 more lines
++4 more lines
+ /102
+-3 more lines
++4 more lines
+ /102
+-3 more lines
++4 more lines
+ /102
+ 3 more lines
+ /102
+@@ -477,13 +477,13 @@ Warning: terminal cannot highlight
+ /012
+ 3 more lines
+ /012
+-3 more lines
++4 more lines
+ /012
+-3 more lines
++4 more lines
+ /012
+-3 more lines
++4 more lines
+ /012
+-3 more lines
++4 more lines
+ /012
+ 3 more lines
+ /012
+@@ -551,13 +551,13 @@ Warning: terminal cannot highlight
+ /111
+ 3 more lines
+ /111
+-3 more lines
++4 more lines
+ /111
+-3 more lines
++4 more lines
+ /111
+-3 more lines
++4 more lines
+ /111
+-3 more lines
++4 more lines
+ /111
+ 3 more lines
+ /111
+@@ -625,13 +625,13 @@ Warning: terminal cannot highlight
+ /210
+ 3 more lines
+ /210
+-3 more lines
++4 more lines
+ /210
+-3 more lines
++4 more lines
+ /210
+-3 more lines
++4 more lines
+ /210
+-3 more lines
++4 more lines
+ /210
+ 3 more lines
+ /210
+@@ -699,13 +699,13 @@ Warning: terminal cannot highlight
+ /212
+ 3 more lines
+ /212
+-3 more lines
++4 more lines
+ /212
+-3 more lines
++4 more lines
+ /212
+-3 more lines
++4 more lines
+ /212
+-3 more lines
++4 more lines
+ /212
+ 3 more lines
+ /212
+@@ -773,13 +773,13 @@ Warning: terminal cannot highlight
+ /101
+ 3 more lines
+ /101
+-3 more lines
++4 more lines
+ /101
+-3 more lines
++4 more lines
+ /101
+-3 more lines
++4 more lines
+ /101
+-3 more lines
++4 more lines
+ /101
+ 3 more lines
+ /101
+@@ -847,13 +847,13 @@ Warning: terminal cannot highlight
+ /011
+ 3 more lines
+ /011
+-3 more lines
++4 more lines
+ /011
+-3 more lines
++4 more lines
+ /011
+-3 more lines
++4 more lines
+ /011
+-3 more lines
++4 more lines
+ /011
+ 3 more lines
+ /011
+@@ -921,13 +921,13 @@ Warning: terminal cannot highlight
+ /211
+ 3 more lines
+ /211
+-3 more lines
++4 more lines
+ /211
+-3 more lines
++4 more lines
+ /211
+-3 more lines
++4 more lines
+ /211
+-3 more lines
++4 more lines
+ /211
+ 3 more lines
+ /211
+@@ -995,13 +995,13 @@ Warning: terminal cannot highlight
+ /110
+ 3 more lines
+ /110
+-3 more lines
++4 more lines
+ /110
+-3 more lines
++4 more lines
+ /110
+-3 more lines
++4 more lines
+ /110
+-3 more lines
++4 more lines
+ /110
+ 3 more lines
+ /110
+@@ -1069,13 +1069,13 @@ Warning: terminal cannot highlight
+ /112
+ 3 more lines
+ /112
+-3 more lines
++4 more lines
+ /112
+-3 more lines
++4 more lines
+ /112
+-3 more lines
++4 more lines
+ /112
+-3 more lines
++4 more lines
+ /112
+ 3 more lines
+ /112
+@@ -1143,13 +1143,13 @@ Warning: terminal cannot highlight
+ /000
+ 3 more lines
+ /000
+-3 more lines
++4 more lines
+ /000
+-3 more lines
++4 more lines
+ /000
+-3 more lines
++4 more lines
+ /000
+-3 more lines
++4 more lines
+ /000
+ 3 more lines
+ /000
+@@ -1217,13 +1217,13 @@ Warning: terminal cannot highlight
+ /002
+ 3 more lines
+ /002
+-3 more lines
++4 more lines
+ /002
+-3 more lines
++4 more lines
+ /002
+-3 more lines
++4 more lines
+ /002
+-3 more lines
++4 more lines
+ /002
+ 3 more lines
+ /002
+@@ -1291,13 +1291,13 @@ Warning: terminal cannot highlight
+ /200
+ 3 more lines
+ /200
+-3 more lines
++4 more lines
+ /200
+-3 more lines
++4 more lines
+ /200
+-3 more lines
++4 more lines
+ /200
+-3 more lines
++4 more lines
+ /200
+ 3 more lines
+ /200
+@@ -1365,13 +1365,13 @@ Warning: terminal cannot highlight
+ /202
+ 3 more lines
+ /202
+-3 more lines
++4 more lines
+ /202
+-3 more lines
++4 more lines
+ /202
+-3 more lines
++4 more lines
+ /202
+-3 more lines
++4 more lines
+ /202
+ 3 more lines
+ /202
+@@ -1380,7 +1380,7 @@ Warning: terminal cannot highlight
+ 3 more lines
+ /202
+ "test7.out"
+-"test7.out" [New] 2016L, 55422C written
++"test7.out" [New] 2088L, 55422C written
+ "test8.in"
+ "test8.in" 1L, 13C
+ "test8.out"
