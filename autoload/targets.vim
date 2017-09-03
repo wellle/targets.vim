@@ -278,16 +278,48 @@ function! s:findRawTarget(context, kind, which, count)
         endif
 
     elseif a:kind ==# 'q'
-        let [dir, rate, skipL, skipR, error] = s:quoteDir(s:opening)
-        if error !=# ''
-            return targets#target#withError('findRawTarget quoteDir')
-        endif
+        let argsList = [{'delimiter': s:opening}]
+        " let argsList = [
+        "             \ {'delimiter': '"' },
+        "             \ {'delimiter': ''''},
+        "             \ {'delimiter': '`' }]
+
         if a:which ==# 'c'
-            return s:seekselect(s:opening, s:closing, dir, rate - skipL, rate - skipR)
+            let cnt = a:count + s:grow(a:context)
+            " need to update as s:grow might move cursor, how can we fix that
+            " nicely? do it outside and early?
+            let oldpos = getpos('.')
+
+            if cnt == 1 " seek
+                let gen = s:newMultiGen(oldpos, min, max)
+                for args in argsList
+                    let g = s:newGen('Q', oldpos, args)
+                    call gen.add(g.child('C'), g.child('N'), g.child('L'))
+                endfor
+                return gen.next()
+            endif
+
+            " don't seek
+            let gen = s:newMultiGen(oldpos, min, max)
+            for args in argsList
+                call gen.add(s:newGen('QC', oldpos, args))
+            endfor
+            return gen.nextN(cnt)
+
         elseif a:which ==# 'n'
-            return s:nextselect(s:opening, s:closing, a:count * rate - skipR)
+            let gen = s:newMultiGen(oldpos, min, max)
+            for args in argsList
+                call gen.add(s:newGen('QN', oldpos, args))
+            endfor
+            return gen.nextN(a:count)
+
         elseif a:which ==# 'l'
-            return s:lastselect(s:opening, s:closing, a:count * rate - skipL)
+            let gen = s:newMultiGen(oldpos, min, max)
+            for args in argsList
+                call gen.add(s:newGen('QL', oldpos, args))
+            endfor
+            return gen.nextN(a:count)
+
         else
             return targets#target#withError('findRawTarget q: ' . a:which)
         endif
@@ -679,6 +711,7 @@ function! s:quoteDir(delimiter)
     return [dir, rate, skipL, skipR, error]
 endfunction
 
+" TODO: deprecate?
 function! s:nextselect(opening, closing, count)
     " echom 'nextselect' a:count
     if s:search(a:count, a:opening, 'W') > 0
@@ -720,6 +753,8 @@ function! s:select(opening, closing, direction)
 endfunction
 
 " select pair of delimiters around cursor (multi line, supports seeking)
+" currently these 'general' functions seem to be used only for quotes, so we
+" could consider merging the first two arguments
 function! s:seekselect(opening, closing, dir, countL, countR)
     " echom 'seekselect' a:dir 'countL' a:countL 'countR' a:countR
     let min = line('w0')
@@ -1088,6 +1123,8 @@ function! s:bestTarget(targets, oldpos, min, max, message)
         let target = a:targets[idx]
         let [range, lines, chars] = target.range(a:oldpos, a:min, a:max)
         let score = get(s:rangeScores, range)
+        " echom 'score ' . score . ' lines ' . lines . ' chars ' . chars
+        " echom target.string()
         if (score > bestScore) ||
                     \ (score == bestScore && lines < minLines) ||
                     \ (score == bestScore && lines == minLines && chars < minChars)
@@ -1096,6 +1133,7 @@ function! s:bestTarget(targets, oldpos, min, max, message)
     endfor
 
     if exists('best')
+        " echom 'best ' . best.string()
         return [best, bestIdx]
     endif
 
@@ -1359,12 +1397,15 @@ endfunction
 
 function! s:gennextN(n) dict
     for i in range(1, a:n)
+        " echom 'multi gen yield target ' . i . ' ' . self.next().string()
         call self.next()
     endfor
     return self.target()
 endfunction
 
 " TODO: use some templating here to avoid repetition?
+
+" pairs
 
 function! s:gennextPC() dict
     if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
@@ -1419,6 +1460,84 @@ function! s:gennextPL() dict
 
     return self.currentTarget
 endfunction
+
+" quotes
+
+function! s:gennextQC() dict
+    " return s:seekselect(delimiter, delimiter, dir, rate - skipL, rate - skipR)
+
+    if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
+        return self.currentTarget
+    endif
+
+    call setpos('.', self.oldpos)
+
+    if exists('self.called')
+        let self.currentTarget = targets#target#withError('only one current quote')
+        return self.currentTarget
+    endif
+
+    if !exists('self.dir')
+        let [self.dir, self.rate, self.skipL, self.skipR, self.error] = s:quoteDir(self.args.delimiter)
+    endif
+
+    let self.currentTarget = s:select(self.args.delimiter, self.args.delimiter, self.dir)
+    let self.called = 1 " group these somehow? self.internal.called
+
+    return self.currentTarget
+endfunction
+
+function! s:gennextQN() dict
+    if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
+        return self.currentTarget
+    endif
+
+    call setpos('.', self.oldpos)
+
+    " do outside somehow? if so remember to reset pos before
+    " TODO: yes do on init somehow. that way we don't need to do it three
+    " times for seekipng
+    if !exists('self.dir')
+        let [self.dir, self.rate, self.skipL, self.skipR, self.error] = s:quoteDir(self.args.delimiter)
+        let cnt = self.rate - self.skipR " skip initially once
+        " echom 'skip'
+    else
+        let cnt = self.rate " then go by rate
+        " echom 'no skip'
+    endif
+
+    let self.currentTarget = s:nextselect(self.args.delimiter, self.args.delimiter, cnt)
+    call self.currentTarget.cursorS() " keep going from left end
+    let self.oldpos = getpos('.')
+
+    return self.currentTarget
+endfunction
+
+function! s:gennextQL() dict
+    if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
+        return self.currentTarget
+    endif
+
+    call setpos('.', self.oldpos)
+
+    " do outside somehow? if so remember to reset pos before
+    if !exists('self.dir')
+        " TODO: remove unused
+        let [self.dir, self.rate, self.skipL, self.skipR, self.error] = s:quoteDir(self.args.delimiter)
+        let cnt = self.rate - self.skipL " skip initially once
+        " echom 'skip'
+    else
+        let cnt = self.rate " then go by rate
+        " echom 'no skip'
+    endif
+
+    let self.currentTarget = s:lastselect(self.args.delimiter, self.args.delimiter, cnt)
+    call self.currentTarget.cursorE() " keep going from right end
+    let self.oldpos = getpos('.')
+
+    return self.currentTarget
+endfunction
+
 
 function! s:newMultiGen(oldpos, min, max)
     return {

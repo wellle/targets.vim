@@ -1,3 +1,7 @@
+" TODO: add source, from gen, like PN(3, might help for debugging
+" TODO: add content(), returns text that it selects. possibly pad with ... in
+" the middle if too long
+
 function! targets#target#new(sl, sc, el, ec, error)
     return {
         \ 'error': a:error,
