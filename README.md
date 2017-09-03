@@ -231,7 +231,7 @@ a ' bbbbbbbb ' c ' d ' e
 
 ### Next and Last Quote
 
-`in' In' An' il' Il' Al' iN' IN' AN' iL' IL' AL' ...`
+`in' In' An' il' Il' Al' ...`
 
 Work directly on distant quotes without moving there separately.
 
@@ -240,19 +240,14 @@ including the letter `n`. The command `in'` selects inside of the next
 single quotes. Use the letter `l` instead to work on the previous (last)
 quote. Uses a count to skip multiple quotation characters.
 
-Use uppercase `N` and `L` to jump from within one quote into the next
-proper quote, instead of into the pseudo quote in between. (Using `N`
-instead of `n` is actually just doubling the count to achieve this.)
-
 See our [Cheat Sheet][cheatsheet] for a chart summarizing all quote mappings.
 
 ### Quote Seek
 
-If any of the normal quote commands (not containing `n`, `l`, `N` or `L`) is
-executed when the cursor is not positioned inside a quote, it seeks for quotes
-before or after the cursor by searching for the appropriate delimiter on the
-current line. This is similar to using the explicit version containing `n` or
-`l`.
+If any of the normal quote commands (not containing `n` or `l`) is executed
+when the cursor is not positioned inside a quote, it seeks for quotes before or
+after the cursor by searching for the appropriate delimiter on the current
+line. This is similar to using the explicit version containing `n` or `l`.
 
 ## Separator Text Objects
 
@@ -328,7 +323,7 @@ a , b , cccccccc , d , e
 
 ### Next and Last Separator
 
-`in, an, In, An, il, al, Il, Al, iN, aN, IN, AN, iL, aL, IL, AL, ...`
+`in, an, In, An, il, al, Il, Al, ...`
 
 Work directly on distant separators without moving there separately.
 
@@ -336,10 +331,6 @@ All the above separator text objects can be shifted to the next separator by
 including the letter `n`. The command `in,` selects inside of the next commas.
 Use the letter `l` instead to work on the previous (last) separators. Uses the
 count to skip multiple separator characters.
-
-Use uppercase `N` and `L` to jump from within one pair of separators into
-the next distinct pair, instead of into the adjacent one. (Using `N`
-instead of `n` is actually just doubling the count to achieve this.)
 
 See our [Cheat Sheet][cheatsheet] for a chart summarizing all separator mappings.
 
@@ -474,7 +465,7 @@ Available options:
 
 ```vim
 g:targets_aiAI
-g:targets_nlNL
+g:targets_nl
 g:targets_pairs
 g:targets_quotes
 g:targets_separators
@@ -499,26 +490,23 @@ Controls the normal mode operator mode maps that get created for In Pair (`i`),
 A Pair (`a`), Inside Pair (`I`), and Around Pair (`A`). Required to be a 4
 character long list. Use a space to deactivate a mode.
 
-### g:targets_nlNL
+### g:targets_nl
 
 Default:
 
 ```vim
-let g:targets_nlNL = 'nlNL'
+let g:targets_nl = 'nl'
 ```
 
 Controls the keys used in maps for seeking next and last text objects. For
-example, if you don't wish to use the `N` and `L` seeks, and instead wish for
-`n` to always search for the next object and `N` to search for the last, you
-could set:
+example, if you want `n` to always search for the next object and `N` to search
+for the last, you could set:
 
 ```vim
-let g:targets_nlNL = 'nN  '
+let g:targets_nl = 'nN'
 ```
 
-Note that two extra spaces are still required on the end, indicating you wish
-to disable the default functionality of `N` and `L`. Required to be a 4
-character long list.
+Required to be a 4 character long list. Use a space to deactivate a direction.
 
 ### g:targets_pairs
 

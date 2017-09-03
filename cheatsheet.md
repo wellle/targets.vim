@@ -48,10 +48,10 @@ a ( b ( cccccccc ) d ) ( e ( ffffff ) g ) ( h ( iiiiiiii ) j ) k
 Available mappings
 
 ```
- i'  i"  i`    in' in" in`    il' il" il`    iL' iL" iL`
- a'  a"  a`    an' an" an`    al' al" al`    aL' aL" aL`
- I'  I"  I`    In' In" In`    Il' Il" Il`    IL' IL" IL`
- A'  A"  A`    An' An" An`    Al' Al" Al`    AL' AL" AL`
+ i'  i"  i`    in' in" in`    il' il" il`
+ a'  a"  a`    an' an" an`    al' al" al`
+ I'  I"  I`    In' In" In`    Il' Il" Il`
+ A'  A"  A`    An' An" An`    Al' Al" Al`
 ```
 
 Chart for a list of quotes
@@ -84,28 +84,18 @@ il, il. il; il: il+ il- il= il~ il_ il* il# il/ il| il\ il& il$
 al, al. al; al: al+ al- al= al~ al_ al* al# al/ al| al\ al& al$
 Il, Il. Il; Il: Il+ Il- Il= Il~ Il_ Il* Il# Il/ Il| Il\ Il& Il$
 Al, Al. Al; Al: Al+ Al- Al= Al~ Al_ Al* Al# Al/ Al| Al\ Al& Al$
-
-iN, iN. iN; iN: iN+ iN- iN= iN~ iN_ iN* iN# iN/ iN| iN\ iN& iN$
-aN, aN. aN; aN: aN+ aN- aN= aN~ aN_ aN* aN# aN/ aN| aN\ aN& aN$
-IN, IN. IN; IN: IN+ IN- IN= IN~ IN_ IN* IN# IN/ IN| IN\ IN& IN$
-AN, AN. AN; AN: AN+ AN- AN= AN~ AN_ AN* AN# AN/ AN| AN\ AN& AN$
-
-iL, iL. iL; iL: iL+ iL- iL= iL~ iL_ iL* iL# iL/ iL| iL\ iL& iL$
-aL, aL. aL; aL: aL+ aL- aL= aL~ aL_ aL* aL# aL/ aL| aL\ aL& aL$
-IL, IL. IL; IL: IL+ IL- IL= IL~ IL_ IL* IL# IL/ IL| IL\ IL& IL$
-AL, AL. AL; AL: AL+ AL- AL= AL~ AL_ AL* AL# AL/ AL| AL\ AL& AL$
 ```
 
 Chart for a list of separators
 
 ```
-                      .........
-a , bbbbbbb , ccccccc , dddddd , eeeeeee , fffffff , g
-  ││└ IL, ┘│││└ Il, ┘│││└ I, ┘│││└ In, ┘│││└ IN, ┘│ │
-  │└─ iL, ─┤│├─ il, ─┤│├─ i, ─┤│├─ in, ─┤│├─ iN, ─┤ │
-  ├── aL, ─┘├┼─ al, ─┘├┼─ a, ─┘├┼─ an, ─┘├┼─ aN, ─┘ │
-  └── AL, ──┼┘        └┼─ A, ──┼┘        └┼─ AN, ───┘
-            └─  Al,  ──┘       └─  An,  ──┘
+                       .........
+a , bbbbbbbb , ccccccc , dddddd , eeeeeee , ffffffff , g
+  ││└ 2Il, ┘│││└ Il, ┘│││└ I, ┘│││└ In, ┘│││└ 2In, ┘│ │
+  │└─ 2il, ─┤│├─ il, ─┤│├─ i, ─┤│├─ in, ─┤│├─ 2in, ─┤ │
+  ├── 2al, ─┘├┼─ al, ─┘├┼─ a, ─┘├┼─ an, ─┘├┼─ 2an, ─┘ │
+  └── 2Al, ──┼┘        └┼─ A, ──┼┘        └┼─ 2An, ───┘
+             └─  Al,  ──┘       └─  An,  ──┘
 ```
 
 ## Argument mappings
