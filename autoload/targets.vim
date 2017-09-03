@@ -230,12 +230,16 @@ function! s:findRawTarget(context, kind, which, count)
     let max = line('w$')
     let oldpos = getpos('.')
 
-    if a:kind ==# 'p'
+    if a:kind ==# 'p' || a:kind ==# 't'
         let argsList = [{'opening': s:opening, 'closing': s:closing, 'trigger': s:closing}]
         " let argsList = [
         "             \ {'opening': '(', 'closing': ')', 'trigger': ')'},
         "             \ {'opening': '{', 'closing': '}', 'trigger': '}'},
         "             \ {'opening': '[', 'closing': ']', 'trigger': ']'}]
+
+        if a:kind ==# 't' " tag
+            let argsList = [{'opening': '<\a', 'closing': '</\a\zs', 'trigger': 't'}]
+        endif
 
         if a:which ==# 'c'
             let cnt = a:count + s:grow(a:context)
@@ -369,23 +373,6 @@ function! s:findRawTarget(context, kind, which, count)
 
         else
             return targets#target#withError('findRawTarget s')
-        endif
-
-    elseif a:kind ==# 't'
-        if a:which ==# 'c'
-            return s:seekselectp(a:count + s:grow(a:context), '<\a', '</\a', 't')
-        elseif a:which ==# 'n'
-            if s:search(a:count, '<\a', 'W') > 0
-                return targets#target#withError('findRawTarget tn')
-            endif
-            return s:selectp(1, s:opening)
-        elseif a:which ==# 'l'
-            if s:search(a:count, '</\a\zs', 'bW') > 0
-                return targets#target#withError('findRawTarget tn')
-            endif
-            return s:selectp(1, s:opening)
-        else
-            return targets#target#withError('findRawTarget t')
         endif
 
     elseif a:kind ==# 'a'
