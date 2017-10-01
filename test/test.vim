@@ -144,6 +144,11 @@ function s:testSeeking()
         execute "normal ci'" . c . "\<Esc>"
     endfor
 
+    for c in split('PQ', '\zs')
+        execute "normal /"   . c . "\<CR>"
+        execute "normal cia" . c . "\<Esc>"
+    endfor
+
     write! test3.out
 endfunction
 
@@ -255,6 +260,8 @@ function s:testReselect()
     write! test8.out
 endfunction
 
+redir >> testM.out
+
 call s:testBasic()
 call s:testMultiline()
 call s:testSeeking()
@@ -263,5 +270,12 @@ call s:testModifiers()
 call s:testEmpty()
 call s:testQuotes()
 call s:testReselect()
+
+redir END
+" remove blank messages and trailing whitespace
+edit! testM.out
+v/./d
+%s/\s\+$
+write! testM.out
 
 quit!

@@ -1,0 +1,56 @@
+"test1.in"
+"test1.in" 28L, 1059C
+Warning: terminal cannot highlight
+"test1.out"
+"test1.out" [New] 6028L, 357518C written
+"test2.in"
+"test2.in" 25L, 263C
+/comment 1
+/comment 2
+/comment 3
+/comment 4
+/comment 5
+"test2.out"
+"test2.out" [New] 20L, 202C written
+"test3.in"
+"test3.in" 44L, 302C
+/A
+search hit BOTTOM, continuing at TOP
+/B
+/C
+/D
+/E
+/F
+/G
+/H
+/I
+/J
+/K
+/L
+/M
+/N
+/O
+/P
+/Q
+"test3.out"
+"test3.out" [New] 40L, 270C written
+"test4.in"
+"test4.in" 6L, 101C
+"test4.out"
+"test4.out" [New] 28L, 517C written
+"test5.in"
+"test5.in" 1L, 11C
+"test5.out"
+"test5.out" [New] 1L, 11C written
+"test6.in"
+"test6.in" 3L, 21C
+"test6.out"
+"test6.out" [New] 3L, 30C written
+"test7.in"
+"test7.in" 16L, 302C
+"test7.out"
+"test7.out" [New] 16L, 302C written
+"test8.in"
+"test8.in" 1L, 13C
+"test8.out"
+"test8.out" [New] 1L, 12C written

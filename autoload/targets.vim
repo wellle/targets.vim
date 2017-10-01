@@ -900,11 +900,11 @@ function! s:seekselecta(context, count)
 
     call setpos('.', oldpos)
 
-    let last = s:lastselecta(a:context.oldpos)
+    let last = s:lastselecta(a:context)
 
     call setpos('.', oldpos)
 
-    let next = s:nextselecta(a:context.oldpos)
+    let next = s:nextselecta(a:context)
 
     return s:bestSeekTarget([around, next, last], oldpos, min, max, 'seekselecta')
 endfunction
