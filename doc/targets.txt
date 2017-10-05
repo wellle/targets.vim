@@ -242,17 +242,10 @@ Work directly on distant quotes without moving there separately.
 in' in" in` il' il" il`            *in`* *in'* *inquote* *il`* *il'* *ilquote*
 an' an" an` al' al" al`            *an`* *an'* *anquote* *al`* *al'* *alquote*
 In' In" In` Il' Il" Il`            *In`* *In'* *Inquote* *Il`* *Il'* *Ilquote*
-iN' iN" iN` iL' iL" iL`            *iN`* *iN'* *iNquote* *iL`* *iL'* *iLquote*
-aN' aN" aN` aL' aL" aL`            *aN`* *aN'* *aNquote* *aL`* *aL'* *aLquote*
-IN' IN" IN` IL' IL" IL`            *IN`* *IN'* *INquote* *IL`* *IL'* *ILquote*
     All the above pair text objects can be shifted to the next quote by
     including the letter `n`. The command `in'` selects inside of the next
     single quotes. Use the letter `l` instead to work on the previous (last)
     quote. Uses a [count] to skip multiple quotation characters.
-
-    Use uppercase `N` and `L` to jump from within one quote into the next
-    proper quote, instead of into the pseudo quote in between. (Using `N`
-    instead of `n` is actually just doubling the count to achieve this.)
 
                                                          *targets-quote-chart*
 The following chart summarizes all quote mappings:
@@ -267,10 +260,10 @@ The following chart summarizes all quote mappings:
 ------------------------------------------------------------------------------
 QUOTE SEEK                                                *targets-quote-seek*
 
-If any of the normal quote commands (not containing `n`, `l`, `N` or `L`) is
-executed when the cursor is not positioned inside a quote, it seeks for quotes
-before or after the cursor by searching for the appropriate delimiter on the
-current line. Similar to using the explicit version containing `n` or `l`.
+If any of the normal quote commands (not containing `n` or `l`) is executed
+when the cursor is not positioned inside a quote, it seeks for quotes before
+or after the cursor by searching for the appropriate delimiter on the current
+line. Similar to using the explicit version containing `n` or `l`.
 
 ==============================================================================
 SEPARATOR TEXT OBJECTS                        *targets-separator-text-objects*
@@ -340,14 +333,6 @@ Work directly on distant separators without moving there separately.
                             *al,* *al.* *al;* *al:* *al+* *al-* *al=* *al~*
                             *Il,* *Il.* *Il;* *Il:* *Il+* *Il-* *Il=* *Il~*
                             *Al,* *Al.* *Al;* *Al:* *Al+* *Al-* *Al=* *Al~*
-                            *iN,* *iN.* *iN;* *iN:* *iN+* *iN-* *iN=* *iN~*
-                            *aN,* *aN.* *aN;* *aN:* *aN+* *aN-* *aN=* *aN~*
-                            *IN,* *IN.* *IN;* *IN:* *IN+* *IN-* *IN=* *IN~*
-                            *AN,* *AN.* *AN;* *AN:* *AN+* *AN-* *AN=* *AN~*
-                            *iL,* *iL.* *iL;* *iL:* *iL+* *iL-* *iL=* *iL~*
-                            *aL,* *aL.* *aL;* *aL:* *aL+* *aL-* *aL=* *aL~*
-                            *IL,* *IL.* *IL;* *IL:* *IL+* *IL-* *IL=* *IL~*
-                            *AL,* *AL.* *AL;* *AL:* *AL+* *AL-* *AL=* *AL~*
 
                             *in_* *in/* *in|* *in\* *in&* *in$* *in#* *instar*
                             *an_* *an/* *an|* *an\* *an&* *an$* *an#* *anstar*
@@ -357,14 +342,6 @@ Work directly on distant separators without moving there separately.
                             *al_* *al/* *al|* *al\* *al&* *al$* *al#* *alstar*
                             *Il_* *Il/* *Il|* *Il\* *Il&* *Il$* *Il#* *Ilstar*
                             *Al_* *Al/* *Al|* *Al\* *Al&* *Al$* *Al#* *Alstar*
-                            *iN_* *iN/* *iN|* *iN\* *iN&* *iN$* *iN#* *iNstar*
-                            *aN_* *aN/* *aN|* *aN\* *aN&* *aN$* *aN#* *aNstar*
-                            *IN_* *IN/* *IN|* *IN\* *IN&* *IN$* *IN#* *INstar*
-                            *AN_* *AN/* *AN|* *AN\* *AN&* *AN$* *AN#* *ANstar*
-                            *iL_* *iL/* *iL|* *iL\* *iL&* *iL$* *iL#* *iLstar*
-                            *aL_* *aL/* *aL|* *aL\* *aL&* *aL$* *aL#* *aLstar*
-                            *IL_* *IL/* *IL|* *IL\* *IL&* *IL$* *IL#* *ILstar*
-                            *AL_* *AL/* *AL|* *AL\* *AL&* *AL$* *AL#* *ALstar*
 
 in, in. in; in: in+ in- in= in~ in_ in/ in| in\ in& in$ in# in*
 an, an. an; an: an+ an- an= an~ an_ an/ an| an\ an& an$ an# an*
@@ -374,34 +351,22 @@ il, il. il; il: il+ il- il= il~ il_ il/ il| il\ il& il$ il# il*
 al, al. al; al: al+ al- al= al~ al_ al/ al| al\ al& al$ al# al*
 Il, Il. Il; Il: Il+ Il- Il= Il~ Il_ Il/ Il| Il\ Il& Il$ Il# Il*
 Al, Al. Al; Al: Al+ Al- Al= Al~ Al_ Al/ Al| Al\ Al& Al$ Al# Al*
-iN, iN. iN; iN: iN+ iN- iN= iN~ iN_ iN/ iN| iN\ iN& iN$ iN# iN*
-aN, aN. aN; aN: aN+ aN- aN= aN~ aN_ aN/ aN| aN\ aN& aN$ aN# aN*
-IN, IN. IN; IN: IN+ IN- IN= IN~ IN_ IN/ IN| IN\ IN& IN$ IN# IN*
-AN, AN. AN; AN: AN+ AN- AN= AN~ AN_ AN/ AN| AN\ AN& AN$ AN# AN*
-iL, iL. iL; iL: iL+ iL- iL= iL~ iL_ iL/ iL| iL\ iL& iL$ iL# iL*
-aL, aL. aL; aL: aL+ aL- aL= aL~ aL_ aL/ aL| aL\ aL& aL$ aL# aL*
-IL, IL. IL; IL: IL+ IL- IL= IL~ IL_ IL/ IL| IL\ IL& IL$ IL# IL*
-AL, AL. AL; AL: AL+ AL- AL= AL~ AL_ AL/ AL| AL\ AL& AL$ AL# AL*
 
     All the above separator text objects can be shifted to the next separator
     by including the letter `n`. The command `in,` selects inside of the next
     commas. Use the letter `l` instead to work on the previous (last)
     separators. Uses a [count] to skip multiple separator characters.
 
-    Use uppercase `N` and `L` to jump from within one pair of separators into
-    the next distinct pair, instead of into the adjacent one. (Using `N`
-    instead of `n` is actually just doubling the count to achieve this.)
-
                                                      *targets-separator-chart*
 The following chart summarizes all separator mappings:
 
-                          .........
-    a , bbbbbbb , ccccccc , dddddd , eeeeeee , fffffff , g ~
-      ││└ IL, ┘│││└ Il, ┘│││└ I, ┘│││└ In, ┘│││└ IN, ┘│ │
-      │└─ iL, ─┤│├─ il, ─┤│├─ i, ─┤│├─ in, ─┤│├─ iN, ─┤ │
-      ├── aL, ─┘├┼─ al, ─┘├┼─ a, ─┘├┼─ an, ─┘├┼─ aN, ─┘ │
-      └── AL, ──┼┘        └┼─ A, ──┼┘        └┼─ AN, ───┘
-                └─  Al,  ──┘       └─  An,  ──┘
+                           .........
+    a , bbbbbbbb , ccccccc , dddddd , eeeeeee , ffffffff , g ~
+      ││└ 2Il, ┘│││└ Il, ┘│││└ I, ┘│││└ In, ┘│││└ 2In, ┘│ │
+      │└─ 2il, ─┤│├─ il, ─┤│├─ i, ─┤│├─ in, ─┤│├─ 2in, ─┤ │
+      ├── 2al, ─┘├┼─ al, ─┘├┼─ a, ─┘├┼─ an, ─┘├┼─ 2an, ─┘ │
+      └── 2Al, ──┼┘        └┼─ A, ──┼┘        └┼─ 2An, ───┘
+                 └─  Al,  ──┘       └─  An,  ──┘
 
 ------------------------------------------------------------------------------
 SEPARATOR SEEK                                        *targets-separator-seek*
@@ -506,7 +471,7 @@ The provided examples also indicate the default values.
 Available options: ~
 
     |g:targets_aiAI|
-    |g:targets_nlNL|
+    |g:targets_nl|
     |g:targets_pairs|
     |g:targets_quotes|
     |g:targets_separators|
@@ -527,20 +492,17 @@ Controls the normal mode operator mode maps that get created for In Pair (i),
 A Pair (a), Inside Pair (I), and Around Pair (A). Required to be a 4 character
 long list. Use a space to deactivate a mode.
 
-                                                              *g:targets_nlNL*
+                                                                *g:targets_nl*
 Default:
-    let g:targets_nlNL = 'nlNL' ~
+    let g:targets_nl = 'nl' ~
 
 Controls the keys used in maps for seeking next and last text objects. For
-example, if you don't wish to use the N and L seeks, and instead wish for 'n'
-to always search for the next object and `N` to search for the last, you could
-set:
+example, if you want 'n' to always search for the next object and `N` to
+search for the last, you could set:
 
-    let g:targets_nlNL = 'nN  ' ~
+    let g:targets_nl = 'nN' ~
 
-Note that two extra spaces are still required on the end, indicating you wish
-to disable the default functionality of N and L. Required to be a 4 character
-long list.
+Required to be a 4 character long list. Use a space to deactivate a direction.
 
                                                              *g:targets_pairs*
 Default:

@@ -64,11 +64,11 @@ function! targets#e(modifier)
     let char1 = nr2char(getchar())
     let [delimiter, which, chars] = [char1, 'c', char1]
     let i = 0
-    while i < 4
-        if g:targets_nlNL[i] ==# delimiter
+    while i < 2
+        if g:targets_nl[i] ==# delimiter
             " delimiter was which, get another char for delimiter
             let char2 = nr2char(getchar())
-            let [delimiter, which, chars] = [char2, 'nlNL'[i], chars . char2]
+            let [delimiter, which, chars] = [char2, 'nl'[i], chars . char2]
             break
         endif
         let i = i + 1
@@ -200,10 +200,6 @@ function! s:findRawTarget(context, kind, which, count)
             return s:nextselect(a:count)
         elseif a:which ==# 'l'
             return s:lastselect(a:count)
-        elseif a:which ==# 'N'
-            return s:nextselect(a:count * 2)
-        elseif a:which ==# 'L'
-            return s:lastselect(a:count * 2)
         else
             return targets#target#withError('findRawTarget s')
         endif
