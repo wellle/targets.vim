@@ -209,7 +209,7 @@ function! s:loadSettings()
     endif
     if !exists('g:targets_nl')
         if exists('g:targets_nlNL')
-            let g:targets_nl = g:targets_nlNL[0:2] " legacy fallback
+            let g:targets_nl = g:targets_nlNL[0:1] " legacy fallback
         else
             let g:targets_nl = 'nl'
         endif

@@ -13,9 +13,10 @@ Warning: terminal cannot highlight
 "test2.out"
 "test2.out" [New] 20L, 202C written
 "test3.in"
-"test3.in" 44L, 302C
+"test3.in" 44L, 298C
+/P
+/Q
 /A
-search hit BOTTOM, continuing at TOP
 /B
 /C
 /D
@@ -30,8 +31,6 @@ search hit BOTTOM, continuing at TOP
 /M
 /N
 /O
-/P
-/Q
 "test3.out"
 "test3.out" [New] 40L, 270C written
 "test4.in"

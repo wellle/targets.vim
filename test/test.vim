@@ -134,6 +134,11 @@ function s:testSeeking()
     edit! test3.in
     normal gg0
 
+    for c in split('PQ', '\zs')
+        execute "normal /"   . c . "\<CR>"
+        execute "normal cia" . c . "\<Esc>"
+    endfor
+
     for c in split('ABCDEFGHI', '\zs')
         execute "normal /"   . c . "\<CR>"
         execute "normal ci)" . c . "\<Esc>"
@@ -142,11 +147,6 @@ function s:testSeeking()
     for c in split('JKLMNO', '\zs')
         execute "normal /"   . c . "\<CR>"
         execute "normal ci'" . c . "\<Esc>"
-    endfor
-
-    for c in split('PQ', '\zs')
-        execute "normal /"   . c . "\<CR>"
-        execute "normal cia" . c . "\<Esc>"
     endfor
 
     write! test3.out
