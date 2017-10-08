@@ -838,7 +838,7 @@ function! s:findArgBoundary(...)
     let separator = a:0 >= 6 ? a:6 : g:targets_argSeparator
     let cnt       = a:0 >= 7 ? a:7 : 1
 
-    let tl = 0
+    let [tl, rl, rc] = [0, 0, 0]
     for _ in range(cnt)
         let [rl, rc] = searchpos(all, flags1)
         while 1
