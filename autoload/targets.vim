@@ -127,7 +127,7 @@ endfunction
 function! s:initX(trigger)
     call s:init()
 
-    let s:visualTarget = targets#target#fromVisualSelection()
+    let s:visualTarget = targets#target#fromVisualSelection(s:selection)
 
     " reselect, save mode and go back to normal mode
     normal! gv

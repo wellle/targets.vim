@@ -34,9 +34,14 @@ function! targets#target#fromValues(sl, sc, el, ec)
     return targets#target#new(a:sl, a:sc, a:el, a:ec, '')
 endfunction
 
-function! targets#target#fromVisualSelection()
+function! targets#target#fromVisualSelection(selection)
     let [sl, sc] = getpos("'<")[1:2]
     let [el, ec] = getpos("'>")[1:2]
+
+    if a:selection ==# 'exclusive'
+        let ec -= 1
+    endif
+
     return targets#target#fromValues(sl, sc, el, ec)
 endfunction
 
