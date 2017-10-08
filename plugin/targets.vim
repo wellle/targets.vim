@@ -260,10 +260,11 @@ function! s:loadSettings()
         "   l: skip first quote when going left ("last" quote objects)
         "      (r: skip once when going right ("next"); b: both; n: none)
         let g:targets_quoteDirs = {
-                    \ 'r1n': ['000', '001', '201', '100', '102'],
+                    \ 'r1n': ['001', '201', '100', '102'],
                     \ 'r1l': ['010', '012', '111', '210', '212'],
                     \ 'r2n': ['101'],
                     \ 'r2l': ['011', '211'],
+                    \ 'r2b': ['000'],
                     \ 'l2r': ['110', '112'],
                     \ 'n2b': ['002', '200', '202'],
                     \ }
