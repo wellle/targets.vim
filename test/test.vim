@@ -115,20 +115,20 @@ function! s:testMultiline()
 
     execute "normal /comment 1\<CR>"
     set autoindent
-    execute "normal cin{foo\<Esc>''A bar"
+    execute "normal cin{foo1\<Esc>''A bar1"
     set autoindent&
 
     execute "normal /comment 2\<CR>"
-    execute "normal din{''A bar"
+    execute "normal din{''A bar2"
 
     execute "normal /comment 3\<CR>"
-    execute "normal cin;foo\<Esc>''A bar"
+    execute "normal cin;foo3\<Esc>''A bar3"
 
     execute "normal /comment 4\<CR>"
-    execute "normal cin`foo\<Esc>''A bar"
+    execute "normal cin`foo4\<Esc>''A bar4"
 
     execute "normal /comment 5\<CR>"
-    execute "normal cI{foo\<Esc>''A bar"
+    execute "normal cI{foo5\<Esc>''A bar5"
 
     write! test2.out
 endfunction
@@ -212,40 +212,20 @@ function s:testQuotes()
     edit! test7.in
     normal gg0
 
-    normal ci"A
-    normal +
-    normal cin"A
-    normal +
-    normal c2in"B
+    for p in split("010 001 201 100 102 012 111 210 212 101 011 211 110 112 000 002 200 202")
+        execute "normal /" . p . "\<CR>"
+        normal "pyip}
 
-    normal +fx
-    normal ci"D
-    normal +fx
-    normal cin"D
-    normal +fx
-    normal c2in"E
-    normal +fx
-    normal cil"C
-    normal +fx
-    normal c2il"B
-
-    normal +fx
-    normal ci"X
-    normal +fx
-    normal cin"D
-    normal +fx
-    normal c2in"E
-    normal +fx
-    normal cil"C
-    normal +fx
-    normal c2il"B
-
-    normal +fx
-    normal ci"C
-    normal +fx
-    normal cil"C
-    normal +fx
-    normal c2il"B
+        for cnt in [ '', '1', '2' ]
+            for ln in [ 'l', '', 'n' ]
+                for iaIA in [ 'I', 'i', 'a', 'A' ]
+                    execute "normal \"pPnw"
+                    let command = "v" . cnt . iaIA . ln . "'"
+                    execute "normal " . command . "r_A " . command . "\<Esc>}"
+                endfor
+            endfor
+        endfor
+    endfor
 
     write! test7.out
 endfunction

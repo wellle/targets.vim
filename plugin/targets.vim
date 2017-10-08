@@ -245,6 +245,31 @@ function! s:loadSettings()
         let g:targets_jumpRanges = 'bb bB BB aa Aa AA'
     endif
 
+    if !exists('g:targets_quoteDirs')
+        " currently undocumented, currently not supposed to be user defined
+        " but could be used to disable 'smart' quote skipping
+        " some technicalities: inverse mapping from quote reps to quote arg reps
+        " quote rep '102' means:
+        "   1: even number of quotation character left from cursor
+        "   0: no quotation char under cursor
+        "   2: even number (but nonzero) of quote chars right of cursor
+        " arg rep 'r1l' means:
+        "   r: select to right (l: to left; n: not at all)
+        "   1: single speed (each quote char starts one text object)
+        "      (2: double speed, skip pseudo quotes)
+        "   l: skip first quote when going left ("last" quote objects)
+        "      (r: skip once when going right ("next"); b: both; n: none)
+        let g:targets_quoteDirs = {
+                    \ 'r1n': ['001', '201', '100', '102'],
+                    \ 'r1l': ['010', '012', '111', '210', '212'],
+                    \ 'r2n': ['101'],
+                    \ 'r2l': ['011', '211'],
+                    \ 'r2b': ['000'],
+                    \ 'l2r': ['110', '112'],
+                    \ 'n2b': ['002', '200', '202'],
+                    \ }
+    endif
+
     let [s:a, s:i, s:A, s:I] = split(g:targets_aiAI, '\zs')
     let [s:n, s:l] = split(g:targets_nl, '\zs')
 endfunction
