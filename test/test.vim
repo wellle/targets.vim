@@ -6,6 +6,9 @@ set runtimepath+=../
 set softtabstop=16 expandtab
 source ../plugin/targets.vim
 
+" tests should pass with this setting too
+" set selection=exclusive
+
 function! s:execute(operation, motions)
     if a:operation == 'c'
         execute "normal " . a:operation . a:motions . "_"
