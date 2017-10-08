@@ -1,16 +1,72 @@
-x "a" "b" c
-x "a" "b" c
-x "a" "b" c
-a "b" "c" x "d" "e" f
-a "b" "c" x "d" "e" f
-a "b" "c" x "d" "e" f
-a "b" "c" x "d" "e" f
-a "b" "c" x "d" "e" f
-a "b" "c" "x" "d" "e" f
-a "b" "c" "x" "d" "e" f
-a "b" "c" "x" "d" "e" f
-a "b" "c" "x" "d" "e" f
-a "b" "c" "x" "d" "e" f
-a "b" "c" x
-a "b" "c" x
-a "b" "c" x
+a ' a ' a ' a ' a ' a ' a
+bbbbbbbbb 010 ' bbbbbbbbb
+c ' c ' c ' c ' c ' c ' c
+
+a ' a ' a ' a ' a ' a ' a
+bbbbbbbbb 001 bbb ' bbbbb
+c ' c ' c ' c ' c ' c ' c
+
+a ' a ' a ' a ' a ' a ' a
+b ' b ' b 201 bbb ' bbbbb
+c ' c ' c ' c ' c ' c ' c
+
+a ' a ' a ' a ' a ' a ' a
+b ' bbbbb 100 bbbbbbbbbbb
+c ' c ' c ' c ' c ' c ' c
+
+a ' a ' a ' a ' a ' a ' a
+b ' bbbbb 102 bbb ' b ' b
+c ' c ' c ' c ' c ' c ' c
+
+a ' a ' a ' a ' a ' a ' a
+bbbbbbbbb 012 ' b ' b ' b
+c ' c ' c ' c ' c ' c ' c
+
+a ' a ' a ' a ' a ' a ' a
+b ' bbbbb 111 ' b ' bbbbb
+c ' c ' c ' c ' c ' c ' c
+
+a ' a ' a ' a ' a ' a ' a
+b ' b ' b 210 ' bbbbbbbbb
+c ' c ' c ' c ' c ' c ' c
+
+a ' a ' a ' a ' a ' a ' a
+b ' b ' b 212 ' b ' b ' b
+c ' c ' c ' c ' c ' c ' c
+
+a ' a ' a ' a ' a ' a ' a
+b ' bbbbb 101 bbb ' bbbbb
+c ' c ' c ' c ' c ' c ' c
+
+a ' a ' a ' a ' a ' a ' a
+bbbbbbbbb 011 ' b ' bbbbb
+c ' c ' c ' c ' c ' c ' c
+
+a ' a ' a ' a ' a ' a ' a
+b ' b ' b 211 ' b ' bbbbb
+c ' c ' c ' c ' c ' c ' c
+
+a ' a ' a ' a ' a ' a ' a
+b ' bbbbb 110 ' bbbbbbbbb
+c ' c ' c ' c ' c ' c ' c
+
+a ' a ' a ' a ' a ' a ' a
+b ' bbbbb 112 ' b ' b ' b
+c ' c ' c ' c ' c ' c ' c
+
+a ' a ' a ' a ' a ' a ' a
+bbbbbbbbb 000 bbbbbbbbbbb
+c ' c ' c ' c ' c ' c ' c
+
+a ' a ' a ' a ' a ' a ' a
+bbbbbbbbb 002 bbb ' b ' b
+c ' c ' c ' c ' c ' c ' c
+
+a ' a ' a ' a ' a ' a ' a
+b ' b ' b 200 bbbbbbbbbbb
+c ' c ' c ' c ' c ' c ' c
+
+a ' a ' a ' a ' a ' a ' a
+b ' b ' b 202 bbb ' b ' b
+c ' c ' c ' c ' c ' c ' c
+

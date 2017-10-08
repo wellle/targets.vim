@@ -11,7 +11,7 @@ Warning: terminal cannot highlight
 /comment 4
 /comment 5
 "test2.out"
-"test2.out" [New] 20L, 202C written
+"test2.out" [New] 20L, 211C written
 "test3.in"
 "test3.in" 44L, 298C
 /P
@@ -46,9 +46,1341 @@ Warning: terminal cannot highlight
 "test6.out"
 "test6.out" [New] 3L, 30C written
 "test7.in"
-"test7.in" 16L, 302C
+"test7.in" 72L, 1422C
+/010
+3 lines yanked
+3 more lines
+/010
+3 more lines
+/010
+3 more lines
+/010
+3 more lines
+/010
+3 more lines
+/010
+3 more lines
+/010
+3 more lines
+/010
+3 more lines
+/010
+3 more lines
+/010
+3 more lines
+/010
+3 more lines
+/010
+3 more lines
+/010
+3 more lines
+/010
+3 more lines
+/010
+3 more lines
+/010
+3 more lines
+/010
+3 more lines
+/010
+3 more lines
+/010
+3 more lines
+/010
+3 more lines
+/010
+3 more lines
+/010
+3 more lines
+/010
+3 more lines
+/010
+3 more lines
+/010
+3 more lines
+/010
+3 more lines
+/010
+3 more lines
+/010
+3 more lines
+/010
+3 more lines
+/010
+3 more lines
+/010
+3 more lines
+/010
+3 more lines
+/010
+3 more lines
+/010
+3 more lines
+/010
+3 more lines
+/010
+3 more lines
+/010
+/001
+3 lines yanked
+3 more lines
+/001
+3 more lines
+/001
+3 more lines
+/001
+3 more lines
+/001
+3 more lines
+/001
+3 more lines
+/001
+3 more lines
+/001
+3 more lines
+/001
+3 more lines
+/001
+3 more lines
+/001
+3 more lines
+/001
+3 more lines
+/001
+3 more lines
+/001
+3 more lines
+/001
+3 more lines
+/001
+3 more lines
+/001
+3 more lines
+/001
+3 more lines
+/001
+3 more lines
+/001
+3 more lines
+/001
+3 more lines
+/001
+3 more lines
+/001
+3 more lines
+/001
+3 more lines
+/001
+3 more lines
+/001
+3 more lines
+/001
+3 more lines
+/001
+3 more lines
+/001
+3 more lines
+/001
+3 more lines
+/001
+3 more lines
+/001
+3 more lines
+/001
+3 more lines
+/001
+3 more lines
+/001
+3 more lines
+/001
+3 more lines
+/001
+/201
+3 lines yanked
+3 more lines
+/201
+3 more lines
+/201
+3 more lines
+/201
+3 more lines
+/201
+3 more lines
+/201
+3 more lines
+/201
+3 more lines
+/201
+3 more lines
+/201
+3 more lines
+/201
+3 more lines
+/201
+3 more lines
+/201
+3 more lines
+/201
+3 more lines
+/201
+3 more lines
+/201
+3 more lines
+/201
+3 more lines
+/201
+3 more lines
+/201
+3 more lines
+/201
+3 more lines
+/201
+3 more lines
+/201
+3 more lines
+/201
+3 more lines
+/201
+3 more lines
+/201
+3 more lines
+/201
+3 more lines
+/201
+3 more lines
+/201
+3 more lines
+/201
+3 more lines
+/201
+3 more lines
+/201
+3 more lines
+/201
+3 more lines
+/201
+3 more lines
+/201
+3 more lines
+/201
+3 more lines
+/201
+3 more lines
+/201
+3 more lines
+/201
+/100
+3 lines yanked
+3 more lines
+/100
+3 more lines
+/100
+3 more lines
+/100
+3 more lines
+/100
+3 more lines
+/100
+3 more lines
+/100
+3 more lines
+/100
+3 more lines
+/100
+3 more lines
+/100
+3 more lines
+/100
+3 more lines
+/100
+3 more lines
+/100
+3 more lines
+/100
+3 more lines
+/100
+3 more lines
+/100
+3 more lines
+/100
+3 more lines
+/100
+3 more lines
+/100
+3 more lines
+/100
+3 more lines
+/100
+3 more lines
+/100
+3 more lines
+/100
+3 more lines
+/100
+3 more lines
+/100
+3 more lines
+/100
+3 more lines
+/100
+3 more lines
+/100
+3 more lines
+/100
+3 more lines
+/100
+3 more lines
+/100
+3 more lines
+/100
+3 more lines
+/100
+3 more lines
+/100
+3 more lines
+/100
+3 more lines
+/100
+3 more lines
+/100
+/102
+3 lines yanked
+3 more lines
+/102
+3 more lines
+/102
+3 more lines
+/102
+3 more lines
+/102
+3 more lines
+/102
+3 more lines
+/102
+3 more lines
+/102
+3 more lines
+/102
+3 more lines
+/102
+3 more lines
+/102
+3 more lines
+/102
+3 more lines
+/102
+3 more lines
+/102
+3 more lines
+/102
+3 more lines
+/102
+3 more lines
+/102
+3 more lines
+/102
+3 more lines
+/102
+3 more lines
+/102
+3 more lines
+/102
+3 more lines
+/102
+3 more lines
+/102
+3 more lines
+/102
+3 more lines
+/102
+3 more lines
+/102
+3 more lines
+/102
+3 more lines
+/102
+3 more lines
+/102
+3 more lines
+/102
+3 more lines
+/102
+3 more lines
+/102
+3 more lines
+/102
+3 more lines
+/102
+3 more lines
+/102
+3 more lines
+/102
+3 more lines
+/102
+/012
+3 lines yanked
+3 more lines
+/012
+3 more lines
+/012
+3 more lines
+/012
+3 more lines
+/012
+3 more lines
+/012
+3 more lines
+/012
+3 more lines
+/012
+3 more lines
+/012
+3 more lines
+/012
+3 more lines
+/012
+3 more lines
+/012
+3 more lines
+/012
+3 more lines
+/012
+3 more lines
+/012
+3 more lines
+/012
+3 more lines
+/012
+3 more lines
+/012
+3 more lines
+/012
+3 more lines
+/012
+3 more lines
+/012
+3 more lines
+/012
+3 more lines
+/012
+3 more lines
+/012
+3 more lines
+/012
+3 more lines
+/012
+3 more lines
+/012
+3 more lines
+/012
+3 more lines
+/012
+3 more lines
+/012
+3 more lines
+/012
+3 more lines
+/012
+3 more lines
+/012
+3 more lines
+/012
+3 more lines
+/012
+3 more lines
+/012
+3 more lines
+/012
+/111
+3 lines yanked
+3 more lines
+/111
+3 more lines
+/111
+3 more lines
+/111
+3 more lines
+/111
+3 more lines
+/111
+3 more lines
+/111
+3 more lines
+/111
+3 more lines
+/111
+3 more lines
+/111
+3 more lines
+/111
+3 more lines
+/111
+3 more lines
+/111
+3 more lines
+/111
+3 more lines
+/111
+3 more lines
+/111
+3 more lines
+/111
+3 more lines
+/111
+3 more lines
+/111
+3 more lines
+/111
+3 more lines
+/111
+3 more lines
+/111
+3 more lines
+/111
+3 more lines
+/111
+3 more lines
+/111
+3 more lines
+/111
+3 more lines
+/111
+3 more lines
+/111
+3 more lines
+/111
+3 more lines
+/111
+3 more lines
+/111
+3 more lines
+/111
+3 more lines
+/111
+3 more lines
+/111
+3 more lines
+/111
+3 more lines
+/111
+3 more lines
+/111
+/210
+3 lines yanked
+3 more lines
+/210
+3 more lines
+/210
+3 more lines
+/210
+3 more lines
+/210
+3 more lines
+/210
+3 more lines
+/210
+3 more lines
+/210
+3 more lines
+/210
+3 more lines
+/210
+3 more lines
+/210
+3 more lines
+/210
+3 more lines
+/210
+3 more lines
+/210
+3 more lines
+/210
+3 more lines
+/210
+3 more lines
+/210
+3 more lines
+/210
+3 more lines
+/210
+3 more lines
+/210
+3 more lines
+/210
+3 more lines
+/210
+3 more lines
+/210
+3 more lines
+/210
+3 more lines
+/210
+3 more lines
+/210
+3 more lines
+/210
+3 more lines
+/210
+3 more lines
+/210
+3 more lines
+/210
+3 more lines
+/210
+3 more lines
+/210
+3 more lines
+/210
+3 more lines
+/210
+3 more lines
+/210
+3 more lines
+/210
+3 more lines
+/210
+/212
+3 lines yanked
+3 more lines
+/212
+3 more lines
+/212
+3 more lines
+/212
+3 more lines
+/212
+3 more lines
+/212
+3 more lines
+/212
+3 more lines
+/212
+3 more lines
+/212
+3 more lines
+/212
+3 more lines
+/212
+3 more lines
+/212
+3 more lines
+/212
+3 more lines
+/212
+3 more lines
+/212
+3 more lines
+/212
+3 more lines
+/212
+3 more lines
+/212
+3 more lines
+/212
+3 more lines
+/212
+3 more lines
+/212
+3 more lines
+/212
+3 more lines
+/212
+3 more lines
+/212
+3 more lines
+/212
+3 more lines
+/212
+3 more lines
+/212
+3 more lines
+/212
+3 more lines
+/212
+3 more lines
+/212
+3 more lines
+/212
+3 more lines
+/212
+3 more lines
+/212
+3 more lines
+/212
+3 more lines
+/212
+3 more lines
+/212
+3 more lines
+/212
+/101
+3 lines yanked
+3 more lines
+/101
+3 more lines
+/101
+3 more lines
+/101
+3 more lines
+/101
+3 more lines
+/101
+3 more lines
+/101
+3 more lines
+/101
+3 more lines
+/101
+3 more lines
+/101
+3 more lines
+/101
+3 more lines
+/101
+3 more lines
+/101
+3 more lines
+/101
+3 more lines
+/101
+3 more lines
+/101
+3 more lines
+/101
+3 more lines
+/101
+3 more lines
+/101
+3 more lines
+/101
+3 more lines
+/101
+3 more lines
+/101
+3 more lines
+/101
+3 more lines
+/101
+3 more lines
+/101
+3 more lines
+/101
+3 more lines
+/101
+3 more lines
+/101
+3 more lines
+/101
+3 more lines
+/101
+3 more lines
+/101
+3 more lines
+/101
+3 more lines
+/101
+3 more lines
+/101
+3 more lines
+/101
+3 more lines
+/101
+3 more lines
+/101
+/011
+3 lines yanked
+3 more lines
+/011
+3 more lines
+/011
+3 more lines
+/011
+3 more lines
+/011
+3 more lines
+/011
+3 more lines
+/011
+3 more lines
+/011
+3 more lines
+/011
+3 more lines
+/011
+3 more lines
+/011
+3 more lines
+/011
+3 more lines
+/011
+3 more lines
+/011
+3 more lines
+/011
+3 more lines
+/011
+3 more lines
+/011
+3 more lines
+/011
+3 more lines
+/011
+3 more lines
+/011
+3 more lines
+/011
+3 more lines
+/011
+3 more lines
+/011
+3 more lines
+/011
+3 more lines
+/011
+3 more lines
+/011
+3 more lines
+/011
+3 more lines
+/011
+3 more lines
+/011
+3 more lines
+/011
+3 more lines
+/011
+3 more lines
+/011
+3 more lines
+/011
+3 more lines
+/011
+3 more lines
+/011
+3 more lines
+/011
+3 more lines
+/011
+/211
+3 lines yanked
+3 more lines
+/211
+3 more lines
+/211
+3 more lines
+/211
+3 more lines
+/211
+3 more lines
+/211
+3 more lines
+/211
+3 more lines
+/211
+3 more lines
+/211
+3 more lines
+/211
+3 more lines
+/211
+3 more lines
+/211
+3 more lines
+/211
+3 more lines
+/211
+3 more lines
+/211
+3 more lines
+/211
+3 more lines
+/211
+3 more lines
+/211
+3 more lines
+/211
+3 more lines
+/211
+3 more lines
+/211
+3 more lines
+/211
+3 more lines
+/211
+3 more lines
+/211
+3 more lines
+/211
+3 more lines
+/211
+3 more lines
+/211
+3 more lines
+/211
+3 more lines
+/211
+3 more lines
+/211
+3 more lines
+/211
+3 more lines
+/211
+3 more lines
+/211
+3 more lines
+/211
+3 more lines
+/211
+3 more lines
+/211
+3 more lines
+/211
+/110
+3 lines yanked
+3 more lines
+/110
+3 more lines
+/110
+3 more lines
+/110
+3 more lines
+/110
+3 more lines
+/110
+3 more lines
+/110
+3 more lines
+/110
+3 more lines
+/110
+3 more lines
+/110
+3 more lines
+/110
+3 more lines
+/110
+3 more lines
+/110
+3 more lines
+/110
+3 more lines
+/110
+3 more lines
+/110
+3 more lines
+/110
+3 more lines
+/110
+3 more lines
+/110
+3 more lines
+/110
+3 more lines
+/110
+3 more lines
+/110
+3 more lines
+/110
+3 more lines
+/110
+3 more lines
+/110
+3 more lines
+/110
+3 more lines
+/110
+3 more lines
+/110
+3 more lines
+/110
+3 more lines
+/110
+3 more lines
+/110
+3 more lines
+/110
+3 more lines
+/110
+3 more lines
+/110
+3 more lines
+/110
+3 more lines
+/110
+3 more lines
+/110
+/112
+3 lines yanked
+3 more lines
+/112
+3 more lines
+/112
+3 more lines
+/112
+3 more lines
+/112
+3 more lines
+/112
+3 more lines
+/112
+3 more lines
+/112
+3 more lines
+/112
+3 more lines
+/112
+3 more lines
+/112
+3 more lines
+/112
+3 more lines
+/112
+3 more lines
+/112
+3 more lines
+/112
+3 more lines
+/112
+3 more lines
+/112
+3 more lines
+/112
+3 more lines
+/112
+3 more lines
+/112
+3 more lines
+/112
+3 more lines
+/112
+3 more lines
+/112
+3 more lines
+/112
+3 more lines
+/112
+3 more lines
+/112
+3 more lines
+/112
+3 more lines
+/112
+3 more lines
+/112
+3 more lines
+/112
+3 more lines
+/112
+3 more lines
+/112
+3 more lines
+/112
+3 more lines
+/112
+3 more lines
+/112
+3 more lines
+/112
+3 more lines
+/112
+/000
+3 lines yanked
+3 more lines
+/000
+3 more lines
+/000
+3 more lines
+/000
+3 more lines
+/000
+3 more lines
+/000
+3 more lines
+/000
+3 more lines
+/000
+3 more lines
+/000
+3 more lines
+/000
+3 more lines
+/000
+3 more lines
+/000
+3 more lines
+/000
+3 more lines
+/000
+3 more lines
+/000
+3 more lines
+/000
+3 more lines
+/000
+3 more lines
+/000
+3 more lines
+/000
+3 more lines
+/000
+3 more lines
+/000
+3 more lines
+/000
+3 more lines
+/000
+3 more lines
+/000
+3 more lines
+/000
+3 more lines
+/000
+3 more lines
+/000
+3 more lines
+/000
+3 more lines
+/000
+3 more lines
+/000
+3 more lines
+/000
+3 more lines
+/000
+3 more lines
+/000
+3 more lines
+/000
+3 more lines
+/000
+3 more lines
+/000
+3 more lines
+/000
+/002
+3 lines yanked
+3 more lines
+/002
+3 more lines
+/002
+3 more lines
+/002
+3 more lines
+/002
+3 more lines
+/002
+3 more lines
+/002
+3 more lines
+/002
+3 more lines
+/002
+3 more lines
+/002
+3 more lines
+/002
+3 more lines
+/002
+3 more lines
+/002
+3 more lines
+/002
+3 more lines
+/002
+3 more lines
+/002
+3 more lines
+/002
+3 more lines
+/002
+3 more lines
+/002
+3 more lines
+/002
+3 more lines
+/002
+3 more lines
+/002
+3 more lines
+/002
+3 more lines
+/002
+3 more lines
+/002
+3 more lines
+/002
+3 more lines
+/002
+3 more lines
+/002
+3 more lines
+/002
+3 more lines
+/002
+3 more lines
+/002
+3 more lines
+/002
+3 more lines
+/002
+3 more lines
+/002
+3 more lines
+/002
+3 more lines
+/002
+3 more lines
+/002
+/200
+3 lines yanked
+3 more lines
+/200
+3 more lines
+/200
+3 more lines
+/200
+3 more lines
+/200
+3 more lines
+/200
+3 more lines
+/200
+3 more lines
+/200
+3 more lines
+/200
+3 more lines
+/200
+3 more lines
+/200
+3 more lines
+/200
+3 more lines
+/200
+3 more lines
+/200
+3 more lines
+/200
+3 more lines
+/200
+3 more lines
+/200
+3 more lines
+/200
+3 more lines
+/200
+3 more lines
+/200
+3 more lines
+/200
+3 more lines
+/200
+3 more lines
+/200
+3 more lines
+/200
+3 more lines
+/200
+3 more lines
+/200
+3 more lines
+/200
+3 more lines
+/200
+3 more lines
+/200
+3 more lines
+/200
+3 more lines
+/200
+3 more lines
+/200
+3 more lines
+/200
+3 more lines
+/200
+3 more lines
+/200
+3 more lines
+/200
+3 more lines
+/200
+/202
+3 lines yanked
+3 more lines
+/202
+3 more lines
+/202
+3 more lines
+/202
+3 more lines
+/202
+3 more lines
+/202
+3 more lines
+/202
+3 more lines
+/202
+3 more lines
+/202
+3 more lines
+/202
+3 more lines
+/202
+3 more lines
+/202
+3 more lines
+/202
+3 more lines
+/202
+3 more lines
+/202
+3 more lines
+/202
+3 more lines
+/202
+3 more lines
+/202
+3 more lines
+/202
+3 more lines
+/202
+3 more lines
+/202
+3 more lines
+/202
+3 more lines
+/202
+3 more lines
+/202
+3 more lines
+/202
+3 more lines
+/202
+3 more lines
+/202
+3 more lines
+/202
+3 more lines
+/202
+3 more lines
+/202
+3 more lines
+/202
+3 more lines
+/202
+3 more lines
+/202
+3 more lines
+/202
+3 more lines
+/202
+3 more lines
+/202
+3 more lines
+/202
 "test7.out"
-"test7.out" [New] 16L, 302C written
+"test7.out" [New] 2016L, 55422C written
 "test8.in"
 "test8.in" 1L, 13C
 "test8.out"

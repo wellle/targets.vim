@@ -31,6 +31,23 @@ function! s:setup()
         let s:rangeJumps[ranges[i]] = 1
         let i = i + 1
     endwhile
+
+    " args in order: dir, rate, skipL, skipR, error
+    let s:quoteArgs = {
+                \ 'r1n': ['>', 1, 0, 0, ''],
+                \ 'r1l': ['>', 1, 1, 0, ''],
+                \ 'r2n': ['>', 2, 0, 0, ''],
+                \ 'r2l': ['>', 2, 1, 0, ''],
+                \ 'l2r': ['<', 2, 0, 1, ''],
+                \ 'n2b': [ '', 2, 1, 1, ''],
+                \ }
+    let s:quoteDirs = {}
+    for key in keys(s:quoteArgs)
+        let args = s:quoteArgs[key]
+        for rep in get(g:targets_quoteDirs, key, [])
+            let s:quoteDirs[rep] = args
+        endfor
+    endfor
 endfunction
 
 call s:setup()
@@ -179,16 +196,16 @@ function! s:findRawTarget(context, kind, which, count)
         endif
 
     elseif a:kind ==# 'q'
-        let [dir, rateL, skipL, rateR, skipR, error] = s:quoteDir()
+        let [dir, rate, skipL, skipR, error] = s:quoteDir()
         if error !=# ''
             return targets#target#withError('findRawTarget quoteDir')
         endif
         if a:which ==# 'c'
-            return s:seekselect(dir, rateL - skipL, rateR - skipR)
+            return s:seekselect(dir, rate - skipL, rate - skipR)
         elseif a:which ==# 'n'
-            return s:nextselect(a:count * rateR - skipR)
+            return s:nextselect(a:count * rate - skipR)
         elseif a:which ==# 'l'
-            return s:lastselect(a:count * rateL - skipL)
+            return s:lastselect(a:count * rate - skipL)
         else
             return targets#target#withError('findRawTarget q: ' . a:which)
         endif
@@ -551,97 +568,29 @@ function! targets#undo(lastseq)
     endif
 endfunction
 
-" returns [direction, rateL, skipL, rateR, skipR, error]
+" returns [dir, rate, skipL, skipR, error]
 function! s:quoteDir()
-    let oldpos = getpos('.')
-    let [direction, rateL, skipL, rateR, skipR, error, rep] = s:quoteDirInternal(oldpos[2])
-    " echom 'rep' rep 'rateL' rateL 'skipL' skipL 'rateR' rateR 'skipR' skipR
+    let line = getline('.')
+    let col = col('.')
 
-    call setpos('.', oldpos)
-    return [direction, rateL, skipL, rateR, skipR, error]
-endfunction
+    " cut line in left of, on and right of cursor
+    let left = col > 1 ? line[:col-2] : ""
+    let cursor = line[col-1]
+    let right = line[col:]
 
-" doesn't restore old position
-" cursor  rep dir rates/skips description
-"    .    ()
-"         xx1  >    1/0 1/0   good multiline around if final
-"   (     bx0  >    1/0 1/0   good multiline below single if final
-"    (    ox0  >    1/1 1/0   good multiline below single on if final
-"     (   ax0  <    1/0 1/0   good multiline above if final
-" ( )     bb1       2/1 2/1   bad after last if final
-"  ( )    bo1  <    2/0 2/1   good end on cursor select to left
-"   ( )   ba1  >    2/0 2/0   good around cursor select around
-"    ( )  oa1  >    2/1 2/0   good start on cursor select to right
-"     ( ) aa1       2/1 2/1   bad before first
-" ) (     bb0  >    2/0 1/0   good multiline below multi if final
-"  ) (    ob0  >    2/1 1/0   good multiline below multi on if final
-"   ) (   ab0       2/1 2/1   bad between pairs
-" returns [dir, skipL, skipR, error, rep]
-function! s:quoteDirInternal(oldcolumn)
-    let column = 0
-    let positions = ['x', 'x']
-    let index = 1 " write into opening first (will be toggled first)
+    " how many delitimers left, on and right of cursor
+    let lc = s:count(s:opening, left)
+    let cc = s:count(s:opening, cursor)
+    let rc = s:count(s:opening, right)
 
-    silent! normal! 0
-    let [_, column] = searchpos(s:opening, 'c', line('.'))
-    while column != 0
-        let index = !index " 0 <-> 1
-        if column < a:oldcolumn
-            let positions[index] = 'b' " before
-        elseif column == a:oldcolumn
-            let positions[index] = 'o' " on
-        else
-            let positions[index] = 'a' " after
-        endif
+    " truncate counts
+    let lc = lc == 0 ? 0 : lc % 2 == 0 ? 2 : 1
+    let rc = rc == 0 ? 0 : rc % 2 == 0 ? 2 : 1
 
-        let rep = positions[0] . positions[1] . index
-        if rep == 'bo1'
-            call s:debug('good end on cursor select to left')
-            return ['<', 2, 0, 2, 1, '', rep]
-        elseif rep == 'ba1'
-            call s:debug('good around cursor select around')
-            return ['>', 2, 0, 2, 0, '', rep]
-        elseif rep == 'oa1'
-            call s:debug('good start on cursor select to right')
-            return ['>', 2, 1, 2, 0, '', rep]
-        elseif rep == 'aa1'
-            call s:debug('bad before first')
-            return ['', 2, 1, 2, 1, '', rep]
-        elseif rep == 'ab0'
-            call s:debug('bad between pairs')
-            return ['', 2, 1, 2, 1, '', rep]
-        else
-            " call s:debug('not final ' . rep)
-        endif
-
-        let [_, column] = searchpos(s:opening, '', line('.'))
-    endwhile
-
-    let rep = positions[0] . positions[1] . index
-    if rep == 'xx1'
-        call s:debug('good multiline around')
-        return ['>', 1, 0, 1, 0, '', rep]
-    elseif rep == 'bx0'
-        call s:debug('good multiline below single')
-        return ['>', 1, 0, 1, 0, '', rep]
-    elseif rep == 'ox0'
-        call s:debug('good multiline below single on')
-        return ['>', 1, 1, 1, 0, '', rep]
-    elseif rep == 'ax0'
-        call s:debug('good multiline above')
-        return ['<', 1, 0, 1, 0, '', rep]
-    elseif rep == 'bb1'
-        call s:debug('bad after last')
-        return ['', 2, 1, 2, 1, '', rep]
-    elseif rep == 'bb0'
-        call s:debug('good multiline below multi')
-        return ['>', 2, 0, 1, 0, '', rep]
-    elseif rep == 'ob0'
-        call s:debug('good multiline below multi on')
-        return ['>', 2, 1, 1, 0, '', rep]
-    else
-        return ['', 1, 0, 1, 0, 'quoteDir not found ' . rep]
-    endif
+    let key = lc . cc . rc
+    let defaultValues = ['', 0, 0, 0, 'bad key: ' . key]
+    let [dir, rate, skipL, skipR, error] = get(s:quoteDirs, key, defaultValues)
+    return [dir, rate, skipL, skipR, error]
 endfunction
 
 function! s:nextselect(count)
@@ -1270,6 +1219,10 @@ function! s:search(...)
             return s:fail('search')
         endif
     endfor
+endfunction
+
+function! s:count(char, text)
+    return len(split(a:text, a:char, 1)) - 1
 endfunction
 
 " return 1 and send a message to s:debug
