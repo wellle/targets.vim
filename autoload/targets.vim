@@ -577,7 +577,7 @@ function! s:quoteDir()
     " cut line in left of, on and right of cursor
     let left = col > 1 ? line[:col-2] : ""
     let cursor = line[col-1]
-    let right = line[col:]
+    let right = line[col :]
 
     " how many delitimers left, on and right of cursor
     let lc = s:count(s:opening, left)
