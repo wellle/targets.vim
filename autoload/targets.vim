@@ -188,10 +188,14 @@ function! s:findRawTarget(context, kind, which, count)
         if a:which ==# 'c'
             return s:seekselectp(a:count + s:grow(a:context))
         elseif a:which ==# 'n'
-            call s:search(a:count, s:opening, 'W')
+            if s:search(a:count, s:opening, 'W') > 0
+                return targets#target#withError('findRawTarget pn')
+            endif
             return s:selectp()
         elseif a:which ==# 'l'
-            call s:search(a:count, s:closing, 'bW')
+            if s:search(a:count, s:closing, 'bW') > 0
+                return targets#target#withError('findRawTarget pl')
+            endif
             return s:selectp()
         else
             return targets#target#withError('findRawTarget p')
@@ -227,10 +231,14 @@ function! s:findRawTarget(context, kind, which, count)
         if a:which ==# 'c'
             return s:seekselectp(a:count + s:grow(a:context), '<\a', '</\a', 't')
         elseif a:which ==# 'n'
-            call s:search(a:count, '<\a', 'W')
+            if s:search(a:count, '<\a', 'W') > 0
+                return targets#target#withError('findRawTarget tn')
+            endif
             return s:selectp()
         elseif a:which ==# 'l'
-            call s:search(a:count, '</\a\zs', 'bW')
+            if s:search(a:count, '</\a\zs', 'bW') > 0
+                return targets#target#withError('findRawTarget tn')
+            endif
             return s:selectp()
         else
             return targets#target#withError('findRawTarget t')
@@ -697,17 +705,19 @@ function! s:seekselectp(...)
         return around
     endif
 
-    call setpos('.', oldpos)
-
-    call s:search(cnt, s:closing, 'bW')
-    let last = s:selectp()
+    let targets = [around]
 
     call setpos('.', oldpos)
+    if s:search(1, s:closing, 'bW') == 0
+        let targets = add(targets, s:selectp())
+    endif
 
-    call s:search(cnt, s:opening, 'W')
-    let next = s:selectp()
+    call setpos('.', oldpos)
+    if s:search(1, s:opening, 'W') == 0
+        let targets = add(targets, s:selectp())
+    endif
 
-    return s:bestSeekTarget([around, next, last], oldpos, min, max, 'seekselectp')
+    return s:bestSeekTarget(targets, oldpos, min, max, 'seekselectp')
 endfunction
 
 " select an argument around the cursor
