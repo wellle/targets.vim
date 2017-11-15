@@ -64,6 +64,7 @@ function! targets#o(trigger, count)
     let [delimiter, which, modifier] = split(a:trigger, '\zs')
     let [target, rawTarget] = s:findTarget(context, delimiter, which, modifier, v:count1)
     if target.state().isInvalid()
+        call s:abortMatch(context, '#o: ' . target.error)
         return s:cleanUp()
     endif
     call s:handleTarget(context, target, rawTarget)
