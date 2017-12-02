@@ -238,12 +238,9 @@ function! s:findRawTarget(context, kind, which, count)
         endif
 
         if a:which ==# 'c'
-            let cnt = a:count + s:grow(a:context)
-            " need to update as s:grow might move cursor, how can we fix that
-            " nicely? do it outside and early?
             let oldpos = getpos('.')
 
-            if cnt == 1 " seek
+            if a:count == 1 && s:newSelection " seek
                 let gen = s:newMultiGen(oldpos, min, max)
                 let g = s:newGen('P', oldpos, args)
                 call gen.add(g.child('C'), g.child('N'), g.child('L'))
@@ -253,7 +250,7 @@ function! s:findRawTarget(context, kind, which, count)
             " don't seek
             let gen = s:newMultiGen(oldpos, min, max)
             call gen.add(s:newGen('PC', oldpos, args))
-            return gen.nextN(cnt)
+            return gen.nextN(a:count)
 
         elseif a:which ==# 'n'
             let gen = s:newMultiGen(oldpos, min, max)
@@ -273,12 +270,9 @@ function! s:findRawTarget(context, kind, which, count)
         let args = {'delimiter': s:opening}
 
         if a:which ==# 'c'
-            let cnt = a:count + s:grow(a:context)
-            " need to update as s:grow might move cursor, how can we fix that
-            " nicely? do it outside and early?
             let oldpos = getpos('.')
 
-            if cnt == 1 " seek
+            if a:count == 1 && s:newSelection " seek
                 let gen = s:newMultiGen(oldpos, min, max)
                 let g = s:newGen('Q', oldpos, args)
                 call gen.add(g.child('C'), g.child('N'), g.child('L'))
@@ -288,7 +282,7 @@ function! s:findRawTarget(context, kind, which, count)
             " don't seek
             let gen = s:newMultiGen(oldpos, min, max)
             call gen.add(s:newGen('QC', oldpos, args))
-            return gen.nextN(cnt)
+            return gen.nextN(a:count)
 
         elseif a:which ==# 'n'
             let gen = s:newMultiGen(oldpos, min, max)
@@ -308,12 +302,9 @@ function! s:findRawTarget(context, kind, which, count)
         let args = {'delimiter': s:opening}
 
         if a:which ==# 'c'
-            let cnt = a:count + s:grow(a:context)
-            " need to update as s:grow might move cursor, how can we fix that
-            " nicely? do it outside and early?
             let oldpos = getpos('.')
 
-            if cnt == 1 " seek
+            if a:count == 1 && s:newSelection " seek
                 let gen = s:newMultiGen(oldpos, min, max)
                 let g = s:newGen('S', oldpos, args)
                 call gen.add(g.child('C'), g.child('N'), g.child('L'))
@@ -323,7 +314,7 @@ function! s:findRawTarget(context, kind, which, count)
             " don't seek
             let gen = s:newMultiGen(oldpos, min, max)
             call gen.add(s:newGen('SC', oldpos, args))
-            return gen.nextN(cnt)
+            return gen.nextN(a:count)
 
         elseif a:which ==# 'n'
             let gen = s:newMultiGen(oldpos, min, max)
@@ -1317,20 +1308,6 @@ function! s:expands(target)
     return a:target
 endfunction
 
-" return 1 if count should be increased by one to grow selection on repeated
-" invocations
-function! s:grow(context)
-    if a:context.mapmode ==# 'o' || !s:shouldGrow
-        return 0
-    endif
-
-    " move cursor to boundary of last raw target
-    " to handle expansion in tight boundaries like (((x)))
-    call s:lastRawTarget.cursorS() " TODO: remove
-
-    return 1
-endfunction
-
 " returns the character under the cursor
 function! s:getchar()
     return getline('.')[col('.')-1]
@@ -1421,15 +1398,20 @@ function! s:gennextPC() dict
 
     call setpos('.', self.oldpos)
 
-    let cnt = 1
-    if exists('self.called')
-        let cnt = 2
+    let cnt = 2
+    if !exists('self.called') " first invocation
+        let self.called = 1
+        if s:newSelection
+            let cnt = 1
+        else
+            " continue from previous state
+            call s:lastRawTarget.cursorE()
+        endif
     endif
 
     let self.currentTarget = s:selectp(cnt, self.args.trigger)
 
     let self.oldpos = getpos('.')
-    let self.called = 1 " group these somehow? self.internal.called
 
     return self.currentTarget
 endfunction
