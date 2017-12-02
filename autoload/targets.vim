@@ -376,12 +376,28 @@ function! s:findRawTarget(context, kind, which, count)
         endif
 
     elseif a:kind ==# 'a'
+        let args = {'delimiter': s:opening}
+
         if a:which ==# 'c'
-            return s:seekselecta(a:context, a:count + s:grow(a:context))
+            if a:count == 1 && s:newSelection " seek
+                let gen = s:newMultiGen(oldpos, min, max)
+                let g = s:newGen('A', oldpos, args)
+                call gen.add(g.child('C'), g.child('N'), g.child('L'))
+                return gen.next()
+            endif
+
+            " don't seek
+            let gen = s:newGen('AC', oldpos, args)
+            return gen.nextN(a:count)
+
         elseif a:which ==# 'n'
-            return s:nextselecta(a:context, a:count)
+            let gen = s:newGen('AN', oldpos, args)
+            return gen.nextN(a:count)
+
         elseif a:which ==# 'l'
-            return s:lastselecta(a:context, a:count)
+            let gen = s:newGen('AL', oldpos, args)
+            return gen.nextN(a:count)
+
         else
             return targets#target#withError('findRawTarget a')
         endif
@@ -856,7 +872,11 @@ function! s:selecta(direction)
 
     let [opening, closing] = [s:argOpening, s:argClosing]
     if a:direction ==# '^'
-        let [sl, sc, el, ec, err] = s:findArg(a:direction, 'W', 'bcW', 'bW', opening, closing)
+        if s:getchar() =~# closing 
+            let [sl, sc, el, ec, err] = s:findArg(a:direction, 'cW', 'bW', 'bW', opening, closing)
+        else
+            let [sl, sc, el, ec, err] = s:findArg(a:direction, 'W', 'bcW', 'bW', opening, closing)
+        endif
         let message = 'selecta 1'
     elseif a:direction ==# '>'
         let [sl, sc, el, ec, err] = s:findArg(a:direction, 'W', 'bW', 'bW', opening, closing)
@@ -1011,13 +1031,12 @@ function! s:nextselecta(...)
         return target
     endif
 
-    if char !~# s:argSeparator " start wasn't on comma
+    if char !~# s:argSeparator " start wasn't on separator
         return targets#target#withError('nextselecta 2')
     endif
 
     call setpos('.', context.oldpos)
-    let opening = s:argOpening
-    if s:search(cnt, opening, 'W', stopline) > 0 " no start found
+    if s:search(cnt, s:argOpening, 'W', stopline) > 0 " no start found
         return targets#target#withError('nextselecta 3')
     endif
 
@@ -1343,7 +1362,7 @@ function! s:grow(context)
 
     " move cursor to boundary of last raw target
     " to handle expansion in tight boundaries like (((x)))
-    call s:lastRawTarget.cursorE()
+    call s:lastRawTarget.cursorS() " TODO: remove
 
     return 1
 endfunction
@@ -1375,6 +1394,7 @@ endfunction
 
 " TODO: move to new file and rename functions accordingly
 
+" TODO: inject context instead of oldpos?
 function! s:newGen(funcNameSuffix, oldpos, args)
     let gen = {
         \ 'oldpos': a:oldpos,
@@ -1621,6 +1641,118 @@ function! s:gennextSL() dict
     endif
 
     let self.called = 1
+    return self.currentTarget
+endfunction
+
+" arguments
+
+function! s:gennextAC() dict
+    if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
+        return self.currentTarget
+    endif
+
+    call setpos('.', self.oldpos)
+
+    if !exists('self.called') " first invocation
+        let self.called = 1
+        if s:newSelection
+            let self.currentTarget = s:selecta('^')
+            " TODO: clean up. change cursorE to return proper big list? [0, el, ec, 0]
+            " similar below
+            call self.currentTarget.cursorE() " keep going from right end
+            let self.oldpos = getpos('.')
+            return self.currentTarget
+        else
+            " continue from previous state
+            call s:lastRawTarget.cursorE()
+        endif
+    endif
+
+    let [opening, closing] = [s:argOpening, s:argClosing]
+    if s:findArgBoundary('cW', 'cW', opening, closing, s:argOuter, s:none, 1)[2] > 0
+        let self.currentTarget = targets#target#withError('AC 1')
+        return self.currentTarget
+    endif
+    silent! execute "normal! 1 "
+
+    let self.currentTarget = s:selecta('<')
+    let self.oldpos = getpos('.')
+    return self.currentTarget
+endfunction
+
+function! s:gennextAN() dict
+    if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
+        return self.currentTarget
+    endif
+
+    if !exists('self.called') " first invocation
+        let self.called = 1
+        if !s:newSelection
+            call s:lastRawTarget.cursorS()
+            let self.oldpos = getpos('.')
+        endif
+    endif
+
+    " search for opening or separator, try to select argument from there
+    " if that fails, keep searching for opening until an argument can be
+    " selected
+    let pattern = s:argOpeningS
+    while 1
+        call setpos('.', self.oldpos)
+
+        if s:search(1, pattern, 'W') > 0
+            let self.currentTarget = targets#target#withError('no target')
+            return self.currentTarget
+        endif
+
+        let self.oldpos = getpos('.')
+        let self.currentTarget = s:selecta('>')
+
+        if self.currentTarget.state().isValid()
+            break
+        endif
+
+        let pattern = s:argOpening
+    endwhile
+
+    return self.currentTarget
+endfunction
+
+function! s:gennextAL() dict
+    if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
+        return self.currentTarget
+    endif
+
+    if !exists('self.called') " first invocation
+        let self.called = 1
+        if !s:newSelection
+            call s:lastRawTarget.cursorE()
+            let self.oldpos = getpos('.')
+        endif
+    endif
+
+    " search for closing or separator, try to select argument from there
+    " if that fails, keep searching for closing until an argument can be
+    " selected
+    let pattern = s:argClosingS
+    while 1
+        call setpos('.', self.oldpos)
+
+        if s:search(1, pattern, 'bW') > 0
+            let self.currentTarget = targets#target#withError('no target')
+            return self.currentTarget
+        endif
+
+        let self.oldpos = getpos('.')
+        let self.currentTarget = s:selecta('<')
+
+        if self.currentTarget.state().isValid()
+            break
+        endif
+
+        let pattern = s:argClosing
+    endwhile
+
     return self.currentTarget
 endfunction
 
