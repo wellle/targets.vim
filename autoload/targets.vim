@@ -171,7 +171,6 @@ endfunction
 " initialize script local variables for the current matching
 function! s:init()
     let s:newSelection = 1
-    let s:shouldGrow = 1
 
     let s:selection = &selection " remember 'selection' setting
     let &selection = 'inclusive' " and set it to inclusive
@@ -180,7 +179,7 @@ function! s:init()
     let &virtualedit = ''            " and set it to default
 
     let s:whichwrap = &whichwrap " remember 'whichwrap' setting
-    let &whichwrap = 'b,s' " and set it to default
+    let &whichwrap = 'b,s'       " and set it to default
 endfunction
 
 " save old visual selection to detect new selections and reselect on fail
@@ -199,7 +198,6 @@ function! s:initX(trigger)
     endif
 
     let s:newSelection = s:isNewSelection()
-    let s:shouldGrow = s:shouldGrow(a:trigger)
 endfunction
 
 " clean up script variables after match
@@ -322,13 +320,11 @@ function! s:modifyTarget(target, kind, modifier)
 
     elseif a:kind ==# 't'
         if a:modifier ==# 'i'
-            let target = s:innert(target)
-            return s:drop(target)
+            return s:drop(s:innert(target))
         elseif a:modifier ==# 'a'
             return target
         elseif a:modifier ==# 'I'
-            let target = s:innert(target)
-            return s:shrink(target)
+            return s:shrink(s:innert(target))
         elseif a:modifier ==# 'A'
             return s:expand(target)
         else
@@ -442,22 +438,6 @@ function! s:isNewSelection()
     endif
 
     return 0
-endfunction
-
-function! s:shouldGrow(trigger)
-    if s:newSelection
-        return 0
-    endif
-
-    if !exists('s:lastTrigger')
-        return 0
-    endif
-
-    if s:lastTrigger != a:trigger
-        return 0
-    endif
-
-    return 1
 endfunction
 
 " clear the commandline to hide targets function calls
@@ -619,25 +599,6 @@ function! s:quoteDir(delimiter)
     return [dir, rate, skipL, skipR, error]
 endfunction
 
-" TODO: deprecate?
-function! s:nextselect(opening, closing, count)
-    " echom 'nextselect' a:count
-    if s:search(a:count, a:opening, 'W') > 0
-        return targets#target#withError('nextselect')
-    endif
-
-    return s:select(a:opening, a:closing, '>')
-endfunction
-
-function! s:lastselect(opening, closing, count)
-    " echom 'lastselect' a:count
-    if s:search(a:count, a:closing, 'bW') > 0
-        return targets#target#withError('lastselect')
-    endif
-
-    return s:select(a:opening, a:closing, '<')
-endfunction
-
 " match selectors
 " ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
@@ -660,28 +621,6 @@ function! s:select(opening, closing, direction)
     endif
 endfunction
 
-" select pair of delimiters around cursor (multi line, supports seeking)
-" currently these 'general' functions seem to be used only for quotes, so we
-" could consider merging the first two arguments
-function! s:seekselect(opening, closing, dir, countL, countR)
-    " echom 'seekselect' a:dir 'countL' a:countL 'countR' a:countR
-    let min = line('w0')
-    let max = line('w$')
-    let oldpos = getpos('.')
-
-    let around = s:select(a:opening, a:closing, a:dir)
-
-    call setpos('.', oldpos)
-
-    let last = s:lastselect(a:opening, a:closing, a:countL)
-
-    call setpos('.', oldpos)
-
-    let next = s:nextselect(a:opening, a:closing, a:countR)
-
-    return s:bestTarget([around, next, last], oldpos, min, max, 'seekselect')[0]
-endfunction
-
 " select a pair around the cursor
 " args (count, trigger)
 function! s:selectp(count, trigger)
@@ -697,38 +636,6 @@ function! s:selectp(count, trigger)
     endif
 
     return targets#target#fromValues(sl, sc, el, ec)
-endfunction
-
-" pair matcher (works across multiple lines, supports seeking)
-" cursor   │   .....
-" line     │ ( ( a ) )
-" modifier │ │ └─1─┘ │
-"          │ └── 2 ──┘
-" args (count, opening, closing, trigger)
-function! s:seekselectp(count, opening, closing, trigger)
-    let min = line('w0')
-    let max = line('w$')
-    let oldpos = getpos('.')
-
-    let around = s:selectp(a:count, a:trigger)
-
-    if a:count > 1 " don't seek with count
-        return around
-    endif
-
-    let targets = [around]
-
-    call setpos('.', oldpos)
-    if s:search(1, a:closing, 'bW') == 0
-        let targets = add(targets, s:selectp(1, a:opening))
-    endif
-
-    call setpos('.', oldpos)
-    if s:search(1, a:opening, 'W') == 0
-        let targets = add(targets, s:selectp(1, a:opening))
-    endif
-
-    return s:bestTarget(targets, oldpos, min, max, 'seekselectp')[0]
 endfunction
 
 " select an argument around the cursor
@@ -842,123 +749,6 @@ function! s:findArgBoundary(...)
     endfor
 
     return [rl, rc, 0]
-endfunction
-
-" selects and argument, supports growing and seeking
-function! s:seekselecta(context, count)
-    if a:count > 1
-        if s:getchar() =~# s:argClosing
-            let [cnt, message] = [a:count - 2, 'seekselecta 1']
-        else
-            let [cnt, message] = [a:count - 1, 'seekselecta 2']
-        endif
-        " find cnt closing while skipping matched openings
-        let [opening, closing] = [s:argOpening, s:argClosing]
-        if cnt > 0
-            if s:findArgBoundary('W', 'W', opening, closing, s:argOuter, s:none, cnt)[2] > 0
-                return targets#target#withError(message . ' count')
-            endif
-        endif
-        return s:selecta('^')
-    endif
-
-    let min = line('w0')
-    let max = line('w$')
-    let oldpos = getpos('.')
-
-    let around = s:selecta('>')
-
-    if a:count > 1 " don't seek with count
-        return around
-    endif
-
-    call setpos('.', oldpos)
-
-    let last = s:lastselecta(a:context)
-
-    call setpos('.', oldpos)
-
-    let next = s:nextselecta(a:context)
-
-    return s:bestTarget([around, next, last], oldpos, min, max, 'seekselecta')[0]
-endfunction
-
-" try to select a next argument, supports count and optional stopline
-" args (context, count=1, stopline=0)
-function! s:nextselecta(...)
-    let context  =            a:1 " required
-    let cnt      = a:0 >= 2 ? a:2 : 1
-    let stopline = a:0 >= 3 ? a:3 : 0
-
-    if s:search(cnt, s:argOpeningS, 'W', stopline) > 0 " no start found
-        return targets#target#withError('nextselecta 1')
-    endif
-
-    let char = s:getchar()
-    let target = s:selecta('>')
-    if target.state().isValid()
-        return target
-    endif
-
-    if char !~# s:argSeparator " start wasn't on separator
-        return targets#target#withError('nextselecta 2')
-    endif
-
-    call setpos('.', context.oldpos)
-    if s:search(cnt, s:argOpening, 'W', stopline) > 0 " no start found
-        return targets#target#withError('nextselecta 3')
-    endif
-
-    let target = s:selecta('>')
-    if target.state().isValid()
-        return target
-    endif
-
-    return targets#target#withError('nextselecta 4')
-endfunction
-
-" try to select a last argument, supports count and optional stopline
-" args (context, count=1, stopline=0)
-function! s:lastselecta(...)
-    let context  =            a:1 " required
-    let cnt      = a:0 >= 2 ? a:2 : 1
-    let stopline = a:0 >= 3 ? a:3 : 0
-
-    " special case to handle vala when invoked on a separator
-    let separator = s:argSeparator
-    if s:getchar() =~# separator && s:newSelection
-        let target = s:selecta('<')
-        if target.state().isValid()
-            return target
-        endif
-    endif
-
-    if s:search(cnt, s:argClosingS, 'bW', stopline) > 0 " no start found
-        return targets#target#withError('lastselecta 1')
-    endif
-
-    let char = s:getchar()
-    let target = s:selecta('<')
-    if target.state().isValid()
-        return target
-    endif
-
-    if char !~# separator " start wasn't on separator
-        return targets#target#withError('lastselecta 2')
-    endif
-
-    call setpos('.', context.oldpos)
-    let closing = s:argClosing
-    if s:search(cnt, closing, 'bW', stopline) > 0 " no start found
-        return targets#target#withError('lastselecta 3')
-    endif
-
-    let target = s:selecta('<')
-    if target.state().isValid()
-        return target
-    endif
-
-    return targets#target#withError('lastselecta 4')
 endfunction
 
 " select best of given targets according to s:rangeScores
@@ -1230,7 +1020,7 @@ endfunction
 " search for pattern using flags and a count, optional stopline
 " args (cnt, pattern, flags, stopline=0)
 function! s:search(...)
-    let cnt      =            a:1 " required
+    let cnt      =            a:1 " required TODO: make optional with default 1?
     let pattern  =            a:2
     let flags    =            a:3
     let stopline = a:0 >= 4 ? a:4 : 0
@@ -1367,8 +1157,6 @@ endfunction
 " quotes
 
 function! s:gennextQC() dict
-    " return s:seekselect(delimiter, delimiter, dir, rate - skipL, rate - skipR)
-
     if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
         return self.currentTarget
     endif
@@ -1409,8 +1197,12 @@ function! s:gennextQN() dict
         " echom 'no skip'
     endif
 
-    let self.currentTarget = s:nextselect(self.args.delimiter, self.args.delimiter, cnt)
-    call self.currentTarget.cursorS() " keep going from left end
+    if s:search(cnt, self.args.delimiter, 'W') > 0
+        return targets#target#withError('QN')
+    endif
+    let self.currentTarget = s:select(self.args.delimiter, self.args.delimiter, '>')
+
+    call self.currentTarget.cursorS() " keep going from left end TODO: is this call needed?
     let self.oldpos = getpos('.')
 
     return self.currentTarget
@@ -1434,8 +1226,12 @@ function! s:gennextQL() dict
         " echom 'no skip'
     endif
 
-    let self.currentTarget = s:lastselect(self.args.delimiter, self.args.delimiter, cnt)
-    call self.currentTarget.cursorE() " keep going from right end
+    if s:search(cnt, self.args.delimiter, 'bW') > 0
+        return targets#target#withError('lastselect')
+    endif
+    let self.currentTarget = s:select(self.args.delimiter, self.args.delimiter, '<')
+
+    call self.currentTarget.cursorE() " keep going from right end TODO: is this call needed?
     let self.oldpos = getpos('.')
 
     return self.currentTarget
