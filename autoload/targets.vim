@@ -226,136 +226,50 @@ endfunction
 
 function! s:findRawTarget(context, kind, which, count)
     " TODO: inject into this function? or add to context?
-    let min = line('w0')
-    let max = line('w$')
     let oldpos = getpos('.')
 
     if a:kind ==# 'p' || a:kind ==# 't'
-        let args = {'opening': s:opening, 'closing': s:closing, 'trigger': s:closing}
-
         if a:kind ==# 't' " tag
             let args = {'opening': '<\a', 'closing': '</\a\zs', 'trigger': 't'}
-        endif
-
-        if a:which ==# 'c'
-            let oldpos = getpos('.')
-
-            if a:count == 1 && s:newSelection " seek
-                let gen = s:newMultiGen(oldpos, min, max)
-                let g = s:newGen('P', oldpos, args)
-                call gen.add(g.child('C'), g.child('N'), g.child('L'))
-                return gen.next()
-            endif
-
-            " don't seek
-            let gen = s:newMultiGen(oldpos, min, max)
-            call gen.add(s:newGen('PC', oldpos, args))
-            return gen.nextN(a:count)
-
-        elseif a:which ==# 'n'
-            let gen = s:newMultiGen(oldpos, min, max)
-            call gen.add(s:newGen('PN', oldpos, args))
-            return gen.nextN(a:count)
-
-        elseif a:which ==# 'l'
-            let gen = s:newMultiGen(oldpos, min, max)
-            call gen.add(s:newGen('PL', oldpos, args))
-            return gen.nextN(a:count)
-
         else
-            return targets#target#withError('findRawTarget p')
+            let args = {'opening': s:opening, 'closing': s:closing, 'trigger': s:closing}
         endif
+        let g = s:newGen('P', oldpos, args)
 
     elseif a:kind ==# 'q'
         let args = {'delimiter': s:opening}
-
-        if a:which ==# 'c'
-            let oldpos = getpos('.')
-
-            if a:count == 1 && s:newSelection " seek
-                let gen = s:newMultiGen(oldpos, min, max)
-                let g = s:newGen('Q', oldpos, args)
-                call gen.add(g.child('C'), g.child('N'), g.child('L'))
-                return gen.next()
-            endif
-
-            " don't seek
-            let gen = s:newMultiGen(oldpos, min, max)
-            call gen.add(s:newGen('QC', oldpos, args))
-            return gen.nextN(a:count)
-
-        elseif a:which ==# 'n'
-            let gen = s:newMultiGen(oldpos, min, max)
-            call gen.add(s:newGen('QN', oldpos, args))
-            return gen.nextN(a:count)
-
-        elseif a:which ==# 'l'
-            let gen = s:newMultiGen(oldpos, min, max)
-            call gen.add(s:newGen('QL', oldpos, args))
-            return gen.nextN(a:count)
-
-        else
-            return targets#target#withError('findRawTarget q: ' . a:which)
-        endif
+        let g = s:newGen('Q', oldpos, args)
 
     elseif a:kind ==# 's'
         let args = {'delimiter': s:opening}
-
-        if a:which ==# 'c'
-            let oldpos = getpos('.')
-
-            if a:count == 1 && s:newSelection " seek
-                let gen = s:newMultiGen(oldpos, min, max)
-                let g = s:newGen('S', oldpos, args)
-                call gen.add(g.child('C'), g.child('N'), g.child('L'))
-                return gen.next()
-            endif
-
-            " don't seek
-            let gen = s:newMultiGen(oldpos, min, max)
-            call gen.add(s:newGen('SC', oldpos, args))
-            return gen.nextN(a:count)
-
-        elseif a:which ==# 'n'
-            let gen = s:newMultiGen(oldpos, min, max)
-            call gen.add(s:newGen('SN', oldpos, args))
-            return gen.nextN(a:count)
-
-        elseif a:which ==# 'l'
-            let gen = s:newMultiGen(oldpos, min, max)
-            call gen.add(s:newGen('SL', oldpos, args))
-            return gen.nextN(a:count)
-
-        else
-            return targets#target#withError('findRawTarget s')
-        endif
+        let g = s:newGen('S', oldpos, args)
 
     elseif a:kind ==# 'a'
         let args = {'delimiter': s:opening}
+        let g = s:newGen('A', oldpos, args)
+    endif
 
-        if a:which ==# 'c'
-            if a:count == 1 && s:newSelection " seek
-                let gen = s:newMultiGen(oldpos, min, max)
-                let g = s:newGen('A', oldpos, args)
-                call gen.add(g.child('C'), g.child('N'), g.child('L'))
-                return gen.next()
-            endif
+    let min = line('w0')
+    let max = line('w$')
 
-            " don't seek
-            let gen = s:newGen('AC', oldpos, args)
-            return gen.nextN(a:count)
-
-        elseif a:which ==# 'n'
-            let gen = s:newGen('AN', oldpos, args)
-            return gen.nextN(a:count)
-
-        elseif a:which ==# 'l'
-            let gen = s:newGen('AL', oldpos, args)
-            return gen.nextN(a:count)
-
-        else
-            return targets#target#withError('findRawTarget a')
+    if a:which ==# 'c'
+        if a:count == 1 && s:newSelection " seek
+            let gen = s:newMultiGen(oldpos, min, max)
+            call gen.add(g.child('C'), g.child('N'), g.child('L'))
+            return gen.next()
         endif
+
+        " don't seek
+        return g.child('C').nextN(a:count)
+
+    elseif a:which ==# 'n'
+        return g.child('N').nextN(a:count)
+
+    elseif a:which ==# 'l'
+        return g.child('L').nextN(a:count)
+
+    else
+        return targets#target#withError('findRawTarget a')
     endif
 
     return targets#target#withError('findRawTarget kind')
@@ -1347,7 +1261,7 @@ function! s:newGen(funcNameSuffix, oldpos, args)
         \ 'target': function('s:gentarget'),
         \ 'nextN': function('s:gennextN'),
         \ }
-    call gen.init(a:funcNameSuffix)
+    call gen.init(a:funcNameSuffix) " TODO: remove?
     return gen
 endfunction
 
@@ -1738,7 +1652,7 @@ function! s:multigennext() dict
     endfor
 
     let [self.currentTarget, idx] = s:bestTarget(targets, self.oldpos, self.min, self.max, 'multigen')
-    call self.gens[idx].next()
+    call self.gens[idx].next() " TODO: delay until needed?
     return self.currentTarget
 endfunction
 
