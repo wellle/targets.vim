@@ -228,12 +228,12 @@ function! s:findRawTarget(context, kind, which, count)
     " TODO: inject into this function? or add to context?
     let oldpos = getpos('.')
 
-    if a:kind ==# 'p' || a:kind ==# 't'
-        if a:kind ==# 't' " tag
-            let args = {'opening': '<\a', 'closing': '</\a\zs', 'trigger': 't'}
-        else
-            let args = {'opening': s:opening, 'closing': s:closing, 'trigger': s:closing}
-        endif
+    if a:kind ==# 't'
+        let args = {'opening': '<\a', 'closing': '</\a\zs', 'trigger': 't'}
+        let g = s:newGen('P', oldpos, args)
+
+    elseif a:kind ==# 'p'
+        let args = {'opening': s:opening, 'closing': s:closing, 'trigger': s:closing}
         let g = s:newGen('P', oldpos, args)
 
     elseif a:kind ==# 'q'
