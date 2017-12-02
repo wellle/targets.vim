@@ -228,49 +228,50 @@ function! s:findRawTarget(context, kind, which, count)
 
     if a:kind ==# 't'
         let args = {'opening': '<\a', 'closing': '</\a\zs', 'trigger': 't'}
-        let g = s:newGen('P', oldpos, args)
+        let f = s:newFactory('P', oldpos, args)
 
     elseif a:kind ==# 'p'
         let args = {'opening': s:opening, 'closing': s:closing, 'trigger': s:closing}
-        let g = s:newGen('P', oldpos, args)
+        let f = s:newFactory('P', oldpos, args)
 
     elseif a:kind ==# 'q'
         let args = {'delimiter': s:opening}
-        let g = s:newGen('Q', oldpos, args)
+        let f = s:newFactory('Q', oldpos, args)
 
     elseif a:kind ==# 's'
         let args = {'delimiter': s:opening}
-        let g = s:newGen('S', oldpos, args)
+        let f = s:newFactory('S', oldpos, args)
 
     elseif a:kind ==# 'a'
         let args = {'delimiter': s:opening}
-        let g = s:newGen('A', oldpos, args)
-    endif
-
-    let min = line('w0')
-    let max = line('w$')
-
-    if a:which ==# 'c'
-        if a:count == 1 && s:newSelection " seek
-            let gen = s:newMultiGen(oldpos, min, max)
-            call gen.add(g.child('C'), g.child('N'), g.child('L'))
-            return gen.next()
-        endif
-
-        " don't seek
-        return g.child('C').nextN(a:count)
-
-    elseif a:which ==# 'n'
-        return g.child('N').nextN(a:count)
-
-    elseif a:which ==# 'l'
-        return g.child('L').nextN(a:count)
+        let f = s:newFactory('A', oldpos, args)
 
     else
-        return targets#target#withError('findRawTarget a')
+        return targets#target#withError('findRawTarget kind')
     endif
 
-    return targets#target#withError('findRawTarget kind')
+    let min = line('w0') " TODO: add these to context
+    let max = line('w$')
+    let gen = s:newMultiGen(oldpos, min, max)
+
+    if a:which ==# 'c'
+        call gen.add(f.new('C'))
+
+        if a:count == 1 && s:newSelection " seek
+            call gen.add(f.new('N'), f.new('L'))
+        endif
+
+    elseif a:which ==# 'n'
+        call gen.add(f.new('N'))
+
+    elseif a:which ==# 'l'
+        call gen.add(f.new('L'))
+
+    else
+        return targets#target#withError('findRawTarget which')
+    endif
+
+    return gen.nextN(a:count)
 endfunction
 
 function! s:modifyTarget(target, kind, modifier)
@@ -1037,45 +1038,33 @@ function! s:count(char, text)
     return len(split(a:text, a:char, 1)) - 1
 endfunction
 
-" TODO: move to new file and rename functions accordingly
+" TODO: move to new file and rename functions accordingly, make autoloaded?
 
+" returns a factory to create generators
 " TODO: inject context instead of oldpos?
-function! s:newGen(funcNameSuffix, oldpos, args)
-    let gen = {
+function! s:newFactory(name, oldpos, args)
+    return {
         \ 'oldpos': a:oldpos,
         \ 'args': a:args,
-        \ 'funcNameSuffix': a:funcNameSuffix,
+        \ 'name': a:name,
         \
-        \ 'init': function('s:geninit'),
-        \ 'child': function('s:genchild'),
-        \ 'target': function('s:gentarget'),
-        \ 'nextN': function('s:gennextN'),
+        \ 'new': function('s:factoryNew'),
         \ }
-    call gen.init(a:funcNameSuffix) " TODO: remove?
-    return gen
 endfunction
 
-function! s:genchild(funcNameSuffix) dict
-    let gen = {
+" returns a target generator
+function! s:factoryNew(which) dict
+    return {
         \ 'oldpos': self.oldpos,
-        \ 'args': self.args,
+        \ 'args':   self.args,
         \
-        \ 'init': function('s:geninit'),
-        \ 'child': function('s:genchild'),
-        \ 'target': function('s:gentarget'),
-        \ 'nextN': function('s:gennextN'),
+        \ 'next':   function('s:genNext' . self.name . a:which),
+        \ 'nextN':  function('s:genNextN'),
+        \ 'target': function('s:genTarget')
         \ }
-    call gen.init(self.funcNameSuffix . a:funcNameSuffix)
-    return gen
 endfunction
 
-function! s:geninit(funcNameSuffix) dict
-    if len(a:funcNameSuffix) == 2
-        let self.next = function('s:gennext' . a:funcNameSuffix)
-    endif
-endfunction
-
-function! s:gentarget() dict
+function! s:genTarget() dict
     if exists('self.currentTarget')
         return self.currentTarget
     endif
@@ -1083,7 +1072,7 @@ function! s:gentarget() dict
     return targets#target#withError('no target')
 endfunction
 
-function! s:gennextN(n) dict
+function! s:genNextN(n) dict
     for i in range(1, a:n)
         " echom 'multi gen yield target ' . i . ' ' . self.next().string()
         call self.next()
@@ -1095,7 +1084,7 @@ endfunction
 
 " pairs
 
-function! s:gennextPC() dict
+function! s:genNextPC() dict
     if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
         return self.currentTarget
     endif
@@ -1120,7 +1109,7 @@ function! s:gennextPC() dict
     return self.currentTarget
 endfunction
 
-function! s:gennextPN() dict
+function! s:genNextPN() dict
     if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
         return self.currentTarget
     endif
@@ -1137,7 +1126,7 @@ function! s:gennextPN() dict
     return self.currentTarget
 endfunction
 
-function! s:gennextPL() dict
+function! s:genNextPL() dict
     if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
         return self.currentTarget
     endif
@@ -1156,7 +1145,7 @@ endfunction
 
 " quotes
 
-function! s:gennextQC() dict
+function! s:genNextQC() dict
     if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
         return self.currentTarget
     endif
@@ -1178,7 +1167,7 @@ function! s:gennextQC() dict
     return self.currentTarget
 endfunction
 
-function! s:gennextQN() dict
+function! s:genNextQN() dict
     if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
         return self.currentTarget
     endif
@@ -1208,7 +1197,7 @@ function! s:gennextQN() dict
     return self.currentTarget
 endfunction
 
-function! s:gennextQL() dict
+function! s:genNextQL() dict
     if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
         return self.currentTarget
     endif
@@ -1239,7 +1228,7 @@ endfunction
 
 " separators
 
-function! s:gennextSC() dict
+function! s:genNextSC() dict
     if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
         return self.currentTarget
     endif
@@ -1259,7 +1248,7 @@ function! s:gennextSC() dict
     return self.currentTarget
 endfunction
 
-function! s:gennextSN() dict
+function! s:genNextSN() dict
     if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
         return self.currentTarget
     endif
@@ -1276,7 +1265,7 @@ function! s:gennextSN() dict
     return self.currentTarget
 endfunction
 
-function! s:gennextSL() dict
+function! s:genNextSL() dict
     if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
         return self.currentTarget
     endif
@@ -1302,7 +1291,7 @@ endfunction
 
 " arguments
 
-function! s:gennextAC() dict
+function! s:genNextAC() dict
     if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
         return self.currentTarget
     endif
@@ -1336,7 +1325,7 @@ function! s:gennextAC() dict
     return self.currentTarget
 endfunction
 
-function! s:gennextAN() dict
+function! s:genNextAN() dict
     if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
         return self.currentTarget
     endif
@@ -1374,7 +1363,7 @@ function! s:gennextAN() dict
     return self.currentTarget
 endfunction
 
-function! s:gennextAL() dict
+function! s:genNextAL() dict
     if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
         return self.currentTarget
     endif
@@ -1412,7 +1401,6 @@ function! s:gennextAL() dict
     return self.currentTarget
 endfunction
 
-
 function! s:newMultiGen(oldpos, min, max)
     return {
                 \ 'gens': [],
@@ -1420,20 +1408,20 @@ function! s:newMultiGen(oldpos, min, max)
                 \ 'min': a:min,
                 \ 'max': a:max,
                 \
-                \ 'add': function('s:multigenadd'),
-                \ 'next': function('s:multigennext'),
-                \ 'nextN': function('s:gennextN'),
-                \ 'target': function('s:gentarget')
+                \ 'add':    function('s:multiGenAdd'),
+                \ 'next':   function('s:multiGenNext'),
+                \ 'nextN':  function('s:genNextN'),
+                \ 'target': function('s:genTarget')
                 \ }
 endfunction
 
-function! s:multigenadd(...) dict
+function! s:multiGenAdd(...) dict
     for gen in a:000
         call add(self.gens, gen)
     endfor
 endfunction
 
-function! s:multigennext() dict
+function! s:multiGenNext() dict
     if !exists('self.called')
         for gen in self.gens
             call gen.next()
