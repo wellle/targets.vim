@@ -231,14 +231,10 @@ function! s:findRawTarget(context, kind, which, count)
     let oldpos = getpos('.')
 
     if a:kind ==# 'p' || a:kind ==# 't'
-        let argsList = [{'opening': s:opening, 'closing': s:closing, 'trigger': s:closing}]
-        " let argsList = [
-        "             \ {'opening': '(', 'closing': ')', 'trigger': ')'},
-        "             \ {'opening': '{', 'closing': '}', 'trigger': '}'},
-        "             \ {'opening': '[', 'closing': ']', 'trigger': ']'}]
+        let args = {'opening': s:opening, 'closing': s:closing, 'trigger': s:closing}
 
         if a:kind ==# 't' " tag
-            let argsList = [{'opening': '<\a', 'closing': '</\a\zs', 'trigger': 't'}]
+            let args = {'opening': '<\a', 'closing': '</\a\zs', 'trigger': 't'}
         endif
 
         if a:which ==# 'c'
@@ -249,32 +245,24 @@ function! s:findRawTarget(context, kind, which, count)
 
             if cnt == 1 " seek
                 let gen = s:newMultiGen(oldpos, min, max)
-                for args in argsList
-                    let g = s:newGen('P', oldpos, args)
-                    call gen.add(g.child('C'), g.child('N'), g.child('L'))
-                endfor
+                let g = s:newGen('P', oldpos, args)
+                call gen.add(g.child('C'), g.child('N'), g.child('L'))
                 return gen.next()
             endif
 
             " don't seek
             let gen = s:newMultiGen(oldpos, min, max)
-            for args in argsList
-                call gen.add(s:newGen('PC', oldpos, args))
-            endfor
+            call gen.add(s:newGen('PC', oldpos, args))
             return gen.nextN(cnt)
 
         elseif a:which ==# 'n'
             let gen = s:newMultiGen(oldpos, min, max)
-            for args in argsList
-                call gen.add(s:newGen('PN', oldpos, args))
-            endfor
+            call gen.add(s:newGen('PN', oldpos, args))
             return gen.nextN(a:count)
 
         elseif a:which ==# 'l'
             let gen = s:newMultiGen(oldpos, min, max)
-            for args in argsList
-                call gen.add(s:newGen('PL', oldpos, args))
-            endfor
+            call gen.add(s:newGen('PL', oldpos, args))
             return gen.nextN(a:count)
 
         else
@@ -282,11 +270,7 @@ function! s:findRawTarget(context, kind, which, count)
         endif
 
     elseif a:kind ==# 'q'
-        let argsList = [{'delimiter': s:opening}]
-        " let argsList = [
-        "             \ {'delimiter': '"' },
-        "             \ {'delimiter': ''''},
-        "             \ {'delimiter': '`' }]
+        let args = {'delimiter': s:opening}
 
         if a:which ==# 'c'
             let cnt = a:count + s:grow(a:context)
@@ -296,32 +280,24 @@ function! s:findRawTarget(context, kind, which, count)
 
             if cnt == 1 " seek
                 let gen = s:newMultiGen(oldpos, min, max)
-                for args in argsList
-                    let g = s:newGen('Q', oldpos, args)
-                    call gen.add(g.child('C'), g.child('N'), g.child('L'))
-                endfor
+                let g = s:newGen('Q', oldpos, args)
+                call gen.add(g.child('C'), g.child('N'), g.child('L'))
                 return gen.next()
             endif
 
             " don't seek
             let gen = s:newMultiGen(oldpos, min, max)
-            for args in argsList
-                call gen.add(s:newGen('QC', oldpos, args))
-            endfor
+            call gen.add(s:newGen('QC', oldpos, args))
             return gen.nextN(cnt)
 
         elseif a:which ==# 'n'
             let gen = s:newMultiGen(oldpos, min, max)
-            for args in argsList
-                call gen.add(s:newGen('QN', oldpos, args))
-            endfor
+            call gen.add(s:newGen('QN', oldpos, args))
             return gen.nextN(a:count)
 
         elseif a:which ==# 'l'
             let gen = s:newMultiGen(oldpos, min, max)
-            for args in argsList
-                call gen.add(s:newGen('QL', oldpos, args))
-            endfor
+            call gen.add(s:newGen('QL', oldpos, args))
             return gen.nextN(a:count)
 
         else
@@ -329,11 +305,7 @@ function! s:findRawTarget(context, kind, which, count)
         endif
 
     elseif a:kind ==# 's'
-        let argsList = [{'delimiter': s:opening}]
-        " let argsList = [
-        "             \ {'delimiter': ','},
-        "             \ {'delimiter': ';'},
-        "             \ {'delimiter': '+'}]
+        let args = {'delimiter': s:opening}
 
         if a:which ==# 'c'
             let cnt = a:count + s:grow(a:context)
@@ -343,32 +315,24 @@ function! s:findRawTarget(context, kind, which, count)
 
             if cnt == 1 " seek
                 let gen = s:newMultiGen(oldpos, min, max)
-                for args in argsList
-                    let g = s:newGen('S', oldpos, args)
-                    call gen.add(g.child('C'), g.child('N'), g.child('L'))
-                endfor
+                let g = s:newGen('S', oldpos, args)
+                call gen.add(g.child('C'), g.child('N'), g.child('L'))
                 return gen.next()
             endif
 
             " don't seek
             let gen = s:newMultiGen(oldpos, min, max)
-            for args in argsList
-                call gen.add(s:newGen('SC', oldpos, args))
-            endfor
+            call gen.add(s:newGen('SC', oldpos, args))
             return gen.nextN(cnt)
 
         elseif a:which ==# 'n'
             let gen = s:newMultiGen(oldpos, min, max)
-            for args in argsList
-                call gen.add(s:newGen('SN', oldpos, args))
-            endfor
+            call gen.add(s:newGen('SN', oldpos, args))
             return gen.nextN(a:count)
 
         elseif a:which ==# 'l'
             let gen = s:newMultiGen(oldpos, min, max)
-            for args in argsList
-                call gen.add(s:newGen('SL', oldpos, args))
-            endfor
+            call gen.add(s:newGen('SL', oldpos, args))
             return gen.nextN(a:count)
 
         else
