@@ -75,8 +75,15 @@ endfunction
 
 " 'e' is for expression; return expression to execute, used for visual
 " mappings to not break non-targets visual mappings
+" and for operator pending mode as well if possible to speed up plugin loading
+" time
 function! targets#e(modifier)
-    if mode() !=? 'v'
+    let mode = mode(1)
+    if mode ==? 'v' " visual mode, from xnoremap
+        let prefix = "\<Esc>:\<C-U>call targets#x('"
+    elseif mode ==# 'no' " operator pending, from onoremap
+        let prefix = ":call targets#o('"
+    else
         return a:modifier
     endif
 
@@ -102,7 +109,7 @@ function! targets#e(modifier)
         let delimiter = "''"
     endif
 
-    return "\<Esc>:\<C-U>call targets#x('" . delimiter . which . a:modifier . "', " . v:count1 . ")\<CR>"
+    return prefix . delimiter . which . a:modifier . "', " . v:count1 . ")\<CR>"
 endfunction
 
 " 'x' is for visual (as in :xnoremap, not in select mode)

@@ -186,20 +186,34 @@ function! s:createArgTextObjects(mapType)
     call s:addMapping2(a:mapType, triggerMap . "lA', v:count1)<CR>", s:A, s:l)
 endfunction
 
-" add expression mappings for `A` and `I` in visual mode #23 unless
-" deactivated #49. Manually make mappings for older verions of vim #117.
-function! s:addVisualMappings()
+function! s:addMappings()
     if v:version >= 704 || (v:version == 703 && has('patch338'))
+        " if possible, create only a few expression mappings to speed up loading times
+        silent! execute 'onoremap <expr> <silent> <unique> ' . s:i . " targets#e('i')"
+        silent! execute 'onoremap <expr> <silent> <unique> ' . s:a . " targets#e('a')"
+        silent! execute 'onoremap <expr> <silent> <unique> ' . s:I . " targets#e('I')"
+        silent! execute 'onoremap <expr> <silent> <unique> ' . s:A . " targets#e('A')"
+
         silent! execute 'xnoremap <expr> <silent> <unique> ' . s:i . " targets#e('i')"
         silent! execute 'xnoremap <expr> <silent> <unique> ' . s:a . " targets#e('a')"
         silent! execute 'xnoremap <expr> <silent> <unique> ' . s:I . " targets#e('I')"
         silent! execute 'xnoremap <expr> <silent> <unique> ' . s:A . " targets#e('A')"
+
     else
-        call s:createPairTextObjects('x')
+        " otherwise create individual mappings #117
+
+        " more specific ones first for #145
+        call s:createTagTextObjects('o')
+        call s:createArgTextObjects('o')
+        call s:createPairTextObjects('o')
+        call s:createQuoteTextObjects('o')
+        call s:createSeparatorTextObjects('o')
+
         call s:createTagTextObjects('x')
+        call s:createArgTextObjects('x')
+        call s:createPairTextObjects('x')
         call s:createQuoteTextObjects('x')
         call s:createSeparatorTextObjects('x')
-        call s:createArgTextObjects('x')
     endif
 endfunction
 
@@ -275,15 +289,7 @@ function! s:loadSettings()
 endfunction
 
 call s:loadSettings()
-
-" create the text objects (current total count: 544)
-" more specific ones first for #145
-call s:createTagTextObjects('o')
-call s:createArgTextObjects('o')
-call s:createPairTextObjects('o')
-call s:createQuoteTextObjects('o')
-call s:createSeparatorTextObjects('o')
-call s:addVisualMappings()
+call s:addMappings()
 
 let &cpoptions = s:save_cpoptions
 unlet s:save_cpoptions
