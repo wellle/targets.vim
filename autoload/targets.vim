@@ -8,14 +8,18 @@ set cpo&vim
 
 " called once when loaded
 function! s:setup()
-    let s:argOpeningS = g:targets_argOpening . '\|' . g:targets_argSeparator
-    let s:argClosingS = g:targets_argClosing . '\|' . g:targets_argSeparator
-    let s:argOuter    = g:targets_argOpening . '\|' . g:targets_argClosing
-    let s:argAll      = s:argOpeningS        . '\|' . g:targets_argClosing
-    let s:none        = 'a^' " matches nothing
+    let s:argOpening   = get(g:, 'targets_argOpening', '[([]')
+    let s:argClosing   = get(g:, 'targets_argClosing', '[])]')
+    let s:argSeparator = get(g:, 'targets_argSeparator', ',')
+    let s:argOpeningS  = s:argOpening  . '\|' . s:argSeparator
+    let s:argClosingS  = s:argClosing  . '\|' . s:argSeparator
+    let s:argOuter     = s:argOpening  . '\|' . s:argClosing
+    let s:argAll       = s:argOpeningS . '\|' . s:argClosing
+    let s:none         = 'a^' " matches nothing
 
     let s:rangeScores = {}
-    let ranges = split(g:targets_seekRanges)
+    let ranges = split(get(g:, 'targets_seekRanges',
+                \ 'cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA'))
     let rangesN = len(ranges)
     let i = 0
     while i < rangesN
@@ -24,13 +28,36 @@ function! s:setup()
     endwhile
 
     let s:rangeJumps = {}
-    let ranges = split(g:targets_jumpRanges)
+    let ranges = split(get(g:, 'targets_jumpRanges', 'bb bB BB aa Aa AA'))
     let rangesN = len(ranges)
     let i = 0
     while i < rangesN
         let s:rangeJumps[ranges[i]] = 1
         let i = i + 1
     endwhile
+
+    " currently undocumented, currently not supposed to be user defined
+    " but could be used to disable 'smart' quote skipping
+    " some technicalities: inverse mapping from quote reps to quote arg reps
+    " quote rep '102' means:
+    "   1: even number of quotation character left from cursor
+    "   0: no quotation char under cursor
+    "   2: even number (but nonzero) of quote chars right of cursor
+    " arg rep 'r1l' means:
+    "   r: select to right (l: to left; n: not at all)
+    "   1: single speed (each quote char starts one text object)
+    "      (2: double speed, skip pseudo quotes)
+    "   l: skip first quote when going left ("last" quote objects)
+    "      (r: skip once when going right ("next"); b: both; n: none)
+    let s:quoteDirsConf = get(g:, 'targets_quoteDirs', {
+                \ 'r1n': ['001', '201', '100', '102'],
+                \ 'r1l': ['010', '012', '111', '210', '212'],
+                \ 'r2n': ['101'],
+                \ 'r2l': ['011', '211'],
+                \ 'r2b': ['000'],
+                \ 'l2r': ['110', '112'],
+                \ 'n2b': ['002', '200', '202'],
+                \ })
 
     " args in order: dir, rate, skipL, skipR, error
     let s:quoteArgs = {
@@ -45,7 +72,7 @@ function! s:setup()
     let s:quoteDirs = {}
     for key in keys(s:quoteArgs)
         let args = s:quoteArgs[key]
-        for rep in get(g:targets_quoteDirs, key, [])
+        for rep in get(s:quoteDirsConf, key, [])
             let s:quoteDirs[rep] = args
         endfor
     endfor
@@ -75,8 +102,15 @@ endfunction
 
 " 'e' is for expression; return expression to execute, used for visual
 " mappings to not break non-targets visual mappings
+" and for operator pending mode as well if possible to speed up plugin loading
+" time
 function! targets#e(modifier)
-    if mode() !=? 'v'
+    let mode = mode(1)
+    if mode ==? 'v' " visual mode, from xnoremap
+        let prefix = "\<Esc>:\<C-U>call targets#x('"
+    elseif mode ==# 'no' " operator pending, from onoremap
+        let prefix = ":call targets#o('"
+    else
         return a:modifier
     endif
 
@@ -102,7 +136,7 @@ function! targets#e(modifier)
         let delimiter = "''"
     endif
 
-    return "\<Esc>:\<C-U>call targets#x('" . delimiter . which . a:modifier . "', " . v:count1 . ")\<CR>"
+    return prefix . delimiter . which . a:modifier . "', " . v:count1 . ")\<CR>"
 endfunction
 
 " 'x' is for visual (as in :xnoremap, not in select mode)
@@ -728,7 +762,7 @@ endfunction
 function! s:selecta(direction)
     let oldpos = getpos('.')
 
-    let [opening, closing] = [g:targets_argOpening, g:targets_argClosing]
+    let [opening, closing] = [s:argOpening, s:argClosing]
     if a:direction ==# '^'
         let [sl, sc, el, ec, err] = s:findArg(a:direction, 'W', 'bcW', 'bW', opening, closing)
         let message = 'selecta 1'
@@ -756,7 +790,7 @@ endfunction
 function! s:findArg(direction, flags1, flags2, flags3, opening, closing)
     let oldpos = getpos('.')
     let char = s:getchar()
-    let separator = g:targets_argSeparator
+    let separator = s:argSeparator
 
     if char =~# a:closing && a:direction !=# '^' " started on closing, but not up
         let [el, ec] = oldpos[1:2] " use old position as end
@@ -766,7 +800,7 @@ function! s:findArg(direction, flags1, flags2, flags3, opening, closing)
             return [0, 0, 0, 0, s:fail('findArg 1', a:)]
         endif
 
-        let separator = g:targets_argSeparator
+        let separator = s:argSeparator
         if char =~# a:opening || char =~# separator " started on opening or separator
             let [sl, sc] = oldpos[1:2] " use old position as start
             return [sl, sc, el, ec, 0]
@@ -788,7 +822,7 @@ endfunction
 " matching `skip`s
 " example: find ',' or ')' while skipping a pair when finding '('
 " args (flags1, flags2, skip, finish, all=s:argAll,
-" separator=g:targets_argSeparator, cnt=2)
+" separator=s:argSeparator, cnt=2)
 " return (line, column, err)
 function! s:findArgBoundary(...)
     let flags1    =            a:1 " required
@@ -796,7 +830,7 @@ function! s:findArgBoundary(...)
     let skip      =            a:3
     let finish    =            a:4
     let all       = a:0 >= 5 ? a:5 : s:argAll
-    let separator = a:0 >= 6 ? a:6 : g:targets_argSeparator
+    let separator = a:0 >= 6 ? a:6 : s:argSeparator
     let cnt       = a:0 >= 7 ? a:7 : 1
 
     let [tl, rl, rc] = [0, 0, 0]
@@ -832,13 +866,13 @@ endfunction
 " selects and argument, supports growing and seeking
 function! s:seekselecta(context, count)
     if a:count > 1
-        if s:getchar() =~# g:targets_argClosing
+        if s:getchar() =~# s:argClosing
             let [cnt, message] = [a:count - 2, 'seekselecta 1']
         else
             let [cnt, message] = [a:count - 1, 'seekselecta 2']
         endif
         " find cnt closing while skipping matched openings
-        let [opening, closing] = [g:targets_argOpening, g:targets_argClosing]
+        let [opening, closing] = [s:argOpening, s:argClosing]
         if s:findArgBoundary('W', 'W', opening, closing, s:argOuter, s:none, cnt)[2] > 0
             return targets#target#withError(message . ' count')
         endif
@@ -883,12 +917,12 @@ function! s:nextselecta(...)
         return target
     endif
 
-    if char !~# g:targets_argSeparator " start wasn't on comma
+    if char !~# s:argSeparator " start wasn't on comma
         return targets#target#withError('nextselecta 2')
     endif
 
     call setpos('.', context.oldpos)
-    let opening = g:targets_argOpening
+    let opening = s:argOpening
     if s:search(cnt, opening, 'W', stopline) > 0 " no start found
         return targets#target#withError('nextselecta 3')
     endif
@@ -909,7 +943,7 @@ function! s:lastselecta(...)
     let stopline = a:0 >= 3 ? a:3 : 0
 
     " special case to handle vala when invoked on a separator
-    let separator = g:targets_argSeparator
+    let separator = s:argSeparator
     if s:getchar() =~# separator && s:newSelection
         let target = s:selecta('<')
         if target.state().isValid()
@@ -932,7 +966,7 @@ function! s:lastselecta(...)
     endif
 
     call setpos('.', context.oldpos)
-    let closing = g:targets_argClosing
+    let closing = s:argClosing
     if s:search(cnt, closing, 'bW', stopline) > 0 " no start found
         return targets#target#withError('lastselecta 3')
     endif
@@ -1081,8 +1115,8 @@ endfunction
 " line │ ( x ) ( x , a ) (a , x , b) ( a , x )
 " out  │  └─┘    └──┘       └──┘        └──┘
 function! s:dropa(target)
-    let startOpening = a:target.getcharS() !~# g:targets_argSeparator
-    let endOpening   = a:target.getcharE() !~# g:targets_argSeparator
+    let startOpening = a:target.getcharS() !~# s:argSeparator
+    let endOpening   = a:target.getcharE() !~# s:argSeparator
 
     if startOpening
         if endOpening
