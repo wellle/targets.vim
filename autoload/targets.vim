@@ -406,7 +406,7 @@ function! s:isNewSelection()
     endif
 
     " selection changed
-    if s:lastTarget != s:visualTarget
+    if !s:lastTarget.equal(s:visualTarget)
         return 1
     endif
 
@@ -583,23 +583,23 @@ endfunction
 " cursor  │   ....
 " line    │ ' ' b ' '
 " matcher │   └───┘
-function! s:select(opening, closing, direction)
+function! s:select(opening, closing, direction, gen)
     if a:direction ==# ''
         return targets#target#withError('select without direction')
     elseif a:direction ==# '>'
         let [sl, sc] = searchpos(a:opening, 'bcW') " search left for opening
         let [el, ec] = searchpos(a:closing, 'W')   " then right for closing
-        return targets#target#fromValues(sl, sc, el, ec)
+        return targets#target#fromValues(sl, sc, el, ec, a:gen)
     else
         let [el, ec] = searchpos(a:closing, 'cW') " search right for closing
         let [sl, sc] = searchpos(a:opening, 'bW') " then left for opening
-        return targets#target#fromValues(sl, sc, el, ec)
+        return targets#target#fromValues(sl, sc, el, ec, a:gen)
     endif
 endfunction
 
 " select a pair around the cursor
 " args (count, trigger)
-function! s:selectp(count, trigger)
+function! s:selectp(count, trigger, gen)
     " try to select pair
     silent! execute 'keepjumps normal! v' . a:count . 'a' . a:trigger
     let [el, ec] = getpos('.')[1:2]
@@ -611,7 +611,7 @@ function! s:selectp(count, trigger)
         return targets#target#withError('selectp')
     endif
 
-    return targets#target#fromValues(sl, sc, el, ec)
+    return targets#target#fromValues(sl, sc, el, ec, a:gen)
 endfunction
 
 " select an argument around the cursor
@@ -619,7 +619,7 @@ endfunction
 "   '>' select to the right (default)
 "   '<' select to the left (used when selecting or skipping to the left)
 "   '^' select up (surrounding argument, used for growing)
-function! s:selecta(direction)
+function! s:selecta(direction, gen)
     let oldpos = getpos('.')
 
     let [opening, closing] = [s:argOpening, s:argClosing]
@@ -645,7 +645,7 @@ function! s:selecta(direction)
         return targets#target#withError(message)
     endif
 
-    return targets#target#fromValues(sl, sc, el, ec)
+    return targets#target#fromValues(sl, sc, el, ec, a:gen)
 endfunction
 
 " find an argument around the cursor given a direction (see s:selecta)
@@ -1106,7 +1106,7 @@ function! s:genNextPC() dict
         endif
     endif
 
-    let self.currentTarget = s:selectp(cnt, self.args.trigger)
+    let self.currentTarget = s:selectp(cnt, self.args.trigger, self)
 
     let self.oldpos = getpos('.')
 
@@ -1124,7 +1124,7 @@ function! s:genNextPN() dict
         let self.currentTarget = targets#target#withError('no target')
     else
         let self.oldpos = getpos('.')
-        let self.currentTarget = s:selectp(1, self.args.trigger)
+        let self.currentTarget = s:selectp(1, self.args.trigger, self)
     endif
 
     return self.currentTarget
@@ -1141,7 +1141,7 @@ function! s:genNextPL() dict
         let self.currentTarget = targets#target#withError('no target')
     else
         let self.oldpos = getpos('.')
-        let self.currentTarget = s:selectp(1, self.args.trigger)
+        let self.currentTarget = s:selectp(1, self.args.trigger, self)
     endif
 
     return self.currentTarget
@@ -1170,7 +1170,7 @@ function! s:genNextQC() dict
         let [self.dir, self.rate, self.skipL, self.skipR, self.error] = s:quoteDir(self.args.delimiter)
     endif
 
-    let self.currentTarget = s:select(self.args.delimiter, self.args.delimiter, self.dir)
+    let self.currentTarget = s:select(self.args.delimiter, self.args.delimiter, self.dir, self)
     let self.called = 1 " group these somehow? self.internal.called
 
     return self.currentTarget
@@ -1200,7 +1200,7 @@ function! s:genNextQN() dict
         return self.currentTarget
     endif
 
-    let self.currentTarget = s:select(self.args.delimiter, self.args.delimiter, '>')
+    let self.currentTarget = s:select(self.args.delimiter, self.args.delimiter, '>', self)
 
     call self.currentTarget.cursorS() " keep going from left end TODO: is this call needed?
     let self.oldpos = getpos('.')
@@ -1231,7 +1231,7 @@ function! s:genNextQL() dict
         return self.currentTarget
     endif
 
-    let self.currentTarget = s:select(self.args.delimiter, self.args.delimiter, '<')
+    let self.currentTarget = s:select(self.args.delimiter, self.args.delimiter, '<', self)
 
     call self.currentTarget.cursorE() " keep going from right end TODO: is this call needed?
     let self.oldpos = getpos('.')
@@ -1258,7 +1258,7 @@ function! s:genNextSC() dict
         return self.currentTarget
     endif
 
-    let self.currentTarget = s:select(self.args.delimiter, self.args.delimiter, '>')
+    let self.currentTarget = s:select(self.args.delimiter, self.args.delimiter, '>', self)
 
     let self.oldpos = getpos('.')
     let self.called = 1
@@ -1277,7 +1277,7 @@ function! s:genNextSN() dict
         let self.currentTarget = targets#target#withError('no target')
     else
         let self.oldpos = getpos('.')
-        let self.currentTarget = s:select(self.args.delimiter, self.args.delimiter, '>')
+        let self.currentTarget = s:select(self.args.delimiter, self.args.delimiter, '>', self)
     endif
 
     return self.currentTarget
@@ -1300,7 +1300,7 @@ function! s:genNextSL() dict
         let self.currentTarget = targets#target#withError('no target')
     else
         let self.oldpos = getpos('.')
-        let self.currentTarget = s:select(self.args.delimiter, self.args.delimiter, '<')
+        let self.currentTarget = s:select(self.args.delimiter, self.args.delimiter, '<', self)
     endif
 
     let self.called = 1
@@ -1323,7 +1323,7 @@ function! s:genNextAC() dict
     if !exists('self.called') " first invocation
         let self.called = 1
         if s:newSelection
-            let self.currentTarget = s:selecta('^')
+            let self.currentTarget = s:selecta('^', self)
             " TODO: clean up. change cursorE to return proper big list? [0, el, ec, 0]
             " similar below
             call self.currentTarget.cursorE() " keep going from right end
@@ -1342,7 +1342,7 @@ function! s:genNextAC() dict
     endif
     silent! execute "normal! 1 "
 
-    let self.currentTarget = s:selecta('<')
+    let self.currentTarget = s:selecta('<', self)
     let self.oldpos = getpos('.')
     return self.currentTarget
 endfunction
@@ -1373,7 +1373,7 @@ function! s:genNextAN() dict
         endif
 
         let self.oldpos = getpos('.')
-        let self.currentTarget = s:selecta('>')
+        let self.currentTarget = s:selecta('>', self)
 
         if self.currentTarget.state().isValid()
             break
@@ -1411,7 +1411,7 @@ function! s:genNextAL() dict
         endif
 
         let self.oldpos = getpos('.')
-        let self.currentTarget = s:selecta('<')
+        let self.currentTarget = s:selecta('<', self)
 
         if self.currentTarget.state().isValid()
             break
