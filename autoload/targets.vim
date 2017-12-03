@@ -228,24 +228,22 @@ function! s:findRawTarget(context, factories, which, count)
     " TODO: inject into this function? or add to context?
     let oldpos = getpos('.')
 
-    let f = a:factories[0] " only use first factory for now
-
     let min = line('w0') " TODO: add these to context
     let max = line('w$')
     let gen = s:newMultiGen(oldpos, min, max)
 
     if a:which ==# 'c'
-        call gen.add(f.new(oldpos, 'C'))
+        call gen.add(a:factories, oldpos, 'C')
 
         if a:count == 1 && s:newSelection " seek
-            call gen.add(f.new(oldpos, 'N'), f.new(oldpos, 'L'))
+            call gen.add(a:factories, oldpos, 'N', 'L')
         endif
 
     elseif a:which ==# 'n'
-        call gen.add(f.new(oldpos, 'N'))
+        call gen.add(a:factories, oldpos, 'N')
 
     elseif a:which ==# 'l'
-        call gen.add(f.new(oldpos, 'L'))
+        call gen.add(a:factories, oldpos, 'L')
 
     else
         return targets#target#withError('findRawTarget which')
@@ -802,8 +800,12 @@ function! s:bestTarget(targets, oldpos, min, max, message)
         let target = a:targets[idx]
         let [range, lines, chars] = target.range(a:oldpos, a:min, a:max)
         let score = get(s:rangeScores, range)
-        " echom 'score ' . score . ' lines ' . lines . ' chars ' . chars
-        " echom target.string()
+
+        " if target.state().isValid()
+        "     echom target.string()
+        "     echom 'score ' . score . ' lines ' . lines . ' chars ' . chars
+        " endif
+
         if (score > bestScore) ||
                     \ (score == bestScore && lines < minLines) ||
                     \ (score == bestScore && lines == minLines && chars < minChars)
@@ -813,6 +815,7 @@ function! s:bestTarget(targets, oldpos, min, max, message)
 
     if exists('best')
         " echom 'best ' . best.string()
+        " echom 'score ' . bestScore . ' lines ' . minLines . ' chars ' . minChars
         return [best, bestIdx]
     endif
 
@@ -1193,8 +1196,10 @@ function! s:genNextQN() dict
     endif
 
     if s:search(cnt, self.args.delimiter, 'W') > 0
-        return targets#target#withError('QN')
+        let self.currentTarget = targets#target#withError('QN')
+        return self.currentTarget
     endif
+
     let self.currentTarget = s:select(self.args.delimiter, self.args.delimiter, '>')
 
     call self.currentTarget.cursorS() " keep going from left end TODO: is this call needed?
@@ -1222,8 +1227,10 @@ function! s:genNextQL() dict
     endif
 
     if s:search(cnt, self.args.delimiter, 'bW') > 0
-        return targets#target#withError('lastselect')
+        let self.currentTarget = targets#target#withError('QL')
+        return self.currentTarget
     endif
+
     let self.currentTarget = s:select(self.args.delimiter, self.args.delimiter, '<')
 
     call self.currentTarget.cursorE() " keep going from right end TODO: is this call needed?
@@ -1430,8 +1437,13 @@ function! s:newMultiGen(oldpos, min, max)
                 \ }
 endfunction
 
-function! s:multiGenAdd(...) dict
-    call extend(self.gens, a:000)
+function! s:multiGenAdd(factories, oldpos, ...) dict
+    let whichs = a:000
+    for factory in a:factories
+        for which in whichs
+            call add(self.gens, factory.new(a:oldpos, which))
+        endfor
+    endfor
 endfunction
 
 function! s:multiGenNext() dict
