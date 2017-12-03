@@ -1,6 +1,4 @@
 " TODO: add source, from gen, like PN(3, might help for debugging
-" TODO: add content(), returns text that it selects. possibly pad with ... in
-" the middle if too long
 
 function! targets#target#new(sl, sc, el, ec, error)
     return {
@@ -147,10 +145,9 @@ endfunction
 
 " returns position character and distances to cursor (lines; characters)
 function! s:position(line, column, cursor, min, max)
-    let cursorLine = a:cursor[1]
+    let [cursorLine, cursorColumn] = a:cursor[1:2]
 
     if a:line == cursorLine " cursor line
-        let cursorColumn = a:cursor[2]
         if a:column == cursorColumn " same column
             return ['c', 0, 0]
         elseif a:column < cursorColumn " left of cursor
@@ -161,16 +158,16 @@ function! s:position(line, column, cursor, min, max)
 
     elseif a:line < cursorLine
         if a:line >= a:min " above on screen
-            return ['a', cursorLine - a:line, 1/0]
+            return ['a', cursorLine - a:line, -a:column]
         else " above off screen
-            return ['A', cursorLine - a:line, 1/0]
+            return ['A', cursorLine - a:line, -a:column]
         endif
 
     else " a:line > cursorLine
         if a:line <= a:max " below on screen
-            return ['b', a:line - cursorLine, 1/0]
+            return ['b', a:line - cursorLine, a:column]
         else " below off screen
-            return ['B', a:line - cursorLine, 1/0]
+            return ['B', a:line - cursorLine, a:column]
         endif
     endif
 endfunction
@@ -193,5 +190,12 @@ function! targets#target#string() dict
         return '[err:' . self.error . ']'
     endif
 
-    return '[' . self.sl . ' ' . self.sc . '; ' . self.el . ' ' . self.ec . ']'
+    let text = ''
+    if self.sl == self.el
+        let text = getline(self.sl)[self.sc-1:self.ec-1]
+    else
+        let text = getline(self.sl)[self.sc-1 :] . '...' . getline(self.el)[: self.ec-1]
+    endif
+
+    return text . ' ' . '[' . self.sl . ' ' . self.sc . '; ' . self.el . ' ' . self.ec . ']'
 endfunction
