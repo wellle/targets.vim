@@ -791,13 +791,11 @@ endfunction
 "      └───────────┘   visible screen
 "         └─────┘      current line
 
-" returns best target (and its index) according to range score and distance to cursor
+" returns best target according to range score and distance to cursor
 function! s:bestTarget(targets, oldpos, min, max, message)
     let [bestScore, minLines, minChars] = [0, 1/0, 1/0] " 1/0 = maxint
 
-    let cnt = len(a:targets)
-    for idx in range(cnt)
-        let target = a:targets[idx]
+    for target in a:targets
         let [range, lines, chars] = target.range(a:oldpos, a:min, a:max)
         let score = get(s:rangeScores, range)
 
@@ -809,17 +807,17 @@ function! s:bestTarget(targets, oldpos, min, max, message)
         if (score > bestScore) ||
                     \ (score == bestScore && lines < minLines) ||
                     \ (score == bestScore && lines == minLines && chars < minChars)
-            let [bestScore, minLines, minChars, best, bestIdx] = [score, lines, chars, target, idx]
+            let [bestScore, minLines, minChars, best] = [score, lines, chars, target]
         endif
     endfor
 
     if exists('best')
         " echom 'best ' . best.string()
         " echom 'score ' . bestScore . ' lines ' . minLines . ' chars ' . minChars
-        return [best, bestIdx]
+        return best
     endif
 
-    return [targets#target#withError(a:message), -1]
+    return targets#target#withError(a:message)
 endfunction
 
 " selection modifiers
@@ -1447,21 +1445,22 @@ function! s:multiGenAdd(factories, oldpos, ...) dict
 endfunction
 
 function! s:multiGenNext() dict
-    if !exists('self.called')
+    if !exists('self.currentTarget') " first call
         for gen in self.gens
             call gen.next()
         endfor
+    elseif self.currentTarget.state().isInvalid() " already found invalid
+        return self.currentTarget
+    else
+        call self.currentTarget.gen.next() " fill up where we used the last target from
     endif
-
-    let self.called = 1
 
     let targets = []
     for gen in self.gens
         call add(targets, gen.target())
     endfor
 
-    let [self.currentTarget, idx] = s:bestTarget(targets, self.oldpos, self.min, self.max, 'multigen')
-    call self.gens[idx].next() " TODO: delay until needed?
+    let self.currentTarget = s:bestTarget(targets, self.oldpos, self.min, self.max, 'multigen')
     return self.currentTarget
 endfunction
 
