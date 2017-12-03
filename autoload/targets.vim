@@ -88,6 +88,7 @@ function! targets#o(trigger, count)
         \ 'oldpos': getpos('.'),
         \ }
 
+    " TODO: include kind in trigger so we don't have to guess as much?
     let [delimiter, which, modifier] = split(a:trigger, '\zs')
     let [target, rawTarget] = s:findTarget(context, delimiter, which, modifier, v:count1)
     if target.state().isInvalid()
@@ -148,7 +149,7 @@ endfunction
 
 " 'x' is for visual (as in :xnoremap, not in select mode)
 function! targets#x(trigger, count)
-    call s:initX(a:trigger)
+    call s:initX()
     let context = {
         \ 'mapmode': 'x',
         \ 'oldpos': getpos('.'),
@@ -161,7 +162,6 @@ function! targets#x(trigger, count)
         return s:cleanUp()
     endif
     if s:handleTarget(context, target, rawTarget) == 0
-        let s:lastTrigger = a:trigger
         let s:lastTarget = target
         let s:lastRawTarget = rawTarget
     endif
@@ -172,18 +172,18 @@ endfunction
 function! s:init()
     let s:newSelection = 1
 
-    let s:selection = &selection " remember 'selection' setting
-    let &selection = 'inclusive' " and set it to inclusive
+    let s:selection = &selection  " remember 'selection' setting
+    let &selection  = 'inclusive' " and set it to inclusive
 
     let s:virtualedit = &virtualedit " remember 'virtualedit' setting
-    let &virtualedit = ''            " and set it to default
+    let &virtualedit  = ''           " and set it to default
 
     let s:whichwrap = &whichwrap " remember 'whichwrap' setting
-    let &whichwrap = 'b,s'       " and set it to default
+    let &whichwrap  = 'b,s'      " and set it to default
 endfunction
 
 " save old visual selection to detect new selections and reselect on fail
-function! s:initX(trigger)
+function! s:initX()
     call s:init()
 
     let s:visualTarget = targets#target#fromVisualSelection(s:selection)
@@ -203,9 +203,9 @@ endfunction
 " clean up script variables after match
 function! s:cleanUp()
     " reset remembered settings
-    let &selection = s:selection
+    let &selection   = s:selection
     let &virtualedit = s:virtualedit
-    let &whichwrap = s:whichwrap
+    let &whichwrap   = s:whichwrap
 endfunction
 
 function! s:findTarget(context, delimiter, which, modifier, count)
@@ -377,9 +377,9 @@ endfunction
 
 function! s:getRawDelimiters(trigger)
     " check more specific ones first for #145
-    if a:trigger ==# g:targets_tagTrigger
+    if a:trigger ==# g:targets_tagTrigger " TODO: does this work with custom trigger?
         return ['t', 't', 0, 0]
-    elseif a:trigger ==# g:targets_argTrigger
+    elseif a:trigger ==# g:targets_argTrigger " TODO: does this work with custom trigger?
         return ['a', 0, 0, 0]
     endif
 
@@ -556,6 +556,9 @@ function! s:prepareRepeat(delimiter, which, modifier)
         return
     endif
 
+    " TODO: this wouldn't work with custom iaIAnl, right?
+    " maybe the trigger args should just always include what's typed
+    " and then we translate in here with the cache, potentially without splitting
     let cmd = v:operator . a:modifier
     if a:which !=# 'c'
         let cmd .= a:which
