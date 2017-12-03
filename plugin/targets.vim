@@ -218,71 +218,13 @@ function! s:addMappings()
 endfunction
 
 function! s:loadSettings()
-    if !exists('g:targets_aiAI')
-        let g:targets_aiAI = 'aiAI'
-    endif
-    if !exists('g:targets_nl')
-        if exists('g:targets_nlNL')
-            let g:targets_nl = g:targets_nlNL[0:1] " legacy fallback
-        else
-            let g:targets_nl = 'nl'
-        endif
-    endif
-    if !exists('g:targets_pairs')
-        let g:targets_pairs = '()b {}B [] <>'
-    endif
-    if !exists('g:targets_quotes')
-        let g:targets_quotes = '" '' `'
-    endif
-    if !exists('g:targets_separators')
-        let g:targets_separators = ', . ; : + - = ~ _ * # / \ | & $'
-    endif
-    if !exists('g:targets_tagTrigger')
-        let g:targets_tagTrigger = 't'
-    endif
-    if !exists('g:targets_argTrigger')
-        let g:targets_argTrigger = 'a'
-    endif
-    if !exists('g:targets_argOpening')
-        let g:targets_argOpening = '[([]'
-    endif
-    if !exists('g:targets_argClosing')
-        let g:targets_argClosing = '[])]'
-    endif
-    if !exists('g:targets_argSeparator')
-        let g:targets_argSeparator = ','
-    endif
-    if !exists('g:targets_seekRanges')
-        let g:targets_seekRanges = 'cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA'
-    endif
-    if !exists('g:targets_jumpRanges')
-        let g:targets_jumpRanges = 'bb bB BB aa Aa AA'
-    endif
-
-    if !exists('g:targets_quoteDirs')
-        " currently undocumented, currently not supposed to be user defined
-        " but could be used to disable 'smart' quote skipping
-        " some technicalities: inverse mapping from quote reps to quote arg reps
-        " quote rep '102' means:
-        "   1: even number of quotation character left from cursor
-        "   0: no quotation char under cursor
-        "   2: even number (but nonzero) of quote chars right of cursor
-        " arg rep 'r1l' means:
-        "   r: select to right (l: to left; n: not at all)
-        "   1: single speed (each quote char starts one text object)
-        "      (2: double speed, skip pseudo quotes)
-        "   l: skip first quote when going left ("last" quote objects)
-        "      (r: skip once when going right ("next"); b: both; n: none)
-        let g:targets_quoteDirs = {
-                    \ 'r1n': ['001', '201', '100', '102'],
-                    \ 'r1l': ['010', '012', '111', '210', '212'],
-                    \ 'r2n': ['101'],
-                    \ 'r2l': ['011', '211'],
-                    \ 'r2b': ['000'],
-                    \ 'l2r': ['110', '112'],
-                    \ 'n2b': ['002', '200', '202'],
-                    \ }
-    endif
+    let g:targets_nl         = get(g:, 'targets_nl', get(g:, 'targets_nlNL', 'nl')[0:1]) " legacy fallback
+    let g:targets_aiAI       = get(g:, 'targets_aiAI', 'aiAI')
+    let g:targets_pairs      = get(g:, 'targets_pairs', '()b {}B [] <>')
+    let g:targets_quotes     = get(g:, 'targets_quotes', '" '' `')
+    let g:targets_separators = get(g:, 'targets_separators', ', . ; : + - = ~ _ * # / \ | & $')
+    let g:targets_tagTrigger = get(g:, 'targets_tagTrigger', 't')
+    let g:targets_argTrigger = get(g:, 'targets_argTrigger', 'a')
 
     let [s:a, s:i, s:A, s:I] = split(g:targets_aiAI, '\zs')
     let [s:n, s:l] = split(g:targets_nl, '\zs')
