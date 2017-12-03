@@ -214,12 +214,9 @@ function! s:findTarget(context, delimiter, which, modifier, count)
         return [errorTarget, errorTarget]
     endif
 
-    " TODO: inject from factory into target, pick name kind or name
-    let kind = factories[0].kind
-
     let view = winsaveview()
     let rawTarget = s:findRawTarget(a:context, factories, a:which, a:count)
-    let target = s:modifyTarget(rawTarget, kind, a:modifier)
+    let target = s:modifyTarget(rawTarget, a:modifier)
     call winrestview(view)
     return [target, rawTarget]
 endfunction
@@ -252,13 +249,14 @@ function! s:findRawTarget(context, factories, which, count)
     return gen.nextN(a:count)
 endfunction
 
-function! s:modifyTarget(target, kind, modifier)
+function! s:modifyTarget(target, modifier)
     if a:target.state().isInvalid()
         return targets#target#withError('modifyTarget invalid: ' . a:target.error)
     endif
     let target = a:target.copy()
+    let kind = a:target.gen.kind
 
-    if a:kind ==# 'p'
+    if kind ==# 'p'
         if a:modifier ==# 'i'
             return s:drop(target)
         elseif a:modifier ==# 'a'
@@ -271,7 +269,7 @@ function! s:modifyTarget(target, kind, modifier)
             return targets#target#withError('modifyTarget p')
         endif
 
-    elseif a:kind ==# 'q'
+    elseif kind ==# 'q'
         if a:modifier ==# 'i'
             return s:drop(target)
         elseif a:modifier ==# 'a'
@@ -284,7 +282,7 @@ function! s:modifyTarget(target, kind, modifier)
             return targets#target#withError('modifyTarget q')
         endif
 
-    elseif a:kind ==# 's'
+    elseif kind ==# 's'
         if a:modifier ==# 'i'
             return s:drop(target)
         elseif a:modifier ==# 'a'
@@ -297,7 +295,7 @@ function! s:modifyTarget(target, kind, modifier)
             return targets#target#withError('modifyTarget s')
         endif
 
-    elseif a:kind ==# 't'
+    elseif kind ==# 't'
         if a:modifier ==# 'i'
             return s:drop(s:innert(target))
         elseif a:modifier ==# 'a'
@@ -310,7 +308,7 @@ function! s:modifyTarget(target, kind, modifier)
             return targets#target#withError('modifyTarget t')
         endif
 
-    elseif a:kind ==# 'a'
+    elseif kind ==# 'a'
         if a:modifier ==# 'i'
             return s:drop(target)
         elseif a:modifier ==# 'a'
