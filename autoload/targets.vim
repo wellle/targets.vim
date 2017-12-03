@@ -84,9 +84,9 @@ call s:setup()
 function! targets#o(trigger, count)
     call s:init()
     let context = {
-        \ 'mapmode': 'o',
-        \ 'oldpos': getpos('.'),
-        \ }
+                \ 'mapmode': 'o',
+                \ 'oldpos': getpos('.'),
+                \ }
 
     " TODO: include kind in trigger so we don't have to guess as much?
     let [delimiter, which, modifier] = split(a:trigger, '\zs')
@@ -150,9 +150,9 @@ endfunction
 function! targets#x(trigger, count)
     call s:initX()
     let context = {
-        \ 'mapmode': 'x',
-        \ 'oldpos': getpos('.'),
-        \ }
+                \ 'mapmode': 'x',
+                \ 'oldpos': getpos('.'),
+                \ }
 
     let [delimiter, which, modifier] = split(a:trigger, '\zs')
     let [target, rawTarget] = s:findTarget(context, delimiter, which, modifier, a:count)
@@ -624,7 +624,7 @@ function! s:selecta(direction, gen)
 
     let [opening, closing] = [s:argOpening, s:argClosing]
     if a:direction ==# '^'
-        if s:getchar() =~# closing 
+        if s:getchar() =~# closing
             let [sl, sc, el, ec, err] = s:findArg(a:direction, 'cW', 'bW', 'bW', opening, closing)
         else
             let [sl, sc, el, ec, err] = s:findArg(a:direction, 'W', 'bcW', 'bW', opening, closing)
@@ -1023,26 +1023,26 @@ endfunction
 " TODO: remove kind later when we have modifyTarget functions per factory
 function! s:newFactory(kind, name, args)
     return {
-        \ 'kind': a:kind,
-        \ 'name': a:name,
-        \ 'args': a:args,
-        \
-        \ 'new': function('s:factoryNew'),
-        \ }
+                \ 'kind': a:kind,
+                \ 'name': a:name,
+                \ 'args': a:args,
+                \
+                \ 'new': function('s:factoryNew'),
+                \ }
 endfunction
 
 " returns a target generator
 function! s:factoryNew(oldpos, which) dict
     return {
-        \ 'kind':   self.kind,
-        \ 'name':   self.name . a:which,
-        \ 'args':   self.args,
-        \ 'oldpos': a:oldpos,
-        \
-        \ 'next':   function('s:genNext' . self.name . a:which),
-        \ 'nextN':  function('s:genNextN'),
-        \ 'target': function('s:genTarget')
-        \ }
+                \ 'kind':   self.kind,
+                \ 'name':   self.name . a:which,
+                \ 'args':   self.args,
+                \ 'oldpos': a:oldpos,
+                \
+                \ 'next':   function('s:genNext' . self.name . a:which),
+                \ 'nextN':  function('s:genNextN'),
+                \ 'target': function('s:genTarget')
+                \ }
 endfunction
 
 function! s:genTarget() dict
@@ -1087,27 +1087,23 @@ endfunction
 
 
 function! s:genNextPC() dict
-    if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
-        return self.currentTarget
-    endif
-
-    call setpos('.', self.oldpos)
-
-    let cnt = 2
-    if !exists('self.called') " first invocation
-        let self.called = 1
+    if !exists('self.currentTarget') " first invocation
         if s:newSelection
+            call setpos('.', self.oldpos)
             let cnt = 1
         else
-            " continue from previous state
             call s:lastRawTarget.cursorE()
+            let cnt = 2
         endif
+    elseif self.currentTarget.state().isInvalid()
+        return self.currentTarget
+    else
+        call setpos('.', self.oldpos)
+        let cnt = 2
     endif
 
     let self.currentTarget = s:selectp(cnt, self.args.trigger, self)
-
     let self.oldpos = getpos('.')
-
     return self.currentTarget
 endfunction
 
@@ -1152,43 +1148,32 @@ function! s:newFactoryQ(delimiter)
     return s:newFactory('q', 'Q', args)
 endfunction
 
+" TODO: just return here and manage self.currentTarget handling outside?
 function! s:genNextQC() dict
-    if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
-        return self.currentTarget
-    endif
-
-    call setpos('.', self.oldpos)
-
-    if exists('self.called')
+    if exists('self.currentTarget')
         let self.currentTarget = targets#target#withError('only one current quote')
         return self.currentTarget
     endif
 
-    if !exists('self.dir')
-        let [self.dir, self.rate, self.skipL, self.skipR, self.error] = s:quoteDir(self.args.delimiter)
-    endif
-
+    call setpos('.', self.oldpos)
+    let [self.dir, self.rate, self.skipL, self.skipR, self.error] = s:quoteDir(self.args.delimiter)
     let self.currentTarget = s:select(self.args.delimiter, self.args.delimiter, self.dir, self)
-    let self.called = 1 " group these somehow? self.internal.called
-
     return self.currentTarget
 endfunction
 
 function! s:genNextQN() dict
-    if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
-        return self.currentTarget
-    endif
-
-    call setpos('.', self.oldpos)
-
-    " do outside somehow? if so remember to reset pos before
-    " TODO: yes do on init somehow. that way we don't need to do it three
-    " times for seekipng
-    if !exists('self.dir')
+    if !exists('self.currentTarget') " first invocation
+        call setpos('.', self.oldpos)
+        " do outside somehow? if so remember to reset pos before
+        " TODO: yes do on init somehow. that way we don't need to do it three
+        " times for seekipng
         let [self.dir, self.rate, self.skipL, self.skipR, self.error] = s:quoteDir(self.args.delimiter)
         let cnt = self.rate - self.skipR " skip initially once
         " echom 'skip'
+    elseif self.currentTarget.state().isInvalid()
+        return self.currentTarget
     else
+        call setpos('.', self.oldpos)
         let cnt = self.rate " then go by rate
         " echom 'no skip'
     endif
@@ -1207,19 +1192,16 @@ function! s:genNextQN() dict
 endfunction
 
 function! s:genNextQL() dict
-    if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
-        return self.currentTarget
-    endif
-
-    call setpos('.', self.oldpos)
-
-    " do outside somehow? if so remember to reset pos before
-    if !exists('self.dir')
+    if !exists('self.currentTarget') " first invocation
+        call setpos('.', self.oldpos)
         " TODO: remove unused
         let [self.dir, self.rate, self.skipL, self.skipR, self.error] = s:quoteDir(self.args.delimiter)
         let cnt = self.rate - self.skipL " skip initially once
         " echom 'skip'
+    elseif self.currentTarget.state().isInvalid()
+        return self.currentTarget
     else
+        call setpos('.', self.oldpos)
         let cnt = self.rate " then go by rate
         " echom 'no skip'
     endif
@@ -1245,22 +1227,13 @@ function! s:newFactoryS(delimiter)
 endfunction
 
 function! s:genNextSC() dict
-    if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
-        return self.currentTarget
-    endif
-
-    call setpos('.', self.oldpos)
-
-    if exists('self.called')
+    if exists('self.currentTarget')
         let self.currentTarget = targets#target#withError('only one current separator')
         return self.currentTarget
     endif
 
+    call setpos('.', self.oldpos)
     let self.currentTarget = s:select(self.args.delimiter, self.args.delimiter, '>', self)
-
-    let self.oldpos = getpos('.')
-    let self.called = 1
-
     return self.currentTarget
 endfunction
 
@@ -1282,26 +1255,23 @@ function! s:genNextSN() dict
 endfunction
 
 function! s:genNextSL() dict
-    if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
-        return self.currentTarget
+    if !exists('self.currentTarget') " first invocation
+        let flags = 'cbW' " allow separator under cursor on first iteration
+    else
+        let flags = 'bW'
+        if self.currentTarget.state().isInvalid()
+            return self.currentTarget
+        endif
     endif
 
     call setpos('.', self.oldpos)
-
-    if exists('self.called')
-        let flags = 'bW'
-    else
-        let flags = 'cbW' " allow separator under cursor on first iteration
-    endif
-
     if s:search(1, self.args.delimiter, flags) > 0
         let self.currentTarget = targets#target#withError('no target')
-    else
-        let self.oldpos = getpos('.')
-        let self.currentTarget = s:select(self.args.delimiter, self.args.delimiter, '<', self)
+        return self.currentTarget
     endif
+    let self.oldpos = getpos('.')
 
-    let self.called = 1
+    let self.currentTarget = s:select(self.args.delimiter, self.args.delimiter, '<', self)
     return self.currentTarget
 endfunction
 
@@ -1312,15 +1282,9 @@ function! s:newFactoryA()
 endfunction
 
 function! s:genNextAC() dict
-    if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
-        return self.currentTarget
-    endif
-
-    call setpos('.', self.oldpos)
-
-    if !exists('self.called') " first invocation
-        let self.called = 1
+    if !exists('self.currentTarget') " first invocation
         if s:newSelection
+            call setpos('.', self.oldpos)
             let self.currentTarget = s:selecta('^', self)
             " TODO: clean up. change cursorE to return proper big list? [0, el, ec, 0]
             " similar below
@@ -1331,6 +1295,10 @@ function! s:genNextAC() dict
             " continue from previous state
             call s:lastRawTarget.cursorE()
         endif
+    elseif self.currentTarget.state().isInvalid()
+        return self.currentTarget
+    else
+        call setpos('.', self.oldpos)
     endif
 
     let [opening, closing] = [s:argOpening, s:argClosing]
@@ -1346,16 +1314,13 @@ function! s:genNextAC() dict
 endfunction
 
 function! s:genNextAN() dict
-    if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
-        return self.currentTarget
-    endif
-
-    if !exists('self.called') " first invocation
-        let self.called = 1
+    if !exists('self.currentTarget') " first invocation
         if !s:newSelection
             call s:lastRawTarget.cursorS()
             let self.oldpos = getpos('.')
         endif
+    elseif self.currentTarget.state().isInvalid()
+        return self.currentTarget
     endif
 
     " search for opening or separator, try to select argument from there
@@ -1384,16 +1349,13 @@ function! s:genNextAN() dict
 endfunction
 
 function! s:genNextAL() dict
-    if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
-        return self.currentTarget
-    endif
-
-    if !exists('self.called') " first invocation
-        let self.called = 1
+    if !exists('self.currentTarget') " first invocation
         if !s:newSelection
             call s:lastRawTarget.cursorE()
             let self.oldpos = getpos('.')
         endif
+    elseif self.currentTarget.state().isInvalid()
+        return self.currentTarget
     endif
 
     " search for closing or separator, try to select argument from there
@@ -1445,7 +1407,7 @@ function! s:multiGenAdd(factories, oldpos, ...) dict
 endfunction
 
 function! s:multiGenNext() dict
-    if !exists('self.currentTarget') " first call
+    if !exists('self.currentTarget') " first invocation
         for gen in self.gens
             call gen.next()
         endfor
