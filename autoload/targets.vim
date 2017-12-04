@@ -8,6 +8,15 @@ set cpo&vim
 
 " called once when loaded
 function! s:setup()
+    " maps kind to factory constructor
+    let s:registry = [
+                \ [ 'pairs',      function('s:newFactoryP')],
+                \ [ 'quotes',     function('s:newFactoryQ')],
+                \ [ 'separators', function('s:newFactoryS')],
+                \ [ 'arguments',  function('s:newFactoryA')],
+                \ [ 'tags',       function('s:newFactoryT')],
+                \ ]
+
     let s:argOpening   = get(g:, 'targets_argOpening', '[([]')
     let s:argClosing   = get(g:, 'targets_argClosing', '[])]')
     let s:argSeparator = get(g:, 'targets_argSeparator', ',')
@@ -76,9 +85,12 @@ function! s:setup()
             let s:quoteDirs[rep] = args
         endfor
     endfor
-endfunction
 
-call s:setup()
+    let g:targets_multis = get(g:, 'targets_multis', {
+                \ 'b': { 'pairs':  [['(', ')'], ['[', ']'], ['{', '}']], },
+                \ 'q': { 'quotes': [["'"], ['"'], ['`']], },
+                \ })
+endfunction
 
 " a:count is unused here, but added for consistency with targets#x
 function! targets#o(trigger, count)
@@ -344,6 +356,11 @@ endfunction
 
 " returns list of [kind, argsForKind], potentially empty
 function! s:getNewFactories(trigger)
+    let multi = get(g:targets_multis, a:trigger, 0)
+    if type(multi) == type({})
+        return s:getMultiFactories(multi)
+    endif
+
     " check more specific ones first for #145
     if a:trigger ==# g:targets_tagTrigger " TODO: does this work with custom trigger?
         return [s:newFactoryT()]
@@ -378,6 +395,16 @@ function! s:getNewFactories(trigger)
     endfor
 
     return []
+endfunction
+
+function! s:getMultiFactories(multi)
+    let factories = []
+    for [kind, Fn] in s:registry
+        for args in get(a:multi, kind, [])
+            call add(factories, call(Fn, args))
+        endfor
+    endfor
+    return factories
 endfunction
 
 function! s:modifyDelimiter(kind, delimiter)
@@ -1441,6 +1468,8 @@ endfunction
 function! s:debug(message)
     " echom a:message
 endfunction
+
+call s:setup()
 
 " reset cpoptions
 let &cpoptions = s:save_cpoptions
