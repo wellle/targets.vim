@@ -1101,10 +1101,12 @@ endfunction
 
 function! s:genNextN(n) dict
     for i in range(1, a:n)
-        " echom 'multi gen yield target ' . i . ' ' . self.next().string()
-        call self.next()
+        let target = self.next()
+        if target.state().isInvalid()
+            return target
+        endif
     endfor
-    return self.target()
+    return target
 endfunction
 
 " TODO: use some templating here to avoid repetition?
@@ -1138,10 +1140,8 @@ function! s:genNextPC() dict
         else
             let cnt = 2 " this doesn't really work in cases like [ ( [ x ] ) ]
         endif
-    elseif self.currentTarget.state().isValid()
-        let cnt = 2
     else
-        return self.currentTarget
+        let cnt = 2
     endif
 
     call setpos('.', self.oldpos)
@@ -1151,11 +1151,6 @@ function! s:genNextPC() dict
 endfunction
 
 function! s:genNextPN() dict
-    if !exists('self.currentTarget') " first invocation
-    elseif self.currentTarget.state().isInvalid()
-        return self.currentTarget
-    endif
-
     call setpos('.', self.oldpos)
 
     if s:search(1, self.args.opening, 'W') > 0
@@ -1169,10 +1164,6 @@ function! s:genNextPN() dict
 endfunction
 
 function! s:genNextPL() dict
-    if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
-        return self.currentTarget
-    endif
-
     call setpos('.', self.oldpos)
 
     if s:search(1, self.args.closing, 'bW') > 0
@@ -1214,12 +1205,10 @@ function! s:genNextQN() dict
         let [self.dir, self.rate, self.skipL, self.skipR, self.error] = s:quoteDir(self.args.delimiter)
         let cnt = self.rate - self.skipR " skip initially once
         " echom 'skip'
-    elseif self.currentTarget.state().isValid()
+    else
         call setpos('.', self.oldpos)
         let cnt = self.rate " then go by rate
         " echom 'no skip'
-    else
-        return self.currentTarget
     endif
 
     if s:search(cnt, self.args.delimiter, 'W') > 0
@@ -1242,12 +1231,10 @@ function! s:genNextQL() dict
         let [self.dir, self.rate, self.skipL, self.skipR, self.error] = s:quoteDir(self.args.delimiter)
         let cnt = self.rate - self.skipL " skip initially once
         " echom 'skip'
-    elseif self.currentTarget.state().isValid()
+    else
         call setpos('.', self.oldpos)
         let cnt = self.rate " then go by rate
         " echom 'no skip'
-    else
-        return self.currentTarget
     endif
 
     if s:search(cnt, self.args.delimiter, 'bW') > 0
@@ -1282,10 +1269,6 @@ function! s:genNextSC() dict
 endfunction
 
 function! s:genNextSN() dict
-    if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
-        return self.currentTarget
-    endif
-
     call setpos('.', self.oldpos)
 
     if s:search(1, self.args.delimiter, 'W') > 0
@@ -1301,10 +1284,8 @@ endfunction
 function! s:genNextSL() dict
     if !exists('self.currentTarget') " first invocation
         let flags = 'cbW' " allow separator under cursor on first iteration
-    elseif self.currentTarget.state().isValid()
-        let flags = 'bW'
     else
-        return self.currentTarget
+        let flags = 'bW'
     endif
 
     call setpos('.', self.oldpos)
@@ -1335,8 +1316,6 @@ function! s:genNextAC() dict
             let self.oldpos = getpos('.')
             return self.currentTarget
         endif
-    elseif self.currentTarget.state().isInvalid()
-        return self.currentTarget
     endif
 
     call setpos('.', self.oldpos)
@@ -1354,10 +1333,6 @@ function! s:genNextAC() dict
 endfunction
 
 function! s:genNextAN() dict
-    if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
-        return self.currentTarget
-    endif
-
     " search for opening or separator, try to select argument from there
     " if that fails, keep searching for opening until an argument can be
     " selected
@@ -1384,10 +1359,6 @@ function! s:genNextAN() dict
 endfunction
 
 function! s:genNextAL() dict
-    if exists('self.currentTarget') && self.currentTarget.state().isInvalid()
-        return self.currentTarget
-    endif
-
     " search for closing or separator, try to select argument from there
     " if that fails, keep searching for closing until an argument can be
     " selected
@@ -1441,10 +1412,8 @@ function! s:multiGenNext() dict
         for gen in self.gens
             call gen.next()
         endfor
-    elseif self.currentTarget.state().isValid()
-        call self.currentTarget.gen.next() " fill up where we used the last target from
     else
-        return self.currentTarget
+        call self.currentTarget.gen.next() " fill up where we used the last target from
     endif
 
     let targets = []
