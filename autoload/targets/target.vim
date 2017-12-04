@@ -209,5 +209,9 @@ function! targets#target#string() dict
         let text = getline(self.sl)[self.sc-1 :] . '...' . getline(self.el)[: self.ec-1]
     endif
 
+    if has_key(self, 'gen')
+        let text .= ' ' . self.gen.kind
+    endif
+
     return text . ' ' . '[' . self.sl . ' ' . self.sc . '; ' . self.el . ' ' . self.ec . ']'
 endfunction

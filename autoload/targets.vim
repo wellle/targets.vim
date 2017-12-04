@@ -816,11 +816,13 @@ endfunction
 "      └───────────┘   visible screen
 "         └─────┘      current line
 
-" returns best target according to range score and distance to cursor
+" returns best target (and its index) according to range score and distance to cursor
 function! s:bestTarget(targets, oldpos, min, max, message)
     let [bestScore, minLines, minChars] = [0, 1/0, 1/0] " 1/0 = maxint
 
-    for target in a:targets
+    let cnt = len(a:targets)
+    for idx in range(cnt)
+        let target = a:targets[idx]
         let [range, lines, chars] = target.range(a:oldpos, a:min, a:max)
         let score = get(s:rangeScores, range)
 
@@ -832,17 +834,17 @@ function! s:bestTarget(targets, oldpos, min, max, message)
         if (score > bestScore) ||
                     \ (score == bestScore && lines < minLines) ||
                     \ (score == bestScore && lines == minLines && chars < minChars)
-            let [bestScore, minLines, minChars, best] = [score, lines, chars, target]
+            let [bestScore, minLines, minChars, best, bestIdx] = [score, lines, chars, target, idx]
         endif
     endfor
 
     if exists('best')
         " echom 'best ' . best.string()
         " echom 'score ' . bestScore . ' lines ' . minLines . ' chars ' . minChars
-        return best
+        return [best, bestIdx]
     endif
 
-    return targets#target#withError(a:message)
+    return [targets#target#withError(a:message), -1]
 endfunction
 
 " selection modifiers
@@ -1447,8 +1449,16 @@ function! s:multiGenNext() dict
         call add(targets, gen.target())
     endfor
 
-    let self.currentTarget = s:bestTarget(targets, self.oldpos, self.min, self.max, 'multigen')
-    return self.currentTarget
+    while 1
+        let [target, idx] = s:bestTarget(targets, self.oldpos, self.min, self.max, 'multigen')
+        if target.state().isInvalid() || !exists('self.currentTarget') || !self.currentTarget.equal(target)
+            let self.currentTarget = target
+            return self.currentTarget
+        endif
+
+        " current target is the same as last one, skip it and try the next one
+        let targets[idx] = target.gen.next()
+    endwhile
 endfunction
 
 " return 1 and send a message to s:debug
