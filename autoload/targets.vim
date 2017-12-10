@@ -1087,22 +1087,32 @@ function! s:factoryNew(oldpos, which) dict
                 \ 'args':    self.args,
                 \ 'oldpos':  a:oldpos,
                 \
-                \ 'next':   function('s:genNext' . self.name . a:which),
+                \ 'next':   function('s:genNext'),
+                \ 'nexti':  function('s:genNext' . self.name . a:which),
+                \ 'nextN':  function('s:genNextN'),
                 \ 'target': function('s:genTarget')
                 \ }
+endfunction
+
+function! s:genNext(first) dict
+    call setpos('.', self.oldpos)
+    let self.currentTarget = self.nexti(a:first) " call internal function
+    let self.oldpos = getpos('.')
+    return self.currentTarget
 endfunction
 
 function! s:genTarget() dict
     return get(self, 'currentTarget', targets#target#withError('no target'))
 endfunction
 
-function! s:multiGenNextN(n) dict
+function! s:genNextN(n) dict
     for i in range(1, a:n)
         let target = self.next(i == 1)
         if target.state().isInvalid()
             return target
         endif
     endfor
+
     return target
 endfunction
 
@@ -1132,44 +1142,39 @@ function! s:newFactoryT()
 endfunction
 
 function! s:genNextPC(first) dict
-    call setpos('.', self.oldpos)
-
     if a:first
         let cnt = 1
     else
         let cnt = 2
     endif
 
-    let self.currentTarget = s:selectp(cnt, self.args.trigger, self)
-    call self.currentTarget.cursorE() " keep going from right end
-    let self.oldpos = getpos('.')
-    return self.currentTarget
+    let target = s:selectp(cnt, self.args.trigger, self)
+    call target.cursorE() " keep going from right end
+    return target
 endfunction
 
 function! s:genNextPN(first) dict
-    call setpos('.', self.oldpos)
-
+    " echom 'PN ' . string(getpos('.')) . ' ' . self.trigger
     if s:search(1, self.args.opening, 'W') > 0
-        let self.currentTarget = targets#target#withError('no target')
-    else
-        let self.oldpos = getpos('.')
-        let self.currentTarget = s:selectp(1, self.args.trigger, self)
+        return targets#target#withError('no target')
     endif
 
-    return self.currentTarget
+    let oldpos = getpos('.')
+    let target = s:selectp(1, self.args.trigger, self)
+    call setpos('.', oldpos)
+    " echom 'ret ' . target.string()
+    return target
 endfunction
 
 function! s:genNextPL(first) dict
-    call setpos('.', self.oldpos)
-
     if s:search(1, self.args.closing, 'bW') > 0
-        let self.currentTarget = targets#target#withError('no target')
-    else
-        let self.oldpos = getpos('.')
-        let self.currentTarget = s:selectp(1, self.args.trigger, self)
+        return targets#target#withError('no target')
     endif
 
-    return self.currentTarget
+    let oldpos = getpos('.')
+    let target = s:selectp(1, self.args.trigger, self)
+    call setpos('.', oldpos)
+    return target
 endfunction
 
 " quotes
@@ -1179,13 +1184,9 @@ function! s:newFactoryQ(delimiter)
     return s:newFactory('q', a:delimiter, 'Q', args)
 endfunction
 
-" TODO: just return here and manage self.currentTarget handling outside?
 function! s:genNextQC(first) dict
-    call setpos('.', self.oldpos)
-
     if !a:first
-        let self.currentTarget = targets#target#withError('only one current quote')
-        return self.currentTarget
+        return targets#target#withError('only one current quote')
     endif
 
     let dir = s:quoteDir(self.args.delimiter)[0]
@@ -1194,8 +1195,6 @@ function! s:genNextQC(first) dict
 endfunction
 
 function! s:genNextQN(first) dict
-    call setpos('.', self.oldpos)
-
     if !exists('self.rate')
         " do outside somehow? if so remember to reset pos before
         " TODO: yes do on init somehow. that way we don't need to do it three
@@ -1209,21 +1208,15 @@ function! s:genNextQN(first) dict
     endif
 
     if s:search(cnt, self.args.delimiter, 'W') > 0
-        let self.currentTarget = targets#target#withError('QN')
-        return self.currentTarget
+        return targets#target#withError('QN')
     endif
 
-    let self.currentTarget = s:select(self.args.delimiter, self.args.delimiter, '>', self)
-
-    call self.currentTarget.cursorS() " keep going from left end TODO: is this call needed?
-    let self.oldpos = getpos('.')
-
-    return self.currentTarget
+    let target = s:select(self.args.delimiter, self.args.delimiter, '>', self)
+    call target.cursorS() " keep going from left end TODO: is this call needed?
+    return target
 endfunction
 
 function! s:genNextQL(first) dict
-    call setpos('.', self.oldpos)
-
     if !exists('self.rate')
         let [_, self.rate, skipL, _, _] = s:quoteDir(self.args.delimiter)
         let cnt = self.rate - skipL " skip initially once
@@ -1234,16 +1227,12 @@ function! s:genNextQL(first) dict
     endif
 
     if s:search(cnt, self.args.delimiter, 'bW') > 0
-        let self.currentTarget = targets#target#withError('QL')
-        return self.currentTarget
+        return targets#target#withError('QL')
     endif
 
-    let self.currentTarget = s:select(self.args.delimiter, self.args.delimiter, '<', self)
-
-    call self.currentTarget.cursorE() " keep going from right end TODO: is this call needed?
-    let self.oldpos = getpos('.')
-
-    return self.currentTarget
+    let target = s:select(self.args.delimiter, self.args.delimiter, '<', self)
+    call target.cursorE() " keep going from right end TODO: is this call needed?
+    return target
 endfunction
 
 " separators
@@ -1254,27 +1243,22 @@ function! s:newFactoryS(delimiter)
 endfunction
 
 function! s:genNextSC(first) dict
-    call setpos('.', self.oldpos)
     if !a:first
-        let self.currentTarget = targets#target#withError('only one current separator')
-        return self.currentTarget
+        return targets#target#withError('only one current separator')
     endif
 
-    let self.currentTarget = s:select(self.args.delimiter, self.args.delimiter, '>', self)
-    return self.currentTarget
+    return s:select(self.args.delimiter, self.args.delimiter, '>', self)
 endfunction
 
 function! s:genNextSN(first) dict
-    call setpos('.', self.oldpos)
-
     if s:search(1, self.args.delimiter, 'W') > 0
-        let self.currentTarget = targets#target#withError('no target')
-    else
-        let self.oldpos = getpos('.')
-        let self.currentTarget = s:select(self.args.delimiter, self.args.delimiter, '>', self)
+        return targets#target#withError('no target')
     endif
 
-    return self.currentTarget
+    let oldpos = getpos('.')
+    let target = s:select(self.args.delimiter, self.args.delimiter, '>', self)
+    call setpos('.', oldpos)
+    return target
 endfunction
 
 function! s:genNextSL(first) dict
@@ -1284,15 +1268,14 @@ function! s:genNextSL(first) dict
         let flags = 'bW'
     endif
 
-    call setpos('.', self.oldpos)
     if s:search(1, self.args.delimiter, flags) > 0
-        let self.currentTarget = targets#target#withError('no target')
-        return self.currentTarget
+        return targets#target#withError('no target')
     endif
-    let self.oldpos = getpos('.')
 
-    let self.currentTarget = s:select(self.args.delimiter, self.args.delimiter, '<', self)
-    return self.currentTarget
+    let oldpos = getpos('.')
+    let target = s:select(self.args.delimiter, self.args.delimiter, '<', self)
+    call setpos('.', oldpos)
+    return target
 endfunction
 
 " arguments
@@ -1302,24 +1285,18 @@ function! s:newFactoryA()
 endfunction
 
 function! s:genNextAC(first) dict
-    call setpos('.', self.oldpos)
-
     if a:first
-        let self.currentTarget = s:selecta('^', self)
+        let target = s:selecta('^', self)
     else
         if s:findArgBoundary('cW', 'cW', s:argOpening, s:argClosing, s:argOuter, s:none, 1)[2] > 0
-            let self.currentTarget = targets#target#withError('AC 1')
-            return self.currentTarget
+            return targets#target#withError('AC 1')
         endif
         silent! execute "normal! 1 "
-        let self.currentTarget = s:selecta('<', self)
+        let target = s:selecta('<', self)
     endif
 
-    " TODO: clean up. change cursorE to return proper big list? [0, el, ec, 0]
-    " similar below
-    call self.currentTarget.cursorE() " keep going from right end
-    let self.oldpos = getpos('.')
-    return self.currentTarget
+    call target.cursorE() " keep going from right end
+    return target
 endfunction
 
 function! s:genNextAN(first) dict
@@ -1328,24 +1305,20 @@ function! s:genNextAN(first) dict
     " selected
     let pattern = s:argOpeningS
     while 1
-        call setpos('.', self.oldpos)
-
         if s:search(1, pattern, 'W') > 0
-            let self.currentTarget = targets#target#withError('no target')
-            return self.currentTarget
+            return targets#target#withError('no target')
         endif
 
-        let self.oldpos = getpos('.')
-        let self.currentTarget = s:selecta('>', self)
+        let oldpos = getpos('.')
+        let target = s:selecta('>', self)
+        call setpos('.', oldpos)
 
-        if self.currentTarget.state().isValid()
-            break
+        if target.state().isValid()
+            return target
         endif
 
         let pattern = s:argOpening
     endwhile
-
-    return self.currentTarget
 endfunction
 
 function! s:genNextAL(first) dict
@@ -1354,24 +1327,20 @@ function! s:genNextAL(first) dict
     " selected
     let pattern = s:argClosingS
     while 1
-        call setpos('.', self.oldpos)
-
         if s:search(1, pattern, 'bW') > 0
-            let self.currentTarget = targets#target#withError('no target')
-            return self.currentTarget
+            return targets#target#withError('no target')
         endif
 
-        let self.oldpos = getpos('.')
-        let self.currentTarget = s:selecta('<', self)
+        let oldpos = getpos('.')
+        let target = s:selecta('<', self)
+        call setpos('.', oldpos)
 
-        if self.currentTarget.state().isValid()
-            break
+        if target.state().isValid()
+            return target
         endif
 
         let pattern = s:argClosing
     endwhile
-
-    return self.currentTarget
 endfunction
 
 function! s:newMultiGen(oldpos, min, max)
@@ -1383,7 +1352,7 @@ function! s:newMultiGen(oldpos, min, max)
                 \
                 \ 'add':    function('s:multiGenAdd'),
                 \ 'next':   function('s:multiGenNext'),
-                \ 'nextN':  function('s:multiGenNextN'),
+                \ 'nextN':  function('s:genNextN'),
                 \ 'target': function('s:genTarget')
                 \ }
 endfunction

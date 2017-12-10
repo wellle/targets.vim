@@ -210,7 +210,7 @@ function! targets#target#string() dict
     endif
 
     if has_key(self, 'gen')
-        let text .= ' ' . self.gen.kind
+        let text .= ' ' . self.gen.kind . self.gen.trigger
     endif
 
     return text . ' ' . '[' . self.sl . ' ' . self.sc . '; ' . self.el . ' ' . self.ec . ']'
