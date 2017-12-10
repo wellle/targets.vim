@@ -1383,13 +1383,30 @@ function! s:multiGenNext(first) dict
 
     while 1
         let [target, idx] = s:bestTarget(targets, self.oldpos, self.min, self.max, 'multigen')
-        if target.state().isInvalid() || !exists('self.currentTarget') || !self.currentTarget.equal(target)
+        if target.state().isInvalid() " best is invalid -> done
             let self.currentTarget = target
             return self.currentTarget
         endif
 
-        " current target is the same as last one, skip it and try the next one
-        let targets[idx] = target.gen.next(0)
+        " TODO: can we merge current target and last raw target to avoid this
+        " sort of duplication?
+        if exists('self.currentTarget')
+            if self.currentTarget.equal(target)
+                " current target is the same as last one, skip it and try the next one
+                let targets[idx] = target.gen.next(0)
+                continue
+            endif
+        elseif !s:newSelection && s:lastRawTarget.equal(target)
+            " current target is the same as continued one, skip it and try the next one
+            " NOTE: this can happen if a multi contains two generators which
+            " may create the same target. in that case growing might break
+            " without this check
+            let targets[idx] = target.gen.next(0)
+            continue
+        endif
+
+        let self.currentTarget = target
+        return self.currentTarget
     endwhile
 endfunction
 
