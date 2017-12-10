@@ -9,13 +9,13 @@ set cpo&vim
 " called once when loaded
 function! s:setup()
     " maps kind to factory constructor
-    let s:registry = [
-                \ [ 'pairs',      function('s:newFactoryP')],
-                \ [ 'quotes',     function('s:newFactoryQ')],
-                \ [ 'separators', function('s:newFactoryS')],
-                \ [ 'arguments',  function('s:newFactoryA')],
-                \ [ 'tags',       function('s:newFactoryT')],
-                \ ]
+    let s:registry = {
+                \ 'pairs':      function('s:newFactoryP'),
+                \ 'quotes':     function('s:newFactoryQ'),
+                \ 'separators': function('s:newFactoryS'),
+                \ 'arguments':  function('s:newFactoryA'),
+                \ 'tags':       function('s:newFactoryT'),
+                \ }
 
     let s:argOpening   = get(g:, 'targets_argOpening', '[([]')
     let s:argClosing   = get(g:, 'targets_argClosing', '[])]')
@@ -418,9 +418,9 @@ endfunction
 
 function! s:getMultiFactories(multi)
     let factories = []
-    for [kind, Fn] in s:registry
+    for kind in keys(s:registry)
         for args in get(a:multi, kind, [])
-            call add(factories, call(Fn, args))
+            call add(factories, call(s:registry[kind], args))
         endfor
     endfor
     return factories
