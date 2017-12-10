@@ -1134,18 +1134,21 @@ function! s:newFactoryT()
 endfunction
 
 function! s:genNextPC() dict
-    if !exists('self.currentTarget') " first invocation
-        if s:newSelection
-            let cnt = 1
-        else
-            let cnt = 2 " this doesn't really work in cases like [ ( [ x ] ) ]
-        endif
-    else
+    call setpos('.', self.oldpos)
+
+    if !exists('self.currentTarget') && s:newSelection " first invocation
+        let cnt = 1
+    " TODO: check if last target has same trigger instead of doing this check
+    " currently disabled as that breaks tag growing
+    " but without the check it breaks growing in cases like [ ( [ x ] ) ]
+    elseif s:getchar() ==# self.args.closing || 1 " continue from within
         let cnt = 2
+    else " continue
+        let cnt = 1
     endif
 
-    call setpos('.', self.oldpos)
     let self.currentTarget = s:selectp(cnt, self.args.trigger, self)
+    call self.currentTarget.cursorE() " keep going from right end
     let self.oldpos = getpos('.')
     return self.currentTarget
 endfunction
@@ -1185,12 +1188,12 @@ endfunction
 
 " TODO: just return here and manage self.currentTarget handling outside?
 function! s:genNextQC() dict
-    if exists('self.currentTarget')
+    call setpos('.', self.oldpos)
+    if exists('self.currentTarget') || (!s:newSelection && s:getchar() =~# self.args.delimiter)
         let self.currentTarget = targets#target#withError('only one current quote')
         return self.currentTarget
     endif
 
-    call setpos('.', self.oldpos)
     let [self.dir, self.rate, self.skipL, self.skipR, self.error] = s:quoteDir(self.args.delimiter)
     let self.currentTarget = s:select(self.args.delimiter, self.args.delimiter, self.dir, self)
     return self.currentTarget
@@ -1258,12 +1261,12 @@ function! s:newFactoryS(delimiter)
 endfunction
 
 function! s:genNextSC() dict
-    if exists('self.currentTarget')
+    call setpos('.', self.oldpos)
+    if exists('self.currentTarget') || (!s:newSelection && s:getchar() ==# self.args.delimiter)
         let self.currentTarget = targets#target#withError('only one current separator')
         return self.currentTarget
     endif
 
-    call setpos('.', self.oldpos)
     let self.currentTarget = s:select(self.args.delimiter, self.args.delimiter, '>', self)
     return self.currentTarget
 endfunction
@@ -1282,7 +1285,7 @@ function! s:genNextSN() dict
 endfunction
 
 function! s:genNextSL() dict
-    if !exists('self.currentTarget') " first invocation
+    if !exists('self.currentTarget') && s:newSelection " first invocation
         let flags = 'cbW' " allow separator under cursor on first iteration
     else
         let flags = 'bW'
@@ -1306,28 +1309,22 @@ function! s:newFactoryA()
 endfunction
 
 function! s:genNextAC() dict
-    if !exists('self.currentTarget') " first invocation
-        if s:newSelection
-            call setpos('.', self.oldpos)
-            let self.currentTarget = s:selecta('^', self)
-            " TODO: clean up. change cursorE to return proper big list? [0, el, ec, 0]
-            " similar below
-            call self.currentTarget.cursorE() " keep going from right end
-            let self.oldpos = getpos('.')
-            return self.currentTarget
-        endif
-    endif
-
     call setpos('.', self.oldpos)
 
-    let [opening, closing] = [s:argOpening, s:argClosing]
-    if s:findArgBoundary('cW', 'cW', opening, closing, s:argOuter, s:none, 1)[2] > 0
-        let self.currentTarget = targets#target#withError('AC 1')
-        return self.currentTarget
+    if !exists('self.currentTarget') && s:newSelection " first invocation
+        let self.currentTarget = s:selecta('^', self)
+    else
+        if s:findArgBoundary('cW', 'cW', s:argOpening, s:argClosing, s:argOuter, s:none, 1)[2] > 0
+            let self.currentTarget = targets#target#withError('AC 1')
+            return self.currentTarget
+        endif
+        silent! execute "normal! 1 "
+        let self.currentTarget = s:selecta('<', self)
     endif
-    silent! execute "normal! 1 "
 
-    let self.currentTarget = s:selecta('<', self)
+    " TODO: clean up. change cursorE to return proper big list? [0, el, ec, 0]
+    " similar below
+    call self.currentTarget.cursorE() " keep going from right end
     let self.oldpos = getpos('.')
     return self.currentTarget
 endfunction
