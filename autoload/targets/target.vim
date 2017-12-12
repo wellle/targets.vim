@@ -145,19 +145,19 @@ function! targets#target#state() dict
 endfunction
 
 " returns range characters and min distance to cursor (lines; characters)
-function! targets#target#range(cursor, min, max) dict
+function! targets#target#range(context) dict
     if self.error != ''
         return ['', 1/0, 1/0]
     endif
 
-    let [positionS, linesS, charsS] = s:position(self.sl, self.sc, a:cursor, a:min, a:max)
-    let [positionE, linesE, charsE] = s:position(self.el, self.ec, a:cursor, a:min, a:max)
+    let [positionS, linesS, charsS] = s:position(self.sl, self.sc, a:context)
+    let [positionE, linesE, charsE] = s:position(self.el, self.ec, a:context)
     return [positionS . positionE, min([linesS, linesE]), min([charsS, charsE])]
 endfunction
 
 " returns position character and distances to cursor (lines; characters)
-function! s:position(line, column, cursor, min, max)
-    let [cursorLine, cursorColumn] = a:cursor[1:2]
+function! s:position(line, column, context)
+    let [cursorLine, cursorColumn] = a:context.oldpos[1:2]
 
     if a:line == cursorLine " cursor line
         if a:column == cursorColumn " same column
@@ -169,14 +169,14 @@ function! s:position(line, column, cursor, min, max)
         endif
 
     elseif a:line < cursorLine
-        if a:line >= a:min " above on screen
+        if a:line >= a:context.minline " above on screen
             return ['a', cursorLine - a:line, -a:column]
         else " above off screen
             return ['A', cursorLine - a:line, -a:column]
         endif
 
     else " a:line > cursorLine
-        if a:line <= a:max " below on screen
+        if a:line <= a:context.maxline " below on screen
             return ['b', a:line - cursorLine, a:column]
         else " below off screen
             return ['B', a:line - cursorLine, a:column]
@@ -186,7 +186,7 @@ endfunction
 
 " visually select the target
 function! targets#target#select() dict
-    call cursor(self.s())
+    call self.cursorS()
 
     if self.linewise
         silent! normal! V
@@ -194,7 +194,7 @@ function! targets#target#select() dict
         silent! normal! v
     endif
 
-    call cursor(self.e())
+    call self.cursorE()
 endfunction
 
 function! targets#target#string() dict

@@ -94,11 +94,7 @@ endfunction
 
 " a:count is unused here, but added for consistency with targets#x
 function! targets#o(trigger, count)
-    call s:init()
-    let context = {
-                \ 'mapmode': 'o',
-                \ 'oldpos': getpos('.'),
-                \ }
+    let context = s:init('o')
 
     " TODO: include kind in trigger so we don't have to guess as much?
     let [delimiter, which, modifier] = split(a:trigger, '\zs')
@@ -160,11 +156,7 @@ endfunction
 
 " 'x' is for visual (as in :xnoremap, not in select mode)
 function! targets#x(trigger, count)
-    call s:initX()
-    let context = {
-                \ 'mapmode': 'x',
-                \ 'oldpos': getpos('.'),
-                \ }
+    let context = s:initX()
 
     let [delimiter, which, modifier] = split(a:trigger, '\zs')
     let [target, rawTarget] = s:findTarget(context, delimiter, which, modifier, a:count)
@@ -180,7 +172,7 @@ function! targets#x(trigger, count)
 endfunction
 
 " initialize script local variables for the current matching
-function! s:init()
+function! s:init(mapmode)
     let s:newSelection = 1
 
     let s:selection = &selection  " remember 'selection' setting
@@ -191,11 +183,18 @@ function! s:init()
 
     let s:whichwrap = &whichwrap " remember 'whichwrap' setting
     let &whichwrap  = 'b,s'      " and set it to default
+
+    return {
+                \ 'mapmode': a:mapmode,
+                \ 'oldpos':  getpos('.'),
+                \ 'minline': line('w0'),
+                \ 'maxline': line('w$'),
+                \ }
 endfunction
 
 " save old visual selection to detect new selections and reselect on fail
 function! s:initX()
-    call s:init()
+    let context = s:init('x')
 
     let s:visualTarget = targets#target#fromVisualSelection(s:selection)
 
@@ -208,7 +207,14 @@ function! s:initX()
         normal! v
     endif
 
+    " need to update oldpos here to make reselect work (see test8)
+    " TODO: can we improve the flow here to avoid this double assignment?
+    " TODO: also reselect only works if cursor is on end of selection, not on
+    " start, fix that too
+    let context.oldpos = getpos('.')
+
     let s:newSelection = s:isNewSelection()
+    return context
 endfunction
 
 " clean up script variables after match
@@ -234,44 +240,44 @@ function! s:findTarget(context, delimiter, which, modifier, count)
 endfunction
 
 function! s:findRawTarget(context, factories, which, count)
-    " TODO: inject into this function? or add to context?
-
-    let min = line('w0') " TODO: add these to context
-    let max = line('w$')
-
     " TODO: clean these up (also don't inject oldpos again)
     " use target.gen.oldpos for scoring instead of a global one?
     " in that case inject different oldpos for C, N, L gens
+
+    let context = a:context
+
     if a:which ==# 'c'
         if a:count == 1 && s:newSelection " seek
-            let oldpos = getpos('.') " actually use cursor pos
-            let gen = s:newMultiGen(oldpos, min, max)
-            call gen.add(a:factories, oldpos, 'C', 'N', 'L')
+            let gen = s:newMultiGen(context)
+            call gen.add(a:factories, context.oldpos, 'C', 'N', 'L')
 
         else " don't seek
             if !s:newSelection
                 call s:lastRawTarget.cursorE() " start from last raw end
+                let context = deepcopy(context)
+                let context.oldpos = getpos('.')
             endif
-            let oldpos = getpos('.')
-            let gen = s:newMultiGen(oldpos, min, max)
-            call gen.add(a:factories, oldpos, 'C')
+            let gen = s:newMultiGen(context)
+            call gen.add(a:factories, context.oldpos, 'C')
         endif
 
     elseif a:which ==# 'n'
         if !s:newSelection
             call s:lastRawTarget.cursorS() " start from last raw start
+            let context = deepcopy(context)
+            let context.oldpos = getpos('.')
         endif
-        let oldpos = getpos('.')
-        let gen = s:newMultiGen(oldpos, min, max)
-        call gen.add(a:factories, oldpos, 'N')
+        let gen = s:newMultiGen(context)
+        call gen.add(a:factories, context.oldpos, 'N')
 
     elseif a:which ==# 'l'
         if !s:newSelection
             call s:lastRawTarget.cursorE() " start from last raw end
+            let context = deepcopy(context)
+            let context.oldpos = getpos('.')
         endif
-        let oldpos = getpos('.')
-        let gen = s:newMultiGen(oldpos, min, max)
-        call gen.add(a:factories, oldpos, 'L')
+        let gen = s:newMultiGen(context)
+        call gen.add(a:factories, context.oldpos, 'L')
 
     else
         return targets#target#withError('findRawTarget which')
@@ -485,9 +491,7 @@ function! s:selectTarget(context, target, rawTarget)
 endfunction
 
 function! s:addToJumplist(context, target)
-    let min = line('w0')
-    let max = line('w$')
-    let range = a:target.range(a:context.oldpos, min, max)[0]
+    let range = a:target.range(a:context)[0]
     return get(s:rangeJumps, range)
 endfunction
 
@@ -836,13 +840,13 @@ endfunction
 "         └─────┘      current line
 
 " returns best target (and its index) according to range score and distance to cursor
-function! s:bestTarget(targets, oldpos, min, max, message)
+function! s:bestTarget(targets, context, message)
     let [bestScore, minLines, minChars] = [0, 1/0, 1/0] " 1/0 = maxint
 
     let cnt = len(a:targets)
     for idx in range(cnt)
         let target = a:targets[idx]
-        let [range, lines, chars] = target.range(a:oldpos, a:min, a:max)
+        let [range, lines, chars] = target.range(a:context)
         let score = get(s:rangeScores, range)
 
         " if target.state().isValid()
@@ -1343,12 +1347,10 @@ function! s:genNextAL(first) dict
     endwhile
 endfunction
 
-function! s:newMultiGen(oldpos, min, max)
+function! s:newMultiGen(context)
     return {
-                \ 'gens': [],
-                \ 'oldpos': a:oldpos,
-                \ 'min': a:min,
-                \ 'max': a:max,
+                \ 'gens':    [],
+                \ 'context': a:context,
                 \
                 \ 'add':    function('s:multiGenAdd'),
                 \ 'next':   function('s:multiGenNext'),
@@ -1382,7 +1384,7 @@ function! s:multiGenNext(first) dict
     endfor
 
     while 1
-        let [target, idx] = s:bestTarget(targets, self.oldpos, self.min, self.max, 'multigen')
+        let [target, idx] = s:bestTarget(targets, self.context, 'multigen')
         if target.state().isInvalid() " best is invalid -> done
             let self.currentTarget = target
             return self.currentTarget
