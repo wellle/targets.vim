@@ -189,6 +189,7 @@ function! s:init(mapmode)
                 \ 'oldpos':  getpos('.'),
                 \ 'minline': line('w0'),
                 \ 'maxline': line('w$'),
+                \ 'withOldpos': function('s:contextWithOldpos'),
                 \ }
 endfunction
 
@@ -240,44 +241,38 @@ function! s:findTarget(context, delimiter, which, modifier, count)
 endfunction
 
 function! s:findRawTarget(context, factories, which, count)
-    " TODO: clean these up (also don't inject oldpos again)
-    " use target.gen.oldpos for scoring instead of a global one?
-    " in that case inject different oldpos for C, N, L gens
-
     let context = a:context
 
+    " TODO: clean these up
     if a:which ==# 'c'
         if a:count == 1 && s:newSelection " seek
             let gen = s:newMultiGen(context)
-            call gen.add(a:factories, context.oldpos, 'C', 'N', 'L')
+            call gen.add(a:factories, 'C', 'N', 'L')
 
         else " don't seek
             if !s:newSelection
                 call s:lastRawTarget.cursorE() " start from last raw end
-                let context = deepcopy(context)
-                let context.oldpos = getpos('.')
+                let context = a:context.withOldpos(getpos('.'))
             endif
             let gen = s:newMultiGen(context)
-            call gen.add(a:factories, context.oldpos, 'C')
+            call gen.add(a:factories, 'C')
         endif
 
     elseif a:which ==# 'n'
         if !s:newSelection
             call s:lastRawTarget.cursorS() " start from last raw start
-            let context = deepcopy(context)
-            let context.oldpos = getpos('.')
+            let context = a:context.withOldpos(getpos('.'))
         endif
         let gen = s:newMultiGen(context)
-        call gen.add(a:factories, context.oldpos, 'N')
+        call gen.add(a:factories, 'N')
 
     elseif a:which ==# 'l'
         if !s:newSelection
             call s:lastRawTarget.cursorE() " start from last raw end
-            let context = deepcopy(context)
-            let context.oldpos = getpos('.')
+            let context = a:context.withOldpos(getpos('.'))
         endif
         let gen = s:newMultiGen(context)
-        call gen.add(a:factories, context.oldpos, 'L')
+        call gen.add(a:factories, 'L')
 
     else
         return targets#target#withError('findRawTarget which')
@@ -1359,11 +1354,11 @@ function! s:newMultiGen(context)
                 \ }
 endfunction
 
-function! s:multiGenAdd(factories, oldpos, ...) dict
+function! s:multiGenAdd(factories, ...) dict
     let whichs = a:000
     for factory in a:factories
         for which in whichs
-            call add(self.gens, factory.new(a:oldpos, which))
+            call add(self.gens, factory.new(self.context.oldpos, which))
         endfor
     endfor
 endfunction
@@ -1410,6 +1405,13 @@ function! s:multiGenNext(first) dict
         let self.currentTarget = target
         return self.currentTarget
     endwhile
+endfunction
+
+" TODO: move to separate file?
+function! s:contextWithOldpos(oldpos) dict
+    let context = deepcopy(self)
+    let context.oldpos = a:oldpos
+    return context
 endfunction
 
 " return 1 and send a message to s:debug
