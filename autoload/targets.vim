@@ -243,33 +243,29 @@ endfunction
 function! s:findRawTarget(context, factories, which, count)
     let context = a:context
 
-    " TODO: clean these up
     if a:which ==# 'c'
         if a:count == 1 && s:newSelection " seek
             let gen = s:newMultiGen(context)
             call gen.add(a:factories, 'C', 'N', 'L')
 
         else " don't seek
-            if !s:newSelection
-                call s:lastRawTarget.cursorE() " start from last raw end
-                let context = a:context.withOldpos(getpos('.'))
+            if !s:newSelection " start from last raw end
+                let context = context.withOldpos(s:lastRawTarget.getposE())
             endif
             let gen = s:newMultiGen(context)
             call gen.add(a:factories, 'C')
         endif
 
     elseif a:which ==# 'n'
-        if !s:newSelection
-            call s:lastRawTarget.cursorS() " start from last raw start
-            let context = a:context.withOldpos(getpos('.'))
+        if !s:newSelection " start from last raw start
+            let context = context.withOldpos(s:lastRawTarget.getposS())
         endif
         let gen = s:newMultiGen(context)
         call gen.add(a:factories, 'N')
 
     elseif a:which ==# 'l'
-        if !s:newSelection
-            call s:lastRawTarget.cursorE() " start from last raw end
-            let context = a:context.withOldpos(getpos('.'))
+        if !s:newSelection " start from last raw end
+            let context = context.withOldpos(s:lastRawTarget.getposE())
         endif
         let gen = s:newMultiGen(context)
         call gen.add(a:factories, 'L')

@@ -114,9 +114,13 @@ function! targets#target#getcharE() dict
 endfunction
 
 function! targets#target#getposS(...) dict
+    call self.cursorS()
+    return getpos('.')
 endfunction
 
 function! targets#target#getposE(...) dict
+    call self.cursorE()
+    return getpos('.')
 endfunction
 
 function! targets#target#cursorS() dict
