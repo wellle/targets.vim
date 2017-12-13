@@ -277,6 +277,7 @@ function! s:findRawTarget(context, factories, which, count)
     return gen.nextN(a:count)
 endfunction
 
+" TODO: have this being set up by gen/factory
 function! s:modifyTarget(target, modifier)
     if a:target.state().isInvalid()
         return targets#target#withError('modifyTarget invalid: ' . a:target.error)
@@ -727,18 +728,14 @@ endfunction
 " args (flags1, flags2, skip, finish, all=s:argAll,
 " separator=s:argSeparator, cnt=2)
 " return (line, column, err)
-function! s:findArgBoundary(...)
-    let flags1    =            a:1 " required
-    let flags2    =            a:2
-    let skip      =            a:3
-    let finish    =            a:4
-    let all       = a:0 >= 5 ? a:5 : s:argAll
-    let separator = a:0 >= 6 ? a:6 : s:argSeparator
-    let cnt       = a:0 >= 7 ? a:7 : 1
+function! s:findArgBoundary(flags1, flags2, skip, finish, ...)
+    let all       = a:0 >= 1 ? a:1 : s:argAll
+    let separator = a:0 >= 2 ? a:2 : s:argSeparator
+    let cnt       = a:0 >= 3 ? a:3 : 1
 
     let [tl, rl, rc] = [0, 0, 0]
     for _ in range(cnt)
-        let [rl, rc] = searchpos(all, flags1)
+        let [rl, rc] = searchpos(all, a:flags1)
         while 1
             if rl == 0
                 return [0, 0, s:fail('findArgBoundary 1', a:)]
@@ -749,17 +746,17 @@ function! s:findArgBoundary(...)
                 if tl == 0
                     let [tl, tc] = [rl, rc]
                 endif
-            elseif char =~# finish
+            elseif char =~# a:finish
                 if tl > 0
                     return [tl, tc, 0]
                 endif
                 break
-            elseif char =~# skip
+            elseif char =~# a:skip
                 silent! keepjumps normal! %
             else
                 return [0, 0, s:fail('findArgBoundary 2')]
             endif
-            let [rl, rc] = searchpos(all, flags2)
+            let [rl, rc] = searchpos(all, a:flags2)
         endwhile
     endfor
 
@@ -980,34 +977,32 @@ endfunction
 " line │ a . b . c │ a . b .c │ a. c .c │ . a .c
 " out  │   └────┘  │  └────┘  │  └───┘  │└────┘
 " args (target, direction=<try right, then left>)
-function! s:expand(...)
-    let target = a:1
-
-    if a:0 == 1 || a:2 ==# '>'
-        call target.cursorE()
+function! s:expand(target, ...)
+    if a:0 == 0 || a:1 ==# '>'
+        call a:target.cursorE()
         let [line, column] = searchpos('\S\|$', '', line('.'))
-        if line > 0 && column-1 > target.ec
+        if line > 0 && column-1 > a:target.ec
             " non whitespace or EOL after trailing whitespace found
             " not counting whitespace directly after end
-            call target.setE(line, column-1)
-            return target
+            call a:target.setE(line, column-1)
+            return a:target
         endif
     endif
 
-    if a:0 == 1 || a:2 ==# '<'
-        call target.cursorS()
+    if a:0 == 0 || a:1 ==# '<'
+        call a:target.cursorS()
         let [line, column] = searchpos('\S', 'b', line('.'))
         if line > 0
             " non whitespace before leading whitespace found
-            call target.setS(line, column+1)
-            return target
+            call a:target.setS(line, column+1)
+            return a:target
         endif
         " only whitespace in front of start
         " include all leading whitespace from beginning of line
-        let target.sc = 1
+        let a:target.sc = 1
     endif
 
-    return target
+    return a:target
 endfunction
 
 " expand separator selection by one whitespace if there are two
@@ -1057,8 +1052,7 @@ endfunction
 " TODO: move to new file and rename functions accordingly, make autoloaded?
 
 " returns a factory to create generators
-" TODO: inject context instead of oldpos?
-" TODO: remove kind later when we have modifyTarget functions per factory
+" TODO: remove kind later when we have modifyTarget functions per factory?
 function! s:newFactory(kind, trigger, name, args)
     return {
                 \ 'kind':    a:kind,
@@ -1123,7 +1117,6 @@ endfunction
 
 " tag factory uses pair functions as well for now
 " special args must not be modified/escaped
-" TODO: tag growing doesn't work vatat, also v2at
 function! s:newFactoryT()
     let args = {
                 \ 'opening': '<\a',
@@ -1189,7 +1182,7 @@ endfunction
 function! s:genNextQN(first) dict
     if !exists('self.rate')
         " do outside somehow? if so remember to reset pos before
-        " TODO: yes do on init somehow. that way we don't need to do it three
+        " TODO: do on init somehow? that way we don't need to do it three
         " times for seekipng
         let [_, self.rate, _, skipR, _] = s:quoteDir(self.args.delimiter)
         let cnt = self.rate - skipR " skip initially once
@@ -1409,9 +1402,9 @@ endfunction
 
 " return 1 and send a message to s:debug
 " args (message, parameters=nil)
-function! s:fail(...)
-    let message = 'fail ' . a:1
-    let message .= a:0 >= 2 ? ' ' . string(a:2) : ''
+function! s:fail(message, ...)
+    let message = 'fail ' . a:message
+    let message .= a:0 >= 1 ? ' ' . string(a:1) : ''
     call s:debug(message)
     return 1
 endfunction
