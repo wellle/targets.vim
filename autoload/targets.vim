@@ -885,7 +885,7 @@ function! s:drop(target)
         let sLinewise = 1
     endif
     silent! execute "normal! 1 "
-    call a:target.getposS()
+    call a:target.setS()
 
     call a:target.cursorE()
     if a:target.sl < a:target.el && searchpos('\S', 'bnW', line('.'))[0] == 0
@@ -897,7 +897,7 @@ function! s:drop(target)
         " one character back
         silent! execute "normal! \<BS>"
     endif
-    call a:target.getposE()
+    call a:target.setE()
     let a:target.linewise = sLinewise && eLinewise
     return a:target
 endfunction
@@ -909,7 +909,7 @@ endfunction
 function! s:dropr(target)
     call a:target.cursorE()
     silent! execute "normal! \<BS>"
-    call a:target.getposE()
+    call a:target.setE()
     return a:target
 endfunction
 

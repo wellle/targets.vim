@@ -67,12 +67,20 @@ function! targets#target#equal(t) dict
                 \ self.linewise == a:t.linewise
 endfunction
 
-function! targets#target#setS(line, column) dict
-    let [self.sl, self.sc] = [a:line, a:column]
+function! targets#target#setS(...) dict
+    if a:0 == 2 " line and column
+        let [self.sl, self.sc] = [a:1, a:2]
+    elseif a:0 == 0 " use current position
+        let [self.sl, self.sc] = getpos('.')[1:2]
+    endif
 endfunction
 
-function! targets#target#setE(line, column) dict
-    let [self.el, self.ec] = [a:line, a:column]
+function! targets#target#setE(...) dict
+    if a:0 == 2 " line and column
+        let [self.el, self.ec] = [a:1, a:2]
+    elseif a:0 == 0 " use current position
+        let [self.el, self.ec] = getpos('.')[1:2]
+    endif
 endfunction
 
 function! targets#target#s() dict
@@ -105,16 +113,10 @@ function! targets#target#getcharE() dict
     return getline(self.el)[self.ec-1]
 endfunction
 
-" args (mark = '.')
 function! targets#target#getposS(...) dict
-    let mark = a:0 > 0 ? a:1 : '.'
-    let [self.sl, self.sc] = getpos(mark)[1:2]
 endfunction
 
-" args (mark = '.')
 function! targets#target#getposE(...) dict
-    let mark = a:0 > 0 ? a:1 : '.'
-    let [self.el, self.ec] = getpos(mark)[1:2]
 endfunction
 
 function! targets#target#cursorS() dict
