@@ -1037,16 +1037,13 @@ function! s:getchar()
     return getline('.')[col('.')-1]
 endfunction
 
-" search for pattern using flags and a count, optional stopline
-" args (cnt, pattern, flags, stopline=0)
-function! s:search(...)
-    let cnt      =            a:1 " required TODO: make optional with default 1?
-    let pattern  =            a:2
-    let flags    =            a:3
-    let stopline = a:0 >= 4 ? a:4 : 0
+" search for pattern using flags and optional count
+" args (pattern, flags, cnt=1)
+function! s:search(pattern, flags, ...)
+    let cnt = a:0 >= 1 ? a:1 : 1
 
     for _ in range(cnt)
-        let line = searchpos(pattern, flags, stopline)[0]
+        let line = searchpos(a:pattern, a:flags)[0]
         if line == 0 " not enough found
             return s:fail('search')
         endif
@@ -1150,7 +1147,7 @@ endfunction
 
 function! s:genNextPN(first) dict
     " echom 'PN ' . string(getpos('.')) . ' ' . self.trigger
-    if s:search(1, self.args.opening, 'W') > 0
+    if s:search(self.args.opening, 'W') > 0
         return targets#target#withError('no target')
     endif
 
@@ -1162,7 +1159,7 @@ function! s:genNextPN(first) dict
 endfunction
 
 function! s:genNextPL(first) dict
-    if s:search(1, self.args.closing, 'bW') > 0
+    if s:search(self.args.closing, 'bW') > 0
         return targets#target#withError('no target')
     endif
 
@@ -1202,7 +1199,7 @@ function! s:genNextQN(first) dict
         " echom 'no skip'
     endif
 
-    if s:search(cnt, self.args.delimiter, 'W') > 0
+    if s:search(self.args.delimiter, 'W', cnt) > 0
         return targets#target#withError('QN')
     endif
 
@@ -1221,7 +1218,7 @@ function! s:genNextQL(first) dict
         " echom 'no skip'
     endif
 
-    if s:search(cnt, self.args.delimiter, 'bW') > 0
+    if s:search(self.args.delimiter, 'bW', cnt) > 0
         return targets#target#withError('QL')
     endif
 
@@ -1246,7 +1243,7 @@ function! s:genNextSC(first) dict
 endfunction
 
 function! s:genNextSN(first) dict
-    if s:search(1, self.args.delimiter, 'W') > 0
+    if s:search(self.args.delimiter, 'W') > 0
         return targets#target#withError('no target')
     endif
 
@@ -1263,7 +1260,7 @@ function! s:genNextSL(first) dict
         let flags = 'bW'
     endif
 
-    if s:search(1, self.args.delimiter, flags) > 0
+    if s:search(self.args.delimiter, flags) > 0
         return targets#target#withError('no target')
     endif
 
@@ -1300,7 +1297,7 @@ function! s:genNextAN(first) dict
     " selected
     let pattern = s:argOpeningS
     while 1
-        if s:search(1, pattern, 'W') > 0
+        if s:search(pattern, 'W') > 0
             return targets#target#withError('no target')
         endif
 
@@ -1322,7 +1319,7 @@ function! s:genNextAL(first) dict
     " selected
     let pattern = s:argClosingS
     while 1
-        if s:search(1, pattern, 'bW') > 0
+        if s:search(pattern, 'bW') > 0
             return targets#target#withError('no target')
         endif
 
