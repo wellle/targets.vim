@@ -369,18 +369,17 @@ function! s:getMultiFactories(multi)
     return factories
 endfunction
 
-function! s:modifyDelimiter(kind, delimiter)
-    let delimiter = escape(a:delimiter, '.~\$')
-    if a:kind !=# 'q' || &quoteescape ==# ''
-        return delimiter
+function! s:quoteEscape(delimiter)
+    if &quoteescape ==# ''
+        return a:delimiter
     endif
 
     let escapedqe = escape(&quoteescape, ']^-\')
     let lookbehind = '[' . escapedqe . ']'
     if v:version >= 704
-        return lookbehind . '\@1<!' . delimiter
+        return lookbehind . '\@1<!' . a:delimiter
     else
-        return lookbehind . '\@<!'  . delimiter
+        return lookbehind . '\@<!'  . a:delimiter
     endif
 endfunction
 
@@ -887,9 +886,9 @@ endfunction
 
 function! s:newFactoryP(opening, closing)
     let args = {
-                \ 'opening': s:modifyDelimiter('p', a:opening),
-                \ 'closing': s:modifyDelimiter('p', a:closing),
-                \ 'trigger': s:modifyDelimiter('p', a:closing),
+                \ 'opening': a:opening,
+                \ 'closing': a:closing,
+                \ 'trigger': a:closing,
                 \ }
     let genFuncs = {
                 \ 'C': function('s:genNextPC'),
@@ -964,7 +963,7 @@ endfunction
 " quotes
 
 function! s:newFactoryQ(delimiter)
-    let args = {'delimiter': s:modifyDelimiter('q', a:delimiter)}
+    let args = {'delimiter': s:quoteEscape(a:delimiter)}
     let genFuncs = {
                 \ 'C': function('s:genNextQC'),
                 \ 'N': function('s:genNextQN'),
@@ -1033,7 +1032,7 @@ endfunction
 " separators
 
 function! s:newFactoryS(delimiter)
-    let args = {'delimiter': s:modifyDelimiter('s', a:delimiter)}
+    let args = {'delimiter': escape(a:delimiter, '.~\$')}
     let genFuncs = {
                 \ 'C': function('s:genNextSC'),
                 \ 'N': function('s:genNextSN'),
