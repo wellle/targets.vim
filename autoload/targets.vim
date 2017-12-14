@@ -277,81 +277,27 @@ function! s:findRawTarget(context, factories, which, count)
     return gen.nextN(a:count)
 endfunction
 
-" TODO: have this being set up by gen/factory
 function! s:modifyTarget(target, modifier)
     if a:target.state().isInvalid()
         return targets#target#withError('modifyTarget invalid: ' . a:target.error)
     endif
-    let target = a:target.copy()
     let kind = a:target.gen.kind
 
-    if kind ==# 'p'
-        if a:modifier ==# 'i'
-            return s:drop(target)
-        elseif a:modifier ==# 'a'
-            return target
-        elseif a:modifier ==# 'I'
-            return s:shrink(target)
-        elseif a:modifier ==# 'A'
-            return s:expand(target)
-        else
-            return targets#target#withError('modifyTarget p')
-        endif
-
-    elseif kind ==# 'q'
-        if a:modifier ==# 'i'
-            return s:drop(target)
-        elseif a:modifier ==# 'a'
-            return target
-        elseif a:modifier ==# 'I'
-            return s:shrink(target)
-        elseif a:modifier ==# 'A'
-            return s:expand(target)
-        else
-            return targets#target#withError('modifyTarget q')
-        endif
-
-    elseif kind ==# 's'
-        if a:modifier ==# 'i'
-            return s:drop(target)
-        elseif a:modifier ==# 'a'
-            return s:dropr(target)
-        elseif a:modifier ==# 'I'
-            return s:shrink(target)
-        elseif a:modifier ==# 'A'
-            return s:expands(target)
-        else
-            return targets#target#withError('modifyTarget s')
-        endif
-
-    elseif kind ==# 't'
-        if a:modifier ==# 'i'
-            return s:drop(s:innert(target))
-        elseif a:modifier ==# 'a'
-            return target
-        elseif a:modifier ==# 'I'
-            return s:shrink(s:innert(target))
-        elseif a:modifier ==# 'A'
-            return s:expand(target)
-        else
-            return targets#target#withError('modifyTarget t')
-        endif
-
-    elseif kind ==# 'a'
-        if a:modifier ==# 'i'
-            return s:drop(target)
-        elseif a:modifier ==# 'a'
-            return s:dropa(target)
-        elseif a:modifier ==# 'I'
-            return s:shrink(target)
-        elseif a:modifier ==# 'A'
-            return s:expand(target)
-        else
-            return targets#target#withError('modifyTarget a')
-        endif
+    let modFuncs = a:target.gen.modFuncs
+    if !has_key(modFuncs, a:modifier)
+        return targets#target#withError('modifyTarget')
     endif
 
-    return targets#target#withError('modifyTarget kind')
+    let Funcs = modFuncs[a:modifier]
+    if type(Funcs) == type(function('tr')) " single function
+        return Funcs(a:target.copy())
+    endif
+
+    let target = a:target.copy()
+    for Func in Funcs " list of functions
+        let target = Func(target)
+    endfor
+    return target
 endfunction
 
 function! s:getFactories(trigger)
@@ -861,6 +807,11 @@ endfunction
 " selection modifiers
 " ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
+" just returns the given target, added for consistency
+function! s:keep(target)
+    return a:target
+endfunction
+
 " drop delimiters left and right
 " remove last line of multiline selection if it consists of whitespace only
 " in   │   ┌─────┐
@@ -1053,12 +1004,13 @@ endfunction
 
 " returns a factory to create generators
 " TODO: remove kind later when we have modifyTarget functions per factory?
-function! s:newFactory(kind, trigger, args, genFuncs)
+function! s:newFactory(kind, trigger, args, genFuncs, modFuncs)
     return {
                 \ 'kind':     a:kind,
                 \ 'trigger':  a:trigger,
                 \ 'args':     a:args,
                 \ 'genFuncs': a:genFuncs,
+                \ 'modFuncs': a:modFuncs,
                 \
                 \ 'new':  function('s:factoryNew'),
                 \ }
@@ -1073,10 +1025,11 @@ function! s:factoryNew(oldpos, which) dict
                 \ 'oldpos':  a:oldpos,
                 \ 'which':   a:which,
                 \
-                \ 'kind':    self.kind,
-                \ 'trigger': self.trigger,
-                \ 'args':    self.args,
-                \ 'nexti':   self.genFuncs[a:which],
+                \ 'kind':     self.kind,
+                \ 'trigger':  self.trigger,
+                \ 'args':     self.args,
+                \ 'nexti':    self.genFuncs[a:which],
+                \ 'modFuncs': self.modFuncs,
                 \
                 \ 'next':   function('s:genNext'),
                 \ 'nextN':  function('s:genNextN'),
@@ -1114,14 +1067,20 @@ function! s:newFactoryP(opening, closing)
     let args = {
                 \ 'opening': s:modifyDelimiter('p', a:opening),
                 \ 'closing': s:modifyDelimiter('p', a:closing),
-                \ 'trigger': s:modifyDelimiter('p', a:closing)
+                \ 'trigger': s:modifyDelimiter('p', a:closing),
                 \ }
     let genFuncs = {
                 \ 'C': function('s:genNextPC'),
                 \ 'N': function('s:genNextPN'),
                 \ 'L': function('s:genNextPL'),
                 \ }
-    return s:newFactory('p', a:closing, args, genFuncs)
+    let modFuncs = {
+                \ 'i': function('s:drop'),
+                \ 'a': function('s:keep'),
+                \ 'I': function('s:shrink'),
+                \ 'A': function('s:expand'),
+                \ }
+    return s:newFactory('p', a:closing, args, genFuncs, modFuncs)
 endfunction
 
 " tag factory uses pair functions as well for now
@@ -1130,14 +1089,20 @@ function! s:newFactoryT()
     let args = {
                 \ 'opening': '<\a',
                 \ 'closing': '</\a\zs',
-                \ 'trigger': 't'
+                \ 'trigger': 't',
                 \ }
     let genFuncs = {
                 \ 'C': function('s:genNextPC'),
                 \ 'N': function('s:genNextPN'),
                 \ 'L': function('s:genNextPL'),
                 \ }
-    return s:newFactory('t', 't', args, genFuncs)
+    let modFuncs = {
+                \ 'i': [function('s:innert'), function('s:drop')],
+                \ 'a': [function('s:keep')],
+                \ 'I': [function('s:innert'), function('s:shrink')],
+                \ 'A': [function('s:expand')],
+                \ }
+    return s:newFactory('t', 't', args, genFuncs, modFuncs)
 endfunction
 
 function! s:genNextPC(first) dict
@@ -1183,7 +1148,13 @@ function! s:newFactoryQ(delimiter)
                 \ 'N': function('s:genNextQN'),
                 \ 'L': function('s:genNextQL'),
                 \ }
-    return s:newFactory('q', a:delimiter, args, genFuncs)
+    let modFuncs = {
+                \ 'i': function('s:drop'),
+                \ 'a': function('s:keep'),
+                \ 'I': function('s:shrink'),
+                \ 'A': function('s:expand'),
+                \ }
+    return s:newFactory('q', a:delimiter, args, genFuncs, modFuncs)
 endfunction
 
 function! s:genNextQC(first) dict
@@ -1246,7 +1217,13 @@ function! s:newFactoryS(delimiter)
                 \ 'N': function('s:genNextSN'),
                 \ 'L': function('s:genNextSL'),
                 \ }
-    return s:newFactory('s', a:delimiter, args, genFuncs)
+    let modFuncs = {
+                \ 'i': function('s:drop'),
+                \ 'a': function('s:dropr'),
+                \ 'I': function('s:shrink'),
+                \ 'A': function('s:expands'),
+                \ }
+    return s:newFactory('s', a:delimiter, args, genFuncs, modFuncs)
 endfunction
 
 function! s:genNextSC(first) dict
@@ -1293,7 +1270,13 @@ function! s:newFactoryA()
                 \ 'N': function('s:genNextAN'),
                 \ 'L': function('s:genNextAL'),
                 \ }
-    return s:newFactory('a', 'a', {}, genFuncs)
+    let modFuncs = {
+                \ 'i': function('s:drop'),
+                \ 'a': function('s:dropa'),
+                \ 'I': function('s:shrink'),
+                \ 'A': function('s:expand'),
+                \ }
+    return s:newFactory('a', 'a', {}, genFuncs, modFuncs)
 endfunction
 
 function! s:genNextAC(first) dict
