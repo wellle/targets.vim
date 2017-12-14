@@ -281,7 +281,6 @@ function! s:modifyTarget(target, modifier)
     if a:target.state().isInvalid()
         return targets#target#withError('modifyTarget invalid: ' . a:target.error)
     endif
-    let kind = a:target.gen.kind
 
     let modFuncs = a:target.gen.modFuncs
     if !has_key(modFuncs, a:modifier)
@@ -1003,10 +1002,8 @@ endfunction
 " TODO: move to new file and rename functions accordingly, make autoloaded?
 
 " returns a factory to create generators
-" TODO: remove kind later when we have modifyTarget functions per factory?
-function! s:newFactory(kind, trigger, args, genFuncs, modFuncs)
+function! s:newFactory(trigger, args, genFuncs, modFuncs)
     return {
-                \ 'kind':     a:kind,
                 \ 'trigger':  a:trigger,
                 \ 'args':     a:args,
                 \ 'genFuncs': a:genFuncs,
@@ -1025,7 +1022,6 @@ function! s:factoryNew(oldpos, which) dict
                 \ 'oldpos':  a:oldpos,
                 \ 'which':   a:which,
                 \
-                \ 'kind':     self.kind,
                 \ 'trigger':  self.trigger,
                 \ 'args':     self.args,
                 \ 'nexti':    self.genFuncs[a:which],
@@ -1080,7 +1076,7 @@ function! s:newFactoryP(opening, closing)
                 \ 'I': function('s:shrink'),
                 \ 'A': function('s:expand'),
                 \ }
-    return s:newFactory('p', a:closing, args, genFuncs, modFuncs)
+    return s:newFactory(a:closing, args, genFuncs, modFuncs)
 endfunction
 
 " tag factory uses pair functions as well for now
@@ -1102,7 +1098,7 @@ function! s:newFactoryT()
                 \ 'I': [function('s:innert'), function('s:shrink')],
                 \ 'A': [function('s:expand')],
                 \ }
-    return s:newFactory('t', 't', args, genFuncs, modFuncs)
+    return s:newFactory('t', args, genFuncs, modFuncs)
 endfunction
 
 function! s:genNextPC(first) dict
@@ -1154,7 +1150,7 @@ function! s:newFactoryQ(delimiter)
                 \ 'I': function('s:shrink'),
                 \ 'A': function('s:expand'),
                 \ }
-    return s:newFactory('q', a:delimiter, args, genFuncs, modFuncs)
+    return s:newFactory(a:delimiter, args, genFuncs, modFuncs)
 endfunction
 
 function! s:genNextQC(first) dict
@@ -1223,7 +1219,7 @@ function! s:newFactoryS(delimiter)
                 \ 'I': function('s:shrink'),
                 \ 'A': function('s:expands'),
                 \ }
-    return s:newFactory('s', a:delimiter, args, genFuncs, modFuncs)
+    return s:newFactory(a:delimiter, args, genFuncs, modFuncs)
 endfunction
 
 function! s:genNextSC(first) dict
@@ -1276,7 +1272,7 @@ function! s:newFactoryA()
                 \ 'I': function('s:shrink'),
                 \ 'A': function('s:expand'),
                 \ }
-    return s:newFactory('a', 'a', {}, genFuncs, modFuncs)
+    return s:newFactory('a', {}, genFuncs, modFuncs)
 endfunction
 
 function! s:genNextAC(first) dict
