@@ -1053,28 +1053,32 @@ endfunction
 
 " returns a factory to create generators
 " TODO: remove kind later when we have modifyTarget functions per factory?
-function! s:newFactory(kind, trigger, name, args)
+function! s:newFactory(kind, trigger, args, genFuncs)
     return {
-                \ 'kind':    a:kind,
-                \ 'trigger': a:trigger,
-                \ 'name':    a:name,
-                \ 'args':    a:args,
+                \ 'kind':     a:kind,
+                \ 'trigger':  a:trigger,
+                \ 'args':     a:args,
+                \ 'genFuncs': a:genFuncs,
                 \
-                \ 'new': function('s:factoryNew'),
+                \ 'new':  function('s:factoryNew'),
                 \ }
 endfunction
 
 " returns a target generator
+" TODO: remove duplicated factory fields and use factory itself?
+" or do a bit of this setup work "outside"?
 function! s:factoryNew(oldpos, which) dict
     return {
+                \ 'factory': self,
+                \ 'oldpos':  a:oldpos,
+                \ 'which':   a:which,
+                \
                 \ 'kind':    self.kind,
                 \ 'trigger': self.trigger,
-                \ 'name':    self.name . a:which,
                 \ 'args':    self.args,
-                \ 'oldpos':  a:oldpos,
+                \ 'nexti':   self.genFuncs[a:which],
                 \
                 \ 'next':   function('s:genNext'),
-                \ 'nexti':  function('s:genNext' . self.name . a:which),
                 \ 'nextN':  function('s:genNextN'),
                 \ 'target': function('s:genTarget')
                 \ }
@@ -1112,7 +1116,12 @@ function! s:newFactoryP(opening, closing)
                 \ 'closing': s:modifyDelimiter('p', a:closing),
                 \ 'trigger': s:modifyDelimiter('p', a:closing)
                 \ }
-    return s:newFactory('p', a:closing, 'P', args)
+    let genFuncs = {
+                \ 'C': function('s:genNextPC'),
+                \ 'N': function('s:genNextPN'),
+                \ 'L': function('s:genNextPL'),
+                \ }
+    return s:newFactory('p', a:closing, args, genFuncs)
 endfunction
 
 " tag factory uses pair functions as well for now
@@ -1123,7 +1132,12 @@ function! s:newFactoryT()
                 \ 'closing': '</\a\zs',
                 \ 'trigger': 't'
                 \ }
-    return s:newFactory('t', 't', 'P', args)
+    let genFuncs = {
+                \ 'C': function('s:genNextPC'),
+                \ 'N': function('s:genNextPN'),
+                \ 'L': function('s:genNextPL'),
+                \ }
+    return s:newFactory('t', 't', args, genFuncs)
 endfunction
 
 function! s:genNextPC(first) dict
@@ -1139,7 +1153,6 @@ function! s:genNextPC(first) dict
 endfunction
 
 function! s:genNextPN(first) dict
-    " echom 'PN ' . string(getpos('.')) . ' ' . self.trigger
     if s:search(self.args.opening, 'W') > 0
         return targets#target#withError('no target')
     endif
@@ -1147,7 +1160,6 @@ function! s:genNextPN(first) dict
     let oldpos = getpos('.')
     let target = s:selectp(1, self.args.trigger, self)
     call setpos('.', oldpos)
-    " echom 'ret ' . target.string()
     return target
 endfunction
 
@@ -1166,7 +1178,12 @@ endfunction
 
 function! s:newFactoryQ(delimiter)
     let args = {'delimiter': s:modifyDelimiter('q', a:delimiter)}
-    return s:newFactory('q', a:delimiter, 'Q', args)
+    let genFuncs = {
+                \ 'C': function('s:genNextQC'),
+                \ 'N': function('s:genNextQN'),
+                \ 'L': function('s:genNextQL'),
+                \ }
+    return s:newFactory('q', a:delimiter, args, genFuncs)
 endfunction
 
 function! s:genNextQC(first) dict
@@ -1224,7 +1241,12 @@ endfunction
 
 function! s:newFactoryS(delimiter)
     let args = {'delimiter': s:modifyDelimiter('s', a:delimiter)}
-    return s:newFactory('s', a:delimiter, 'S', args)
+    let genFuncs = {
+                \ 'C': function('s:genNextSC'),
+                \ 'N': function('s:genNextSN'),
+                \ 'L': function('s:genNextSL'),
+                \ }
+    return s:newFactory('s', a:delimiter, args, genFuncs)
 endfunction
 
 function! s:genNextSC(first) dict
@@ -1266,7 +1288,12 @@ endfunction
 " arguments
 
 function! s:newFactoryA()
-    return s:newFactory('a', 'a', 'A', {})
+    let genFuncs = {
+                \ 'C': function('s:genNextAC'),
+                \ 'N': function('s:genNextAN'),
+                \ 'L': function('s:genNextAL'),
+                \ }
+    return s:newFactory('a', 'a', {}, genFuncs)
 endfunction
 
 function! s:genNextAC(first) dict
