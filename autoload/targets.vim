@@ -17,13 +17,9 @@ function! s:setup()
                 \ 'tags':       function('s:newFactoryT'),
                 \ }
 
-    let s:argOpening   = get(g:, 'targets_argOpening', '[([]')
-    let s:argClosing   = get(g:, 'targets_argClosing', '[])]')
-    let s:argSeparator = get(g:, 'targets_argSeparator', ',')
-    let s:argOpeningS  = s:argOpening  . '\|' . s:argSeparator
-    let s:argClosingS  = s:argClosing  . '\|' . s:argSeparator
-    let s:argOuter     = s:argOpening  . '\|' . s:argClosing
-    let s:argAll       = s:argOpeningS . '\|' . s:argClosing
+    let g:targets_argOpening   = get(g:, 'targets_argOpening', '[([]')
+    let g:targets_argClosing   = get(g:, 'targets_argClosing', '[])]')
+    let g:targets_argSeparator = get(g:, 'targets_argSeparator', ',')
     let s:none         = 'a^' " matches nothing
 
     let s:rangeScores = {}
@@ -329,7 +325,7 @@ function! s:getNewFactories(trigger)
     endif
 
     if a:trigger ==# g:targets_argTrigger " TODO: does this work with custom trigger?
-        return [s:newFactoryA()]
+        return [s:newFactoryA(g:targets_argOpening, g:targets_argClosing, g:targets_argSeparator)]
     endif
 
     for pair in split(g:targets_pairs)
@@ -584,22 +580,22 @@ endfunction
 "   '>' select to the right (default)
 "   '<' select to the left (used when selecting or skipping to the left)
 "   '^' select up (surrounding argument, used for growing)
-function! s:selecta(direction, gen)
+function! s:selecta(direction) dict
     let oldpos = getpos('.')
 
-    let [opening, closing] = [s:argOpening, s:argClosing]
+    let [opening, closing] = [self.opening, self.closing]
     if a:direction ==# '^'
         if s:getchar() =~# closing
-            let [sl, sc, el, ec, err] = s:findArg(a:direction, 'cW', 'bW', 'bW', opening, closing)
+            let [sl, sc, el, ec, err] = self.findArg(a:direction, 'cW', 'bW', 'bW', opening, closing)
         else
-            let [sl, sc, el, ec, err] = s:findArg(a:direction, 'W', 'bcW', 'bW', opening, closing)
+            let [sl, sc, el, ec, err] = self.findArg(a:direction, 'W', 'bcW', 'bW', opening, closing)
         endif
         let message = 'selecta 1'
     elseif a:direction ==# '>'
-        let [sl, sc, el, ec, err] = s:findArg(a:direction, 'W', 'bW', 'bW', opening, closing)
+        let [sl, sc, el, ec, err] = self.findArg(a:direction, 'W', 'bW', 'bW', opening, closing)
         let message = 'selecta 2'
     elseif a:direction ==# '<' " like '>', but backwards
-        let [el, ec, sl, sc, err] = s:findArg(a:direction, 'bW', 'W', 'W', closing, opening)
+        let [el, ec, sl, sc, err] = self.findArg(a:direction, 'bW', 'W', 'W', closing, opening)
         let message = 'selecta 3'
     else
         return targets#target#withError('selecta')
@@ -610,26 +606,26 @@ function! s:selecta(direction, gen)
         return targets#target#withError(message)
     endif
 
-    return targets#target#fromValues(sl, sc, el, ec, a:gen)
+    return targets#target#fromValues(sl, sc, el, ec, self)
 endfunction
 
 " find an argument around the cursor given a direction (see s:selecta)
 " uses flags1 to search for end to the right; flags1 and flags2 to search for
 " start to the left
-function! s:findArg(direction, flags1, flags2, flags3, opening, closing)
+function! s:findArg(direction, flags1, flags2, flags3, opening, closing) dict
     let oldpos = getpos('.')
     let char = s:getchar()
-    let separator = s:argSeparator
+    let separator = self.separator
 
     if char =~# a:closing && a:direction !=# '^' " started on closing, but not up
         let [el, ec] = oldpos[1:2] " use old position as end
     else " find end to the right
-        let [el, ec, err] = s:findArgBoundary(a:flags1, a:flags1, a:opening, a:closing)
+        let [el, ec, err] = s:findArgBoundary(a:flags1, a:flags1, a:opening, a:closing, self.all, self.separator)
         if err > 0 " no closing found
             return [0, 0, 0, 0, targets#util#fail('findArg 1', a:)]
         endif
 
-        let separator = s:argSeparator
+        let separator = self.separator
         if char =~# a:opening || char =~# separator " started on opening or separator
             let [sl, sc] = oldpos[1:2] " use old position as start
             return [sl, sc, el, ec, 0]
@@ -639,7 +635,7 @@ function! s:findArg(direction, flags1, flags2, flags3, opening, closing)
     endif
 
     " find start to the left
-    let [sl, sc, err] = s:findArgBoundary(a:flags2, a:flags3, a:closing, a:opening)
+    let [sl, sc, err] = s:findArgBoundary(a:flags2, a:flags3, a:closing, a:opening, self.all, self.separator)
     if err > 0 " no opening found
         return [0, 0, 0, 0, targets#util#fail('findArg 2')]
     endif
@@ -650,40 +646,37 @@ endfunction
 " find arg boundary by search for `finish` or `separator` while skipping
 " matching `skip`s
 " example: find ',' or ')' while skipping a pair when finding '('
-" args (flags1, flags2, skip, finish, all=s:argAll,
-" separator=s:argSeparator, cnt=2)
+" args (flags1, flags2, skip, finish, all=all,
+" separator=separator, cnt=2)
 " return (line, column, err)
-function! s:findArgBoundary(flags1, flags2, skip, finish, ...)
-    let all       = a:0 >= 1 ? a:1 : s:argAll
-    let separator = a:0 >= 2 ? a:2 : s:argSeparator
-    let cnt       = a:0 >= 3 ? a:3 : 1
+" TODO: avoid the need for none by implicitly using it as default? (only try
+" to match finish if provided, otherwise just skip the check)
+function! s:findArgBoundary(flags1, flags2, skip, finish, all, separator)
 
     let [tl, rl, rc] = [0, 0, 0]
-    for _ in range(cnt)
-        let [rl, rc] = searchpos(all, a:flags1)
-        while 1
-            if rl == 0
-                return [0, 0, targets#util#fail('findArgBoundary 1', a:)]
-            endif
+    let [rl, rc] = searchpos(a:all, a:flags1)
+    while 1
+        if rl == 0
+            return [0, 0, targets#util#fail('findArgBoundary 1', a:)]
+        endif
 
-            let char = s:getchar()
-            if char =~# separator
-                if tl == 0
-                    let [tl, tc] = [rl, rc]
-                endif
-            elseif char =~# a:finish
-                if tl > 0
-                    return [tl, tc, 0]
-                endif
-                break
-            elseif char =~# a:skip
-                silent! keepjumps normal! %
-            else
-                return [0, 0, targets#util#fail('findArgBoundary 2')]
+        let char = s:getchar()
+        if char =~# a:separator
+            if tl == 0
+                let [tl, tc] = [rl, rc]
             endif
-            let [rl, rc] = searchpos(all, a:flags2)
-        endwhile
-    endfor
+        elseif char =~# a:finish
+            if tl > 0
+                return [tl, tc, 0]
+            endif
+            break
+        elseif char =~# a:skip
+            silent! keepjumps normal! %
+        else
+            return [0, 0, targets#util#fail('findArgBoundary 2')]
+        endif
+        let [rl, rc] = searchpos(a:all, a:flags2)
+    endwhile
 
     return [rl, rc, 0]
 endfunction
@@ -795,6 +788,7 @@ endfunction
 " TODO: move to new file and rename functions accordingly, make autoloaded?
 
 " returns a factory to create generators
+" TODO: can we drop trigger and compare factories differently?
 function! s:newFactory(trigger, args, genFuncs, modFuncs)
     return {
                 \ 'trigger':  a:trigger,
@@ -810,12 +804,11 @@ endfunction
 " TODO: remove duplicated factory fields and use factory itself?
 " or do a bit of this setup work "outside"?
 function! s:factoryNew(oldpos, which) dict
-    return {
+    let gen = {
                 \ 'factory': self,
                 \ 'oldpos':  a:oldpos,
                 \ 'which':   a:which,
                 \
-                \ 'trigger':  self.trigger,
                 \ 'args':     self.args,
                 \ 'nexti':    self.genFuncs[a:which],
                 \ 'modFuncs': self.modFuncs,
@@ -824,6 +817,19 @@ function! s:factoryNew(oldpos, which) dict
                 \ 'nextN':  function('s:genNextN'),
                 \ 'target': function('s:genTarget')
                 \ }
+
+    " add args as top level fields of gen
+    for key in keys(self.args)
+        if has_key(gen, key)
+            " TODO: use more obscure internal keys to avoid collisions?
+            echom 'duplicate gen key: ' . key
+        else
+            let Value = self.args[key]
+            let gen[key] = Value
+        endif
+    endfor
+
+    return gen
 endfunction
 
 function! s:genNext(first) dict
@@ -901,29 +907,29 @@ function! s:genNextPC(first) dict
         let cnt = 2
     endif
 
-    let target = s:selectp(cnt, self.args.trigger, self)
+    let target = s:selectp(cnt, self.trigger, self)
     call target.cursorE() " keep going from right end
     return target
 endfunction
 
 function! s:genNextPN(first) dict
-    if targets#util#search(self.args.opening, 'W') > 0
+    if targets#util#search(self.opening, 'W') > 0
         return targets#target#withError('no target')
     endif
 
     let oldpos = getpos('.')
-    let target = s:selectp(1, self.args.trigger, self)
+    let target = s:selectp(1, self.trigger, self)
     call setpos('.', oldpos)
     return target
 endfunction
 
 function! s:genNextPL(first) dict
-    if targets#util#search(self.args.closing, 'bW') > 0
+    if targets#util#search(self.closing, 'bW') > 0
         return targets#target#withError('no target')
     endif
 
     let oldpos = getpos('.')
-    let target = s:selectp(1, self.args.trigger, self)
+    let target = s:selectp(1, self.trigger, self)
     call setpos('.', oldpos)
     return target
 endfunction
@@ -951,8 +957,8 @@ function! s:genNextQC(first) dict
         return targets#target#withError('only one current quote')
     endif
 
-    let dir = s:quoteDir(self.args.delimiter)[0]
-    let self.currentTarget = targets#util#select(self.args.delimiter, self.args.delimiter, dir, self)
+    let dir = s:quoteDir(self.delimiter)[0]
+    let self.currentTarget = targets#util#select(self.delimiter, self.delimiter, dir, self)
     return self.currentTarget
 endfunction
 
@@ -961,7 +967,7 @@ function! s:genNextQN(first) dict
         " do outside somehow? if so remember to reset pos before
         " TODO: do on init somehow? that way we don't need to do it three
         " times for seekipng
-        let [_, self.rate, _, skipR, _] = s:quoteDir(self.args.delimiter)
+        let [_, self.rate, _, skipR, _] = s:quoteDir(self.delimiter)
         let cnt = self.rate - skipR " skip initially once
         " echom 'skip'
     else
@@ -969,18 +975,18 @@ function! s:genNextQN(first) dict
         " echom 'no skip'
     endif
 
-    if targets#util#search(self.args.delimiter, 'W', cnt) > 0
+    if targets#util#search(self.delimiter, 'W', cnt) > 0
         return targets#target#withError('QN')
     endif
 
-    let target = targets#util#select(self.args.delimiter, self.args.delimiter, '>', self)
+    let target = targets#util#select(self.delimiter, self.delimiter, '>', self)
     call target.cursorS() " keep going from left end TODO: is this call needed?
     return target
 endfunction
 
 function! s:genNextQL(first) dict
     if !exists('self.rate')
-        let [_, self.rate, skipL, _, _] = s:quoteDir(self.args.delimiter)
+        let [_, self.rate, skipL, _, _] = s:quoteDir(self.delimiter)
         let cnt = self.rate - skipL " skip initially once
         " echom 'skip'
     else
@@ -988,11 +994,11 @@ function! s:genNextQL(first) dict
         " echom 'no skip'
     endif
 
-    if targets#util#search(self.args.delimiter, 'bW', cnt) > 0
+    if targets#util#search(self.delimiter, 'bW', cnt) > 0
         return targets#target#withError('QL')
     endif
 
-    let target = targets#util#select(self.args.delimiter, self.args.delimiter, '<', self)
+    let target = targets#util#select(self.delimiter, self.delimiter, '<', self)
     call target.cursorE() " keep going from right end TODO: is this call needed?
     return target
 endfunction
@@ -1020,16 +1026,16 @@ function! s:genNextSC(first) dict
         return targets#target#withError('only one current separator')
     endif
 
-    return targets#util#select(self.args.delimiter, self.args.delimiter, '>', self)
+    return targets#util#select(self.delimiter, self.delimiter, '>', self)
 endfunction
 
 function! s:genNextSN(first) dict
-    if targets#util#search(self.args.delimiter, 'W') > 0
+    if targets#util#search(self.delimiter, 'W') > 0
         return targets#target#withError('no target')
     endif
 
     let oldpos = getpos('.')
-    let target = targets#util#select(self.args.delimiter, self.args.delimiter, '>', self)
+    let target = targets#util#select(self.delimiter, self.delimiter, '>', self)
     call setpos('.', oldpos)
     return target
 endfunction
@@ -1041,19 +1047,31 @@ function! s:genNextSL(first) dict
         let flags = 'bW'
     endif
 
-    if targets#util#search(self.args.delimiter, flags) > 0
+    if targets#util#search(self.delimiter, flags) > 0
         return targets#target#withError('no target')
     endif
 
     let oldpos = getpos('.')
-    let target = targets#util#select(self.args.delimiter, self.args.delimiter, '<', self)
+    let target = targets#util#select(self.delimiter, self.delimiter, '<', self)
     call setpos('.', oldpos)
     return target
 endfunction
 
 " arguments
 
-function! s:newFactoryA()
+function! s:newFactoryA(opening, closing, separator)
+    let args = {
+                \ 'opening':   a:opening,
+                \ 'closing':   a:closing,
+                \ 'separator': a:separator,
+                \ 'openingS':  a:opening . '\|' . a:separator,
+                \ 'closingS':  a:closing . '\|' . a:separator,
+                \ 'all':       a:opening . '\|' . a:separator . '\|' . a:closing,
+                \ 'outer':     a:opening . '\|' . a:closing,
+                \
+                \ 'select':  function('s:selecta'),
+                \ 'findArg': function('s:findArg'),
+                \ }
     let genFuncs = {
                 \ 'C': function('s:genNextAC'),
                 \ 'N': function('s:genNextAN'),
@@ -1061,22 +1079,22 @@ function! s:newFactoryA()
                 \ }
     let modFuncs = {
                 \ 'i': function('targets#modify#drop'),
-                \ 'a': function('targets#modify#dropa', [s:argSeparator]),
+                \ 'a': function('targets#modify#dropa', [a:separator]),
                 \ 'I': function('targets#modify#shrink'),
                 \ 'A': function('targets#modify#expand'),
                 \ }
-    return s:newFactory('a', {}, genFuncs, modFuncs)
+    return s:newFactory('a', args, genFuncs, modFuncs)
 endfunction
 
 function! s:genNextAC(first) dict
     if a:first
-        let target = s:selecta('^', self)
+        let target = self.select('^')
     else
-        if s:findArgBoundary('cW', 'cW', s:argOpening, s:argClosing, s:argOuter, s:none, 1)[2] > 0
+        if s:findArgBoundary('cW', 'cW', self.opening, self.closing, self.outer, s:none)[2] > 0
             return targets#target#withError('AC 1')
         endif
         silent! execute "normal! 1 "
-        let target = s:selecta('<', self)
+        let target = self.select('<')
     endif
 
     call target.cursorE() " keep going from right end
@@ -1087,21 +1105,21 @@ function! s:genNextAN(first) dict
     " search for opening or separator, try to select argument from there
     " if that fails, keep searching for opening until an argument can be
     " selected
-    let pattern = s:argOpeningS
+    let pattern = self.openingS
     while 1
         if targets#util#search(pattern, 'W') > 0
             return targets#target#withError('no target')
         endif
 
         let oldpos = getpos('.')
-        let target = s:selecta('>', self)
+        let target = self.select('>')
         call setpos('.', oldpos)
 
         if target.state().isValid()
             return target
         endif
 
-        let pattern = s:argOpening
+        let pattern = self.opening
     endwhile
 endfunction
 
@@ -1109,21 +1127,21 @@ function! s:genNextAL(first) dict
     " search for closing or separator, try to select argument from there
     " if that fails, keep searching for closing until an argument can be
     " selected
-    let pattern = s:argClosingS
+    let pattern = self.closingS
     while 1
         if targets#util#search(pattern, 'bW') > 0
             return targets#target#withError('no target')
         endif
 
         let oldpos = getpos('.')
-        let target = s:selecta('<', self)
+        let target = self.select('<')
         call setpos('.', oldpos)
 
         if target.state().isValid()
             return target
         endif
 
-        let pattern = s:argClosing
+        let pattern = self.closing
     endwhile
 endfunction
 
@@ -1151,7 +1169,7 @@ endfunction
 function! s:multiGenNext(first) dict
     if a:first
         for gen in self.gens
-            let first = s:newSelection || s:lastRawTarget.gen.trigger != gen.trigger
+            let first = s:newSelection || s:lastRawTarget.gen.factory.trigger != gen.factory.trigger
             call gen.next(first)
         endfor
     else
