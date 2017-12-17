@@ -12,7 +12,7 @@ function! s:setup()
     let s:registry = {
                 \ 'pairs':      function('targets#sources#pairs#new'),
                 \ 'tags':       function('targets#sources#tags#new'),
-                \ 'quotes':     function('s:newFactoryQ'),
+                \ 'quotes':     function('targets#sources#quotes#new'),
                 \ 'separators': function('s:newFactoryS'),
                 \ 'arguments':  function('s:newFactoryA'),
                 \ }
@@ -54,7 +54,7 @@ function! s:setup()
     "      (2: double speed, skip pseudo quotes)
     "   l: skip first quote when going left ("last" quote objects)
     "      (r: skip once when going right ("next"); b: both; n: none)
-    let s:quoteDirsConf = get(g:, 'targets_quoteDirs', {
+    let g:targets_quoteDirs = get(g:, 'targets_quoteDirs', {
                 \ 'r1n': ['001', '201', '100', '102'],
                 \ 'r1l': ['010', '012', '111', '210', '212'],
                 \ 'r2n': ['101'],
@@ -63,24 +63,6 @@ function! s:setup()
                 \ 'l2r': ['110', '112'],
                 \ 'n2b': ['002', '200', '202'],
                 \ })
-
-    " args in order: dir, rate, skipL, skipR, error
-    let s:quoteArgs = {
-                \ 'r1n': ['>', 1, 0, 0, ''],
-                \ 'r1l': ['>', 1, 1, 0, ''],
-                \ 'r2n': ['>', 2, 0, 0, ''],
-                \ 'r2l': ['>', 2, 1, 0, ''],
-                \ 'r2b': ['>', 2, 1, 1, ''],
-                \ 'l2r': ['<', 2, 0, 1, ''],
-                \ 'n2b': [ '', 2, 1, 1, ''],
-                \ }
-    let s:quoteDirs = {}
-    for key in keys(s:quoteArgs)
-        let args = s:quoteArgs[key]
-        for rep in get(s:quoteDirsConf, key, [])
-            let s:quoteDirs[rep] = args
-        endfor
-    endfor
 
     let g:targets_multis = get(g:, 'targets_multis', {
                 \ 'b': { 'pairs':  [['(', ')'], ['[', ']'], ['{', '}']], },
@@ -339,7 +321,7 @@ function! s:getNewFactories(trigger)
     for quote in split(g:targets_quotes)
         for trigger in split(quote, '\zs')
             if trigger ==# a:trigger
-                return [s:newFactoryQ(quote[0])]
+                return [targets#sources#quotes#new(quote[0])]
             endif
         endfor
     endfor
@@ -363,20 +345,6 @@ function! s:getMultiFactories(multi)
         endfor
     endfor
     return factories
-endfunction
-
-function! s:quoteEscape(delimiter)
-    if &quoteescape ==# ''
-        return a:delimiter
-    endif
-
-    let escapedqe = escape(&quoteescape, ']^-\')
-    let lookbehind = '[' . escapedqe . ']'
-    if v:version >= 704
-        return lookbehind . '\@1<!' . a:delimiter
-    else
-        return lookbehind . '\@<!'  . a:delimiter
-    endif
 endfunction
 
 " return 0 if the selection changed since the last invocation. used for
@@ -528,31 +496,6 @@ function! targets#undo(lastseq)
     if undotree().seq_cur > a:lastseq
         silent! execute "normal! u"
     endif
-endfunction
-
-" returns [dir, rate, skipL, skipR, error]
-function! s:quoteDir(delimiter)
-    let line = getline('.')
-    let col = col('.')
-
-    " cut line in left of, on and right of cursor
-    let left = col > 1 ? line[:col-2] : ""
-    let cursor = line[col-1]
-    let right = line[col :]
-
-    " how many delitimers left, on and right of cursor
-    let lc = s:count(a:delimiter, left)
-    let cc = s:count(a:delimiter, cursor)
-    let rc = s:count(a:delimiter, right)
-
-    " truncate counts
-    let lc = lc == 0 ? 0 : lc % 2 == 0 ? 2 : 1
-    let rc = rc == 0 ? 0 : rc % 2 == 0 ? 2 : 1
-
-    let key = lc . cc . rc
-    let defaultValues = ['', 0, 0, 0, 'bad key: ' . key]
-    let [dir, rate, skipL, skipR, error] = get(s:quoteDirs, key, defaultValues)
-    return [dir, rate, skipL, skipR, error]
 endfunction
 
 " match selectors
@@ -762,79 +705,6 @@ endfunction
 " returns the character under the cursor
 function! s:getchar()
     return getline('.')[col('.')-1]
-endfunction
-
-function! s:count(char, text)
-    return len(split(a:text, a:char, 1)) - 1
-endfunction
-
-" quotes
-
-function! s:newFactoryQ(delimiter)
-    let args = {'delimiter': s:quoteEscape(a:delimiter)}
-    let genFuncs = {
-                \ 'C': function('s:genNextQC'),
-                \ 'N': function('s:genNextQN'),
-                \ 'L': function('s:genNextQL'),
-                \ }
-    let modFuncs = {
-                \ 'i': function('targets#modify#drop'),
-                \ 'a': function('targets#modify#keep'),
-                \ 'I': function('targets#modify#shrink'),
-                \ 'A': function('targets#modify#expand'),
-                \ }
-    return targets#factory#new(a:delimiter, args, genFuncs, modFuncs)
-endfunction
-
-function! s:genNextQC(first) dict
-    if !a:first
-        return targets#target#withError('only one current quote')
-    endif
-
-    let dir = s:quoteDir(self.delimiter)[0]
-    let self.currentTarget = targets#util#select(self.delimiter, self.delimiter, dir, self)
-    return self.currentTarget
-endfunction
-
-function! s:genNextQN(first) dict
-    if !exists('self.rate')
-        " do outside somehow? if so remember to reset pos before
-        " TODO: do on init somehow? that way we don't need to do it three
-        " times for seekipng
-        let [_, self.rate, _, skipR, _] = s:quoteDir(self.delimiter)
-        let cnt = self.rate - skipR " skip initially once
-        " echom 'skip'
-    else
-        let cnt = self.rate " then go by rate
-        " echom 'no skip'
-    endif
-
-    if targets#util#search(self.delimiter, 'W', cnt) > 0
-        return targets#target#withError('QN')
-    endif
-
-    let target = targets#util#select(self.delimiter, self.delimiter, '>', self)
-    call target.cursorS() " keep going from left end TODO: is this call needed?
-    return target
-endfunction
-
-function! s:genNextQL(first) dict
-    if !exists('self.rate')
-        let [_, self.rate, skipL, _, _] = s:quoteDir(self.delimiter)
-        let cnt = self.rate - skipL " skip initially once
-        " echom 'skip'
-    else
-        let cnt = self.rate " then go by rate
-        " echom 'no skip'
-    endif
-
-    if targets#util#search(self.delimiter, 'bW', cnt) > 0
-        return targets#target#withError('QL')
-    endif
-
-    let target = targets#util#select(self.delimiter, self.delimiter, '<', self)
-    call target.cursorE() " keep going from right end TODO: is this call needed?
-    return target
 endfunction
 
 " separators
