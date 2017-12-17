@@ -477,7 +477,7 @@ function! s:abortMatch(context, message)
     " trigger reselect if called from xmap
     call s:triggerReselect(a:context)
 
-    return s:fail(a:message)
+    return targets#util#fail(a:message)
 endfunction
 
 " feed keys to call undo after aborted operation and clear the command line
@@ -626,7 +626,7 @@ function! s:findArg(direction, flags1, flags2, flags3, opening, closing)
     else " find end to the right
         let [el, ec, err] = s:findArgBoundary(a:flags1, a:flags1, a:opening, a:closing)
         if err > 0 " no closing found
-            return [0, 0, 0, 0, s:fail('findArg 1', a:)]
+            return [0, 0, 0, 0, targets#util#fail('findArg 1', a:)]
         endif
 
         let separator = s:argSeparator
@@ -641,7 +641,7 @@ function! s:findArg(direction, flags1, flags2, flags3, opening, closing)
     " find start to the left
     let [sl, sc, err] = s:findArgBoundary(a:flags2, a:flags3, a:closing, a:opening)
     if err > 0 " no opening found
-        return [0, 0, 0, 0, s:fail('findArg 2')]
+        return [0, 0, 0, 0, targets#util#fail('findArg 2')]
     endif
 
     return [sl, sc, el, ec, 0]
@@ -663,7 +663,7 @@ function! s:findArgBoundary(flags1, flags2, skip, finish, ...)
         let [rl, rc] = searchpos(all, a:flags1)
         while 1
             if rl == 0
-                return [0, 0, s:fail('findArgBoundary 1', a:)]
+                return [0, 0, targets#util#fail('findArgBoundary 1', a:)]
             endif
 
             let char = s:getchar()
@@ -679,7 +679,7 @@ function! s:findArgBoundary(flags1, flags2, skip, finish, ...)
             elseif char =~# a:skip
                 silent! keepjumps normal! %
             else
-                return [0, 0, s:fail('findArgBoundary 2')]
+                return [0, 0, targets#util#fail('findArgBoundary 2')]
             endif
             let [rl, rc] = searchpos(all, a:flags2)
         endwhile
@@ -786,19 +786,6 @@ endfunction
 " returns the character under the cursor
 function! s:getchar()
     return getline('.')[col('.')-1]
-endfunction
-
-" search for pattern using flags and optional count
-" args (pattern, flags, cnt=1)
-function! s:search(pattern, flags, ...)
-    let cnt = a:0 >= 1 ? a:1 : 1
-
-    for _ in range(cnt)
-        let line = searchpos(a:pattern, a:flags)[0]
-        if line == 0 " not enough found
-            return s:fail('search')
-        endif
-    endfor
 endfunction
 
 function! s:count(char, text)
@@ -920,7 +907,7 @@ function! s:genNextPC(first) dict
 endfunction
 
 function! s:genNextPN(first) dict
-    if s:search(self.args.opening, 'W') > 0
+    if targets#util#search(self.args.opening, 'W') > 0
         return targets#target#withError('no target')
     endif
 
@@ -931,7 +918,7 @@ function! s:genNextPN(first) dict
 endfunction
 
 function! s:genNextPL(first) dict
-    if s:search(self.args.closing, 'bW') > 0
+    if targets#util#search(self.args.closing, 'bW') > 0
         return targets#target#withError('no target')
     endif
 
@@ -982,7 +969,7 @@ function! s:genNextQN(first) dict
         " echom 'no skip'
     endif
 
-    if s:search(self.args.delimiter, 'W', cnt) > 0
+    if targets#util#search(self.args.delimiter, 'W', cnt) > 0
         return targets#target#withError('QN')
     endif
 
@@ -1001,7 +988,7 @@ function! s:genNextQL(first) dict
         " echom 'no skip'
     endif
 
-    if s:search(self.args.delimiter, 'bW', cnt) > 0
+    if targets#util#search(self.args.delimiter, 'bW', cnt) > 0
         return targets#target#withError('QL')
     endif
 
@@ -1037,7 +1024,7 @@ function! s:genNextSC(first) dict
 endfunction
 
 function! s:genNextSN(first) dict
-    if s:search(self.args.delimiter, 'W') > 0
+    if targets#util#search(self.args.delimiter, 'W') > 0
         return targets#target#withError('no target')
     endif
 
@@ -1054,7 +1041,7 @@ function! s:genNextSL(first) dict
         let flags = 'bW'
     endif
 
-    if s:search(self.args.delimiter, flags) > 0
+    if targets#util#search(self.args.delimiter, flags) > 0
         return targets#target#withError('no target')
     endif
 
@@ -1102,7 +1089,7 @@ function! s:genNextAN(first) dict
     " selected
     let pattern = s:argOpeningS
     while 1
-        if s:search(pattern, 'W') > 0
+        if targets#util#search(pattern, 'W') > 0
             return targets#target#withError('no target')
         endif
 
@@ -1124,7 +1111,7 @@ function! s:genNextAL(first) dict
     " selected
     let pattern = s:argClosingS
     while 1
-        if s:search(pattern, 'bW') > 0
+        if targets#util#search(pattern, 'bW') > 0
             return targets#target#withError('no target')
         endif
 
@@ -1210,24 +1197,6 @@ function! s:contextWithOldpos(oldpos) dict
     let context = deepcopy(self)
     let context.oldpos = a:oldpos
     return context
-endfunction
-
-" return 1 and send a message to s:debug
-" args (message, parameters=nil)
-function! s:fail(message, ...)
-    let message = 'fail ' . a:message
-    let message .= a:0 >= 1 ? ' ' . string(a:1) : ''
-    call s:debug(message)
-    return 1
-endfunction
-
-function! s:print(...)
-    echom string(a:)
-endfunction
-
-" useful for debugging
-function! s:debug(message)
-    " echom a:message
 endfunction
 
 call s:setup()

@@ -17,3 +17,34 @@ function! targets#util#select(opening, closing, direction, gen)
     endif
 endfunction
 
+" search for pattern using flags and optional count
+" args (pattern, flags, cnt=1)
+function! targets#util#search(pattern, flags, ...)
+    let cnt = a:0 >= 1 ? a:1 : 1
+
+    for _ in range(cnt)
+        let line = search(a:pattern, a:flags)
+        if line == 0 " not enough found
+            return targets#util#fail('search')
+        endif
+    endfor
+endfunction
+
+" return 1 and send a message to targets#util#debug
+" args (message, parameters=nil)
+function! targets#util#fail(message, ...)
+    let message = 'fail ' . a:message
+    let message .= a:0 >= 1 ? ' ' . string(a:1) : ''
+    call targets#util#debug(message)
+    return 1
+endfunction
+
+function! targets#util#print(...)
+    echom string(a:)
+endfunction
+
+" useful for debugging
+function! targets#util#debug(message)
+    " echom a:message
+endfunction
+
