@@ -13,7 +13,7 @@ function! s:setup()
                 \ 'pairs':      function('targets#sources#pairs#new'),
                 \ 'tags':       function('targets#sources#tags#new'),
                 \ 'quotes':     function('targets#sources#quotes#new'),
-                \ 'separators': function('s:newFactoryS'),
+                \ 'separators': function('targets#sources#separators#new'),
                 \ 'arguments':  function('s:newFactoryA'),
                 \ }
 
@@ -329,7 +329,7 @@ function! s:getNewFactories(trigger)
     for separator in split(g:targets_separators)
         for trigger in split(separator, '\zs')
             if trigger ==# a:trigger
-                return [s:newFactoryS(separator[0])]
+                return [targets#sources#separators#new(separator[0])]
             endif
         endfor
     endfor
@@ -705,60 +705,6 @@ endfunction
 " returns the character under the cursor
 function! s:getchar()
     return getline('.')[col('.')-1]
-endfunction
-
-" separators
-
-function! s:newFactoryS(delimiter)
-    let args = {'delimiter': escape(a:delimiter, '.~\$')}
-    let genFuncs = {
-                \ 'C': function('s:genNextSC'),
-                \ 'N': function('s:genNextSN'),
-                \ 'L': function('s:genNextSL'),
-                \ }
-    let modFuncs = {
-                \ 'i': function('targets#modify#drop'),
-                \ 'a': function('targets#modify#dropr'),
-                \ 'I': function('targets#modify#shrink'),
-                \ 'A': function('targets#modify#expands'),
-                \ }
-    return targets#factory#new(a:delimiter, args, genFuncs, modFuncs)
-endfunction
-
-function! s:genNextSC(first) dict
-    if !a:first
-        return targets#target#withError('only one current separator')
-    endif
-
-    return targets#util#select(self.delimiter, self.delimiter, '>', self)
-endfunction
-
-function! s:genNextSN(first) dict
-    if targets#util#search(self.delimiter, 'W') > 0
-        return targets#target#withError('no target')
-    endif
-
-    let oldpos = getpos('.')
-    let target = targets#util#select(self.delimiter, self.delimiter, '>', self)
-    call setpos('.', oldpos)
-    return target
-endfunction
-
-function! s:genNextSL(first) dict
-    if a:first
-        let flags = 'cbW' " allow separator under cursor on first iteration
-    else
-        let flags = 'bW'
-    endif
-
-    if targets#util#search(self.delimiter, flags) > 0
-        return targets#target#withError('no target')
-    endif
-
-    let oldpos = getpos('.')
-    let target = targets#util#select(self.delimiter, self.delimiter, '<', self)
-    call setpos('.', oldpos)
-    return target
 endfunction
 
 " arguments
