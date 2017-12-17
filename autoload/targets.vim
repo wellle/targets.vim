@@ -10,11 +10,11 @@ set cpo&vim
 function! s:setup()
     " maps kind to factory constructor
     let s:registry = {
-                \ 'pairs':      function('s:newFactoryP'),
+                \ 'pairs':      function('targets#sources#pairs#new'),
+                \ 'tags':       function('targets#sources#tags#new'),
                 \ 'quotes':     function('s:newFactoryQ'),
                 \ 'separators': function('s:newFactoryS'),
                 \ 'arguments':  function('s:newFactoryA'),
-                \ 'tags':       function('s:newFactoryT'),
                 \ }
 
     let g:targets_argOpening   = get(g:, 'targets_argOpening', '[([]')
@@ -321,7 +321,7 @@ function! s:getNewFactories(trigger)
 
     " check more specific ones first for #145
     if a:trigger ==# g:targets_tagTrigger " TODO: does this work with custom trigger?
-        return [s:newFactoryT()]
+        return [targets#sources#tags#new()]
     endif
 
     if a:trigger ==# g:targets_argTrigger " TODO: does this work with custom trigger?
@@ -331,7 +331,7 @@ function! s:getNewFactories(trigger)
     for pair in split(g:targets_pairs)
         for trigger in split(pair, '\zs')
             if trigger ==# a:trigger
-                return [s:newFactoryP(pair[0], pair[1])]
+                return [targets#sources#pairs#new(pair[0], pair[1])]
             endif
         endfor
     endfor
@@ -558,23 +558,6 @@ endfunction
 " match selectors
 " ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
-" select a pair around the cursor
-" args (count, trigger)
-function! s:selectp(count, trigger, gen)
-    " try to select pair
-    silent! execute 'keepjumps normal! v' . a:count . 'a' . a:trigger
-    let [el, ec] = getpos('.')[1:2]
-    silent! normal! o
-    let [sl, sc] = getpos('.')[1:2]
-    silent! normal! v
-
-    if sc == ec && sl == el
-        return targets#target#withError('selectp')
-    endif
-
-    return targets#target#fromValues(sl, sc, el, ec, a:gen)
-endfunction
-
 " select an argument around the cursor
 " parameter direction decides where to select when invoked on a separator:
 "   '>' select to the right (default)
@@ -783,86 +766,6 @@ endfunction
 
 function! s:count(char, text)
     return len(split(a:text, a:char, 1)) - 1
-endfunction
-
-" TODO: use some templating here to avoid repetition?
-
-" pairs
-
-function! s:newFactoryP(opening, closing)
-    let args = {
-                \ 'opening': a:opening,
-                \ 'closing': a:closing,
-                \ 'trigger': a:closing,
-                \ }
-    let genFuncs = {
-                \ 'C': function('s:genNextPC'),
-                \ 'N': function('s:genNextPN'),
-                \ 'L': function('s:genNextPL'),
-                \ }
-    let modFuncs = {
-                \ 'i': function('targets#modify#drop'),
-                \ 'a': function('targets#modify#keep'),
-                \ 'I': function('targets#modify#shrink'),
-                \ 'A': function('targets#modify#expand'),
-                \ }
-    return targets#factory#new(a:closing, args, genFuncs, modFuncs)
-endfunction
-
-" tag factory uses pair functions as well for now
-" special args must not be modified/escaped
-function! s:newFactoryT()
-    let args = {
-                \ 'opening': '<\a',
-                \ 'closing': '</\a\zs',
-                \ 'trigger': 't',
-                \ }
-    let genFuncs = {
-                \ 'C': function('s:genNextPC'),
-                \ 'N': function('s:genNextPN'),
-                \ 'L': function('s:genNextPL'),
-                \ }
-    let modFuncs = {
-                \ 'i': [function('targets#modify#innert'), function('targets#modify#drop')],
-                \ 'a': [function('targets#modify#keep')],
-                \ 'I': [function('targets#modify#innert'), function('targets#modify#shrink')],
-                \ 'A': [function('targets#modify#expand')],
-                \ }
-    return targets#factory#new('t', args, genFuncs, modFuncs)
-endfunction
-
-function! s:genNextPC(first) dict
-    if a:first
-        let cnt = 1
-    else
-        let cnt = 2
-    endif
-
-    let target = s:selectp(cnt, self.trigger, self)
-    call target.cursorE() " keep going from right end
-    return target
-endfunction
-
-function! s:genNextPN(first) dict
-    if targets#util#search(self.opening, 'W') > 0
-        return targets#target#withError('no target')
-    endif
-
-    let oldpos = getpos('.')
-    let target = s:selectp(1, self.trigger, self)
-    call setpos('.', oldpos)
-    return target
-endfunction
-
-function! s:genNextPL(first) dict
-    if targets#util#search(self.closing, 'bW') > 0
-        return targets#target#withError('no target')
-    endif
-
-    let oldpos = getpos('.')
-    let target = s:selectp(1, self.trigger, self)
-    call setpos('.', oldpos)
-    return target
 endfunction
 
 " quotes
