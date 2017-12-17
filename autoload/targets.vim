@@ -785,75 +785,6 @@ function! s:count(char, text)
     return len(split(a:text, a:char, 1)) - 1
 endfunction
 
-" TODO: move to new file and rename functions accordingly, make autoloaded?
-
-" returns a factory to create generators
-" TODO: can we drop trigger and compare factories differently?
-function! s:newFactory(trigger, args, genFuncs, modFuncs)
-    return {
-                \ 'trigger':  a:trigger,
-                \ 'args':     a:args,
-                \ 'genFuncs': a:genFuncs,
-                \ 'modFuncs': a:modFuncs,
-                \
-                \ 'new': function('s:factoryNew'),
-                \ }
-endfunction
-
-" returns a target generator
-" TODO: remove duplicated factory fields and use factory itself?
-" or do a bit of this setup work "outside"?
-function! s:factoryNew(oldpos, which) dict
-    let gen = {
-                \ 'factory': self,
-                \ 'oldpos':  a:oldpos,
-                \ 'which':   a:which,
-                \
-                \ 'args':     self.args,
-                \ 'nexti':    self.genFuncs[a:which],
-                \ 'modFuncs': self.modFuncs,
-                \
-                \ 'next':   function('s:genNext'),
-                \ 'nextN':  function('s:genNextN'),
-                \ 'target': function('s:genTarget')
-                \ }
-
-    " add args as top level fields of gen
-    for key in keys(self.args)
-        if has_key(gen, key)
-            " TODO: use more obscure internal keys to avoid collisions?
-            echom 'duplicate gen key: ' . key
-        else
-            let Value = self.args[key]
-            let gen[key] = Value
-        endif
-    endfor
-
-    return gen
-endfunction
-
-function! s:genNext(first) dict
-    call setpos('.', self.oldpos)
-    let self.currentTarget = self.nexti(a:first) " call internal function
-    let self.oldpos = getpos('.')
-    return self.currentTarget
-endfunction
-
-function! s:genTarget() dict
-    return get(self, 'currentTarget', targets#target#withError('no target'))
-endfunction
-
-function! s:genNextN(n) dict
-    for i in range(1, a:n)
-        let target = self.next(i == 1)
-        if target.state().isInvalid()
-            return target
-        endif
-    endfor
-
-    return target
-endfunction
-
 " TODO: use some templating here to avoid repetition?
 
 " pairs
@@ -875,7 +806,7 @@ function! s:newFactoryP(opening, closing)
                 \ 'I': function('targets#modify#shrink'),
                 \ 'A': function('targets#modify#expand'),
                 \ }
-    return s:newFactory(a:closing, args, genFuncs, modFuncs)
+    return targets#factory#new(a:closing, args, genFuncs, modFuncs)
 endfunction
 
 " tag factory uses pair functions as well for now
@@ -897,7 +828,7 @@ function! s:newFactoryT()
                 \ 'I': [function('targets#modify#innert'), function('targets#modify#shrink')],
                 \ 'A': [function('targets#modify#expand')],
                 \ }
-    return s:newFactory('t', args, genFuncs, modFuncs)
+    return targets#factory#new('t', args, genFuncs, modFuncs)
 endfunction
 
 function! s:genNextPC(first) dict
@@ -949,7 +880,7 @@ function! s:newFactoryQ(delimiter)
                 \ 'I': function('targets#modify#shrink'),
                 \ 'A': function('targets#modify#expand'),
                 \ }
-    return s:newFactory(a:delimiter, args, genFuncs, modFuncs)
+    return targets#factory#new(a:delimiter, args, genFuncs, modFuncs)
 endfunction
 
 function! s:genNextQC(first) dict
@@ -1018,7 +949,7 @@ function! s:newFactoryS(delimiter)
                 \ 'I': function('targets#modify#shrink'),
                 \ 'A': function('targets#modify#expands'),
                 \ }
-    return s:newFactory(a:delimiter, args, genFuncs, modFuncs)
+    return targets#factory#new(a:delimiter, args, genFuncs, modFuncs)
 endfunction
 
 function! s:genNextSC(first) dict
@@ -1083,7 +1014,7 @@ function! s:newFactoryA(opening, closing, separator)
                 \ 'I': function('targets#modify#shrink'),
                 \ 'A': function('targets#modify#expand'),
                 \ }
-    return s:newFactory('a', args, genFuncs, modFuncs)
+    return targets#factory#new('a', args, genFuncs, modFuncs)
 endfunction
 
 function! s:genNextAC(first) dict
@@ -1152,8 +1083,8 @@ function! s:newMultiGen(context)
                 \
                 \ 'add':    function('s:multiGenAdd'),
                 \ 'next':   function('s:multiGenNext'),
-                \ 'nextN':  function('s:genNextN'),
-                \ 'target': function('s:genTarget')
+                \ 'nextN':  function('targets#generator#nextN'),
+                \ 'target': function('targets#generator#target')
                 \ }
 endfunction
 
