@@ -7,6 +7,73 @@ to give you more opportunities to craft powerful commands that can be
 [repeated][repeat] reliably. One major goal is to handle all corner cases
 correctly.
 
+## Table of Contents
+
+<details>
+<summary>Click here to show.</summary>
+
+<!-- BEGIN-MARKDOWN-TOC -->
+
+* [Installation](#installation)
+* [Examples](#examples)
+* [Overview](#overview)
+	* [Pair Text Objects](#pair-text-objects)
+		* [In Pair](#in-pair)
+		* [A Pair](#a-pair)
+		* [Inside Pair](#inside-pair)
+		* [Around Pair](#around-pair)
+		* [Next and Last Pair](#next-and-last-pair)
+		* [Pair Seek](#pair-seek)
+	* [Quote Text Objects](#quote-text-objects)
+		* [In Quote](#in-quote)
+		* [A Quote](#a-quote)
+		* [Inside Quote](#inside-quote)
+		* [Around Quote](#around-quote)
+		* [Next and Last Quote](#next-and-last-quote)
+		* [Quote Seek](#quote-seek)
+	* [Separator Text Objects](#separator-text-objects)
+		* [In Separator](#in-separator)
+		* [A Separator](#a-separator)
+		* [Inside Separator](#inside-separator)
+		* [Around Separator](#around-separator)
+		* [Next and Last Separator](#next-and-last-separator)
+		* [Separator Seek](#separator-seek)
+	* [Argument Text Objects](#argument-text-objects)
+		* [In Argument](#in-argument)
+		* [An Argument](#an-argument)
+		* [Inside Argument](#inside-argument)
+		* [Around Argument](#around-argument)
+		* [Next and Last Argument](#next-and-last-argument)
+		* [Argument Seek](#argument-seek)
+* [Settings](#settings)
+	* [g:targets_aiAI](#gtargets_aiai)
+	* [g:targets_nl](#gtargets_nl)
+	* [g:targets_pairs](#gtargets_pairs)
+	* [g:targets_quotes](#gtargets_quotes)
+	* [g:targets_separators](#gtargets_separators)
+	* [g:targets_tagTrigger](#gtargets_tagtrigger)
+	* [g:targets_argTrigger](#gtargets_argtrigger)
+	* [g:targets_argOpening and g:targets_argClosing](#gtargets_argopening-and-gtargets_argclosing)
+	* [g:targets_argSeparator](#gtargets_argseparator)
+	* [g:targets_seekRanges](#gtargets_seekranges)
+	* [g:targets_jumpRanges](#gtargets_jumpranges)
+* [Notes](#notes)
+* [Issues](#issues)
+* [Todos](#todos)
+
+</details>
+
+<!-- END-MARKDOWN-TOC -->
+
+## Installation
+
+| Plugin Manager         | Command                                                                       |
+|------------------------|-------------------------------------------------------------------------------|
+| [NeoBundle][neobundle] | `NeoBundle 'wellle/targets.vim'`                                              |
+| [Vundle][vundle]       | `Bundle 'wellle/targets.vim'`                                                 |
+| [Vim-plug][vim-plug]   | `Plug 'wellle/targets.vim'`                                                   |
+| [Pathogen][pathogen]   | `git clone git://github.com/wellle/targets.vim.git ~/.vim/bundle/targets.vim` |
+
 ## Examples
 
 The following examples are displayed as three lines each. The top line denotes
@@ -43,7 +110,7 @@ differently:
 - Separator text objects
 - Argument text objects
 
-## Pair Text Objects
+### Pair Text Objects
 
 These text objects are similar to the built in text objects such as `i)`.
 Supported trigger characters:
@@ -125,7 +192,7 @@ a ( b ( cccccccc ) d ) e
   └────── 2A) ────────┘
 ```
 
-### Next and Last Pair
+#### Next and Last Pair
 
 `in( an( In( An( il( al( Il( Al( ...`
 
@@ -138,7 +205,7 @@ a count to skip multiple pairs. Skipping works over multiple lines.
 
 See our [Cheat Sheet][cheatsheet] for two charts summarizing all pair mappings.
 
-### Pair Seek
+#### Pair Seek
 
 If any of the normal pair commands (not containing `n` or `l`) is executed when
 the cursor is not positioned inside a pair, it seeks for pairs before or after
@@ -146,7 +213,7 @@ the cursor by searching for the appropriate delimiter on the current line. This
 is similar to using the explicit version containing `n` or `l`, but in only
 seeks on the current line.
 
-## Quote Text Objects
+### Quote Text Objects
 
 These text objects are similar to the built in text objects such as `i'`.
 Supported trigger characters:
@@ -229,7 +296,7 @@ a ' bbbbbbbb ' c ' d ' e
   └─── A' ────┘
 ```
 
-### Next and Last Quote
+#### Next and Last Quote
 
 `in' In' An' il' Il' Al' ...`
 
@@ -242,14 +309,14 @@ quote. Uses a count to skip multiple quotation characters.
 
 See our [Cheat Sheet][cheatsheet] for a chart summarizing all quote mappings.
 
-### Quote Seek
+#### Quote Seek
 
 If any of the normal quote commands (not containing `n` or `l`) is executed
 when the cursor is not positioned inside a quote, it seeks for quotes before or
 after the cursor by searching for the appropriate delimiter on the current
 line. This is similar to using the explicit version containing `n` or `l`.
 
-## Separator Text Objects
+### Separator Text Objects
 
 These text objects are based on single separator characters like the comma in
 one of our examples above. The text between two instances of the separator
@@ -321,7 +388,7 @@ a , b , cccccccc , d , e
       └─── A, ────┘
 ```
 
-### Next and Last Separator
+#### Next and Last Separator
 
 `in, an, In, An, il, al, Il, Al, ...`
 
@@ -334,14 +401,14 @@ count to skip multiple separator characters.
 
 See our [Cheat Sheet][cheatsheet] for a chart summarizing all separator mappings.
 
-### Separator Seek
+#### Separator Seek
 
 Like quote seeking. If any of the normal separator commands (not
 containing `n` or `l`) is executed when the cursor is not positioned inside a
 pair of separators, it seeks for the separator before or after the cursor.
 This is similar to using the explicit version containing `n` or `l`.
 
-## Argument Text Objects
+### Argument Text Objects
 
 These text objects are similar to separator text objects, but are specialized
 for arguments surrounded by braces and commas. They also take matching braces
@@ -407,7 +474,7 @@ a , b ( cccccccc , d ) e
       └─── Aa ────┘
 ```
 
-### Next and Last Argument
+#### Next and Last Argument
 
 `ina ana Ina Ana ila ala Ila Ala`
 
@@ -421,40 +488,12 @@ the nearest surrounding argument delimiter.
 
 See our [Cheat Sheet][cheatsheet] for a chart summarizing all argument mappings.
 
-### Argument Seek
+#### Argument Seek
 
 Like separator seeking. If any of the normal argument commands (not containing
 `n` or `l`) is executed when the cursor is not positioned inside an argument,
 it seeks for the argument before or after the cursor. This is similar to using
 the explicit version containing `n` or `l`.
-
-## Installation
-
-Use your favorite plugin manager.
-
-- [NeoBundle][neobundle]
-
-    ```vim
-    NeoBundle 'wellle/targets.vim'
-    ```
-
-- [Vundle][vundle]
-
-    ```vim
-    Bundle 'wellle/targets.vim'
-    ```
-
-- [Vim-plug][vim-plug]
-
-    ```vim
-    Plug 'wellle/targets.vim'
-    ```
-
-- [Pathogen][pathogen]
-
-    ```sh
-    git clone git://github.com/wellle/targets.vim.git ~/.vim/bundle/targets.vim
-    ```
 
 ## Settings
 
