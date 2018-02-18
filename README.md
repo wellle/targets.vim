@@ -1,9 +1,16 @@
-# targets.vim
+## Introduction
 
-> **Targets.vim** is a Vim plugin that adds various [text objects][textobjects] to give you more targets to [operate][operator] on.
+**Targets.vim** is a Vim plugin that adds various [text objects][textobjects]
+to give you more targets to [operate][operator] on.  It expands on the idea of
+simple commands like `di'` (delete inside the single quotes around the cursor)
+to give you more opportunities to craft powerful commands that can be
+[repeated][repeat] reliably. One major goal is to handle all corner cases
+correctly.
+
+## Table of Contents
 
 <!-- BEGIN-MARKDOWN-TOC -->
-* [Introduction](#introduction)
+
 * [Installation](#installation)
 * [Examples](#examples)
 * [Overview](#overview)
@@ -52,15 +59,6 @@
 * [Todos](#todos)
 
 <!-- END-MARKDOWN-TOC -->
-
-## Introduction
-
-**Targets.vim** is a Vim plugin that adds various [text objects][textobjects]
-to give you more targets to [operate][operator] on.  It expands on the idea of
-simple commands like `di'` (delete inside the single quotes around the cursor)
-to give you more opportunities to craft powerful commands that can be
-[repeated][repeat] reliably. One major goal is to handle all corner cases
-correctly.
 
 ## Installation
 
