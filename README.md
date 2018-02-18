@@ -67,31 +67,12 @@ correctly.
 
 ## Installation
 
-Use your favorite plugin manager.
-
-- [NeoBundle][neobundle]
-
-    ```vim
-    NeoBundle 'wellle/targets.vim'
-    ```
-
-- [Vundle][vundle]
-
-    ```vim
-    Bundle 'wellle/targets.vim'
-    ```
-
-- [Vim-plug][vim-plug]
-
-    ```vim
-    Plug 'wellle/targets.vim'
-    ```
-
-- [Pathogen][pathogen]
-
-    ```sh
-    git clone git://github.com/wellle/targets.vim.git ~/.vim/bundle/targets.vim
-    ```
+| Plugin Manager         | Command                                                                       |
+|------------------------|-------------------------------------------------------------------------------|
+| [NeoBundle][neobundle] | `NeoBundle 'wellle/targets.vim'`                                              |
+| [Vundle][vundle]       | `Bundle 'wellle/targets.vim'`                                                 |
+| [Vim-plug][vim-plug]   | `Plug 'wellle/targets.vim'`                                                   |
+| [Pathogen][pathogen]   | `git clone git://github.com/wellle/targets.vim.git ~/.vim/bundle/targets.vim` |
 
 ## Examples
 
