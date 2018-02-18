@@ -9,6 +9,9 @@ correctly.
 
 ## Table of Contents
 
+<details>
+<summary>Click here to show.</summary>
+
 <!-- BEGIN-MARKDOWN-TOC -->
 
 * [Installation](#installation)
@@ -57,6 +60,8 @@ correctly.
 * [Notes](#notes)
 * [Issues](#issues)
 * [Todos](#todos)
+
+</details>
 
 <!-- END-MARKDOWN-TOC -->
 
