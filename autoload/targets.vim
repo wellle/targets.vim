@@ -104,7 +104,7 @@ endfunction
 " mappings to not break non-targets visual mappings
 " and for operator pending mode as well if possible to speed up plugin loading
 " time
-function! targets#e(modifier)
+function! targets#e(modifier, original)
     let mode = mode(1)
     if mode ==? 'v' " visual mode, from xnoremap
         let prefix = "\<Esc>:\<C-U>call targets#x('"
@@ -129,7 +129,7 @@ function! targets#e(modifier)
 
     let [_, _, _, err] = s:getDelimiters(delimiter)
     if err
-        return a:modifier . chars
+        return a:original . chars
     endif
 
     if delimiter ==# "'"

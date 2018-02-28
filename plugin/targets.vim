@@ -189,15 +189,15 @@ endfunction
 function! s:addMappings()
     if v:version >= 704 || (v:version == 703 && has('patch338'))
         " if possible, create only a few expression mappings to speed up loading times
-        silent! execute 'onoremap <expr> <silent> <unique> ' . s:i . " targets#e('i')"
-        silent! execute 'onoremap <expr> <silent> <unique> ' . s:a . " targets#e('a')"
-        silent! execute 'onoremap <expr> <silent> <unique> ' . s:I . " targets#e('I')"
-        silent! execute 'onoremap <expr> <silent> <unique> ' . s:A . " targets#e('A')"
+        silent! execute 'onoremap <expr> <silent> <unique> ' . s:i . " targets#e('i', '" . s:i . "')"
+        silent! execute 'onoremap <expr> <silent> <unique> ' . s:a . " targets#e('a', '" . s:a . "')"
+        silent! execute 'onoremap <expr> <silent> <unique> ' . s:I . " targets#e('I', '" . s:I . "')"
+        silent! execute 'onoremap <expr> <silent> <unique> ' . s:A . " targets#e('A', '" . s:A . "')"
 
-        silent! execute 'xnoremap <expr> <silent> <unique> ' . s:i . " targets#e('i')"
-        silent! execute 'xnoremap <expr> <silent> <unique> ' . s:a . " targets#e('a')"
-        silent! execute 'xnoremap <expr> <silent> <unique> ' . s:I . " targets#e('I')"
-        silent! execute 'xnoremap <expr> <silent> <unique> ' . s:A . " targets#e('A')"
+        silent! execute 'xnoremap <expr> <silent> <unique> ' . s:i . " targets#e('i', '" . s:i . "')"
+        silent! execute 'xnoremap <expr> <silent> <unique> ' . s:a . " targets#e('a', '" . s:a . "')"
+        silent! execute 'xnoremap <expr> <silent> <unique> ' . s:I . " targets#e('I', '" . s:I . "')"
+        silent! execute 'xnoremap <expr> <silent> <unique> ' . s:A . " targets#e('A', '" . s:A . "')"
 
     else
         " otherwise create individual mappings #117
