@@ -21,7 +21,7 @@ function! targets#factory#dictnew(oldpos, which) dict
                 \ 'which':   a:which,
                 \
                 \ 'args':     self.args,
-                \ 'nexti':    self.genFuncs[a:which],
+                \ 'genFunc':  self.genFuncs[a:which],
                 \ 'modFuncs': self.modFuncs,
                 \
                 \ 'next':   function('targets#generator#next'),

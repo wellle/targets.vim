@@ -2,7 +2,7 @@
 
 function! targets#generator#next(first) dict
     call setpos('.', self.oldpos)
-    let self.currentTarget = self.nexti(a:first) " call internal function
+    let self.currentTarget = self.genFunc(a:first)
     let self.currentTarget.gen = self
     let self.oldpos = getpos('.')
     return self.currentTarget
