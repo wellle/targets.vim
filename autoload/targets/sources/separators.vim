@@ -14,38 +14,38 @@ function! targets#sources#separators#new(delimiter)
     return targets#factory#new(a:delimiter, args, genFuncs, modFuncs)
 endfunction
 
-function! targets#sources#separators#C(first) dict
+function! targets#sources#separators#C(gen, first)
     if !a:first
         return targets#target#withError('only one current separator')
     endif
 
-    return targets#util#select(self.delimiter, self.delimiter, '>')
+    return targets#util#select(a:gen.args.delimiter, a:gen.args.delimiter, '>')
 endfunction
 
-function! targets#sources#separators#N(first) dict
-    if targets#util#search(self.delimiter, 'W') > 0
+function! targets#sources#separators#N(gen, first)
+    if targets#util#search(a:gen.args.delimiter, 'W') > 0
         return targets#target#withError('no target')
     endif
 
     let oldpos = getpos('.')
-    let target = targets#util#select(self.delimiter, self.delimiter, '>')
+    let target = targets#util#select(a:gen.args.delimiter, a:gen.args.delimiter, '>')
     call setpos('.', oldpos)
     return target
 endfunction
 
-function! targets#sources#separators#L(first) dict
+function! targets#sources#separators#L(gen, first)
     if a:first
         let flags = 'cbW' " allow separator under cursor on first iteration
     else
         let flags = 'bW'
     endif
 
-    if targets#util#search(self.delimiter, flags) > 0
+    if targets#util#search(a:gen.args.delimiter, flags) > 0
         return targets#target#withError('no target')
     endif
 
     let oldpos = getpos('.')
-    let target = targets#util#select(self.delimiter, self.delimiter, '<')
+    let target = targets#util#select(a:gen.args.delimiter, a:gen.args.delimiter, '<')
     call setpos('.', oldpos)
     return target
 endfunction

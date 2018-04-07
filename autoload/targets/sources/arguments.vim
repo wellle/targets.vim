@@ -9,9 +9,6 @@ function! targets#sources#arguments#new(opening, closing, separator)
                 \ 'closingS':  a:closing . '\|' . a:separator,
                 \ 'all':       a:opening . '\|' . a:separator . '\|' . a:closing,
                 \ 'outer':     a:opening . '\|' . a:closing,
-                \
-                \ 'select':  function('s:selecta'),
-                \ 'findArg': function('s:findArg'),
                 \ }
     let genFuncs = {
                 \ 'C': function('targets#sources#arguments#C'),
@@ -27,62 +24,62 @@ function! targets#sources#arguments#new(opening, closing, separator)
     return targets#factory#new('a', args, genFuncs, modFuncs)
 endfunction
 
-function! targets#sources#arguments#C(first) dict
+function! targets#sources#arguments#C(gen, first)
     if a:first
-        let target = self.select('^')
+        let target = s:select(a:gen, '^')
     else
-        if s:findArgBoundary('cW', 'cW', self.opening, self.closing, self.outer, s:none)[2] > 0
+        if s:findArgBoundary('cW', 'cW', a:gen.args.opening, a:gen.args.closing, a:gen.args.outer, s:none)[2] > 0
             return targets#target#withError('AC 1')
         endif
         silent! execute "normal! 1 "
-        let target = self.select('<')
+        let target = s:select(a:gen, '<')
     endif
 
     call target.cursorE() " keep going from right end
     return target
 endfunction
 
-function! targets#sources#arguments#N(first) dict
+function! targets#sources#arguments#N(gen, first)
     " search for opening or separator, try to select argument from there
     " if that fails, keep searching for opening until an argument can be
     " selected
-    let pattern = self.openingS
+    let pattern = a:gen.args.openingS
     while 1
         if targets#util#search(pattern, 'W') > 0
             return targets#target#withError('no target')
         endif
 
         let oldpos = getpos('.')
-        let target = self.select('>')
+        let target = s:select(a:gen, '>')
         call setpos('.', oldpos)
 
         if target.state().isValid()
             return target
         endif
 
-        let pattern = self.opening
+        let pattern = a:gen.args.opening
     endwhile
 endfunction
 
-function! targets#sources#arguments#L(first) dict
+function! targets#sources#arguments#L(gen, first)
     " search for closing or separator, try to select argument from there
     " if that fails, keep searching for closing until an argument can be
     " selected
-    let pattern = self.closingS
+    let pattern = a:gen.args.closingS
     while 1
         if targets#util#search(pattern, 'bW') > 0
             return targets#target#withError('no target')
         endif
 
         let oldpos = getpos('.')
-        let target = self.select('<')
+        let target = s:select(a:gen, '<')
         call setpos('.', oldpos)
 
         if target.state().isValid()
             return target
         endif
 
-        let pattern = self.closing
+        let pattern = a:gen.args.closing
     endwhile
 endfunction
 
@@ -91,25 +88,25 @@ endfunction
 "   '>' select to the right (default)
 "   '<' select to the left (used when selecting or skipping to the left)
 "   '^' select up (surrounding argument, used for growing)
-function! s:selecta(direction) dict
+function! s:select(gen, direction)
     let oldpos = getpos('.')
 
-    let [opening, closing] = [self.opening, self.closing]
+    let [opening, closing] = [a:gen.args.opening, a:gen.args.closing]
     if a:direction ==# '^'
         if s:getchar() =~# closing
-            let [sl, sc, el, ec, err] = self.findArg(a:direction, 'cW', 'bW', 'bW', opening, closing)
+            let [sl, sc, el, ec, err] = s:findArg(a:gen, a:direction, 'cW', 'bW', 'bW', opening, closing)
         else
-            let [sl, sc, el, ec, err] = self.findArg(a:direction, 'W', 'bcW', 'bW', opening, closing)
+            let [sl, sc, el, ec, err] = s:findArg(a:gen, a:direction, 'W', 'bcW', 'bW', opening, closing)
         endif
-        let message = 'selecta 1'
+        let message = 'argument select 1'
     elseif a:direction ==# '>'
-        let [sl, sc, el, ec, err] = self.findArg(a:direction, 'W', 'bW', 'bW', opening, closing)
-        let message = 'selecta 2'
+        let [sl, sc, el, ec, err] = s:findArg(a:gen, a:direction, 'W', 'bW', 'bW', opening, closing)
+        let message = 'argument select 2'
     elseif a:direction ==# '<' " like '>', but backwards
-        let [el, ec, sl, sc, err] = self.findArg(a:direction, 'bW', 'W', 'W', closing, opening)
-        let message = 'selecta 3'
+        let [el, ec, sl, sc, err] = s:findArg(a:gen, a:direction, 'bW', 'W', 'W', closing, opening)
+        let message = 'argument select 3'
     else
-        return targets#target#withError('selecta')
+        return targets#target#withError('argument select')
     endif
 
     if err > 0
@@ -120,23 +117,23 @@ function! s:selecta(direction) dict
     return targets#target#fromValues(sl, sc, el, ec)
 endfunction
 
-" find an argument around the cursor given a direction (see s:selecta)
+" find an argument around the cursor given a direction (see s:select)
 " uses flags1 to search for end to the right; flags1 and flags2 to search for
 " start to the left
-function! s:findArg(direction, flags1, flags2, flags3, opening, closing) dict
+function! s:findArg(gen, direction, flags1, flags2, flags3, opening, closing)
     let oldpos = getpos('.')
     let char = s:getchar()
-    let separator = self.separator
+    let separator = a:gen.args.separator
 
     if char =~# a:closing && a:direction !=# '^' " started on closing, but not up
         let [el, ec] = oldpos[1:2] " use old position as end
     else " find end to the right
-        let [el, ec, err] = s:findArgBoundary(a:flags1, a:flags1, a:opening, a:closing, self.all, self.separator)
+        let [el, ec, err] = s:findArgBoundary(a:flags1, a:flags1, a:opening, a:closing, a:gen.args.all, a:gen.args.separator)
         if err > 0 " no closing found
             return [0, 0, 0, 0, targets#util#fail('findArg 1', a:)]
         endif
 
-        let separator = self.separator
+        let separator = a:gen.args.separator
         if char =~# a:opening || char =~# separator " started on opening or separator
             let [sl, sc] = oldpos[1:2] " use old position as start
             return [sl, sc, el, ec, 0]
@@ -146,7 +143,7 @@ function! s:findArg(direction, flags1, flags2, flags3, opening, closing) dict
     endif
 
     " find start to the left
-    let [sl, sc, err] = s:findArgBoundary(a:flags2, a:flags3, a:closing, a:opening, self.all, self.separator)
+    let [sl, sc, err] = s:findArgBoundary(a:flags2, a:flags3, a:closing, a:opening, a:gen.args.all, a:gen.args.separator)
     if err > 0 " no opening found
         return [0, 0, 0, 0, targets#util#fail('findArg 2')]
     endif

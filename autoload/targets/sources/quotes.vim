@@ -23,8 +23,6 @@ function! targets#sources#quotes#new(delimiter, ...)
     let args = {
                 \ 'delimiter': s:quoteEscape(a:delimiter),
                 \ 'quoteDirs': quoteDirs,
-                \
-                \ 'quoteDir': function('s:quoteDir'),
                 \ }
     let genFuncs = {
                 \ 'C': function('targets#sources#quotes#C'),
@@ -40,59 +38,55 @@ function! targets#sources#quotes#new(delimiter, ...)
     return targets#factory#new(a:delimiter, args, genFuncs, modFuncs)
 endfunction
 
-function! targets#sources#quotes#C(first) dict
+function! targets#sources#quotes#C(gen, first)
     if !a:first
         return targets#target#withError('only one current quote')
     endif
 
-    let dir = self.quoteDir(self.delimiter)[0]
-    let self.currentTarget = targets#util#select(self.delimiter, self.delimiter, dir)
-    return self.currentTarget
+    let dir = s:quoteDir(a:gen.args.quoteDirs, a:gen.args.delimiter)[0]
+    return targets#util#select(a:gen.args.delimiter, a:gen.args.delimiter, dir)
 endfunction
 
-function! targets#sources#quotes#N(first) dict
-    if !exists('self.rate')
-        " do outside somehow? if so remember to reset pos before
-        " TODO: do on init somehow? that way we don't need to do it three
-        " times for seeking
-        let [_, self.rate, _, skipR, _] = self.quoteDir(self.delimiter)
-        let cnt = self.rate - skipR " skip initially once
+function! targets#sources#quotes#N(gen, first)
+    if !exists('a:gen.state.rate')
+        let [_, a:gen.state.rate, _, skipR, _] = s:quoteDir(a:gen.args.quoteDirs, a:gen.args.delimiter)
+        let cnt = a:gen.state.rate - skipR " skip initially once
         " echom 'skip'
     else
-        let cnt = self.rate " then go by rate
+        let cnt = a:gen.state.rate " then go by rate
         " echom 'no skip'
     endif
 
-    if targets#util#search(self.delimiter, 'W', cnt) > 0
+    if targets#util#search(a:gen.args.delimiter, 'W', cnt) > 0
         return targets#target#withError('QN')
     endif
 
-    let target = targets#util#select(self.delimiter, self.delimiter, '>')
+    let target = targets#util#select(a:gen.args.delimiter, a:gen.args.delimiter, '>')
     call target.cursorS() " keep going from left end TODO: is this call needed?
     return target
 endfunction
 
-function! targets#sources#quotes#L(first) dict
-    if !exists('self.rate')
-        let [_, self.rate, skipL, _, _] = self.quoteDir(self.delimiter)
-        let cnt = self.rate - skipL " skip initially once
+function! targets#sources#quotes#L(gen, first)
+    if !exists('a:gen.state.rate')
+        let [_, a:gen.state.rate, skipL, _, _] = s:quoteDir(a:gen.args.quoteDirs, a:gen.args.delimiter)
+        let cnt = a:gen.state.rate - skipL " skip initially once
         " echom 'skip'
     else
-        let cnt = self.rate " then go by rate
+        let cnt = a:gen.state.rate " then go by rate
         " echom 'no skip'
     endif
 
-    if targets#util#search(self.delimiter, 'bW', cnt) > 0
+    if targets#util#search(a:gen.args.delimiter, 'bW', cnt) > 0
         return targets#target#withError('QL')
     endif
 
-    let target = targets#util#select(self.delimiter, self.delimiter, '<')
+    let target = targets#util#select(a:gen.args.delimiter, a:gen.args.delimiter, '<')
     call target.cursorE() " keep going from right end TODO: is this call needed?
     return target
 endfunction
 
 " returns [dir, rate, skipL, skipR, error]
-function! s:quoteDir(delimiter) dict
+function! s:quoteDir(quoteDirs, delimiter)
     let line = getline('.')
     let col = col('.')
 
@@ -112,7 +106,7 @@ function! s:quoteDir(delimiter) dict
 
     let key = lc . cc . rc
     let defaultValues = ['', 0, 0, 0, 'bad key: ' . key]
-    let [dir, rate, skipL, skipR, error] = get(self.quoteDirs, key, defaultValues)
+    let [dir, rate, skipL, skipR, error] = get(a:quoteDirs, key, defaultValues)
     return [dir, rate, skipL, skipR, error]
 endfunction
 

@@ -18,36 +18,36 @@ function! targets#sources#pairs#new(opening, closing)
     return targets#factory#new(a:closing, args, genFuncs, modFuncs)
 endfunction
 
-function! targets#sources#pairs#C(first) dict
+function! targets#sources#pairs#C(gen, first)
     if a:first
         let cnt = 1
     else
         let cnt = 2
     endif
 
-    let target = s:select(cnt, self.trigger)
+    let target = s:select(cnt, a:gen.args.trigger)
     call target.cursorE() " keep going from right end
     return target
 endfunction
 
-function! targets#sources#pairs#N(first) dict
-    if targets#util#search(self.opening, 'W') > 0
+function! targets#sources#pairs#N(gen, first)
+    if targets#util#search(a:gen.args.opening, 'W') > 0
         return targets#target#withError('no target')
     endif
 
     let oldpos = getpos('.')
-    let target = s:select(1, self.trigger)
+    let target = s:select(1, a:gen.args.trigger)
     call setpos('.', oldpos)
     return target
 endfunction
 
-function! targets#sources#pairs#L(first) dict
-    if targets#util#search(self.closing, 'bW') > 0
+function! targets#sources#pairs#L(gen, first)
+    if targets#util#search(a:gen.args.closing, 'bW') > 0
         return targets#target#withError('no target')
     endif
 
     let oldpos = getpos('.')
-    let target = s:select(1, self.trigger)
+    let target = s:select(1, a:gen.args.trigger)
     call setpos('.', oldpos)
     return target
 endfunction

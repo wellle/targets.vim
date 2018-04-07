@@ -12,34 +12,24 @@ function! targets#factory#new(trigger, args, genFuncs, modFuncs)
 endfunction
 
 " returns a target generator
-" TODO: remove duplicated factory fields and use factory itself?
-" or do a bit of this setup work "outside"?
+" values to be used in genFunc:
+" args: forwarded from targets#factory#new
+" state: a fresh empty dictionary per generator (which usually gets created
+" per invocation), can be used to remember values between multiple genFunc
+" invocations
 function! targets#factory#dictnew(oldpos, which) dict
-    let gen = {
-                \ 'factory': self,
-                \ 'oldpos':  a:oldpos,
-                \ 'which':   a:which,
-                \
+    return {
                 \ 'args':     self.args,
+                \ 'state':    {},
+                \
+                \ 'oldpos':   a:oldpos,
+                \ 'which':    a:which,
+                \ 'factory':  self,
                 \ 'genFunc':  self.genFuncs[a:which],
-                \ 'modFuncs': self.modFuncs,
                 \
                 \ 'next':   function('targets#generator#next'),
                 \ 'nextN':  function('targets#generator#nextN'),
                 \ 'target': function('targets#generator#target')
                 \ }
-
-    " add args as top level fields of gen
-    for key in keys(self.args)
-        if has_key(gen, key)
-            " TODO: use more obscure internal keys to avoid collisions?
-            echom 'duplicate gen key: ' . key
-        else
-            let Value = self.args[key]
-            let gen[key] = Value
-        endif
-    endfor
-
-    return gen
 endfunction
 

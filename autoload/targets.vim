@@ -259,7 +259,7 @@ function! s:modifyTarget(target, modifier)
         return targets#target#withError('modifyTarget invalid: ' . a:target.error)
     endif
 
-    let modFuncs = a:target.gen.modFuncs
+    let modFuncs = a:target.gen.factory.modFuncs
     if !has_key(modFuncs, a:modifier)
         return targets#target#withError('modifyTarget')
     endif
