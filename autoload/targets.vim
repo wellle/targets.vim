@@ -150,8 +150,6 @@ endfunction
 
 " initialize script local variables for the current matching
 function! s:init(mapmode)
-    let s:newSelection = 1
-
     let s:selection = &selection  " remember 'selection' setting
     let &selection  = 'inclusive' " and set it to inclusive
 
@@ -162,6 +160,7 @@ function! s:init(mapmode)
     let &whichwrap  = 'b,s'      " and set it to default
 
     return {
+                \ 'newSelection': 1,
                 \ 'mapmode': a:mapmode,
                 \ 'oldpos':  getpos('.'),
                 \ 'minline': line('w0'),
@@ -191,7 +190,7 @@ function! s:initX()
     " start, fix that too
     let context.oldpos = getpos('.')
 
-    let s:newSelection = s:isNewSelection()
+    let context['newSelection'] = s:isNewSelection()
     return context
 endfunction
 
@@ -221,12 +220,12 @@ function! s:findRawTarget(context, factories, which, count)
     let context = a:context
 
     if a:which ==# 'c'
-        if a:count == 1 && s:newSelection " seek
+        if a:count == 1 && a:context.newSelection " seek
             let gen = s:newMultiGen(context)
             call gen.add(a:factories, 'C', 'N', 'L')
 
         else " don't seek
-            if !s:newSelection " start from last raw end
+            if !a:context.newSelection " start from last raw end
                 let context = context.withOldpos(s:lastRawTarget.getposE())
             endif
             let gen = s:newMultiGen(context)
@@ -234,14 +233,14 @@ function! s:findRawTarget(context, factories, which, count)
         endif
 
     elseif a:which ==# 'n'
-        if !s:newSelection " start from last raw start
+        if !a:context.newSelection " start from last raw start
             let context = context.withOldpos(s:lastRawTarget.getposS())
         endif
         let gen = s:newMultiGen(context)
         call gen.add(a:factories, 'N')
 
     elseif a:which ==# 'l'
-        if !s:newSelection " start from last raw end
+        if !a:context.newSelection " start from last raw end
             let context = context.withOldpos(s:lastRawTarget.getposE())
         endif
         let gen = s:newMultiGen(context)
@@ -616,7 +615,7 @@ endfunction
 function! s:multiGenNext(first) dict
     if a:first
         for gen in self.gens
-            let first = s:newSelection || s:lastRawTarget.gen.factory.trigger != gen.factory.trigger
+            let first = self.context.newSelection || s:lastRawTarget.gen.factory.trigger != gen.factory.trigger
             call gen.next(first)
         endfor
     else
@@ -643,7 +642,7 @@ function! s:multiGenNext(first) dict
                 let targets[idx] = target.gen.next(0)
                 continue
             endif
-        elseif !s:newSelection && s:lastRawTarget.equal(target)
+        elseif !self.context.newSelection && s:lastRawTarget.equal(target)
             " current target is the same as continued one, skip it and try the next one
             " NOTE: this can happen if a multi contains two generators which
             " may create the same target. in that case growing might break
