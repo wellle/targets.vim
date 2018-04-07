@@ -1,5 +1,3 @@
-let s:none = 'a^' " matches nothing
-
 function! targets#sources#arguments#new(opening, closing, separator)
     let args = {
                 \ 'opening':   a:opening,
@@ -28,7 +26,7 @@ function! targets#sources#arguments#C(gen, first)
     if a:first
         let target = s:select(a:gen, '^')
     else
-        if s:findArgBoundary('cW', 'cW', a:gen.args.opening, a:gen.args.closing, a:gen.args.outer, s:none)[2] > 0
+        if s:findArgBoundary('cW', 'cW', a:gen.args.opening, a:gen.args.closing, a:gen.args.outer, "")[2] > 0
             return targets#target#withError('AC 1')
         endif
         silent! execute "normal! 1 "
@@ -157,8 +155,7 @@ endfunction
 " args (flags1, flags2, skip, finish, all=all,
 " separator=separator, cnt=2)
 " return (line, column, err)
-" TODO: avoid the need for none by implicitly using it as default? (only try
-" to match finish if provided, otherwise just skip the check)
+" separator can be empty and means it should never match
 function! s:findArgBoundary(flags1, flags2, skip, finish, all, separator)
 
     let [tl, rl, rc] = [0, 0, 0]
@@ -169,7 +166,7 @@ function! s:findArgBoundary(flags1, flags2, skip, finish, all, separator)
         endif
 
         let char = s:getchar()
-        if char =~# a:separator
+        if a:separator != "" && char =~# a:separator
             if tl == 0
                 let [tl, tc] = [rl, rc]
             endif
