@@ -19,7 +19,7 @@ function! targets#sources#separators#C(first) dict
         return targets#target#withError('only one current separator')
     endif
 
-    return targets#util#select(self.delimiter, self.delimiter, '>', self)
+    return targets#util#select(self.delimiter, self.delimiter, '>')
 endfunction
 
 function! targets#sources#separators#N(first) dict
@@ -28,7 +28,7 @@ function! targets#sources#separators#N(first) dict
     endif
 
     let oldpos = getpos('.')
-    let target = targets#util#select(self.delimiter, self.delimiter, '>', self)
+    let target = targets#util#select(self.delimiter, self.delimiter, '>')
     call setpos('.', oldpos)
     return target
 endfunction
@@ -45,7 +45,7 @@ function! targets#sources#separators#L(first) dict
     endif
 
     let oldpos = getpos('.')
-    let target = targets#util#select(self.delimiter, self.delimiter, '<', self)
+    let target = targets#util#select(self.delimiter, self.delimiter, '<')
     call setpos('.', oldpos)
     return target
 endfunction

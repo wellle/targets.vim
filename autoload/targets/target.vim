@@ -1,13 +1,14 @@
 " TODO: add source, from gen, like PN(3, might help for debugging
 
-function! targets#target#new(sl, sc, el, ec, gen, error)
+" gen gets injected later
+function! targets#target#new(sl, sc, el, ec, error)
     return {
         \ 'error': a:error,
         \ 'sl':    a:sl,
         \ 'sc':    a:sc,
         \ 'el':    a:el,
         \ 'ec':    a:ec,
-        \ 'gen':   a:gen,
+        \ 'gen':   0,
         \ 'linewise': 0,
         \
         \ 'copy': function('targets#target#copy'),
@@ -31,11 +32,11 @@ function! targets#target#new(sl, sc, el, ec, gen, error)
         \ }
 endfunction
 
-function! targets#target#fromValues(sl, sc, el, ec, gen)
+function! targets#target#fromValues(sl, sc, el, ec)
     if a:sl == 0 || a:sc == 0 || a:el == 0 || a:ec == 0
         return targets#target#withError("zero found")
     endif
-    return targets#target#new(a:sl, a:sc, a:el, a:ec, a:gen, '')
+    return targets#target#new(a:sl, a:sc, a:el, a:ec, '')
 endfunction
 
 function! targets#target#fromVisualSelection(selection)
@@ -46,15 +47,17 @@ function! targets#target#fromVisualSelection(selection)
         let ec -= 1
     endif
 
-    return targets#target#fromValues(sl, sc, el, ec, 0)
+    return targets#target#fromValues(sl, sc, el, ec)
 endfunction
 
 function! targets#target#withError(error)
-    return targets#target#new(0, 0, 0, 0, 0, a:error)
+    return targets#target#new(0, 0, 0, 0, a:error)
 endfunction
 
 function! targets#target#copy() dict
-    return targets#target#fromValues(self.sl, self.sc, self.el, self.ec, self.gen)
+    let target = targets#target#fromValues(self.sl, self.sc, self.el, self.ec)
+    let target['gen'] = self.gen
+    return target
 endfunction
 
 function! targets#target#equal(t) dict

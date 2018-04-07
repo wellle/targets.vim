@@ -46,7 +46,7 @@ function! targets#sources#quotes#C(first) dict
     endif
 
     let dir = self.quoteDir(self.delimiter)[0]
-    let self.currentTarget = targets#util#select(self.delimiter, self.delimiter, dir, self)
+    let self.currentTarget = targets#util#select(self.delimiter, self.delimiter, dir)
     return self.currentTarget
 endfunction
 
@@ -67,7 +67,7 @@ function! targets#sources#quotes#N(first) dict
         return targets#target#withError('QN')
     endif
 
-    let target = targets#util#select(self.delimiter, self.delimiter, '>', self)
+    let target = targets#util#select(self.delimiter, self.delimiter, '>')
     call target.cursorS() " keep going from left end TODO: is this call needed?
     return target
 endfunction
@@ -86,7 +86,7 @@ function! targets#sources#quotes#L(first) dict
         return targets#target#withError('QL')
     endif
 
-    let target = targets#util#select(self.delimiter, self.delimiter, '<', self)
+    let target = targets#util#select(self.delimiter, self.delimiter, '<')
     call target.cursorE() " keep going from right end TODO: is this call needed?
     return target
 endfunction

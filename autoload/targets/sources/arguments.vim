@@ -117,7 +117,7 @@ function! s:selecta(direction) dict
         return targets#target#withError(message)
     endif
 
-    return targets#target#fromValues(sl, sc, el, ec, self)
+    return targets#target#fromValues(sl, sc, el, ec)
 endfunction
 
 " find an argument around the cursor given a direction (see s:selecta)
