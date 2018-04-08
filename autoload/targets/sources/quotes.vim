@@ -14,15 +14,15 @@ function! targets#sources#quotes#new(delimiter, ...)
 
     let quoteDirs = {}
     for key in keys(s:quoteArgs)
-        let args = s:quoteArgs[key]
+        let quoteArgs = s:quoteArgs[key]
         for rep in get(quoteDirsConf, key, [])
-            let quoteDirs[rep] = args
+            let quoteDirs[rep] = quoteArgs
         endfor
     endfor
 
     let args = {
                 \ 'delimiter': s:quoteEscape(a:delimiter),
-                \ 'quoteDirs': quoteDirs,
+                \ 'quoteDirs': quoteDirs
                 \ }
     let genFuncs = {
                 \ 'C': function('targets#sources#quotes#C'),

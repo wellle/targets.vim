@@ -21,6 +21,21 @@ function! s:addMapping2(mapType, mapping, aiAI, nl)
     endif
 endfunction
 
+function! s:addMappings(mapType, prefix, suffix)
+    call s:addMapping1(a:mapType, a:prefix . "ci', '" . s:i       . a:suffix, s:i)
+    call s:addMapping1(a:mapType, a:prefix . "ca', '" . s:a       . a:suffix, s:a)
+    call s:addMapping1(a:mapType, a:prefix . "cI', '" . s:I       . a:suffix, s:I)
+    call s:addMapping1(a:mapType, a:prefix . "cA', '" . s:A       . a:suffix, s:A)
+    call s:addMapping2(a:mapType, a:prefix . "ni', '" . s:i . s:n . a:suffix, s:i, s:n)
+    call s:addMapping2(a:mapType, a:prefix . "na', '" . s:a . s:n . a:suffix, s:a, s:n)
+    call s:addMapping2(a:mapType, a:prefix . "nI', '" . s:I . s:n . a:suffix, s:I, s:n)
+    call s:addMapping2(a:mapType, a:prefix . "nA', '" . s:A . s:n . a:suffix, s:A, s:n)
+    call s:addMapping2(a:mapType, a:prefix . "li', '" . s:i . s:l . a:suffix, s:i, s:l)
+    call s:addMapping2(a:mapType, a:prefix . "la', '" . s:a . s:l . a:suffix, s:a, s:l)
+    call s:addMapping2(a:mapType, a:prefix . "lI', '" . s:I . s:l . a:suffix, s:I, s:l)
+    call s:addMapping2(a:mapType, a:prefix . "lA', '" . s:A . s:l . a:suffix, s:A, s:l)
+endfunction
+
 " pair text objects (multi line objects with single line seek)
 " cursor  │                        .........
 " line    │ a ( bbbbbb ) ( ccccc ) ( ddddd ) ( eeeee ) ( ffffff ) g
@@ -43,38 +58,18 @@ function! s:createPairTextObjects(mapType)
         if trigger ==# ' '
             continue
         endif
-        let triggerMap = trigger . " :<C-U>call targets#" . a:mapType . "('" . trigger
-        call s:addMapping1(a:mapType, triggerMap . "ci', v:count1)<CR>", s:i)
-        call s:addMapping1(a:mapType, triggerMap . "ca', v:count1)<CR>", s:a)
-        call s:addMapping1(a:mapType, triggerMap . "cI', v:count1)<CR>", s:I)
-        call s:addMapping1(a:mapType, triggerMap . "cA', v:count1)<CR>", s:A)
-        call s:addMapping2(a:mapType, triggerMap . "ni', v:count1)<CR>", s:i, s:n)
-        call s:addMapping2(a:mapType, triggerMap . "na', v:count1)<CR>", s:a, s:n)
-        call s:addMapping2(a:mapType, triggerMap . "nI', v:count1)<CR>", s:I, s:n)
-        call s:addMapping2(a:mapType, triggerMap . "nA', v:count1)<CR>", s:A, s:n)
-        call s:addMapping2(a:mapType, triggerMap . "li', v:count1)<CR>", s:i, s:l)
-        call s:addMapping2(a:mapType, triggerMap . "la', v:count1)<CR>", s:a, s:l)
-        call s:addMapping2(a:mapType, triggerMap . "lI', v:count1)<CR>", s:I, s:l)
-        call s:addMapping2(a:mapType, triggerMap . "lA', v:count1)<CR>", s:A, s:l)
+        let prefix = trigger . " :<C-U>call targets#" . a:mapType . "('" . trigger
+        let suffix = trigger . "', v:count1)<CR>"
+        call s:addMappings(a:mapType, prefix, suffix)
     endfor
 endfunction
 
 " tag text objects work on tags (similar to pair text objects)
 function! s:createTagTextObjects(mapType)
     let trigger = g:targets_tagTrigger
-    let triggerMap = trigger . " :<C-U>call targets#" . a:mapType . "('" . trigger
-    call s:addMapping1(a:mapType, triggerMap . "ci', v:count1)<CR>", s:i)
-    call s:addMapping1(a:mapType, triggerMap . "ca', v:count1)<CR>", s:a)
-    call s:addMapping1(a:mapType, triggerMap . "cI', v:count1)<CR>", s:I)
-    call s:addMapping1(a:mapType, triggerMap . "cA', v:count1)<CR>", s:A)
-    call s:addMapping2(a:mapType, triggerMap . "ni', v:count1)<CR>", s:i, s:n)
-    call s:addMapping2(a:mapType, triggerMap . "na', v:count1)<CR>", s:a, s:n)
-    call s:addMapping2(a:mapType, triggerMap . "nI', v:count1)<CR>", s:I, s:n)
-    call s:addMapping2(a:mapType, triggerMap . "nA', v:count1)<CR>", s:A, s:n)
-    call s:addMapping2(a:mapType, triggerMap . "li', v:count1)<CR>", s:i, s:l)
-    call s:addMapping2(a:mapType, triggerMap . "la', v:count1)<CR>", s:a, s:l)
-    call s:addMapping2(a:mapType, triggerMap . "lI', v:count1)<CR>", s:I, s:l)
-    call s:addMapping2(a:mapType, triggerMap . "lA', v:count1)<CR>", s:A, s:l)
+    let prefix = trigger . " :<C-U>call targets#" . a:mapType . "('" . trigger
+    let suffix = trigger . "', v:count1)<CR>"
+    call s:addMappings(a:mapType, prefix, suffix)
 endfunction
 
 " quote text objects expand into quote (by counting quote signs)
@@ -97,25 +92,16 @@ endfunction
 function! s:createQuoteTextObjects(mapType)
     " quote text objects
     for trigger in split(g:targets_quotes, '\zs')
-        if trigger ==# " "
+        if trigger ==# ' '
             continue
         elseif trigger ==# "'"
-            let triggerMap = "' :<C-U>call targets#" . a:mapType . "('''"
+            let prefix = "' :<C-U>call targets#" . a:mapType . "('''"
+            let suffix = "''', v:count1)<CR>"
         else
-            let triggerMap = trigger . " :<C-U>call targets#" . a:mapType . "('" . trigger
+            let prefix = trigger . " :<C-U>call targets#" . a:mapType . "('" . trigger
+            let suffix = trigger . "', v:count1)<CR>"
         endif
-        call s:addMapping1(a:mapType, triggerMap . "ci', v:count1)<CR>", s:i)
-        call s:addMapping1(a:mapType, triggerMap . "ca', v:count1)<CR>", s:a)
-        call s:addMapping1(a:mapType, triggerMap . "cI', v:count1)<CR>", s:I)
-        call s:addMapping1(a:mapType, triggerMap . "cA', v:count1)<CR>", s:A)
-        call s:addMapping2(a:mapType, triggerMap . "ni', v:count1)<CR>", s:i, s:n)
-        call s:addMapping2(a:mapType, triggerMap . "na', v:count1)<CR>", s:a, s:n)
-        call s:addMapping2(a:mapType, triggerMap . "nI', v:count1)<CR>", s:I, s:n)
-        call s:addMapping2(a:mapType, triggerMap . "nA', v:count1)<CR>", s:A, s:n)
-        call s:addMapping2(a:mapType, triggerMap . "li', v:count1)<CR>", s:i, s:l)
-        call s:addMapping2(a:mapType, triggerMap . "la', v:count1)<CR>", s:a, s:l)
-        call s:addMapping2(a:mapType, triggerMap . "lI', v:count1)<CR>", s:I, s:l)
-        call s:addMapping2(a:mapType, triggerMap . "lA', v:count1)<CR>", s:A, s:l)
+        call s:addMappings(a:mapType, prefix, suffix)
     endfor
 endfunction
 
@@ -141,18 +127,8 @@ function! s:createSeparatorTextObjects(mapType)
             let trigger = '\|'
         endif
         let triggerMap = trigger . " :<C-U>call targets#" . a:mapType . "('" . trigger
-        call s:addMapping1(a:mapType, triggerMap . "ci', v:count1)<CR>", s:i)
-        call s:addMapping1(a:mapType, triggerMap . "ca', v:count1)<CR>", s:a)
-        call s:addMapping1(a:mapType, triggerMap . "cI', v:count1)<CR>", s:I)
-        call s:addMapping1(a:mapType, triggerMap . "cA', v:count1)<CR>", s:A)
-        call s:addMapping2(a:mapType, triggerMap . "ni', v:count1)<CR>", s:i, s:n)
-        call s:addMapping2(a:mapType, triggerMap . "na', v:count1)<CR>", s:a, s:n)
-        call s:addMapping2(a:mapType, triggerMap . "nI', v:count1)<CR>", s:I, s:n)
-        call s:addMapping2(a:mapType, triggerMap . "nA', v:count1)<CR>", s:A, s:n)
-        call s:addMapping2(a:mapType, triggerMap . "li', v:count1)<CR>", s:i, s:l)
-        call s:addMapping2(a:mapType, triggerMap . "la', v:count1)<CR>", s:a, s:l)
-        call s:addMapping2(a:mapType, triggerMap . "lI', v:count1)<CR>", s:I, s:l)
-        call s:addMapping2(a:mapType, triggerMap . "lA', v:count1)<CR>", s:A, s:l)
+        let suffix = trigger . "', v:count1)<CR>"
+        call s:addMappings(a:mapType, triggerMap, suffix)
     endfor
 endfunction
 
@@ -172,21 +148,11 @@ endfunction
 function! s:createArgTextObjects(mapType)
     let trigger = g:targets_argTrigger
     let triggerMap = trigger . " :<C-U>call targets#" . a:mapType . "('" . trigger
-    call s:addMapping1(a:mapType, triggerMap . "ci', v:count1)<CR>", s:i)
-    call s:addMapping1(a:mapType, triggerMap . "ca', v:count1)<CR>", s:a)
-    call s:addMapping1(a:mapType, triggerMap . "cI', v:count1)<CR>", s:I)
-    call s:addMapping1(a:mapType, triggerMap . "cA', v:count1)<CR>", s:A)
-    call s:addMapping2(a:mapType, triggerMap . "ni', v:count1)<CR>", s:i, s:n)
-    call s:addMapping2(a:mapType, triggerMap . "na', v:count1)<CR>", s:a, s:n)
-    call s:addMapping2(a:mapType, triggerMap . "nI', v:count1)<CR>", s:I, s:n)
-    call s:addMapping2(a:mapType, triggerMap . "nA', v:count1)<CR>", s:A, s:n)
-    call s:addMapping2(a:mapType, triggerMap . "li', v:count1)<CR>", s:i, s:l)
-    call s:addMapping2(a:mapType, triggerMap . "la', v:count1)<CR>", s:a, s:l)
-    call s:addMapping2(a:mapType, triggerMap . "lI', v:count1)<CR>", s:I, s:l)
-    call s:addMapping2(a:mapType, triggerMap . "lA', v:count1)<CR>", s:A, s:l)
+    let suffix = trigger . "', v:count1)<CR>"
+    call s:addMappings(a:mapType, triggerMap, suffix)
 endfunction
 
-function! s:addMappings()
+function! s:addAllMappings()
     if v:version >= 704 || (v:version == 703 && has('patch338'))
         " if possible, create only a few expression mappings to speed up loading times
         silent! execute 'omap <expr> <unique> ' . s:i . " targets#e('i', '" . s:i . "')"
@@ -239,7 +205,7 @@ function! s:loadSettings()
 endfunction
 
 call s:loadSettings()
-call s:addMappings()
+call s:addAllMappings()
 
 let &cpoptions = s:save_cpoptions
 unlet s:save_cpoptions

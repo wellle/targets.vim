@@ -68,11 +68,11 @@ function! s:setup()
                 \ 'q': { 'quotes': [["'"], ['"'], ['`']], },
                 \ })
 
-    let s:lastRawTarget = 0
+    let s:lastRawTarget = {}
 endfunction
 
 " a:count is unused here, but added for consistency with targets#x
-function! targets#o(trigger, count)
+function! targets#o(trigger, typed, count)
     let context = s:init('o')
 
     " TODO: include kind in trigger so we don't have to guess as much?
@@ -84,7 +84,7 @@ function! targets#o(trigger, count)
     endif
     call s:handleTarget(context, target, rawTarget)
     call s:clearCommandLine()
-    call s:prepareRepeat(delimiter, which, modifier)
+    call s:prepareRepeat(a:typed)
     call s:cleanUp()
 endfunction
 
@@ -115,15 +115,15 @@ function! targets#e(modifier, original)
         let i = i + 1
     endwhile
 
+    let typed = a:original . chars
     if empty(s:getFactories(delimiter))
-        return a:original . chars
+        return typed
     endif
 
-    if delimiter ==# "'"
-        let delimiter = "''"
-    endif
+    let delimiter = substitute(delimiter, "'", "''", "g")
+    let typed = substitute(typed, "'", "''", "g")
 
-    let s:call = prefix . delimiter . which . a:modifier . "', " . v:count1 . ")"
+    let s:call = prefix . delimiter . which . a:modifier . "', '" . typed . "', " . v:count1 . ")"
     " indirectly (but silently) call targets#do below
     return "@(targets)"
 endfunction
@@ -134,7 +134,8 @@ function! targets#do()
 endfunction
 
 " 'x' is for visual (as in :xnoremap, not in select mode)
-function! targets#x(trigger, count)
+" a:typed is unused here, but added for consistency with targets#o
+function! targets#x(trigger, typed, count)
     let context = s:initX()
 
     let [delimiter, which, modifier] = split(a:trigger, '\zs')
@@ -464,7 +465,7 @@ function! s:triggerReselect(context)
 endfunction
 
 " set up repeat.vim for older Vim versions
-function! s:prepareRepeat(delimiter, which, modifier)
+function! s:prepareRepeat(typed)
     if v:version >= 704 " skip recent versions
         return
     endif
@@ -473,14 +474,7 @@ function! s:prepareRepeat(delimiter, which, modifier)
         return
     endif
 
-    " TODO: this wouldn't work with custom iaIAnl, right?
-    " maybe the trigger args should just always include what's typed
-    " and then we translate in here with the cache, potentially without splitting
-    let cmd = v:operator . a:modifier
-    if a:which !=# 'c'
-        let cmd .= a:which
-    endif
-    let cmd .= a:delimiter
+    let cmd = v:operator . a:typed
     if v:operator ==# 'c'
         let cmd .= "\<C-r>.\<ESC>"
     endif
