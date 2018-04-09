@@ -176,12 +176,12 @@ endfunction
 function! s:initX()
     let context = s:init('x')
 
-    let s:visualTarget = targets#target#fromVisualSelection(s:selection)
+    let visualTarget = targets#target#fromVisualSelection(s:selection)
 
     " reselect, save mode and go back to normal mode
     normal! gv
     if mode() ==# 'V'
-        let s:visualTarget.linewise = 1
+        let visualTarget.linewise = 1
         normal! V
     else
         normal! v
@@ -193,7 +193,8 @@ function! s:initX()
     " start, fix that too
     let context.oldpos = getpos('.')
 
-    let context['newSelection'] = s:isNewSelection()
+    let context['newSelection'] = s:isNewSelection(visualTarget)
+    let context['visualTarget'] = visualTarget
     return context
 endfunction
 
@@ -347,14 +348,14 @@ endfunction
 
 " return 0 if the selection changed since the last invocation. used for
 " growing
-function! s:isNewSelection()
+function! s:isNewSelection(visualTarget)
     " no previous invocation or target
     if !exists('s:lastTarget')
         return 1
     endif
 
     " selection changed
-    if !s:lastTarget.equal(s:visualTarget)
+    if !s:lastTarget.equal(a:visualTarget)
         return 1
     endif
 
@@ -453,7 +454,7 @@ endfunction
 " temporarily select original selection to reselect later
 function! s:prepareReselect(context)
     if a:context.mapmode ==# 'x'
-        call s:selectRegion(s:visualTarget)
+        call s:selectRegion(a:context.visualTarget)
     endif
 endfunction
 
