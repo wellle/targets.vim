@@ -30,6 +30,13 @@ function! targets#util#search(pattern, flags, ...)
     endfor
 endfunction
 
+function! targets#util#printpos()
+    let line = getline('.')
+    let c = col('.')
+    let prefix = c == 1 ? '' : line[0 : c-2]
+    echom prefix . '→' . line[c-1] . '←' . line[c : ]
+endfunction
+
 " return 1 and send a message to targets#util#debug
 " args (message, parameters=nil)
 function! targets#util#fail(message, ...)
