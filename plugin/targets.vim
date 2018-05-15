@@ -189,15 +189,23 @@ endfunction
 function! s:addMappings()
     if v:version >= 704 || (v:version == 703 && has('patch338'))
         " if possible, create only a few expression mappings to speed up loading times
-        silent! execute 'onoremap <expr> <silent> <unique> ' . s:i . " targets#e('i', '" . s:i . "')"
-        silent! execute 'onoremap <expr> <silent> <unique> ' . s:a . " targets#e('a', '" . s:a . "')"
-        silent! execute 'onoremap <expr> <silent> <unique> ' . s:I . " targets#e('I', '" . s:I . "')"
-        silent! execute 'onoremap <expr> <silent> <unique> ' . s:A . " targets#e('A', '" . s:A . "')"
+        silent! execute 'omap <expr> <unique> ' . s:i . " targets#e('i', '" . s:i . "')"
+        silent! execute 'omap <expr> <unique> ' . s:a . " targets#e('a', '" . s:a . "')"
+        silent! execute 'omap <expr> <unique> ' . s:I . " targets#e('I', '" . s:I . "')"
+        silent! execute 'omap <expr> <unique> ' . s:A . " targets#e('A', '" . s:A . "')"
 
-        silent! execute 'xnoremap <expr> <silent> <unique> ' . s:i . " targets#e('i', '" . s:i . "')"
-        silent! execute 'xnoremap <expr> <silent> <unique> ' . s:a . " targets#e('a', '" . s:a . "')"
-        silent! execute 'xnoremap <expr> <silent> <unique> ' . s:I . " targets#e('I', '" . s:I . "')"
-        silent! execute 'xnoremap <expr> <silent> <unique> ' . s:A . " targets#e('A', '" . s:A . "')"
+        silent! execute 'xmap <expr> <unique> ' . s:i . " targets#e('i', '" . s:i . "')"
+        silent! execute 'xmap <expr> <unique> ' . s:a . " targets#e('a', '" . s:a . "')"
+        silent! execute 'xmap <expr> <unique> ' . s:I . " targets#e('I', '" . s:I . "')"
+        silent! execute 'xmap <expr> <unique> ' . s:A . " targets#e('A', '" . s:A . "')"
+
+        " #209: The above mappings don't use <silent> for better visual
+        " feedback on `!ip` (when we pass back control to Vim). To be silent
+        " when calling internal targest functions, we use this special mapping
+        " which does use <silent>. It should not lead to conflicts because (
+        " is not a valid register.
+        onoremap <silent> @(targets) :<C-u>call targets#do()<CR>
+        xnoremap <silent> @(targets) :<C-u>call targets#do()<CR>
 
     else
         " otherwise create individual mappings #117

@@ -107,9 +107,9 @@ endfunction
 function! targets#e(modifier, original)
     let mode = mode(1)
     if mode ==? 'v' " visual mode, from xnoremap
-        let prefix = "\<Esc>:\<C-U>call targets#x('"
+        let prefix = "call targets#x('"
     elseif mode ==# 'no' " operator pending, from onoremap
-        let prefix = ":call targets#o('"
+        let prefix = "call targets#o('"
     else
         return a:modifier
     endif
@@ -136,7 +136,14 @@ function! targets#e(modifier, original)
         let delimiter = "''"
     endif
 
-    return prefix . delimiter . which . a:modifier . "', " . v:count1 . ")\<CR>"
+    let s:call = prefix . delimiter . which . a:modifier . "', " . v:count1 . ")"
+    " indirectly (but silently) call targets#do below
+    return "@(targets)"
+endfunction
+
+" gets called via the @(targets) mapping from above
+function! targets#do()
+    exe s:call
 endfunction
 
 " 'x' is for visual (as in :xnoremap, not in select mode)
