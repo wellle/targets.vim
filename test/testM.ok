@@ -48,7 +48,7 @@ Warning: terminal cannot highlight
 "test7.in"
 "test7.in" 72L, 1422C
 /010
-3 lines yanked
+3 lines yanked into "p
 3 more lines
 /010
 3 more lines
@@ -122,7 +122,7 @@ Warning: terminal cannot highlight
 3 more lines
 /010
 /001
-3 lines yanked
+3 lines yanked into "p
 3 more lines
 /001
 3 more lines
@@ -196,7 +196,7 @@ Warning: terminal cannot highlight
 3 more lines
 /001
 /201
-3 lines yanked
+3 lines yanked into "p
 3 more lines
 /201
 3 more lines
@@ -270,7 +270,7 @@ Warning: terminal cannot highlight
 3 more lines
 /201
 /100
-3 lines yanked
+3 lines yanked into "p
 3 more lines
 /100
 3 more lines
@@ -344,7 +344,7 @@ Warning: terminal cannot highlight
 3 more lines
 /100
 /102
-3 lines yanked
+3 lines yanked into "p
 3 more lines
 /102
 3 more lines
@@ -418,7 +418,7 @@ Warning: terminal cannot highlight
 3 more lines
 /102
 /012
-3 lines yanked
+3 lines yanked into "p
 3 more lines
 /012
 3 more lines
@@ -492,7 +492,7 @@ Warning: terminal cannot highlight
 3 more lines
 /012
 /111
-3 lines yanked
+3 lines yanked into "p
 3 more lines
 /111
 3 more lines
@@ -566,7 +566,7 @@ Warning: terminal cannot highlight
 3 more lines
 /111
 /210
-3 lines yanked
+3 lines yanked into "p
 3 more lines
 /210
 3 more lines
@@ -640,7 +640,7 @@ Warning: terminal cannot highlight
 3 more lines
 /210
 /212
-3 lines yanked
+3 lines yanked into "p
 3 more lines
 /212
 3 more lines
@@ -714,7 +714,7 @@ Warning: terminal cannot highlight
 3 more lines
 /212
 /101
-3 lines yanked
+3 lines yanked into "p
 3 more lines
 /101
 3 more lines
@@ -788,7 +788,7 @@ Warning: terminal cannot highlight
 3 more lines
 /101
 /011
-3 lines yanked
+3 lines yanked into "p
 3 more lines
 /011
 3 more lines
@@ -862,7 +862,7 @@ Warning: terminal cannot highlight
 3 more lines
 /011
 /211
-3 lines yanked
+3 lines yanked into "p
 3 more lines
 /211
 3 more lines
@@ -936,7 +936,7 @@ Warning: terminal cannot highlight
 3 more lines
 /211
 /110
-3 lines yanked
+3 lines yanked into "p
 3 more lines
 /110
 3 more lines
@@ -1010,7 +1010,7 @@ Warning: terminal cannot highlight
 3 more lines
 /110
 /112
-3 lines yanked
+3 lines yanked into "p
 3 more lines
 /112
 3 more lines
@@ -1084,7 +1084,7 @@ Warning: terminal cannot highlight
 3 more lines
 /112
 /000
-3 lines yanked
+3 lines yanked into "p
 3 more lines
 /000
 3 more lines
@@ -1158,7 +1158,7 @@ Warning: terminal cannot highlight
 3 more lines
 /000
 /002
-3 lines yanked
+3 lines yanked into "p
 3 more lines
 /002
 3 more lines
@@ -1232,7 +1232,7 @@ Warning: terminal cannot highlight
 3 more lines
 /002
 /200
-3 lines yanked
+3 lines yanked into "p
 3 more lines
 /200
 3 more lines
@@ -1306,7 +1306,7 @@ Warning: terminal cannot highlight
 3 more lines
 /200
 /202
-3 lines yanked
+3 lines yanked into "p
 3 more lines
 /202
 3 more lines
