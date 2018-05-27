@@ -111,7 +111,7 @@ function! targets#e(modifier, original)
     elseif mode ==# 'no' " operator pending, from onoremap
         let prefix = "call targets#o('"
     else
-        return a:modifier
+        return a:original
     endif
 
     let char1 = nr2char(getchar())
