@@ -40,9 +40,7 @@ endfunction
 " return 1 and send a message to targets#util#debug
 " args (message, parameters=nil)
 function! targets#util#fail(message, ...)
-    let message = 'fail ' . a:message
-    let message .= a:0 >= 1 ? ' ' . string(a:1) : ''
-    call targets#util#debug(message)
+    call targets#util#debug('fail ' . a:message . (a:0 == 0 ? '' : ' ' . string(a:1)))
     return 1
 endfunction
 

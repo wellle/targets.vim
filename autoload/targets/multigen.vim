@@ -24,8 +24,7 @@ endfunction
 function! targets#multigen#next(first) dict
     if a:first
         for gen in self.gens
-            let first = self.context.newSelection || self.lastRawTarget.gen.factory.trigger != gen.factory.trigger
-            call gen.next(first)
+            call gen.next(1)
         endfor
     else
         call self.currentTarget.gen.next(0) " fill up where we used the last target from
@@ -43,19 +42,9 @@ function! targets#multigen#next(first) dict
             return self.currentTarget
         endif
 
-        " TODO: can we merge current target and last raw target to avoid this
-        " sort of duplication?
-        if exists('self.currentTarget')
-            if self.currentTarget.equal(target)
-                " current target is the same as last one, skip it and try the next one
-                let targets[idx] = target.gen.next(0)
-                continue
-            endif
-        elseif !self.context.newSelection && self.lastRawTarget.equal(target)
-            " current target is the same as continued one, skip it and try the next one
-            " NOTE: this can happen if a multi contains two generators which
-            " may create the same target. in that case growing might break
-            " without this check
+        " if two generators produce the same target, skip it
+        " also used for growing in some cases
+        if self.lastRawTarget.equal(target)
             let targets[idx] = target.gen.next(0)
             continue
         endif
@@ -131,6 +120,10 @@ endfunction
 
 " returns best target (and its index) according to range score and distance to cursor
 function! s:bestTarget(targets, context, rangeScores, message)
+    if len(a:targets) == 1
+        return [a:targets[0], 0]
+    endif
+
     let [bestScore, minLines, minChars] = [0, 1/0, 1/0] " 1/0 = maxint
 
     let cnt = len(a:targets)

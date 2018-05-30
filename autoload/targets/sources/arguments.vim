@@ -92,16 +92,16 @@ function! s:select(gen, direction)
     let [opening, closing] = [a:gen.args.opening, a:gen.args.closing]
     if a:direction ==# '^'
         if s:getchar() =~# closing
-            let [sl, sc, el, ec, err] = s:findArg(a:gen, a:direction, 'cW', 'bW', 'bW', opening, closing)
+            let [sl, sc, el, ec, err] = s:findArg(a:gen.args, a:direction, 'cW', 'bW', 'bW', opening, closing)
         else
-            let [sl, sc, el, ec, err] = s:findArg(a:gen, a:direction, 'W', 'bcW', 'bW', opening, closing)
+            let [sl, sc, el, ec, err] = s:findArg(a:gen.args, a:direction, 'W', 'bcW', 'bW', opening, closing)
         endif
         let message = 'argument select 1'
     elseif a:direction ==# '>'
-        let [sl, sc, el, ec, err] = s:findArg(a:gen, a:direction, 'W', 'bW', 'bW', opening, closing)
+        let [sl, sc, el, ec, err] = s:findArg(a:gen.args, a:direction, 'W', 'bW', 'bW', opening, closing)
         let message = 'argument select 2'
     elseif a:direction ==# '<' " like '>', but backwards
-        let [el, ec, sl, sc, err] = s:findArg(a:gen, a:direction, 'bW', 'W', 'W', closing, opening)
+        let [el, ec, sl, sc, err] = s:findArg(a:gen.args, a:direction, 'bW', 'W', 'W', closing, opening)
         let message = 'argument select 3'
     else
         return targets#target#withError('argument select')
@@ -118,20 +118,20 @@ endfunction
 " find an argument around the cursor given a direction (see s:select)
 " uses flags1 to search for end to the right; flags1 and flags2 to search for
 " start to the left
-function! s:findArg(gen, direction, flags1, flags2, flags3, opening, closing)
+function! s:findArg(args, direction, flags1, flags2, flags3, opening, closing)
     let oldpos = getpos('.')
     let char = s:getchar()
-    let separator = a:gen.args.separator
+    let separator = a:args.separator
 
     if char =~# a:closing && a:direction !=# '^' " started on closing, but not up
         let [el, ec] = oldpos[1:2] " use old position as end
     else " find end to the right
-        let [el, ec, err] = s:findArgBoundary(a:flags1, a:flags1, a:opening, a:closing, a:gen.args.all, a:gen.args.separator)
+        let [el, ec, err] = s:findArgBoundary(a:flags1, a:flags1, a:opening, a:closing, a:args.all, a:args.separator)
         if err > 0 " no closing found
             return [0, 0, 0, 0, targets#util#fail('findArg 1', a:)]
         endif
 
-        let separator = a:gen.args.separator
+        let separator = a:args.separator
         if char =~# a:opening || char =~# separator " started on opening or separator
             let [sl, sc] = oldpos[1:2] " use old position as start
             return [sl, sc, el, ec, 0]
@@ -141,7 +141,7 @@ function! s:findArg(gen, direction, flags1, flags2, flags3, opening, closing)
     endif
 
     " find start to the left
-    let [sl, sc, err] = s:findArgBoundary(a:flags2, a:flags3, a:closing, a:opening, a:gen.args.all, a:gen.args.separator)
+    let [sl, sc, err] = s:findArgBoundary(a:flags2, a:flags3, a:closing, a:opening, a:args.all, a:args.separator)
     if err > 0 " no opening found
         return [0, 0, 0, 0, targets#util#fail('findArg 2')]
     endif

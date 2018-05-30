@@ -1,2 +1,5 @@
 doc/tags
 .DS_Store
+
+tags
+*.diff

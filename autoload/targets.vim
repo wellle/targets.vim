@@ -68,16 +68,16 @@ function! s:setup()
                 \ 'q': { 'quotes': [["'"], ['"'], ['`']], },
                 \ })
 
-    let s:lastRawTarget = {}
+    let s:lastRawTarget = targets#target#withError('initial')
+    let s:lastTrigger   = "   "
 endfunction
 
 " a:count is unused here, but added for consistency with targets#x
 function! targets#o(trigger, typed, count)
-    let context = s:init('o')
+    let context = s:init('o', a:trigger)
 
     " TODO: include kind in trigger so we don't have to guess as much?
-    let [delimiter, which, modifier] = split(a:trigger, '\zs')
-    let [target, rawTarget] = s:findTarget(context, delimiter, which, modifier, v:count1)
+    let [target, rawTarget] = s:findTarget(context, v:count1)
     if target.state().isInvalid()
         call s:abortMatch(context, '#o: ' . target.error)
         return s:cleanUp()
@@ -136,23 +136,23 @@ endfunction
 " 'x' is for visual (as in :xnoremap, not in select mode)
 " a:typed is unused here, but added for consistency with targets#o
 function! targets#x(trigger, typed, count)
-    let context = s:initX()
+    let context = s:initX(a:trigger)
 
-    let [delimiter, which, modifier] = split(a:trigger, '\zs')
-    let [target, rawTarget] = s:findTarget(context, delimiter, which, modifier, a:count)
+    let [target, rawTarget] = s:findTarget(context, a:count)
     if target.state().isInvalid()
         call s:abortMatch(context, '#x: ' . target.error)
         return s:cleanUp()
     endif
     if s:handleTarget(context, target, rawTarget) == 0
-        let s:lastTarget = target
-        let s:lastRawTarget = rawTarget
+        let s:lastTrigger   = a:trigger " needed to decide wether to skip/grow
+        let s:lastTarget    = target    " needed to decide whether selection has changed
+        let s:lastRawTarget = rawTarget " needed to jump to start or end when growing/skipping
     endif
     call s:cleanUp()
 endfunction
 
 " initialize script local variables for the current matching
-function! s:init(mapmode)
+function! s:init(mapmode, trigger)
     let s:selection = &selection  " remember 'selection' setting
     let &selection  = 'inclusive' " and set it to inclusive
 
@@ -164,6 +164,7 @@ function! s:init(mapmode)
 
     return {
                 \ 'newSelection': 1,
+                \ 'trigger': a:trigger,
                 \ 'mapmode': a:mapmode,
                 \ 'oldpos':  getpos('.'),
                 \ 'minline': line('w0'),
@@ -173,8 +174,8 @@ function! s:init(mapmode)
 endfunction
 
 " save old visual selection to detect new selections and reselect on fail
-function! s:initX()
-    let context = s:init('x')
+function! s:initX(trigger)
+    let context = s:init('x', a:trigger)
 
     let visualTarget = targets#target#fromVisualSelection(s:selection)
 
@@ -195,6 +196,11 @@ function! s:initX()
 
     let context['newSelection'] = s:isNewSelection(visualTarget)
     let context['visualTarget'] = visualTarget
+
+    if context.newSelection
+        let s:lastRawTarget = targets#target#withError('initial')
+    endif
+
     return context
 endfunction
 
@@ -206,42 +212,81 @@ function! s:cleanUp()
     let &whichwrap   = s:whichwrap
 endfunction
 
-function! s:findTarget(context, delimiter, which, modifier, count)
-    let factories = s:getFactories(a:delimiter)
+function! s:findTarget(context, count)
+    let delimiter = a:context.trigger[0]
+    let modifier  = a:context.trigger[2]
+
+    let factories = s:getFactories(delimiter)
     if empty(factories)
         let errorTarget = targets#target#withError("failed to find delimiter")
         return [errorTarget, errorTarget]
     endif
 
     let view = winsaveview()
-    let rawTarget = s:findRawTarget(a:context, factories, a:which, a:count)
-    let target = s:modifyTarget(rawTarget, a:modifier)
+    let rawTarget = s:findRawTarget(a:context, factories, a:count)
+    let target = s:modifyTarget(rawTarget, modifier)
     call winrestview(view)
     return [target, rawTarget]
 endfunction
 
-function! s:findRawTarget(context, factories, which, count)
+function! s:findRawTarget(context, factories, count)
     let context = a:context
     let multigen = targets#multigen#new(context, s:lastRawTarget, s:rangeScores)
+    let first = 1
+    let [delimiter , which , modifier ] = split(a:context.trigger, '\zs')
+    let [delimiterL, whichL, modifierL] = split(s:lastTrigger, '\zs')
+    let sameDelimiter = delimiter ==# delimiterL
+    let sameModifier  = modifier  ==# modifierL
 
-    if a:which ==# 'c'
-        if a:count == 1 && a:context.newSelection " seek
+    " echom s:lastTrigger . ' ' context.trigger
+    " TODO: test all these cases
+
+    if which ==# 'c'
+        if !a:context.newSelection && sameDelimiter && sameModifier
+            " grow if selection didn't change and the trigger is the same (or only which changed)
+            let multigen = s:lastRawTarget.multigen      " continue with last gens
+            let multigen.currentTarget = s:lastRawTarget " continue from here
+            let multigen.lastRawTarget = s:lastRawTarget " skip current
+            call filter(multigen.gens, 'v:val.which ==# "C"') " drop N/L gens TODO: use same uppercase everywhere?
+
+            if len(multigen.gens) > 0
+                " echom 'same selection, same trigger, just grow'
+                " if some gens are left we're good and can continue
+                let first = 0
+            else
+                " echom 'same selection, same trigger, but no gen left, no seek'
+                " if all gens have been filtered out, fall back to non seeking
+                let multigen.context = context.withOldpos(s:lastRawTarget.getposS())
+                call multigen.add(a:factories, 'C')
+            endif
+
+        elseif a:count == 1 && !a:context.newSelection && sameDelimiter && !sameModifier
+            " echom 'different modifier only, reuse last target'
+            " if the target is the same, but just the modifier is different, reuse
+            " last raw target
+            return s:lastRawTarget
+
+        elseif a:count == 1 && (a:context.newSelection || !sameDelimiter)
+            " echom 'new selection or new delimiter, seek'
+            " allow seeking if no count was given and the selection changed
+            " or something else was typed
             call multigen.add(a:factories, 'C', 'N', 'L')
 
         else " don't seek
+            " echom 'no grow, no seek'
             if !a:context.newSelection " start from last raw end
                 let multigen.context = context.withOldpos(s:lastRawTarget.getposE())
             endif
             call multigen.add(a:factories, 'C')
         endif
 
-    elseif a:which ==# 'n'
+    elseif which ==# 'n'
         if !a:context.newSelection " start from last raw start
             let multigen.context = context.withOldpos(s:lastRawTarget.getposS())
         endif
         call multigen.add(a:factories, 'N')
 
-    elseif a:which ==# 'l'
+    elseif which ==# 'l'
         if !a:context.newSelection " start from last raw end
             let multigen.context = context.withOldpos(s:lastRawTarget.getposE())
         endif
@@ -251,7 +296,9 @@ function! s:findRawTarget(context, factories, which, count)
         return targets#target#withError('findRawTarget which')
     endif
 
-    return multigen.nextN(a:count)
+    let target = multigen.nextN(a:count, first)
+    let target.multigen = multigen
+    return target
 endfunction
 
 function! s:modifyTarget(target, modifier)
@@ -293,7 +340,6 @@ function! s:getFactories(trigger)
     return factories
 endfunction
 
-" returns list of [kind, argsForKind], potentially empty
 function! s:getNewFactories(trigger)
     let multi = get(g:targets_multis, a:trigger, 0)
     if type(multi) == type({})
