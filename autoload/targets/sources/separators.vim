@@ -1,9 +1,9 @@
 function! targets#sources#separators#new(delimiter)
     let args = {'delimiter': escape(a:delimiter, '.~\$')}
     let genFuncs = {
-                \ 'C': function('targets#sources#separators#C'),
-                \ 'N': function('targets#sources#separators#N'),
-                \ 'L': function('targets#sources#separators#L'),
+                \ 'c': function('targets#sources#separators#current'),
+                \ 'n': function('targets#sources#separators#next'),
+                \ 'l': function('targets#sources#separators#last'),
                 \ }
     let modFuncs = {
                 \ 'i': function('targets#modify#drop'),
@@ -14,7 +14,7 @@ function! targets#sources#separators#new(delimiter)
     return targets#factory#new(a:delimiter, args, genFuncs, modFuncs)
 endfunction
 
-function! targets#sources#separators#C(gen, first)
+function! targets#sources#separators#current(gen, first)
     if !a:first
         return targets#target#withError('only one current separator')
     endif
@@ -22,7 +22,7 @@ function! targets#sources#separators#C(gen, first)
     return targets#util#select(a:gen.args.delimiter, a:gen.args.delimiter, '>')
 endfunction
 
-function! targets#sources#separators#N(gen, first)
+function! targets#sources#separators#next(gen, first)
     if targets#util#search(a:gen.args.delimiter, 'W') > 0
         return targets#target#withError('no target')
     endif
@@ -33,7 +33,7 @@ function! targets#sources#separators#N(gen, first)
     return target
 endfunction
 
-function! targets#sources#separators#L(gen, first)
+function! targets#sources#separators#last(gen, first)
     if a:first
         let flags = 'cbW' " allow separator under cursor on first iteration
     else

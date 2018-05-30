@@ -5,9 +5,9 @@ function! targets#sources#pairs#new(opening, closing)
                 \ 'trigger': a:closing,
                 \ }
     let genFuncs = {
-                \ 'C': function('targets#sources#pairs#C'),
-                \ 'N': function('targets#sources#pairs#N'),
-                \ 'L': function('targets#sources#pairs#L'),
+                \ 'c': function('targets#sources#pairs#current'),
+                \ 'n': function('targets#sources#pairs#next'),
+                \ 'l': function('targets#sources#pairs#last'),
                 \ }
     let modFuncs = {
                 \ 'i': function('targets#modify#drop'),
@@ -18,7 +18,7 @@ function! targets#sources#pairs#new(opening, closing)
     return targets#factory#new(a:closing, args, genFuncs, modFuncs)
 endfunction
 
-function! targets#sources#pairs#C(gen, first)
+function! targets#sources#pairs#current(gen, first)
     if a:first
         let cnt = 1
     else
@@ -30,7 +30,7 @@ function! targets#sources#pairs#C(gen, first)
     return target
 endfunction
 
-function! targets#sources#pairs#N(gen, first)
+function! targets#sources#pairs#next(gen, first)
     if targets#util#search(a:gen.args.opening, 'W') > 0
         return targets#target#withError('no target')
     endif
@@ -41,7 +41,7 @@ function! targets#sources#pairs#N(gen, first)
     return target
 endfunction
 
-function! targets#sources#pairs#L(gen, first)
+function! targets#sources#pairs#last(gen, first)
     if targets#util#search(a:gen.args.closing, 'bW') > 0
         return targets#target#withError('no target')
     endif

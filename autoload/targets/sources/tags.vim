@@ -7,9 +7,9 @@ function! targets#sources#tags#new()
                 \ 'trigger': 't',
                 \ }
     let genFuncs = {
-                \ 'C': function('targets#sources#pairs#C'),
-                \ 'N': function('targets#sources#pairs#N'),
-                \ 'L': function('targets#sources#pairs#L'),
+                \ 'c': function('targets#sources#pairs#current'),
+                \ 'n': function('targets#sources#pairs#next'),
+                \ 'l': function('targets#sources#pairs#last'),
                 \ }
     let modFuncs = {
                 \ 'i': [function('targets#modify#innert'), function('targets#modify#drop')],

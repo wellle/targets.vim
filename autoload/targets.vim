@@ -222,7 +222,7 @@ function! s:findRawTarget(context, factories, count)
             let multigen = s:lastRawTarget.multigen      " continue with last gens
             let multigen.currentTarget = s:lastRawTarget " continue from here
             let multigen.lastRawTarget = s:lastRawTarget " skip current
-            call filter(multigen.gens, 'v:val.which ==# "C"') " drop N/L gens TODO: use same uppercase everywhere?
+            call filter(multigen.gens, 'v:val.which ==# "c"') " drop n/l gens
 
             if len(multigen.gens) > 0
                 " echom 'same selection, same trigger, just grow'
@@ -232,7 +232,7 @@ function! s:findRawTarget(context, factories, count)
                 " echom 'same selection, same trigger, but no gen left, no seek'
                 " if all gens have been filtered out, fall back to non seeking
                 let multigen.context = context.withOldpos(s:lastRawTarget.getposS())
-                call multigen.add(a:factories, 'C')
+                call multigen.add(a:factories, 'c')
             endif
 
         elseif a:count == 1 && !a:context.newSelection && sameDelimiter && !sameModifier
@@ -245,27 +245,27 @@ function! s:findRawTarget(context, factories, count)
             " echom 'new selection or new delimiter, seek'
             " allow seeking if no count was given and the selection changed
             " or something else was typed
-            call multigen.add(a:factories, 'C', 'N', 'L')
+            call multigen.add(a:factories, 'c', 'n', 'l')
 
         else " don't seek
             " echom 'no grow, no seek'
             if !a:context.newSelection " start from last raw end
                 let multigen.context = context.withOldpos(s:lastRawTarget.getposE())
             endif
-            call multigen.add(a:factories, 'C')
+            call multigen.add(a:factories, 'c')
         endif
 
     elseif which ==# 'n'
         if !a:context.newSelection " start from last raw start
             let multigen.context = context.withOldpos(s:lastRawTarget.getposS())
         endif
-        call multigen.add(a:factories, 'N')
+        call multigen.add(a:factories, 'n')
 
     elseif which ==# 'l'
         if !a:context.newSelection " start from last raw end
             let multigen.context = context.withOldpos(s:lastRawTarget.getposE())
         endif
-        call multigen.add(a:factories, 'L')
+        call multigen.add(a:factories, 'l')
 
     else
         return targets#target#withError('findRawTarget which')
@@ -498,7 +498,7 @@ function! s:prepareRepeat(typed)
 
     let cmd = v:operator . a:typed
     if v:operator ==# 'c'
-        let cmd .= "\<C-r>.\<ESC>"
+        let cmd .= "\<C-R>.\<ESC>"
     endif
 
     silent! call repeat#set(cmd, v:count)

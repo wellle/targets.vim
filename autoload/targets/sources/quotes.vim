@@ -25,9 +25,9 @@ function! targets#sources#quotes#new(delimiter, ...)
                 \ 'quoteDirs': quoteDirs
                 \ }
     let genFuncs = {
-                \ 'C': function('targets#sources#quotes#C'),
-                \ 'N': function('targets#sources#quotes#N'),
-                \ 'L': function('targets#sources#quotes#L'),
+                \ 'c': function('targets#sources#quotes#current'),
+                \ 'n': function('targets#sources#quotes#next'),
+                \ 'l': function('targets#sources#quotes#last'),
                 \ }
     let modFuncs = {
                 \ 'i': function('targets#modify#drop'),
@@ -38,7 +38,7 @@ function! targets#sources#quotes#new(delimiter, ...)
     return targets#factory#new(a:delimiter, args, genFuncs, modFuncs)
 endfunction
 
-function! targets#sources#quotes#C(gen, first)
+function! targets#sources#quotes#current(gen, first)
     if !a:first
         return targets#target#withError('only one current quote')
     endif
@@ -47,7 +47,7 @@ function! targets#sources#quotes#C(gen, first)
     return targets#util#select(a:gen.args.delimiter, a:gen.args.delimiter, dir)
 endfunction
 
-function! targets#sources#quotes#N(gen, first)
+function! targets#sources#quotes#next(gen, first)
     if !exists('a:gen.state.rate')
         let [_, a:gen.state.rate, _, skipR, _] = s:quoteDir(a:gen.args.quoteDirs, a:gen.args.delimiter)
         let cnt = a:gen.state.rate - skipR " skip initially once
@@ -66,7 +66,7 @@ function! targets#sources#quotes#N(gen, first)
     return target
 endfunction
 
-function! targets#sources#quotes#L(gen, first)
+function! targets#sources#quotes#last(gen, first)
     if !exists('a:gen.state.rate')
         let [_, a:gen.state.rate, skipL, _, _] = s:quoteDir(a:gen.args.quoteDirs, a:gen.args.delimiter)
         let cnt = a:gen.state.rate - skipL " skip initially once

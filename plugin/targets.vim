@@ -170,8 +170,8 @@ function! s:addAllMappings()
         " when calling internal targest functions, we use this special mapping
         " which does use <silent>. It should not lead to conflicts because (
         " is not a valid register.
-        onoremap <silent> @(targets) :<C-u>call targets#do()<CR>
-        xnoremap <silent> @(targets) :<C-u>call targets#do()<CR>
+        onoremap <silent> @(targets) :<C-U>call targets#do()<CR>
+        xnoremap <silent> @(targets) :<C-U>call targets#do()<CR>
 
     else
         " otherwise create individual mappings #117

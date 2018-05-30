@@ -9,9 +9,9 @@ function! targets#sources#arguments#new(opening, closing, separator)
                 \ 'outer':     a:opening . '\|' . a:closing,
                 \ }
     let genFuncs = {
-                \ 'C': function('targets#sources#arguments#C'),
-                \ 'N': function('targets#sources#arguments#N'),
-                \ 'L': function('targets#sources#arguments#L'),
+                \ 'c': function('targets#sources#arguments#current'),
+                \ 'n': function('targets#sources#arguments#next'),
+                \ 'l': function('targets#sources#arguments#last'),
                 \ }
     let modFuncs = {
                 \ 'i': function('targets#modify#drop'),
@@ -22,7 +22,7 @@ function! targets#sources#arguments#new(opening, closing, separator)
     return targets#factory#new('a', args, genFuncs, modFuncs)
 endfunction
 
-function! targets#sources#arguments#C(gen, first)
+function! targets#sources#arguments#current(gen, first)
     if a:first
         let target = s:select(a:gen, '^')
     else
@@ -37,7 +37,7 @@ function! targets#sources#arguments#C(gen, first)
     return target
 endfunction
 
-function! targets#sources#arguments#N(gen, first)
+function! targets#sources#arguments#next(gen, first)
     " search for opening or separator, try to select argument from there
     " if that fails, keep searching for opening until an argument can be
     " selected
@@ -59,7 +59,7 @@ function! targets#sources#arguments#N(gen, first)
     endwhile
 endfunction
 
-function! targets#sources#arguments#L(gen, first)
+function! targets#sources#arguments#last(gen, first)
     " search for closing or separator, try to select argument from there
     " if that fails, keep searching for closing until an argument can be
     " selected
