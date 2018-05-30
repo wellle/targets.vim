@@ -62,7 +62,7 @@ function! targets#sources#quotes#N(gen, first)
     endif
 
     let target = targets#util#select(a:gen.args.delimiter, a:gen.args.delimiter, '>')
-    call target.cursorS() " keep going from left end TODO: is this call needed?
+    call target.cursorS() " keep going from left end
     return target
 endfunction
 
@@ -81,7 +81,7 @@ function! targets#sources#quotes#L(gen, first)
     endif
 
     let target = targets#util#select(a:gen.args.delimiter, a:gen.args.delimiter, '<')
-    call target.cursorE() " keep going from right end TODO: is this call needed?
+    call target.cursorE() " keep going from right end
     return target
 endfunction
 

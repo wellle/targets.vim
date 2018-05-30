@@ -25,20 +25,15 @@ function! s:setup()
     let ranges = split(get(g:, 'targets_seekRanges',
                 \ 'cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA'))
     let rangesN = len(ranges)
-    let i = 0
-    while i < rangesN
+    for i in range(rangesN)
         let s:rangeScores[ranges[i]] = rangesN - i
-        let i = i + 1
-    endwhile
+    endfor
 
     let s:rangeJumps = {}
     let ranges = split(get(g:, 'targets_jumpRanges', 'bb bB BB aa Aa AA'))
-    let rangesN = len(ranges)
-    let i = 0
-    while i < rangesN
+    for i in range(len(ranges))
         let s:rangeJumps[ranges[i]] = 1
-        let i = i + 1
-    endwhile
+    endfor
 
     " currently undocumented, currently not supposed to be user defined
     " but could be used to disable 'smart' quote skipping
@@ -74,9 +69,9 @@ endfunction
 
 " a:count is unused here, but added for consistency with targets#x
 function! targets#o(trigger, typed, count)
-    let context = s:init('o', a:trigger)
+    call s:init()
+    let context = targets#context#new('o', a:trigger, 1, {})
 
-    " TODO: include kind in trigger so we don't have to guess as much?
     let [target, rawTarget] = s:findTarget(context, v:count1)
     if target.state().isInvalid()
         call s:abortMatch(context, '#o: ' . target.error)
@@ -104,16 +99,14 @@ function! targets#e(modifier, original)
 
     let char1 = nr2char(getchar())
     let [delimiter, which, chars] = [char1, 'c', char1]
-    let i = 0
-    while i < 2
+    for i in range(2)
         if g:targets_nl[i] ==# delimiter
             " delimiter was which, get another char for delimiter
             let char2 = nr2char(getchar())
             let [delimiter, which, chars] = [char2, 'nl'[i], chars . char2]
             break
         endif
-        let i = i + 1
-    endwhile
+    endfor
 
     let typed = a:original . chars
     if empty(s:getFactories(delimiter))
@@ -152,7 +145,7 @@ function! targets#x(trigger, typed, count)
 endfunction
 
 " initialize script local variables for the current matching
-function! s:init(mapmode, trigger)
+function! s:init()
     let s:selection = &selection  " remember 'selection' setting
     let &selection  = 'inclusive' " and set it to inclusive
 
@@ -161,21 +154,11 @@ function! s:init(mapmode, trigger)
 
     let s:whichwrap = &whichwrap " remember 'whichwrap' setting
     let &whichwrap  = 'b,s'      " and set it to default
-
-    return {
-                \ 'newSelection': 1,
-                \ 'trigger': a:trigger,
-                \ 'mapmode': a:mapmode,
-                \ 'oldpos':  getpos('.'),
-                \ 'minline': line('w0'),
-                \ 'maxline': line('w$'),
-                \ 'withOldpos': function('s:contextWithOldpos'),
-                \ }
 endfunction
 
 " save old visual selection to detect new selections and reselect on fail
 function! s:initX(trigger)
-    let context = s:init('x', a:trigger)
+    call s:init()
 
     let visualTarget = targets#target#fromVisualSelection(s:selection)
 
@@ -188,20 +171,12 @@ function! s:initX(trigger)
         normal! v
     endif
 
-    " need to update oldpos here to make reselect work (see test8)
-    " TODO: can we improve the flow here to avoid this double assignment?
-    " TODO: also reselect only works if cursor is on end of selection, not on
-    " start, fix that too
-    let context.oldpos = getpos('.')
-
-    let context['newSelection'] = s:isNewSelection(visualTarget)
-    let context['visualTarget'] = visualTarget
-
-    if context.newSelection
+    let isNewSelection = s:isNewSelection(visualTarget)
+    if isNewSelection
         let s:lastRawTarget = targets#target#withError('initial')
     endif
 
-    return context
+    return targets#context#new('x', a:trigger, isNewSelection, visualTarget)
 endfunction
 
 " clean up script variables after match
@@ -347,11 +322,11 @@ function! s:getNewFactories(trigger)
     endif
 
     " check more specific ones first for #145
-    if a:trigger ==# g:targets_tagTrigger " TODO: does this work with custom trigger?
+    if a:trigger ==# g:targets_tagTrigger
         return [targets#sources#tags#new()]
     endif
 
-    if a:trigger ==# g:targets_argTrigger " TODO: does this work with custom trigger?
+    if a:trigger ==# g:targets_argTrigger
         return [targets#sources#arguments#new(g:targets_argOpening, g:targets_argClosing, g:targets_argSeparator)]
     endif
 
@@ -534,13 +509,6 @@ function! targets#undo(lastseq)
     if undotree().seq_cur > a:lastseq
         silent! execute "normal! u"
     endif
-endfunction
-
-" TODO: move to separate file?
-function! s:contextWithOldpos(oldpos) dict
-    let context = deepcopy(self)
-    let context.oldpos = a:oldpos
-    return context
 endfunction
 
 call s:setup()
