@@ -61,6 +61,9 @@ function! s:setup()
     let g:targets_multis = get(g:, 'targets_multis', {
                 \ 'b': { 'pairs':  [['(', ')'], ['[', ']'], ['{', '}']], },
                 \ 'q': { 'quotes': [["'"], ['"'], ['`']], },
+                \
+                \ g:targets_argTrigger: { 'arguments': [[g:targets_argOpening, g:targets_argClosing, g:targets_argSeparator]], },
+                \ g:targets_tagTrigger: { 'tags':      [[]], },
                 \ })
 
     let s:lastRawTarget = targets#target#withError('initial')
@@ -319,15 +322,6 @@ function! s:getNewFactories(trigger)
     let multi = get(g:targets_multis, a:trigger, 0)
     if type(multi) == type({})
         return s:getMultiFactories(multi)
-    endif
-
-    " check more specific ones first for #145
-    if a:trigger ==# g:targets_tagTrigger
-        return [targets#sources#tags#new()]
-    endif
-
-    if a:trigger ==# g:targets_argTrigger
-        return [targets#sources#arguments#new(g:targets_argOpening, g:targets_argClosing, g:targets_argSeparator)]
     endif
 
     for pair in split(g:targets_pairs)
