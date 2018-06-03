@@ -58,13 +58,20 @@ function! s:setup()
                 \ 'n2b': ['002', '200', '202'],
                 \ })
 
-    let g:targets_multis = get(g:, 'targets_multis', {
+    let defaultMultis = {
                 \ 'b': { 'pairs':  [['(', ')'], ['[', ']'], ['{', '}']], },
                 \ 'q': { 'quotes': [["'"], ['"'], ['`']], },
-                \
-                \ g:targets_argTrigger: { 'arguments': [[g:targets_argOpening, g:targets_argClosing, g:targets_argSeparator]], },
-                \ g:targets_tagTrigger: { 'tags':      [[]], },
-                \ })
+                \ }
+    " we need to assign these like this because Vim 7.3 doesn't seem to like
+    " variables as keys in dict definitions like above
+    let defaultMultis[g:targets_argTrigger] = { 'arguments': [[
+                \ g:targets_argOpening,
+                \ g:targets_argClosing,
+                \ g:targets_argSeparator,
+                \ ]], }
+    let defaultMultis[g:targets_tagTrigger] = { 'tags': [[]], }
+
+    let g:targets_multis = get(g:, 'targets_multis', defaultMultis)
 
     let s:lastRawTarget = targets#target#withError('initial')
     let s:lastTrigger   = "   "
@@ -293,12 +300,12 @@ function! s:modifyTarget(target, modifier)
 
     let Funcs = modFuncs[a:modifier]
     if type(Funcs) == type(function('tr')) " single function
-        return Funcs(a:target.copy())
+        return Funcs(a:target.gen, a:target.copy())
     endif
 
     let target = a:target.copy()
     for Func in Funcs " list of functions
-        let target = Func(target)
+        let target = Func(a:target.gen, target)
     endfor
     return target
 endfunction

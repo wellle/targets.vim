@@ -15,7 +15,7 @@ function! targets#sources#arguments#new(opening, closing, separator)
                 \ }
     let modFuncs = {
                 \ 'i': function('targets#modify#drop'),
-                \ 'a': function('targets#modify#dropa', [a:separator]),
+                \ 'a': function('targets#modify#dropa'),
                 \ 'I': function('targets#modify#shrink'),
                 \ 'A': function('targets#modify#expand'),
                 \ }

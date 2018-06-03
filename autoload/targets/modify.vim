@@ -2,7 +2,7 @@
 " ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
 " just returns the given target, added for consistency
-function! targets#modify#keep(target)
+function! targets#modify#keep(gen, target)
     return a:target
 endfunction
 
@@ -11,7 +11,7 @@ endfunction
 " in   │   ┌─────┐
 " line │ a .  b  . c
 " out  │    └───┘
-function! targets#modify#drop(target)
+function! targets#modify#drop(gen, target)
     if a:target.state().isInvalid()
         return a:target
     endif
@@ -44,7 +44,7 @@ endfunction
 " in   │   ┌─────┐
 " line │ a . b c . d
 " out  │   └────┘
-function! targets#modify#dropr(target)
+function! targets#modify#dropr(gen, target)
     call a:target.cursorE()
     silent! execute "normal! \<BS>"
     call a:target.setE()
@@ -56,29 +56,29 @@ endfunction
 " in   │ ┌───┐ ┌───┐        ┌───┐        ┌───┐
 " line │ ( x ) ( x , a ) (a , x , b) ( a , x )
 " out  │  └─┘    └──┘       └──┘        └──┘
-function! targets#modify#dropa(argSeparator, target)
-    let startOpening = a:target.getcharS() !~# a:argSeparator
-    let endOpening   = a:target.getcharE() !~# a:argSeparator
+function! targets#modify#dropa(gen, target)
+    let startOpening = a:target.getcharS() !~# a:gen.args.separator
+    let endOpening   = a:target.getcharE() !~# a:gen.args.separator
 
     if startOpening
         if endOpening
             " ( x ) select space on both sides
-            return targets#modify#drop(a:target)
+            return targets#modify#drop(a:gen, a:target)
         else
             " ( x , a ) select separator and space after
             call a:target.cursorS()
             call a:target.searchposS('\S', '', a:target.el)
-            return targets#modify#expand(a:target, '>')
+            return targets#modify#expand(a:gen, a:target, '>')
         endif
     else
         if !endOpening
             " (a , x , b) select leading separator, no surrounding space
-            return targets#modify#dropr(a:target)
+            return targets#modify#dropr(a:gen, a:target)
         else
             " ( a , x ) select separator and space before
             call a:target.cursorE()
             call a:target.searchposE('\S', 'b', a:target.sl)
-            return targets#modify#expand(a:target, '<')
+            return targets#modify#expand(a:gen, a:target, '<')
         endif
     endif
 endfunction
@@ -87,7 +87,7 @@ endfunction
 " in   │   ┌──────────┐
 " line │ a <b>  c  </b> c
 " out  │     └─────┘
-function! targets#modify#innert(target)
+function! targets#modify#innert(gen, target)
     call a:target.cursorS()
     call a:target.searchposS('>', 'W')
     call a:target.cursorE()
@@ -100,7 +100,7 @@ endfunction
 " in   │   ┌─────┐   │   ┌──┐
 " line │ a . b c . d │ a .  . d
 " out  │     └─┘     │    └┘
-function! targets#modify#shrink(target)
+function! targets#modify#shrink(gen, target)
     if a:target.state().isInvalid()
         return a:target
     endif
@@ -122,7 +122,7 @@ endfunction
 " line │ a . b . c │ a . b .c │ a. c .c │ . a .c
 " out  │   └────┘  │  └────┘  │  └───┘  │└────┘
 " args (target, direction=<try right, then left>)
-function! targets#modify#expand(target, ...)
+function! targets#modify#expand(gen, target, ...)
     if a:0 == 0 || a:1 ==# '>'
         call a:target.cursorE()
         let [line, column] = searchpos('\S\|$', '', line('.'))
@@ -155,7 +155,7 @@ endfunction
 " line │ a . b . c │ a. b . c │ a . b .c │ a. c .c │ . a .c
 " out  │   └────┘  │  └───┘   │   └───┘  │  └───┘  │ └───┘
 " args (target, direction=<try right, then left>)
-function! targets#modify#expands(target)
+function! targets#modify#expands(gen, target)
     call a:target.cursorE()
     let [eline, ecolumn] = searchpos('\S\|$', '', line('.'))
     if eline > 0 && ecolumn-1 > a:target.ec
