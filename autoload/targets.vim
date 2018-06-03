@@ -75,6 +75,9 @@ function! targets#o(trigger, typed, count)
     call s:init()
     let context = targets#context#new('o', a:trigger, 1, {})
 
+    " reset last raw target to not avoid it in #o when it was set from #x
+    let s:lastRawTarget = targets#target#withError('#o')
+
     let [target, rawTarget] = s:findTarget(context, v:count1)
     if target.state().isInvalid()
         call s:abortMatch(context, '#o: ' . target.error)
@@ -208,15 +211,14 @@ function! s:findTarget(context, count)
 endfunction
 
 function! s:findRawTarget(context, factories, count)
-    let context = a:context
-    let multigen = targets#multigen#new(context, s:lastRawTarget, s:rangeScores)
+    let multigen = targets#multigen#new(a:context, s:lastRawTarget, s:rangeScores)
     let first = 1
     let [delimiter , which , modifier ] = split(a:context.trigger, '\zs')
     let [delimiterL, whichL, modifierL] = split(s:lastTrigger, '\zs')
     let sameDelimiter = delimiter ==# delimiterL
     let sameModifier  = modifier  ==# modifierL
 
-    " echom s:lastTrigger . ' ' context.trigger
+    " echom s:lastTrigger . ' ' a:context.trigger
     " TODO: test all these cases
 
     if which ==# 'c'
@@ -234,7 +236,7 @@ function! s:findRawTarget(context, factories, count)
             else
                 " echom 'same selection, same trigger, but no gen left, no seek'
                 " if all gens have been filtered out, fall back to non seeking
-                let multigen.context = context.withOldpos(s:lastRawTarget.getposS())
+                let multigen.context = a:context.withOldpos(s:lastRawTarget.getposS())
                 call multigen.add(a:factories, 'c')
             endif
 
@@ -253,20 +255,20 @@ function! s:findRawTarget(context, factories, count)
         else " don't seek
             " echom 'no grow, no seek'
             if !a:context.newSelection " start from last raw end
-                let multigen.context = context.withOldpos(s:lastRawTarget.getposE())
+                let multigen.context = a:context.withOldpos(s:lastRawTarget.getposE())
             endif
             call multigen.add(a:factories, 'c')
         endif
 
     elseif which ==# 'n'
         if !a:context.newSelection " start from last raw start
-            let multigen.context = context.withOldpos(s:lastRawTarget.getposS())
+            let multigen.context = a:context.withOldpos(s:lastRawTarget.getposS())
         endif
         call multigen.add(a:factories, 'n')
 
     elseif which ==# 'l'
         if !a:context.newSelection " start from last raw end
-            let multigen.context = context.withOldpos(s:lastRawTarget.getposE())
+            let multigen.context = a:context.withOldpos(s:lastRawTarget.getposE())
         endif
         call multigen.add(a:factories, 'l')
 
