@@ -1,0 +1,6 @@
+a ( b, c ( x , d ), e )
+a ( b, c ( d , x ), e )
+a ( b, c ( x , d ), e )
+a ( b, c ( d ( x , e ) , f ), g )
+( ( ( x ) ) )
+( ( ( x ) ) )

@@ -224,12 +224,12 @@ function! s:findRawTarget(context, factories, count)
     let [delimiterL, whichL, modifierL] = split(s:lastTrigger, '\zs')
     let sameDelimiter = delimiter ==# delimiterL
     let sameModifier  = modifier  ==# modifierL
+    let similar = !a:context.newSelection && sameDelimiter
 
     " echom s:lastTrigger . ' ' a:context.trigger
-    " TODO: test all these cases
 
     if which ==# 'c'
-        if !a:context.newSelection && sameDelimiter && sameModifier
+        if similar && sameModifier
             " grow if selection didn't change and the trigger is the same (or only which changed)
             let multigen = s:lastRawTarget.multigen      " continue with last gens
             let multigen.currentTarget = s:lastRawTarget " continue from here
@@ -247,16 +247,16 @@ function! s:findRawTarget(context, factories, count)
                 call multigen.add(a:factories, 'c')
             endif
 
-        elseif a:count == 1 && !a:context.newSelection && sameDelimiter && !sameModifier
+        elseif similar && !sameModifier && a:count == 1
             " echom 'different modifier only, reuse last target'
             " if the target is the same, but just the modifier is different, reuse
             " last raw target
             return s:lastRawTarget
 
-        elseif a:count == 1 && (a:context.newSelection || !sameDelimiter)
+        elseif !similar && a:count == 1
             " echom 'new selection or new delimiter, seek'
             " allow seeking if no count was given and the selection changed
-            " or something else was typed
+            " or something different was typed
             call multigen.add(a:factories, 'c', 'n', 'l')
 
         else " don't seek

@@ -264,6 +264,41 @@ function s:testReselect()
     write! test8.out
 endfunction
 
+function s:testGrow()
+    edit! test9.in
+    normal gg0
+
+    " from x, select an argument, grow it
+    normal fxvaaaar_
+
+    normal +
+
+    " from x, select last argument, grow it
+    normal fxvalaaar_
+
+    normal +
+
+    " from x, select inner argument, select an argument (shouldn't grow)
+    normal fxviaaar_
+
+    normal +
+
+    " from x, select inner argument, select secound outer argument (shouldn't grow extra)
+    normal fxvia2aar_
+
+    normal +
+
+    " from x, select argument, grow, select next (should shrink)
+    normal fxvaaaaanar_
+
+    normal +
+
+    " from x, select argument, grow, switch to start, select last (should shrink)
+    normal fxvaaaaoalar_
+
+    write! test9.out
+endfunction
+
 redir >> testM.out
 
 call s:testBasic()
@@ -274,6 +309,7 @@ call s:testModifiers()
 call s:testEmpty()
 call s:testQuotes()
 call s:testReselect()
+call s:testGrow()
 
 redir END
 " remove blank messages and trailing whitespace
