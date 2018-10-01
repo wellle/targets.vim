@@ -2,4 +2,5 @@ doc/tags
 .DS_Store
 
 tags
+*.out
 *.diff
