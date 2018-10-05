@@ -1,6 +1,6 @@
 " tags are implemented as special pairs
 " special args must not be modified/escaped
-function! targets#sources#tags#new()
+function! targets#sources#tags#new(args)
     let args = {
                 \ 'opening': '<\a',
                 \ 'closing': '</\a\zs',

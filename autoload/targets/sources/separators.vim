@@ -1,5 +1,6 @@
-function! targets#sources#separators#new(delimiter)
-    let args = {'delimiter': escape(a:delimiter, '.~\$')}
+function! targets#sources#separators#new(args)
+    let delimiter = a:args['d']
+    let args = {'delimiter': escape(delimiter, '.~\$')}
     let genFuncs = {
                 \ 'c': function('targets#sources#separators#current'),
                 \ 'n': function('targets#sources#separators#next'),
@@ -11,7 +12,7 @@ function! targets#sources#separators#new(delimiter)
                 \ 'I': function('targets#modify#shrink'),
                 \ 'A': function('targets#modify#expands'),
                 \ }
-    return targets#factory#new(a:delimiter, args, genFuncs, modFuncs)
+    return targets#factory#new(delimiter, args, genFuncs, modFuncs)
 endfunction
 
 function! targets#sources#separators#current(gen, first)

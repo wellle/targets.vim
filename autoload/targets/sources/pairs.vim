@@ -1,8 +1,9 @@
-function! targets#sources#pairs#new(opening, closing)
+function! targets#sources#pairs#new(args)
+    let [opening, closing] = [a:args['o'], a:args['c']]
     let args = {
-                \ 'opening': a:opening,
-                \ 'closing': a:closing,
-                \ 'trigger': a:closing,
+                \ 'opening': opening,
+                \ 'closing': closing,
+                \ 'trigger': closing,
                 \ }
     let genFuncs = {
                 \ 'c': function('targets#sources#pairs#current'),
@@ -15,7 +16,7 @@ function! targets#sources#pairs#new(opening, closing)
                 \ 'I': function('targets#modify#shrink'),
                 \ 'A': function('targets#modify#expand'),
                 \ }
-    return targets#factory#new(a:closing, args, genFuncs, modFuncs)
+    return targets#factory#new(closing, args, genFuncs, modFuncs)
 endfunction
 
 function! targets#sources#pairs#current(gen, first)

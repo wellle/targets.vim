@@ -1,12 +1,13 @@
-function! targets#sources#arguments#new(opening, closing, separator)
+function! targets#sources#arguments#new(args)
+    let [opening, closing, separator] = [a:args['o'], a:args['c'], a:args['s']]
     let args = {
-                \ 'opening':   a:opening,
-                \ 'closing':   a:closing,
-                \ 'separator': a:separator,
-                \ 'openingS':  a:opening . '\|' . a:separator,
-                \ 'closingS':  a:closing . '\|' . a:separator,
-                \ 'all':       a:opening . '\|' . a:separator . '\|' . a:closing,
-                \ 'outer':     a:opening . '\|' . a:closing,
+                \ 'opening':   opening,
+                \ 'closing':   closing,
+                \ 'separator': separator,
+                \ 'openingS':  opening . '\|' . separator,
+                \ 'closingS':  closing . '\|' . separator,
+                \ 'all':       opening . '\|' . separator . '\|' . closing,
+                \ 'outer':     opening . '\|' . closing,
                 \ }
     let genFuncs = {
                 \ 'c': function('targets#sources#arguments#current'),

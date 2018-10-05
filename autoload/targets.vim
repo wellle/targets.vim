@@ -58,18 +58,19 @@ function! s:setup()
                 \ 'n2b': ['002', '200', '202'],
                 \ })
 
+    " TODO: document this
     let defaultMultis = {
-                \ 'b': { 'pairs':  [['(', ')'], ['[', ']'], ['{', '}']], },
-                \ 'q': { 'quotes': [["'"], ['"'], ['`']], },
+                \ 'b': { 'pairs':  [{'o':'(', 'c':')'}, {'o':'[', 'c':']'}, {'o':'{', 'c':'}'}], },
+                \ 'q': { 'quotes': [{'d':"'"}, {'d':'"'}, {'d':'`'}], },
                 \ }
     " we need to assign these like this because Vim 7.3 doesn't seem to like
     " variables as keys in dict definitions like above
-    let defaultMultis[g:targets_argTrigger] = { 'arguments': [[
-                \ g:targets_argOpening,
-                \ g:targets_argClosing,
-                \ g:targets_argSeparator,
-                \ ]], }
-    let defaultMultis[g:targets_tagTrigger] = { 'tags': [[]], }
+    let defaultMultis[g:targets_tagTrigger] = { 'tags': [{}], }
+    let defaultMultis[g:targets_argTrigger] = { 'arguments': [{
+                \ 'o':g:targets_argOpening,
+                \ 'c':g:targets_argClosing,
+                \ 's':g:targets_argSeparator,
+                \ }], }
 
     let g:targets_multis = get(g:, 'targets_multis', defaultMultis)
 
@@ -333,10 +334,12 @@ function! s:getNewFactories(trigger)
         return s:getMultiFactories(multi)
     endif
 
+    " TODO: actually add those to g:targets_multis on init so we don't have to
+    " loop every time
     for pair in split(g:targets_pairs)
         for trigger in split(pair, '\zs')
             if trigger ==# a:trigger
-                return [targets#sources#pairs#new(pair[0], pair[1])]
+                return [targets#sources#pairs#new({'o':pair[0], 'c':pair[1]})]
             endif
         endfor
     endfor
@@ -344,7 +347,7 @@ function! s:getNewFactories(trigger)
     for quote in split(g:targets_quotes)
         for trigger in split(quote, '\zs')
             if trigger ==# a:trigger
-                return [targets#sources#quotes#new(quote[0])]
+                return [targets#sources#quotes#new({'d':quote[0]})]
             endif
         endfor
     endfor
@@ -352,7 +355,7 @@ function! s:getNewFactories(trigger)
     for separator in split(g:targets_separators)
         for trigger in split(separator, '\zs')
             if trigger ==# a:trigger
-                return [targets#sources#separators#new(separator[0])]
+                return [targets#sources#separators#new({'d':separator[0]})]
             endif
         endfor
     endfor
@@ -364,7 +367,7 @@ function! s:getMultiFactories(multi)
     let factories = []
     for kind in keys(s:registry)
         for args in get(a:multi, kind, [])
-            call add(factories, call(s:registry[kind], args))
+            call add(factories, call(s:registry[kind], [args]))
         endfor
     endfor
     return factories

@@ -9,8 +9,9 @@ let s:quoteArgs = {
             \ 'n2b': [ '', 2, 1, 1, ''],
             \ }
 
-function! targets#sources#quotes#new(delimiter, ...)
-    let quoteDirsConf = a:0 > 0 ? a:1 : g:targets_quoteDirs
+function! targets#sources#quotes#new(args)
+    let delimiter = a:args['d']
+    let quoteDirsConf = get(a:args, 'quoteDirs', g:targets_quoteDirs)
 
     let quoteDirs = {}
     for key in keys(s:quoteArgs)
@@ -21,7 +22,7 @@ function! targets#sources#quotes#new(delimiter, ...)
     endfor
 
     let args = {
-                \ 'delimiter': s:quoteEscape(a:delimiter),
+                \ 'delimiter': s:quoteEscape(delimiter),
                 \ 'quoteDirs': quoteDirs
                 \ }
     let genFuncs = {
@@ -35,7 +36,7 @@ function! targets#sources#quotes#new(delimiter, ...)
                 \ 'I': function('targets#modify#shrink'),
                 \ 'A': function('targets#modify#expand'),
                 \ }
-    return targets#factory#new(a:delimiter, args, genFuncs, modFuncs)
+    return targets#factory#new(delimiter, args, genFuncs, modFuncs)
 endfunction
 
 function! targets#sources#quotes#current(gen, first)
