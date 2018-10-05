@@ -194,6 +194,7 @@ endfunction
 function! s:loadSettings()
     let g:targets_nl         = get(g:, 'targets_nl', get(g:, 'targets_nlNL', 'nl')[0:1]) " legacy fallback
     let g:targets_aiAI       = get(g:, 'targets_aiAI', 'aiAI')
+    " TODO: remove misleading b here and in docs
     let g:targets_pairs      = get(g:, 'targets_pairs', '()b {}B [] <>')
     let g:targets_quotes     = get(g:, 'targets_quotes', '" '' `')
     let g:targets_separators = get(g:, 'targets_separators', ', . ; : + - = ~ _ * # / \ | & $')

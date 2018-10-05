@@ -7,14 +7,17 @@ let s:save_cpoptions = &cpoptions
 set cpo&vim
 
 " called once when loaded
+" TODO: move this to a separate autoload file setup/defaults.vim
+" TODO: avoid accessing globals in all other autoloaded functions (use script
+" local ones)
 function! s:setup()
     " maps kind to factory constructor
     let s:registry = {
                 \ 'pairs':      function('targets#sources#pairs#new'),
-                \ 'tags':       function('targets#sources#tags#new'),
                 \ 'quotes':     function('targets#sources#quotes#new'),
                 \ 'separators': function('targets#sources#separators#new'),
                 \ 'arguments':  function('targets#sources#arguments#new'),
+                \ 'tags':       function('targets#sources#tags#new'),
                 \ }
 
     let g:targets_argOpening   = get(g:, 'targets_argOpening', '[([]')
@@ -73,6 +76,28 @@ function! s:setup()
                 \ }], }
 
     let g:targets_multis = get(g:, 'targets_multis', defaultMultis)
+
+    " TODO: since we use this not only for multis now, rename targets_multis?
+    for pair in split(g:targets_pairs)
+        let config = {'pairs': [{'o':pair[0], 'c':pair[1]}]}
+        for trigger in split(pair, '\zs')
+            call extend(g:targets_multis, {trigger: config}, 'keep')
+        endfor
+    endfor
+
+    for quote in split(g:targets_quotes)
+        let config = {'quotes': [{'d':quote[0]}]}
+        for trigger in split(quote, '\zs')
+            call extend(g:targets_multis, {trigger: config}, 'keep')
+        endfor
+    endfor
+
+    for separator in split(g:targets_separators)
+        let config = {'separators': [{'d':separator[0]}]}
+        for trigger in split(separator, '\zs')
+            call extend(g:targets_multis, {trigger: config}, 'keep')
+        endfor
+    endfor
 
     let s:lastRawTarget = targets#target#withError('initial')
     let s:lastTrigger   = "   "
@@ -333,33 +358,6 @@ function! s:getNewFactories(trigger)
     if type(multi) == type({})
         return s:getMultiFactories(multi)
     endif
-
-    " TODO: actually add those to g:targets_multis on init so we don't have to
-    " loop every time
-    for pair in split(g:targets_pairs)
-        for trigger in split(pair, '\zs')
-            if trigger ==# a:trigger
-                return [targets#sources#pairs#new({'o':pair[0], 'c':pair[1]})]
-            endif
-        endfor
-    endfor
-
-    for quote in split(g:targets_quotes)
-        for trigger in split(quote, '\zs')
-            if trigger ==# a:trigger
-                return [targets#sources#quotes#new({'d':quote[0]})]
-            endif
-        endfor
-    endfor
-
-    for separator in split(g:targets_separators)
-        for trigger in split(separator, '\zs')
-            if trigger ==# a:trigger
-                return [targets#sources#separators#new({'d':separator[0]})]
-            endif
-        endfor
-    endfor
-
     return []
 endfunction
 
