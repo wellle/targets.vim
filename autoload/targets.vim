@@ -10,6 +10,11 @@ set cpo&vim
 " TODO: move this to a separate autoload file setup/defaults.vim
 " TODO: avoid accessing globals in all other autoloaded functions (use script
 " local ones)
+" TODO: move registry to own autoload file so we don't autoload everything
+" when something gets registered (or move everything else to a different file,
+" in any case split it and check autoloading in practice)
+" TODO: actually, can we make all this lazy? (for example cache in the
+" settings functions)
 function! s:setup()
     " maps kind to factory constructor
     let s:registry = {
@@ -24,19 +29,9 @@ function! s:setup()
     let g:targets_argClosing   = get(g:, 'targets_argClosing', '[])]')
     let g:targets_argSeparator = get(g:, 'targets_argSeparator', ',')
 
-    let s:rangeScores = {}
-    let ranges = split(get(g:, 'targets_seekRanges',
-                \ 'cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA'))
-    let rangesN = len(ranges)
-    for i in range(rangesN)
-        let s:rangeScores[ranges[i]] = rangesN - i
-    endfor
-
-    let s:rangeJumps = {}
-    let ranges = split(get(g:, 'targets_jumpRanges', 'bb bB BB aa Aa AA'))
-    for i in range(len(ranges))
-        let s:rangeJumps[ranges[i]] = 1
-    endfor
+    let s:rangeScores = targets#settings#rangeScores()
+    let s:rangeJumps  = targets#settings#rangeJumps()
+    let s:multis      = targets#settings#multis()
 
     " currently undocumented, currently not supposed to be user defined
     " but could be used to disable 'smart' quote skipping
@@ -51,6 +46,7 @@ function! s:setup()
     "      (2: double speed, skip pseudo quotes)
     "   l: skip first quote when going left ("last" quote objects)
     "      (r: skip once when going right ("next"); b: both; n: none)
+    " TODO: this is quote specific, move there (and do lazily)
     let g:targets_quoteDirs = get(g:, 'targets_quoteDirs', {
                 \ 'r1n': ['001', '201', '100', '102'],
                 \ 'r1l': ['010', '012', '111', '210', '212'],
@@ -60,44 +56,6 @@ function! s:setup()
                 \ 'l2r': ['110', '112'],
                 \ 'n2b': ['002', '200', '202'],
                 \ })
-
-    " TODO: document this
-    let defaultMultis = {
-                \ 'b': { 'pairs':  [{'o':'(', 'c':')'}, {'o':'[', 'c':']'}, {'o':'{', 'c':'}'}], },
-                \ 'q': { 'quotes': [{'d':"'"}, {'d':'"'}, {'d':'`'}], },
-                \ }
-    " we need to assign these like this because Vim 7.3 doesn't seem to like
-    " variables as keys in dict definitions like above
-    let defaultMultis[g:targets_tagTrigger] = { 'tags': [{}], }
-    let defaultMultis[g:targets_argTrigger] = { 'arguments': [{
-                \ 'o':g:targets_argOpening,
-                \ 'c':g:targets_argClosing,
-                \ 's':g:targets_argSeparator,
-                \ }], }
-
-    let g:targets_multis = get(g:, 'targets_multis', defaultMultis)
-
-    " TODO: since we use this not only for multis now, rename targets_multis?
-    for pair in split(g:targets_pairs)
-        let config = {'pairs': [{'o':pair[0], 'c':pair[1]}]}
-        for trigger in split(pair, '\zs')
-            call extend(g:targets_multis, {trigger: config}, 'keep')
-        endfor
-    endfor
-
-    for quote in split(g:targets_quotes)
-        let config = {'quotes': [{'d':quote[0]}]}
-        for trigger in split(quote, '\zs')
-            call extend(g:targets_multis, {trigger: config}, 'keep')
-        endfor
-    endfor
-
-    for separator in split(g:targets_separators)
-        let config = {'separators': [{'d':separator[0]}]}
-        for trigger in split(separator, '\zs')
-            call extend(g:targets_multis, {trigger: config}, 'keep')
-        endfor
-    endfor
 
     let s:lastRawTarget = targets#target#withError('initial')
     let s:lastTrigger   = "   "
@@ -354,7 +312,7 @@ function! s:getFactories(trigger)
 endfunction
 
 function! s:getNewFactories(trigger)
-    let multi = get(g:targets_multis, a:trigger, 0)
+    let multi = get(s:multis, a:trigger, 0)
     if type(multi) == type({})
         return s:getMultiFactories(multi)
     endif
