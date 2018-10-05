@@ -26,13 +26,14 @@ function! targets#settings#multis()
                 \ 'b': { 'pairs':  [{'o':'(', 'c':')'}, {'o':'[', 'c':']'}, {'o':'{', 'c':'}'}], },
                 \ 'q': { 'quotes': [{'d':"'"}, {'d':'"'}, {'d':'`'}], },
                 \ }
+
     " we need to assign these like this because Vim 7.3 doesn't seem to like
     " variables as keys in dict definitions like above
     let defaultMultis[g:targets_tagTrigger] = { 'tags': [{}], }
     let defaultMultis[g:targets_argTrigger] = { 'arguments': [{
-                \ 'o':g:targets_argOpening,
-                \ 'c':g:targets_argClosing,
-                \ 's':g:targets_argSeparator,
+                \ 'o': get(g:, 'targets_argOpening', '[([]'),
+                \ 'c': get(g:, 'targets_argClosing', '[])]'),
+                \ 's': get(g:, 'targets_argSeparator', ','),
                 \ }], }
 
     let multis = get(g:, 'targets_multis', defaultMultis)

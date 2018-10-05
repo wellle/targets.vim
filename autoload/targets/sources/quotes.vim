@@ -9,9 +9,32 @@ let s:quoteArgs = {
             \ 'n2b': [ '', 2, 1, 1, ''],
             \ }
 
+" currently undocumented, currently not supposed to be user defined
+" but could be used to disable 'smart' quote skipping
+" some technicalities: inverse mapping from quote reps to quote arg reps
+" quote rep '102' means:
+"   1: even number of quotation character left from cursor
+"   0: no quotation char under cursor
+"   2: even number (but nonzero) of quote chars right of cursor
+" arg rep 'r1l' means:
+"   r: select to right (l: to left; n: not at all)
+"   1: single speed (each quote char starts one text object)
+"      (2: double speed, skip pseudo quotes)
+"   l: skip first quote when going left ("last" quote objects)
+"      (r: skip once when going right ("next"); b: both; n: none)
+let s:defaultQuoteDirs = get(g:, 'targets_quoteDirs', {
+            \ 'r1n': ['001', '201', '100', '102'],
+            \ 'r1l': ['010', '012', '111', '210', '212'],
+            \ 'r2n': ['101'],
+            \ 'r2l': ['011', '211'],
+            \ 'r2b': ['000'],
+            \ 'l2r': ['110', '112'],
+            \ 'n2b': ['002', '200', '202'],
+            \ })
+
 function! targets#sources#quotes#new(args)
     let delimiter = a:args['d']
-    let quoteDirsConf = get(a:args, 'quoteDirs', g:targets_quoteDirs)
+    let quoteDirsConf = get(a:args, 'quoteDirs', s:defaultQuoteDirs)
 
     let quoteDirs = {}
     for key in keys(s:quoteArgs)

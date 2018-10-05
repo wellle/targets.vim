@@ -7,9 +7,6 @@ let s:save_cpoptions = &cpoptions
 set cpo&vim
 
 " called once when loaded
-" TODO: move this to a separate autoload file setup/defaults.vim
-" TODO: avoid accessing globals in all other autoloaded functions (use script
-" local ones)
 " TODO: move registry to own autoload file so we don't autoload everything
 " when something gets registered (or move everything else to a different file,
 " in any case split it and check autoloading in practice)
@@ -25,37 +22,9 @@ function! s:setup()
                 \ 'tags':       function('targets#sources#tags#new'),
                 \ }
 
-    let g:targets_argOpening   = get(g:, 'targets_argOpening', '[([]')
-    let g:targets_argClosing   = get(g:, 'targets_argClosing', '[])]')
-    let g:targets_argSeparator = get(g:, 'targets_argSeparator', ',')
-
     let s:rangeScores = targets#settings#rangeScores()
     let s:rangeJumps  = targets#settings#rangeJumps()
     let s:multis      = targets#settings#multis()
-
-    " currently undocumented, currently not supposed to be user defined
-    " but could be used to disable 'smart' quote skipping
-    " some technicalities: inverse mapping from quote reps to quote arg reps
-    " quote rep '102' means:
-    "   1: even number of quotation character left from cursor
-    "   0: no quotation char under cursor
-    "   2: even number (but nonzero) of quote chars right of cursor
-    " arg rep 'r1l' means:
-    "   r: select to right (l: to left; n: not at all)
-    "   1: single speed (each quote char starts one text object)
-    "      (2: double speed, skip pseudo quotes)
-    "   l: skip first quote when going left ("last" quote objects)
-    "      (r: skip once when going right ("next"); b: both; n: none)
-    " TODO: this is quote specific, move there (and do lazily)
-    let g:targets_quoteDirs = get(g:, 'targets_quoteDirs', {
-                \ 'r1n': ['001', '201', '100', '102'],
-                \ 'r1l': ['010', '012', '111', '210', '212'],
-                \ 'r2n': ['101'],
-                \ 'r2l': ['011', '211'],
-                \ 'r2b': ['000'],
-                \ 'l2r': ['110', '112'],
-                \ 'n2b': ['002', '200', '202'],
-                \ })
 
     let s:lastRawTarget = targets#target#withError('initial')
     let s:lastTrigger   = "   "
