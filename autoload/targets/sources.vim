@@ -9,14 +9,29 @@ let s:sources = {
             \ }
 
 function! targets#sources#register(source, newFactoryFunc)
+    " echom 'registered source: ' . a:source
     call extend(s:sources, {a:source: a:newFactoryFunc}, 'keep')
 endfunction
+
+" avoid message "No matching autocommands" in some cases
+augroup targetsSourcesRegisterSilent
+    autocmd!
+    autocmd User targetsSourcesRegister silent
+augroup END
+
+" allow targets plugins
+doautocmd User targetsSourcesRegister
 
 function! targets#sources#newFactories(trigger)
     let factories = []
     let sources = s:sources(a:trigger)
     for source in keys(sources)
         for args in sources[source]
+            if !has_key(s:sources, source)
+                echom 'targets.vim source not registered: ' . source
+                return []
+            endif
+
             call add(factories, call(s:sources[source], [args]))
         endfor
     endfor
