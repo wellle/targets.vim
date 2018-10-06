@@ -14,59 +14,58 @@ endfunction
 
 function! targets#sources#newFactories(trigger)
     let factories = []
-    let multi = get(s:multis(), a:trigger, {})
-    for source in keys(multi)
-        for args in multi[source]
+    let sources = s:sources(a:trigger)
+    for source in keys(sources)
+        for args in sources[source]
             call add(factories, call(s:sources[source], [args]))
         endfor
     endfor
     return factories
 endfunction
 
-" TODO: since we use this not only for multis now, rename g:targets_multis?
-function! s:multis()
-    if exists('s:cached_multis')
-        return s:cached_multis
+function! s:sources(trigger)
+    if !exists('s:config')
+        " maps triggers to sources (per source a list of factory constructor args)
+        let defaultConfig = {
+                    \ 'b': { 'pairs':  [{'o':'(', 'c':')'}, {'o':'[', 'c':']'}, {'o':'{', 'c':'}'}], },
+                    \ 'q': { 'quotes': [{'d':"'"}, {'d':'"'}, {'d':'`'}], },
+                    \ }
+
+        " we need to assign these like this because Vim 7.3 doesn't seem to like
+        " variables as keys in dict definitions like above
+        let defaultConfig[g:targets_tagTrigger] = { 'tags': [{}], }
+        let defaultConfig[g:targets_argTrigger] = { 'arguments': [{
+                    \ 'o': get(g:, 'targets_argOpening', '[([]'),
+                    \ 'c': get(g:, 'targets_argClosing', '[])]'),
+                    \ 's': get(g:, 'targets_argSeparator', ','),
+                    \ }], }
+
+        " TODO: document g:targets_config
+        let s:config = get(g:, 'targets_config', defaultConfig)
+
+        " TODO: should we still apply those if g:targets_config was set? or
+        " only in defaults, like for args and tags?
+        for pair in split(g:targets_pairs)
+            let config = {'pairs': [{'o':pair[0], 'c':pair[1]}]}
+            for trigger in split(pair, '\zs')
+                call extend(s:config, {trigger: config}, 'keep')
+            endfor
+        endfor
+
+        for quote in split(g:targets_quotes)
+            let config = {'quotes': [{'d':quote[0]}]}
+            for trigger in split(quote, '\zs')
+                call extend(s:config, {trigger: config}, 'keep')
+            endfor
+        endfor
+
+        for separator in split(g:targets_separators)
+            let config = {'separators': [{'d':separator[0]}]}
+            for trigger in split(separator, '\zs')
+                call extend(s:config, {trigger: config}, 'keep')
+            endfor
+        endfor
     endif
 
-    " TODO: document this
-    let defaultMultis = {
-                \ 'b': { 'pairs':  [{'o':'(', 'c':')'}, {'o':'[', 'c':']'}, {'o':'{', 'c':'}'}], },
-                \ 'q': { 'quotes': [{'d':"'"}, {'d':'"'}, {'d':'`'}], },
-                \ }
-
-    " we need to assign these like this because Vim 7.3 doesn't seem to like
-    " variables as keys in dict definitions like above
-    let defaultMultis[g:targets_tagTrigger] = { 'tags': [{}], }
-    let defaultMultis[g:targets_argTrigger] = { 'arguments': [{
-                \ 'o': get(g:, 'targets_argOpening', '[([]'),
-                \ 'c': get(g:, 'targets_argClosing', '[])]'),
-                \ 's': get(g:, 'targets_argSeparator', ','),
-                \ }], }
-
-    let multis = get(g:, 'targets_multis', defaultMultis)
-
-    for pair in split(g:targets_pairs)
-        let config = {'pairs': [{'o':pair[0], 'c':pair[1]}]}
-        for trigger in split(pair, '\zs')
-            call extend(multis, {trigger: config}, 'keep')
-        endfor
-    endfor
-
-    for quote in split(g:targets_quotes)
-        let config = {'quotes': [{'d':quote[0]}]}
-        for trigger in split(quote, '\zs')
-            call extend(multis, {trigger: config}, 'keep')
-        endfor
-    endfor
-
-    for separator in split(g:targets_separators)
-        let config = {'separators': [{'d':separator[0]}]}
-        for trigger in split(separator, '\zs')
-            call extend(multis, {trigger: config}, 'keep')
-        endfor
-    endfor
-
-    let s:cached_multis = multis
-    return multis
+    return get(s:config, a:trigger, {})
 endfunction
