@@ -6,16 +6,9 @@
 let s:save_cpoptions = &cpoptions
 set cpo&vim
 
-" called once when loaded
-" TODO: actually, can we make all this lazy? (for example cache in the
-" settings functions)
-function! s:setup()
-    let s:rangeScores = targets#settings#rangeScores()
-    let s:rangeJumps  = targets#settings#rangeJumps()
-
-    let s:lastRawTarget = targets#target#withError('initial')
-    let s:lastTrigger   = "   "
-endfunction
+" state which we need across invocations
+let s:lastRawTarget = targets#target#withError('initial')
+let s:lastTrigger   = "   "
 
 " a:count is unused here, but added for consistency with targets#x
 function! targets#o(trigger, typed, count)
@@ -158,7 +151,7 @@ function! s:findTarget(context, count)
 endfunction
 
 function! s:findRawTarget(context, factories, count)
-    let multigen = targets#multigen#new(a:context, s:lastRawTarget, s:rangeScores)
+    let multigen = targets#multigen#new(a:context, s:lastRawTarget)
     let first = 1
     let [delimiter , which , modifier ] = split(a:context.trigger, '\zs')
     let [delimiterL, whichL, modifierL] = split(s:lastTrigger, '\zs')
@@ -311,8 +304,14 @@ function! s:selectTarget(context, target, rawTarget)
 endfunction
 
 function! s:addToJumplist(context, target)
-    let range = a:target.range(a:context)[0]
-    return get(s:rangeJumps, range)
+    if !exists('s:rangeJumps')
+        let s:rangeJumps = {}
+        let ranges = split(get(g:, 'targets_jumpRanges', 'bb bB BB aa Aa AA'))
+        for i in range(len(ranges))
+            let s:rangeJumps[ranges[i]] = 1
+        endfor
+    endif
+    return get(s:rangeJumps, a:target.range(a:context)[0])
 endfunction
 
 " visually select a given match. used for match or old selection
@@ -410,8 +409,6 @@ function! targets#undo(lastseq)
         silent! execute "normal! u"
     endif
 endfunction
-
-call s:setup()
 
 " reset cpoptions
 let &cpoptions = s:save_cpoptions

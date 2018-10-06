@@ -1,9 +1,8 @@
-function! targets#multigen#new(context, lastRawTarget, rangeScores)
+function! targets#multigen#new(context, lastRawTarget)
     return {
                 \ 'gens':          [],
                 \ 'context':       a:context,
                 \ 'lastRawTarget': a:lastRawTarget,
-                \ 'rangeScores':   a:rangeScores,
                 \
                 \ 'add':    function('targets#multigen#add'),
                 \ 'next':   function('targets#multigen#next'),
@@ -36,7 +35,7 @@ function! targets#multigen#next(first) dict
     endfor
 
     while 1
-        let [target, idx] = s:bestTarget(targets, self.context, self.rangeScores, 'multigen')
+        let [target, idx] = s:bestTarget(targets, self.context, 'multigen')
         if target.state().isInvalid() " best is invalid -> done
             let self.currentTarget = target
             return self.currentTarget
@@ -119,7 +118,7 @@ endfunction
 "         └─────┘      current line
 
 " returns best target (and its index) according to range score and distance to cursor
-function! s:bestTarget(targets, context, rangeScores, message)
+function! s:bestTarget(targets, context, message)
     if len(a:targets) == 1
         return [a:targets[0], 0]
     endif
@@ -130,7 +129,7 @@ function! s:bestTarget(targets, context, rangeScores, message)
     for idx in range(cnt)
         let target = a:targets[idx]
         let [range, lines, chars] = target.range(a:context)
-        let score = get(a:rangeScores, range)
+        let score = s:rangeScore(range)
 
         " if target.state().isValid()
         "     echom target.string()
@@ -151,5 +150,19 @@ function! s:bestTarget(targets, context, rangeScores, message)
     endif
 
     return [targets#target#withError(a:message), -1]
+endfunction
+
+function! s:rangeScore(range)
+    if !exists('s:rangeScores')
+        let s:rangeScores = {}
+        let ranges = split(get(g:, 'targets_seekRanges',
+                    \ 'cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA'
+                    \ ))
+        let rangesN = len(ranges)
+        for i in range(rangesN)
+            let s:rangeScores[ranges[i]] = rangesN - i
+        endfor
+    endif
+    return get(s:rangeScores, a:range)
 endfunction
 
