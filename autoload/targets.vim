@@ -7,24 +7,11 @@ let s:save_cpoptions = &cpoptions
 set cpo&vim
 
 " called once when loaded
-" TODO: move registry to own autoload file so we don't autoload everything
-" when something gets registered (or move everything else to a different file,
-" in any case split it and check autoloading in practice)
 " TODO: actually, can we make all this lazy? (for example cache in the
 " settings functions)
 function! s:setup()
-    " maps kind to factory constructor
-    let s:registry = {
-                \ 'pairs':      function('targets#sources#pairs#new'),
-                \ 'quotes':     function('targets#sources#quotes#new'),
-                \ 'separators': function('targets#sources#separators#new'),
-                \ 'arguments':  function('targets#sources#arguments#new'),
-                \ 'tags':       function('targets#sources#tags#new'),
-                \ }
-
     let s:rangeScores = targets#settings#rangeScores()
     let s:rangeJumps  = targets#settings#rangeJumps()
-    let s:multis      = targets#settings#multis()
 
     let s:lastRawTarget = targets#target#withError('initial')
     let s:lastTrigger   = "   "
@@ -274,27 +261,9 @@ function! s:getFactories(trigger)
         return s:factoriesCache[a:trigger]
     endif
 
-    let factories = s:getNewFactories(a:trigger)
+    let factories = targets#sources#newFactories(a:trigger)
     " write to cache (even if no factories were returned)
     let s:factoriesCache[a:trigger] = factories
-    return factories
-endfunction
-
-function! s:getNewFactories(trigger)
-    let multi = get(s:multis, a:trigger, 0)
-    if type(multi) == type({})
-        return s:getMultiFactories(multi)
-    endif
-    return []
-endfunction
-
-function! s:getMultiFactories(multi)
-    let factories = []
-    for kind in keys(s:registry)
-        for args in get(a:multi, kind, [])
-            call add(factories, call(s:registry[kind], [args]))
-        endfor
-    endfor
     return factories
 endfunction
 
