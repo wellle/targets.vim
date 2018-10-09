@@ -8,7 +8,7 @@ function! targets#target#new(sl, sc, el, ec, error)
         \ 'sc':    a:sc,
         \ 'el':    a:el,
         \ 'ec':    a:ec,
-        \ 'gen':   0,
+        \ 'gen':   {},
         \ 'linewise': 0,
         \
         \ 'copy': function('targets#target#copy'),
@@ -218,9 +218,7 @@ function! targets#target#string() dict
         let text = getline(self.sl)[self.sc-1 :] . '...' . getline(self.el)[: self.ec-1]
     endif
 
-    if has_key(self, 'gen')
-        let text .= ' ' . self.gen.kind . self.gen.trigger
-    endif
+    " TODO: include info about gen if exists?
 
     return text . ' ' . '[' . self.sl . ' ' . self.sc . '; ' . self.el . ' ' . self.ec . ']'
 endfunction

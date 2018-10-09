@@ -56,6 +56,7 @@ endfunction
 " in   │ ┌───┐ ┌───┐        ┌───┐        ┌───┐
 " line │ ( x ) ( x , a ) (a , x , b) ( a , x )
 " out  │  └─┘    └──┘       └──┘        └──┘
+" TODO: inject args instead of gen?
 function! targets#modify#dropa(gen, target)
     let startOpening = a:target.getcharS() !~# a:gen.args.separator
     let endOpening   = a:target.getcharE() !~# a:gen.args.separator

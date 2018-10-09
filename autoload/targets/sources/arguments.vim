@@ -1,26 +1,26 @@
 function! targets#sources#arguments#new(args)
     let [opening, closing, separator] = [a:args['o'], a:args['c'], a:args['s']]
-    let args = {
-                \ 'opening':   opening,
-                \ 'closing':   closing,
-                \ 'separator': separator,
-                \ 'openingS':  opening . '\|' . separator,
-                \ 'closingS':  closing . '\|' . separator,
-                \ 'all':       opening . '\|' . separator . '\|' . closing,
-                \ 'outer':     opening . '\|' . closing,
-                \ }
-    let genFuncs = {
-                \ 'c': function('targets#sources#arguments#current'),
-                \ 'n': function('targets#sources#arguments#next'),
-                \ 'l': function('targets#sources#arguments#last'),
-                \ }
-    let modFuncs = {
-                \ 'i': function('targets#modify#drop'),
-                \ 'a': function('targets#modify#dropa'),
-                \ 'I': function('targets#modify#shrink'),
-                \ 'A': function('targets#modify#expand'),
-                \ }
-    return targets#factory#new('a', args, genFuncs, modFuncs)
+    return {
+                \ 'args': {
+                \     'opening':   opening,
+                \     'closing':   closing,
+                \     'separator': separator,
+                \     'openingS':  opening . '\|' . separator,
+                \     'closingS':  closing . '\|' . separator,
+                \     'all':       opening . '\|' . separator . '\|' . closing,
+                \     'outer':     opening . '\|' . closing,
+                \ },
+                \ 'genFuncs': {
+                \     'c': function('targets#sources#arguments#current'),
+                \     'n': function('targets#sources#arguments#next'),
+                \     'l': function('targets#sources#arguments#last'),
+                \ },
+                \ 'modFuncs': {
+                \     'i': function('targets#modify#drop'),
+                \     'a': function('targets#modify#dropa'),
+                \     'I': function('targets#modify#shrink'),
+                \     'A': function('targets#modify#expand'),
+                \ }}
 endfunction
 
 function! targets#sources#arguments#current(gen, first)

@@ -1,18 +1,19 @@
 function! targets#sources#separators#new(args)
-    let delimiter = a:args['d']
-    let args = {'delimiter': escape(delimiter, '.~\$')}
-    let genFuncs = {
-                \ 'c': function('targets#sources#separators#current'),
-                \ 'n': function('targets#sources#separators#next'),
-                \ 'l': function('targets#sources#separators#last'),
-                \ }
-    let modFuncs = {
-                \ 'i': function('targets#modify#drop'),
-                \ 'a': function('targets#modify#dropr'),
-                \ 'I': function('targets#modify#shrink'),
-                \ 'A': function('targets#modify#expands'),
-                \ }
-    return targets#factory#new(delimiter, args, genFuncs, modFuncs)
+    return {
+                \ 'args': {
+                \     'delimiter': escape(a:args['d'], '.~\$'),
+                \ },
+                \ 'genFuncs': {
+                \     'c': function('targets#sources#separators#current'),
+                \     'n': function('targets#sources#separators#next'),
+                \     'l': function('targets#sources#separators#last'),
+                \ },
+                \ 'modFuncs': {
+                \     'i': function('targets#modify#drop'),
+                \     'a': function('targets#modify#dropr'),
+                \     'I': function('targets#modify#shrink'),
+                \     'A': function('targets#modify#expands'),
+                \ }}
 endfunction
 
 function! targets#sources#separators#current(gen, first)

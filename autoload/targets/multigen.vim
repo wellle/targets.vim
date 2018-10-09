@@ -15,7 +15,10 @@ function! targets#multigen#add(factories, ...) dict
     let whichs = a:000
     for factory in a:factories
         for which in whichs
-            call add(self.gens, factory.new(self.context.oldpos, which))
+            let gen = factory.new(self.context.oldpos, which)
+            if gen != {}
+                call add(self.gens, gen)
+            endif
         endfor
     endfor
 endfunction
@@ -155,8 +158,9 @@ endfunction
 function! s:rangeScore(range)
     if !exists('s:rangeScores')
         let s:rangeScores = {}
+        " TODO: cc was added, update docs accordingly!
         let ranges = split(get(g:, 'targets_seekRanges',
-                    \ 'cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA'
+                    \ 'cc cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA'
                     \ ))
         let rangesN = len(ranges)
         for i in range(rangesN)

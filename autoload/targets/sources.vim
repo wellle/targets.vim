@@ -28,11 +28,18 @@ function! targets#sources#newFactories(trigger)
     for source in keys(sources)
         for args in sources[source]
             if !has_key(s:sources, source)
-                echom 'targets.vim source not registered: ' . source
-                return []
+                echom "targets.vim source '" . source . "' not registered"
+                continue
             endif
 
-            call add(factories, call(s:sources[source], [args]))
+            let factory = call(s:sources[source], [args])
+            let err = targets#factory#init(source, factory)
+            if err != ''
+                echom "targets.vim source '" . source . "': " . err
+                continue
+            endif
+
+            call add(factories, factory)
         endfor
     endfor
     return factories

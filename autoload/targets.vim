@@ -226,12 +226,8 @@ function! s:modifyTarget(target, modifier)
         return targets#target#withError('modifyTarget invalid: ' . a:target.error)
     endif
 
-    let modFuncs = a:target.gen.factory.modFuncs
-    if !has_key(modFuncs, a:modifier)
-        return targets#target#withError('modifyTarget')
-    endif
-
-    let Funcs = modFuncs[a:modifier]
+    " use keep function by default
+    let Funcs = get(a:target.gen.factory.modFuncs, a:modifier, function('targets#modify#keep'))
     if type(Funcs) == type(function('tr')) " single function
         return Funcs(a:target.gen, a:target.copy())
     endif

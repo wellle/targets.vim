@@ -33,9 +33,7 @@ let s:defaultQuoteDirs = get(g:, 'targets_quoteDirs', {
             \ })
 
 function! targets#sources#quotes#new(args)
-    let delimiter = a:args['d']
     let quoteDirsConf = get(a:args, 'quoteDirs', s:defaultQuoteDirs)
-
     let quoteDirs = {}
     for key in keys(s:quoteArgs)
         let quoteArgs = s:quoteArgs[key]
@@ -44,22 +42,22 @@ function! targets#sources#quotes#new(args)
         endfor
     endfor
 
-    let args = {
-                \ 'delimiter': s:quoteEscape(delimiter),
-                \ 'quoteDirs': quoteDirs
-                \ }
-    let genFuncs = {
-                \ 'c': function('targets#sources#quotes#current'),
-                \ 'n': function('targets#sources#quotes#next'),
-                \ 'l': function('targets#sources#quotes#last'),
-                \ }
-    let modFuncs = {
-                \ 'i': function('targets#modify#drop'),
-                \ 'a': function('targets#modify#keep'),
-                \ 'I': function('targets#modify#shrink'),
-                \ 'A': function('targets#modify#expand'),
-                \ }
-    return targets#factory#new(delimiter, args, genFuncs, modFuncs)
+    return {
+                \ 'args': {
+                \     'delimiter': s:quoteEscape(a:args['d']),
+                \     'quoteDirs': quoteDirs
+                \ },
+                \ 'genFuncs': {
+                \     'c': function('targets#sources#quotes#current'),
+                \     'n': function('targets#sources#quotes#next'),
+                \     'l': function('targets#sources#quotes#last'),
+                \ },
+                \ 'modFuncs': {
+                \     'i': function('targets#modify#drop'),
+                \     'a': function('targets#modify#keep'),
+                \     'I': function('targets#modify#shrink'),
+                \     'A': function('targets#modify#expand'),
+                \ }}
 endfunction
 
 function! targets#sources#quotes#current(gen, first)

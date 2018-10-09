@@ -1,22 +1,22 @@
 function! targets#sources#pairs#new(args)
-    let [opening, closing] = [a:args['o'], a:args['c']]
-    let args = {
-                \ 'opening': opening,
-                \ 'closing': closing,
-                \ 'trigger': closing,
-                \ }
-    let genFuncs = {
-                \ 'c': function('targets#sources#pairs#current'),
-                \ 'n': function('targets#sources#pairs#next'),
-                \ 'l': function('targets#sources#pairs#last'),
-                \ }
-    let modFuncs = {
-                \ 'i': function('targets#modify#drop'),
-                \ 'a': function('targets#modify#keep'),
-                \ 'I': function('targets#modify#shrink'),
-                \ 'A': function('targets#modify#expand'),
-                \ }
-    return targets#factory#new(closing, args, genFuncs, modFuncs)
+    " args.trigger is used differently from tags source
+    return {
+                \ 'args': {
+                \     'opening': a:args['o'],
+                \     'closing': a:args['c'],
+                \     'trigger': a:args['c'],
+                \ },
+                \ 'genFuncs': {
+                \     'c': function('targets#sources#pairs#current'),
+                \     'n': function('targets#sources#pairs#next'),
+                \     'l': function('targets#sources#pairs#last'),
+                \ },
+                \ 'modFuncs': {
+                \     'i': function('targets#modify#drop'),
+                \     'a': function('targets#modify#keep'),
+                \     'I': function('targets#modify#shrink'),
+                \     'A': function('targets#modify#expand'),
+                \ }}
 endfunction
 
 function! targets#sources#pairs#current(gen, first)
@@ -57,16 +57,13 @@ endfunction
 " args (count, trigger)
 function! s:select(count, trigger)
     " try to select pair
-    silent! execute 'keepjumps normal! v' . a:count . 'a' . a:trigger
-    let [el, ec] = getpos('.')[1:2]
-    silent! normal! o
-    let [sl, sc] = getpos('.')[1:2]
-    silent! normal! v
+    silent! execute 'keepjumps normal! v' . a:count . 'a' . a:trigger . 'v'
+    let target = targets#target#fromVisualSelection('')
 
-    if sc == ec && sl == el
+    if target.sc == target.ec && target.sl == target.el
         return targets#target#withError('pairs select')
     endif
 
-    return targets#target#fromValues(sl, sc, el, ec)
+    return target
 endfunction
 
