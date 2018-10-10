@@ -552,7 +552,7 @@ Required to be a 2 character long list. Use a space to deactivate a direction.
 Default:
 
 ```vim
-let g:targets_pairs = '()b {}B [] <>'
+let g:targets_pairs = '() {}B [] <>'
 ```
 
 Defines the space separated list of pair objects you wish to use, along with

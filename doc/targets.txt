@@ -506,7 +506,7 @@ Required to be a 4 character long list. Use a space to deactivate a direction.
 
                                                              *g:targets_pairs*
 Default:
-    let g:targets_pairs = '()b {}B [] <>' ~
+    let g:targets_pairs = '() {}B [] <>' ~
 
 Defines the space separated list of pair objects you wish to use, along with
 optional one letter aliases for them.
