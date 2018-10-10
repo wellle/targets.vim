@@ -1,4 +1,19 @@
-" generators get created by factories
+function! targets#generator#new(genFunc, modFuncs, source, args, oldpos, which)
+    return {
+                \ 'genFunc':  a:genFunc,
+                \ 'modFuncs': a:modFuncs,
+                \ 'source':   a:source,
+                \ 'args':     a:args,
+                \
+                \ 'oldpos':   a:oldpos,
+                \ 'which':    a:which,
+                \ 'state':    {},
+                \
+                \ 'next':   function('targets#generator#next'),
+                \ 'nextN':  function('targets#generator#nextN'),
+                \ 'target': function('targets#generator#target')
+                \ }
+endfunction
 
 function! targets#generator#next(first) dict
     call setpos('.', self.oldpos)
@@ -15,8 +30,7 @@ function! targets#generator#next(first) dict
         " empty return, no target
         return targets#target#withError('no target')
     elseif type(target) != type({})
-        " TODO: include details? (source, which etc.)
-        echom 'should return target (dictionary), got ' . target
+        echom "targets.vim source '" . self.source . "' genFunc for " . self.which . " returned unexpected " . string(target)
         return targets#target#withError('bad target')
     endif
 

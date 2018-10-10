@@ -227,7 +227,7 @@ function! s:modifyTarget(target, modifier)
     endif
 
     " use keep function by default
-    let Funcs = get(a:target.gen.factory.modFuncs, a:modifier, function('targets#modify#keep'))
+    let Funcs = get(a:target.gen.modFuncs, a:modifier, function('targets#modify#keep'))
     if type(Funcs) == type(function('tr')) " single function
         return Funcs(a:target.gen, a:target.copy())
     endif

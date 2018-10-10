@@ -1,5 +1,3 @@
-" TODO: add source, from gen, like PN(3, might help for debugging
-
 " gen gets injected later
 function! targets#target#new(sl, sc, el, ec, error)
     return {
@@ -218,7 +216,9 @@ function! targets#target#string() dict
         let text = getline(self.sl)[self.sc-1 :] . '...' . getline(self.el)[: self.ec-1]
     endif
 
-    " TODO: include info about gen if exists?
+    if has_key(self, 'gen')
+        let text .= ' ' . self.gen.source . ' ' . self.gen.which
+    endif
 
     return text . ' ' . '[' . self.sl . ' ' . self.sc . '; ' . self.el . ' ' . self.ec . ']'
 endfunction

@@ -1,5 +1,6 @@
 " maps source to factory constructor, with default sources
 " more can be added (before first use) via targets#sources#register()
+" TODO: make singular?
 let s:sources = {
             \ 'pairs':      function('targets#sources#pairs#new'),
             \ 'quotes':     function('targets#sources#quotes#new'),
@@ -67,6 +68,11 @@ function! s:sources(trigger)
 
         " TODO: should we still apply those if g:targets_config was set? or
         " only in defaults, like for args and tags?
+        " alternatively we could apply those only if at least one of those
+        " options have been used by the user. but currently we populate them
+        " anyway, so at this point we can't tell anymore. so we would need to
+        " stop doing that in plugin/targets.vim, which is currently only being
+        " used for legacy behavior (many individual mappings)
         for pair in split(g:targets_pairs)
             let config = {'pairs': [{'o':pair[0], 'c':pair[1]}]}
             for trigger in split(pair, '\zs')
