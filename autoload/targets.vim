@@ -225,16 +225,17 @@ function! s:modifyTarget(target, modifier)
     if a:target.state().isInvalid()
         return targets#target#withError('modifyTarget invalid: ' . a:target.error)
     endif
+    " don't modify the original injected target (used as lastRawTarget)
+    let target = a:target.copy()
 
     " use keep function by default
-    let Funcs = get(a:target.gen.modFuncs, a:modifier, function('targets#modify#keep'))
+    let Funcs = get(target.gen.modFuncs, a:modifier, function('targets#modify#keep'))
     if type(Funcs) == type(function('tr')) " single function
-        return Funcs(a:target.gen, a:target.copy())
+        return Funcs(target, target.gen.args)
     endif
 
-    let target = a:target.copy()
     for Func in Funcs " list of functions
-        let target = Func(a:target.gen, target)
+        let target = Func(target, target.gen.args)
     endfor
     return target
 endfunction
