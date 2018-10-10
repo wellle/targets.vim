@@ -19,36 +19,36 @@ function! targets#sources#pairs#new(args)
                 \ }}
 endfunction
 
-function! targets#sources#pairs#current(gen, first)
-    if a:first
+function! targets#sources#pairs#current(args, opts, state)
+    if a:opts.first
         let cnt = 1
     else
         let cnt = 2
     endif
 
-    let target = s:select(cnt, a:gen.args.trigger)
+    let target = s:select(cnt, a:args.trigger)
     call target.cursorE() " keep going from right end
     return target
 endfunction
 
-function! targets#sources#pairs#next(gen, first)
-    if targets#util#search(a:gen.args.opening, 'W') > 0
+function! targets#sources#pairs#next(args, opts, state)
+    if targets#util#search(a:args.opening, 'W') > 0
         return targets#target#withError('no target')
     endif
 
     let oldpos = getpos('.')
-    let target = s:select(1, a:gen.args.trigger)
+    let target = s:select(1, a:args.trigger)
     call setpos('.', oldpos)
     return target
 endfunction
 
-function! targets#sources#pairs#last(gen, first)
-    if targets#util#search(a:gen.args.closing, 'bW') > 0
+function! targets#sources#pairs#last(args, opts, state)
+    if targets#util#search(a:args.closing, 'bW') > 0
         return targets#target#withError('no target')
     endif
 
     let oldpos = getpos('.')
-    let target = s:select(1, a:gen.args.trigger)
+    let target = s:select(1, a:args.trigger)
     call setpos('.', oldpos)
     return target
 endfunction

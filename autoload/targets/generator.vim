@@ -17,11 +17,10 @@ endfunction
 
 function! targets#generator#next(first) dict
     call setpos('.', self.oldpos)
-    " TODO: don't pass self (gen), but args and state separately?
-    " no need to access anything else in there
     " TODO: how about having this function return [a, b, c, d] instead of a
     " target? maybe return string as error?
-    let target = call(self.genFunc, [self, a:first])
+    let opts = {'first': a:first}
+    let target = call(self.genFunc, [self.args, opts, self.state])
     if mode() == 'v'
         normal! v
         " TODO: make argument optional, we only need it in init()

@@ -60,49 +60,49 @@ function! targets#sources#quotes#new(args)
                 \ }}
 endfunction
 
-function! targets#sources#quotes#current(gen, first)
-    if !a:first
+function! targets#sources#quotes#current(args, opts, state)
+    if !a:opts.first
         return targets#target#withError('only one current quote')
     endif
 
-    let dir = s:quoteDir(a:gen.args.quoteDirs, a:gen.args.delimiter)[0]
-    return targets#util#select(a:gen.args.delimiter, a:gen.args.delimiter, dir)
+    let dir = s:quoteDir(a:args.quoteDirs, a:args.delimiter)[0]
+    return targets#util#select(a:args.delimiter, a:args.delimiter, dir)
 endfunction
 
-function! targets#sources#quotes#next(gen, first)
-    if !exists('a:gen.state.rate')
-        let [_, a:gen.state.rate, _, skipR, _] = s:quoteDir(a:gen.args.quoteDirs, a:gen.args.delimiter)
-        let cnt = a:gen.state.rate - skipR " skip initially once
+function! targets#sources#quotes#next(args, opts, state)
+    if !exists('a:state.rate')
+        let [_, a:state.rate, _, skipR, _] = s:quoteDir(a:args.quoteDirs, a:args.delimiter)
+        let cnt = a:state.rate - skipR " skip initially once
         " echom 'skip'
     else
-        let cnt = a:gen.state.rate " then go by rate
+        let cnt = a:state.rate " then go by rate
         " echom 'no skip'
     endif
 
-    if targets#util#search(a:gen.args.delimiter, 'W', cnt) > 0
+    if targets#util#search(a:args.delimiter, 'W', cnt) > 0
         return targets#target#withError('QN')
     endif
 
-    let target = targets#util#select(a:gen.args.delimiter, a:gen.args.delimiter, '>')
+    let target = targets#util#select(a:args.delimiter, a:args.delimiter, '>')
     call target.cursorS() " keep going from left end
     return target
 endfunction
 
-function! targets#sources#quotes#last(gen, first)
-    if !exists('a:gen.state.rate')
-        let [_, a:gen.state.rate, skipL, _, _] = s:quoteDir(a:gen.args.quoteDirs, a:gen.args.delimiter)
-        let cnt = a:gen.state.rate - skipL " skip initially once
+function! targets#sources#quotes#last(args, opts, state)
+    if !exists('a:state.rate')
+        let [_, a:state.rate, skipL, _, _] = s:quoteDir(a:args.quoteDirs, a:args.delimiter)
+        let cnt = a:state.rate - skipL " skip initially once
         " echom 'skip'
     else
-        let cnt = a:gen.state.rate " then go by rate
+        let cnt = a:state.rate " then go by rate
         " echom 'no skip'
     endif
 
-    if targets#util#search(a:gen.args.delimiter, 'bW', cnt) > 0
+    if targets#util#search(a:args.delimiter, 'bW', cnt) > 0
         return targets#target#withError('QL')
     endif
 
-    let target = targets#util#select(a:gen.args.delimiter, a:gen.args.delimiter, '<')
+    let target = targets#util#select(a:args.delimiter, a:args.delimiter, '<')
     call target.cursorE() " keep going from right end
     return target
 endfunction

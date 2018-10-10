@@ -16,38 +16,38 @@ function! targets#sources#separators#new(args)
                 \ }}
 endfunction
 
-function! targets#sources#separators#current(gen, first)
-    if !a:first
+function! targets#sources#separators#current(args, opts, state)
+    if !a:opts.first
         return targets#target#withError('only one current separator')
     endif
 
-    return targets#util#select(a:gen.args.delimiter, a:gen.args.delimiter, '>')
+    return targets#util#select(a:args.delimiter, a:args.delimiter, '>')
 endfunction
 
-function! targets#sources#separators#next(gen, first)
-    if targets#util#search(a:gen.args.delimiter, 'W') > 0
+function! targets#sources#separators#next(args, opts, state)
+    if targets#util#search(a:args.delimiter, 'W') > 0
         return targets#target#withError('no target')
     endif
 
     let oldpos = getpos('.')
-    let target = targets#util#select(a:gen.args.delimiter, a:gen.args.delimiter, '>')
+    let target = targets#util#select(a:args.delimiter, a:args.delimiter, '>')
     call setpos('.', oldpos)
     return target
 endfunction
 
-function! targets#sources#separators#last(gen, first)
-    if a:first
+function! targets#sources#separators#last(args, opts, state)
+    if a:opts.first
         let flags = 'cbW' " allow separator under cursor on first iteration
     else
         let flags = 'bW'
     endif
 
-    if targets#util#search(a:gen.args.delimiter, flags) > 0
+    if targets#util#search(a:args.delimiter, flags) > 0
         return targets#target#withError('no target')
     endif
 
     let oldpos = getpos('.')
-    let target = targets#util#select(a:gen.args.delimiter, a:gen.args.delimiter, '<')
+    let target = targets#util#select(a:args.delimiter, a:args.delimiter, '<')
     call setpos('.', oldpos)
     return target
 endfunction

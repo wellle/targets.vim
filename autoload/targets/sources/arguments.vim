@@ -23,62 +23,62 @@ function! targets#sources#arguments#new(args)
                 \ }}
 endfunction
 
-function! targets#sources#arguments#current(gen, first)
-    if a:first
-        let target = s:select(a:gen, '^')
+function! targets#sources#arguments#current(args, opts, state)
+    if a:opts.first
+        let target = s:select(a:args, '^')
     else
-        if s:findArgBoundary('cW', 'cW', a:gen.args.opening, a:gen.args.closing, a:gen.args.outer, "")[2] > 0
+        if s:findArgBoundary('cW', 'cW', a:args.opening, a:args.closing, a:args.outer, "")[2] > 0
             return targets#target#withError('AC 1')
         endif
         silent! execute "normal! 1 "
-        let target = s:select(a:gen, '<')
+        let target = s:select(a:args, '<')
     endif
 
     call target.cursorE() " keep going from right end
     return target
 endfunction
 
-function! targets#sources#arguments#next(gen, first)
+function! targets#sources#arguments#next(args, opts, state)
     " search for opening or separator, try to select argument from there
     " if that fails, keep searching for opening until an argument can be
     " selected
-    let pattern = a:gen.args.openingS
+    let pattern = a:args.openingS
     while 1
         if targets#util#search(pattern, 'W') > 0
             return targets#target#withError('no target')
         endif
 
         let oldpos = getpos('.')
-        let target = s:select(a:gen, '>')
+        let target = s:select(a:args, '>')
         call setpos('.', oldpos)
 
         if target.state().isValid()
             return target
         endif
 
-        let pattern = a:gen.args.opening
+        let pattern = a:args.opening
     endwhile
 endfunction
 
-function! targets#sources#arguments#last(gen, first)
+function! targets#sources#arguments#last(args, opts, state)
     " search for closing or separator, try to select argument from there
     " if that fails, keep searching for closing until an argument can be
     " selected
-    let pattern = a:gen.args.closingS
+    let pattern = a:args.closingS
     while 1
         if targets#util#search(pattern, 'bW') > 0
             return targets#target#withError('no target')
         endif
 
         let oldpos = getpos('.')
-        let target = s:select(a:gen, '<')
+        let target = s:select(a:args, '<')
         call setpos('.', oldpos)
 
         if target.state().isValid()
             return target
         endif
 
-        let pattern = a:gen.args.closing
+        let pattern = a:args.closing
     endwhile
 endfunction
 
@@ -87,22 +87,22 @@ endfunction
 "   '>' select to the right (default)
 "   '<' select to the left (used when selecting or skipping to the left)
 "   '^' select up (surrounding argument, used for growing)
-function! s:select(gen, direction)
+function! s:select(args, direction)
     let oldpos = getpos('.')
 
-    let [opening, closing] = [a:gen.args.opening, a:gen.args.closing]
+    let [opening, closing] = [a:args.opening, a:args.closing]
     if a:direction ==# '^'
         if s:getchar() =~# closing
-            let [sl, sc, el, ec, err] = s:findArg(a:gen.args, a:direction, 'cW', 'bW', 'bW', opening, closing)
+            let [sl, sc, el, ec, err] = s:findArg(a:args, a:direction, 'cW', 'bW', 'bW', opening, closing)
         else
-            let [sl, sc, el, ec, err] = s:findArg(a:gen.args, a:direction, 'W', 'bcW', 'bW', opening, closing)
+            let [sl, sc, el, ec, err] = s:findArg(a:args, a:direction, 'W', 'bcW', 'bW', opening, closing)
         endif
         let message = 'argument select 1'
     elseif a:direction ==# '>'
-        let [sl, sc, el, ec, err] = s:findArg(a:gen.args, a:direction, 'W', 'bW', 'bW', opening, closing)
+        let [sl, sc, el, ec, err] = s:findArg(a:args, a:direction, 'W', 'bW', 'bW', opening, closing)
         let message = 'argument select 2'
     elseif a:direction ==# '<' " like '>', but backwards
-        let [el, ec, sl, sc, err] = s:findArg(a:gen.args, a:direction, 'bW', 'W', 'W', closing, opening)
+        let [el, ec, sl, sc, err] = s:findArg(a:args, a:direction, 'bW', 'W', 'W', closing, opening)
         let message = 'argument select 3'
     else
         return targets#target#withError('argument select')
