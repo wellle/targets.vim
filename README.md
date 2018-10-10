@@ -656,7 +656,7 @@ let g:targets_argSeparator = '[,;]'
 Default:
 
 ```vim
-let g:targets_seekRanges = 'cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA'
+let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA'
 ```
 
 Defines a priority ordered, space separated list of range types which can be
@@ -671,32 +671,32 @@ Some other useful example settings:
 
 Prefer multiline targets around cursor over distant targets within cursor line:
 ```vim
-let g:targets_seekRanges = 'cr cb cB lc ac Ac lr lb ar ab lB Ar aB Ab AB rr ll rb al rB Al bb aa bB Aa BB AA'
+let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr lb ar ab lB Ar aB Ab AB rr ll rb al rB Al bb aa bB Aa BB AA'
 ```
 
 Never seek backwards:
 ```vim
-let g:targets_seekRanges = 'cr cb cB lc ac Ac lr rr lb ar ab lB Ar aB Ab AB rb rB bb bB BB'
+let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr rr lb ar ab lB Ar aB Ab AB rb rB bb bB BB'
 ```
 
 Only seek if next/last targets touch current line:
 ```vim
-let g:targets_seekRanges = 'cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb rB al Al'
+let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb rB al Al'
 ```
 
 Only consider targets fully visible on screen:
 ```vim
-let g:targets_seekRanges = 'cr cb cB lc ac Ac lr lb ar ab rr rb bb ll al aa'
+let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr lb ar ab rr rb bb ll al aa'
 ```
 
 Only consider targets around cursor:
 ```vim
-let g:targets_seekRanges = 'cr cb cB lc ac Ac lr lb ar ab lB Ar aB Ab AB'
+let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr lb ar ab lB Ar aB Ab AB'
 ```
 
 Only consider targets fully contained in current line:
 ```vim
-let g:targets_seekRanges = 'cr cb cB lc ac Ac lr rr ll'
+let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr rr ll'
 ```
 
 If you want to build your own, or are just curious what those cryptic letters

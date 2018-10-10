@@ -158,7 +158,6 @@ endfunction
 function! s:rangeScore(range)
     if !exists('s:rangeScores')
         let s:rangeScores = {}
-        " TODO: cc was added, update docs accordingly!
         let ranges = split(get(g:, 'targets_seekRanges',
                     \ 'cc cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA'
                     \ ))
