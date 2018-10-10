@@ -17,17 +17,32 @@ endfunction
 
 function! targets#generator#next(first) dict
     call setpos('.', self.oldpos)
-    " TODO: how about having this function return [a, b, c, d] instead of a
-    " target? maybe return string as error?
     let opts = {'first': a:first}
+
     let target = call(self.genFunc, [self.args, opts, self.state])
-    if mode() == 'v'
+
+    if type(target) == type(0) && target == 0
+        " no/empty return
+        if mode() != 'v'
+            " not in visual mode, no target
+            return targets#target#withError('no target')
+        endif
+
+        " in visual mode, take selection as target
         normal! v
         " TODO: make argument optional, we only need it in init()
         let target = targets#target#fromVisualSelection('')
-    elseif type(target) == type(0) && target == 0
-        " empty return, no target
-        return targets#target#withError('no target')
+
+    elseif type(target) == type('')
+        " returned string, taken as error message
+        return targets#target#withError(target)
+
+    elseif type(target) == type([]) && len(target) == 4
+        " returned list of four, taken as [sl, sc, el, ec]
+        " NOTE: still fails if a list of four non ints gets returned, ignored
+        " for now
+        let target = targets#target#fromValues(target[0], target[1], target[2], target[3])
+
     elseif type(target) != type({})
         echom "targets.vim source '" . self.source . "' genFunc for " . self.which . " returned unexpected " . string(target)
         return targets#target#withError('bad target')
