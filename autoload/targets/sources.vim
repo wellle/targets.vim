@@ -53,16 +53,25 @@ function! s:sources(trigger)
                     \ 'q': { 'quote': [{'d':"'"}, {'d':'"'}, {'d':'`'}], },
                     \ }
 
+        let tagTrigger = get(g:, 'targets_tagTrigger', 't')
+        let argTrigger = get(g:, 'targets_argTrigger', 'a')
+        let pairs      = get(g:, 'targets_pairs'     , '() {}B [] <>')
+        let quotes     = get(g:, 'targets_quotes'    , '" '' `')
+        let separators = get(g:, 'targets_separators', ', . ; : + - = ~ _ * # / \ | & $')
+
         " we need to assign these like this because Vim 7.3 doesn't seem to like
         " variables as keys in dict definitions like above
-        let defaultConfig[g:targets_tagTrigger] = { 'tag': [{}], }
-        let defaultConfig[g:targets_argTrigger] = { 'argument': [{
+        let defaultConfig[tagTrigger] = { 'tag': [{}], }
+        let defaultConfig[argTrigger] = { 'argument': [{
                     \ 'o': get(g:, 'targets_argOpening', '[([]'),
                     \ 'c': get(g:, 'targets_argClosing', '[])]'),
                     \ 's': get(g:, 'targets_argSeparator', ','),
                     \ }], }
 
-        " TODO: document g:targets_config
+        " TODO: document g:targets_config, rename to targets_mappings?
+        " as we have other config parameters still, like seekRanges
+        " also document that all of these other settings are deprecated
+        " still supported, but ignored if targets_config is set
         let s:config = get(g:, 'targets_config', defaultConfig)
 
         " TODO: should we still apply those if g:targets_config was set? or
@@ -72,21 +81,21 @@ function! s:sources(trigger)
         " anyway, so at this point we can't tell anymore. so we would need to
         " stop doing that in plugin/targets.vim, which is currently only being
         " used for legacy behavior (many individual mappings)
-        for pair in split(g:targets_pairs)
+        for pair in split(pairs)
             let config = {'pair': [{'o':pair[0], 'c':pair[1]}]}
             for trigger in split(pair, '\zs')
                 call extend(s:config, {trigger: config}, 'keep')
             endfor
         endfor
 
-        for quote in split(g:targets_quotes)
+        for quote in split(quotes)
             let config = {'quote': [{'d':quote[0]}]}
             for trigger in split(quote, '\zs')
                 call extend(s:config, {trigger: config}, 'keep')
             endfor
         endfor
 
-        for separator in split(g:targets_separators)
+        for separator in split(separators)
             let config = {'separator': [{'d':separator[0]}]}
             for trigger in split(separator, '\zs')
                 call extend(s:config, {trigger: config}, 'keep')

@@ -9,6 +9,8 @@ let g:loaded_targets = '0.4.6' " version number
 let s:save_cpoptions = &cpoptions
 set cpo&vim
 
+" TODO: move these legacy mapping functions to autoload, not needed in new
+" versions, then rename addAllMappings -> addMappings
 function! s:addMapping1(mapType, mapping, aiAI)
     if a:aiAI !=# ' '
         silent! execute a:mapType . 'noremap <silent> <unique>' . a:aiAI . a:mapping
@@ -53,8 +55,8 @@ endfunction
 "         │   │└──────il)─────┘│││└─────2i)─────┘│││└──────in)─────┘││
 "         │   ├───────al)──────┘│├──────2a)──────┘│├───────an)──────┘│
 "         │   └───────Al)───────┘└──────2A)───────┘└───────An)───────┘
-function! s:createPairTextObjects(mapType)
-    for trigger in split(g:targets_pairs, '\zs')
+function! s:createPairTextObjects(mapType, pairs)
+    for trigger in split(a:pairs, '\zs')
         if trigger ==# ' '
             continue
         endif
@@ -65,10 +67,9 @@ function! s:createPairTextObjects(mapType)
 endfunction
 
 " tag text objects work on tags (similar to pair text objects)
-function! s:createTagTextObjects(mapType)
-    let trigger = g:targets_tagTrigger
-    let prefix = trigger . " :<C-U>call targets#" . a:mapType . "('" . trigger
-    let suffix = trigger . "', v:count1)<CR>"
+function! s:createTagTextObjects(mapType, trigger)
+    let prefix = a:trigger . " :<C-U>call targets#" . a:mapType . "('" . a:trigger
+    let suffix = a:trigger . "', v:count1)<CR>"
     call s:addMappings(a:mapType, prefix, suffix)
 endfunction
 
@@ -89,9 +90,9 @@ endfunction
 "         │   │└─i'─┘││     │     │└─i'─┘││    │      │└─i'─┘││
 "         │   ├──a'──┘│     │     ├──a'──┘│    │      ├──a'──┘│
 "         │   └──A'───┘     │     └──A'───┘    │      └──A'───┘
-function! s:createQuoteTextObjects(mapType)
+function! s:createQuoteTextObjects(mapType, quotes)
     " quote text objects
-    for trigger in split(g:targets_quotes, '\zs')
+    for trigger in split(a:quotes, '\zs')
         if trigger ==# ' '
             continue
         elseif trigger ==# "'"
@@ -118,9 +119,9 @@ endfunction
 "         │   │└─i,─┤ │      │       │└─i,─┤ │
 "         │   ├──a,─┘ │      │       ├──a,─┘ │
 "         │   └──A,───┘      │       └──A,───┘
-function! s:createSeparatorTextObjects(mapType)
+function! s:createSeparatorTextObjects(mapType, separators)
     " separator text objects
-    for trigger in split(g:targets_separators, '\zs')
+    for trigger in split(a:separators, '\zs')
         if trigger ==# ' '
             continue
         elseif trigger ==# '|'
@@ -145,14 +146,21 @@ endfunction
 "         │                      │└──────2ia─────────────┤ │
 "         │                      ├───────2aa─────────────┘ │
 "         │                      └───────2Aa───────────────┘
-function! s:createArgTextObjects(mapType)
-    let trigger = g:targets_argTrigger
-    let triggerMap = trigger . " :<C-U>call targets#" . a:mapType . "('" . trigger
-    let suffix = trigger . "', v:count1)<CR>"
+function! s:createArgTextObjects(mapType, trigger)
+    let triggerMap = a:trigger . " :<C-U>call targets#" . a:mapType . "('" . a:trigger
+    let suffix = a:trigger . "', v:count1)<CR>"
     call s:addMappings(a:mapType, triggerMap, suffix)
 endfunction
 
 function! s:addAllMappings()
+    " this is somewhat ugly, but we still need these nl values inside of the
+    " expression mapping and don't want to have this legacy fallback in two
+    " places
+    let g:targets_nl = get(g:, 'targets_nl', get(g:, 'targets_nlNL', 'nl')[0:1]) " legacy fallback
+    let aiAI         = get(g:, 'targets_aiAI', 'aiAI')
+    let [s:a, s:i, s:A, s:I] = split(aiAI, '\zs')
+    let [s:n, s:l]           = split(g:targets_nl, '\zs')
+
     if v:version >= 704 || (v:version == 703 && has('patch338'))
         " if possible, create only a few expression mappings to speed up loading times
         silent! execute 'omap <expr> <unique> ' . s:i . " targets#e('i', '" . s:i . "')"
@@ -175,36 +183,27 @@ function! s:addAllMappings()
 
     else
         " otherwise create individual mappings #117
+        " NOTE: for old versions only these legacy settings are used
+        " the more flexible g:targets_mappings only work with the expression
+        " mappings above (from Vim version 7.3.338 on)
+
+        let tagTrigger = get(g:, 'targets_tagTrigger', 't')
+        let argTrigger = get(g:, 'targets_argTrigger', 'a')
+        let pairs      = get(g:, 'targets_pairs'     , '() {}B [] <>')
+        let quotes     = get(g:, 'targets_quotes'    , '" '' `')
+        let separators = get(g:, 'targets_separators', ', . ; : + - = ~ _ * # / \ | & $')
 
         " more specific ones first for #145
-        call s:createTagTextObjects('o')
-        call s:createArgTextObjects('o')
-        call s:createPairTextObjects('o')
-        call s:createQuoteTextObjects('o')
-        call s:createSeparatorTextObjects('o')
-
-        call s:createTagTextObjects('x')
-        call s:createArgTextObjects('x')
-        call s:createPairTextObjects('x')
-        call s:createQuoteTextObjects('x')
-        call s:createSeparatorTextObjects('x')
+        for mapType in ['o', 'x']
+            call s:createTagTextObjects(mapType, tagTrigger)
+            call s:createArgTextObjects(mapType, argTrigger)
+            call s:createPairTextObjects(mapType, pairs)
+            call s:createQuoteTextObjects(mapType, quotes)
+            call s:createSeparatorTextObjects(mapType, separators)
+        endfor
     endif
 endfunction
 
-function! s:loadSettings()
-    let g:targets_nl         = get(g:, 'targets_nl', get(g:, 'targets_nlNL', 'nl')[0:1]) " legacy fallback
-    let g:targets_aiAI       = get(g:, 'targets_aiAI', 'aiAI')
-    let g:targets_pairs      = get(g:, 'targets_pairs', '() {}B [] <>')
-    let g:targets_quotes     = get(g:, 'targets_quotes', '" '' `')
-    let g:targets_separators = get(g:, 'targets_separators', ', . ; : + - = ~ _ * # / \ | & $')
-    let g:targets_tagTrigger = get(g:, 'targets_tagTrigger', 't')
-    let g:targets_argTrigger = get(g:, 'targets_argTrigger', 'a')
-
-    let [s:a, s:i, s:A, s:I] = split(g:targets_aiAI, '\zs')
-    let [s:n, s:l] = split(g:targets_nl, '\zs')
-endfunction
-
-call s:loadSettings()
 call s:addAllMappings()
 
 let &cpoptions = s:save_cpoptions
