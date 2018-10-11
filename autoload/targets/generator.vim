@@ -30,8 +30,7 @@ function! targets#generator#next(first) dict
 
         " in visual mode, take selection as target
         normal! v
-        " TODO: make argument optional, we only need it in init()
-        let target = targets#target#fromVisualSelection('')
+        let target = targets#target#fromVisualSelection()
 
     elseif type(target) == type('')
         " returned string, taken as error message

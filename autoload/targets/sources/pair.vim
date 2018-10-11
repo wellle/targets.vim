@@ -58,7 +58,7 @@ endfunction
 function! s:select(count, trigger)
     " try to select pair
     silent! execute 'keepjumps normal! v' . a:count . 'a' . a:trigger . 'v'
-    let target = targets#target#fromVisualSelection('')
+    let target = targets#target#fromVisualSelection()
 
     if target.sc == target.ec && target.sl == target.el
         return targets#target#withError('pair select')

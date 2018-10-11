@@ -37,11 +37,14 @@ function! targets#target#fromValues(sl, sc, el, ec)
     return targets#target#new(a:sl, a:sc, a:el, a:ec, '')
 endfunction
 
-function! targets#target#fromVisualSelection(selection)
+" optional parameter: selection (values: 'inclusive' (default) or 'exclusive')
+function! targets#target#fromVisualSelection(...)
+    let selection = a:0 == 1 ? a:1 : 'inclusive'
+
     let [sl, sc] = getpos("'<")[1:2]
     let [el, ec] = getpos("'>")[1:2]
 
-    if a:selection ==# 'exclusive'
+    if selection ==# 'exclusive'
         let ec -= 1
     endif
 
