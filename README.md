@@ -115,7 +115,7 @@ differently:
 These text objects are similar to the built in text objects such as `i)`.
 Supported trigger characters:
 
-- `(` `)` `b` (work on parentheses)
+- `(` `)` (work on parentheses)
 - `{` `}` `B` (work on curly braces)
 - `[` `]` (work on square brackets)
 - `<` `>` (work on angle brackets)
@@ -129,7 +129,7 @@ trigger character accordingly.
 
 #### In Pair
 
-`i( i) ib i{ i} iB i[ i] i< i> it`
+`i( i) i{ i} iB i[ i] i< i> it`
 
 - Select inside of pair characters.
 - This overrides Vim's default text object to allow seeking for the next pair
@@ -147,7 +147,7 @@ a ( b ( cccccccc ) d ) e
 
 #### A Pair
 
-`a( a) ab a{ a} aB a[ a] a< a> at`
+`a( a) a{ a} aB a[ a] a< a> at`
 
 - Select a pair including pair characters.
 - Overrides Vim's default text object to allow seeking.
@@ -162,7 +162,7 @@ a ( b ( cccccccc ) d ) e
 
 #### Inside Pair
 
-`I( I) Ib I{ I} IB I[ I] I< I> It`
+`I( I) I{ I} IB I[ I] I< I> It`
 
 - Select contents of pair characters.
 - Like inside of parentheses, but exclude whitespace at both ends. Useful for
@@ -178,7 +178,7 @@ a ( b ( cccccccc ) d ) e
 
 #### Around Pair
 
-`A( A) Ab A{ A} AB A[ A] A< A> At`
+`A( A) A{ A} AB A[ A] A< A> At`
 
 - Select around pair characters.
 - Like a pair, but include whitespace at one side of the pair. Prefers to

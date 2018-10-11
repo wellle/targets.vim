@@ -58,7 +58,7 @@ PAIR TEXT OBJECTS                                  *targets-pair-text-objects*
 These text objects are similar to the built in text objects such as |i)|.
 Supported trigger characters:
 
-    ( ) b     (work on parentheses)
+    ( )       (work on parentheses)
     { } B     (work on curly braces)
     [ ]       (work on square brackets)
     < >       (work on angle brackets)
@@ -70,8 +70,8 @@ We borrowed the aliases `r` and `a` from the |surround| plugin by Tim Pope.
 The following examples will use parentheses, but they all work for each listed
 trigger character accordingly.
 
-i( i) ib i[ i] it                    *it_t* *i(_t* *i)_t* *ib_t* *i[_t* *i]_t*
-i{ i} iB i< i>                              *i{_t* *i}_t* *iB_t* *i<_t* *i>_t*
+i( i) i[ i] iB                                      *i(_t* *i)_t* *i[_t* *i]_t* *iB_t*
+i{ i} i< i> it                                      *i{_t* *i}_t* *i<_t* *i>_t* *it_t* 
     Select inside of pair characters. This overrides Vim's default text object
     to allow seeking for the next pair in the current line to the right or
     left when the cursor is not inside a pair. This behavior is similar to
@@ -84,8 +84,8 @@ i{ i} iB i< i>                              *i{_t* *i}_t* *iB_t* *i<_t* *i>_t*
            │   └── i) ──┘   │
            └───── 2i) ──────┘
 
-a( a) ab a[ a] at                    *at_t* *a(_t* *a)_t* *ab_t* *a[_t* *a]_t*
-a{ a} aB a< a>                              *a{_t* *a}_t* *aB_t* *a<_t* *a>_t*
+a( a) a[ a] aB                                      *a(_t* *a)_t* *a[_t* *a]_t* *aB_t*
+a{ a} a< a> at                                      *a{_t* *a}_t* *a<_t* *a>_t* *at_t* 
     Select a pair. Overrides Vim's default text object to allow seeking.
     Accepts [count].
 
@@ -94,8 +94,8 @@ a{ a} aB a< a>                              *a{_t* *a}_t* *aB_t* *a<_t* *a>_t*
           │   └─── a) ───┘   │
           └────── 2a) ───────┘
 
-I( I) Ib I[ I] It                                *It* *I(* *I)* *Ib* *I[* *I]*
-I{ I} IB I< I>                                        *I{* *I}* *IB* *I<* *I>*
+I( I) I[ I] IB                                      *I(_t* *I)_t* *I[_t* *I]_t* *IB_t*
+I{ I} I< I> It                                      *I{_t* *I}_t* *I<_t* *I>_t* *It_t* 
     Select contents of pair characters. Like inside of parentheses, but
     exclude whitespace at both ends. Useful for changing contents while
     preserving spacing. Accepts [count].
@@ -105,8 +105,8 @@ I{ I} IB I< I>                                        *I{* *I}* *IB* *I<* *I>*
             │   └─ I) ─┘   │
             └──── 2I) ─────┘
 
-A( A) Ab A[ A] At                                *At* *A(* *A)* *Ab* *A[* *A]*
-A{ A} AB A< A>                                        *A{* *A}* *AB* *A<* *A>*
+A( A) A[ A] AB                                      *A(_t* *A)_t* *A[_t* *A]_t* *AB_t*
+A{ A} A< A> At                                      *A{_t* *A}_t* *A<_t* *A>_t* *At_t* 
     Select around pair characters. Like a pair, but include whitespace at one
     side of the pair. Prefers to select trailing whitespace, falls back to
     select leading whitespace. Accepts [count].
@@ -121,28 +121,28 @@ NEXT AND LAST PAIR                                    *targets-next-last-pair*
 
 Work directly on distant pairs without moving there separately.
 
-in( in) inb in[ in] int                    *int* *in(* *in)* *inb* *in[* *in]*
-in{ in} inB in< in>                              *in{* *in}* *inB* *in<* *in>*
-an( an) anb an[ an] ant                    *ant* *an(* *an)* *anb* *an[* *an]*
-an{ an} anB an< an>                              *an{* *an}* *anB* *an<* *an>*
-In( In) Inb In[ In] Int                    *Int* *In(* *In)* *Inb* *In[* *In]*
-In{ In} InB In< In>                              *In{* *In}* *InB* *In<* *In>*
-An( An) Anb An[ An] Ant                    *Ant* *An(* *An)* *Anb* *An[* *An]*
-An{ An} AnB An< An>                              *An{* *An}* *AnB* *An<* *An>*
-il( il) ilb il[ il] ilt                    *ilt* *il(* *il)* *ilb* *il[* *il]*
-il{ il} ilB il< il>                              *il{* *il}* *ilB* *il<* *il>*
-al( al) alb al[ al] alt                    *alt* *al(* *al)* *alb* *al[* *al]*
-al{ al} alB al< al>                              *al{* *al}* *alB* *al<* *al>*
-Il( Il) Ilb Il[ Il] Ilt                    *Ilt* *Il(* *Il)* *Ilb* *Il[* *Il]*
-Il{ Il} IlB Il< Il>                              *Il{* *Il}* *IlB* *Il<* *Il>*
-Al( Al) Alb Al[ Al] Alt                    *Alt* *Al(* *Al)* *Alb* *Al[* *Al]*
-Al{ Al} AlB Al< Al>                              *Al{* *Al}* *AlB* *Al<* *Al>*
+in( in) in[ in] inB                                      *in(* *in)* *in[* *in]* *inB* 
+in{ in} in< in> int                                      *in{* *in}* *in<* *in>* *int* 
+an( an) an[ an] anB                                      *an(* *an)* *an[* *an]* *anB* 
+an{ an} an< an> ant                                      *an{* *an}* *an<* *an>* *ant* 
+In( In) In[ In] InB                                      *In(* *In)* *In[* *In]* *InB* 
+In{ In} In< In> Int                                      *In{* *In}* *In<* *In>* *Int* 
+An( An) An[ An] AnB                                      *An(* *An)* *An[* *An]* *AnB* 
+An{ An} An< An> Ant                                      *An{* *An}* *An<* *An>* *Ant* 
+il( il) il[ il] ilB                                      *il(* *il)* *il[* *il]* *ilB* 
+il{ il} il< il> ilt                                      *il{* *il}* *il<* *il>* *ilt* 
+al( al) al[ al] alB                                      *al(* *al)* *al[* *al]* *alB* 
+al{ al} al< al> alt                                      *al{* *al}* *al<* *al>* *alt* 
+Il( Il) Il[ Il] IlB                                      *Il(* *Il)* *Il[* *Il]* *IlB* 
+Il{ Il} Il< Il> Ilt                                      *Il{* *Il}* *Il<* *Il>* *Ilt* 
+Al( Al) Al[ Al] AlB                                      *Al(* *Al)* *Al[* *Al]* *AlB* 
+Al{ Al} Al< Al> Alt                                      *Al{* *Al}* *Al<* *Al>* *Alt* 
     All the above pair text objects can be shifted to the next pair by
     including the letter `n`. The command `in)` selects inside of the next
     pair. Use the letter `l` instead to work on the previous (last) pair. Uses
     a [count] to skip multiple pairs. Skipping works over multiple lines.
 
-                                                        *targets-pair-charts*
+                                                         *targets-pair-charts*
 The following charts summarizes all pair mappings for a list of pairs and
 nested pairs:
 
@@ -200,7 +200,7 @@ Quote text objects work over multiple lines and support |targets-quote-seek|.
 The following examples will use single quotes, but they all work for each
 listed quoting character accordingly.
 
-i' i" i`                                              *i`_t* *i'_t* *iquote_t*
+i' i" i`                                                  *i`_t* *i'_t* *iquote_t*
     Select inside quote. This overrides Vim's default text object to allow
     seeking in both directions.
 
@@ -208,7 +208,7 @@ i' i" i`                                              *i`_t* *i'_t* *iquote_t*
         a ' bbbbbbbb ' c ' d ' e~
            └── i' ──┘
 
-a' a" a`                                              *a`_t* *a'_t* *aquote_t*
+a' a" a`                                                  *a`_t* *a'_t* *aquote_t*
     Select a quote. This overrides Vim's default text object to support
     |targets-quote-seek|. Unlike Vim's quote text objects, this incudes no
     surrounding whitespace.
@@ -217,7 +217,7 @@ a' a" a`                                              *a`_t* *a'_t* *aquote_t*
         a ' bbbbbbbb ' c ' d ' e~
           └─── a' ───┘
 
-I' I" I`                                                    *I`* *I'* *Iquote*
+I' I" I`                                                        *I`* *I'* *Iquote*
     Select contents of a quote. Like inside quote, but exclude whitespace at
     both ends. Useful for changing contents while preserving spacing.
 
@@ -225,7 +225,7 @@ I' I" I`                                                    *I`* *I'* *Iquote*
         a ' bbbbbbbb ' c ' d ' e~
             └─ I' ─┘
 
-A' A" A`                                                    *A`* *A'* *Aquote*
+A' A" A`                                                        *A`* *A'* *Aquote*
     Select around a quote. Like a quote, but include whitespace in one
     direction. Prefers to select trailing whitespace, falls back to select
     leading whitespace.
@@ -239,9 +239,9 @@ NEXT AND LAST QUOTE                                  *targets-next-last-quote*
 
 Work directly on distant quotes without moving there separately.
 
-in' in" in` il' il" il`            *in`* *in'* *inquote* *il`* *il'* *ilquote*
-an' an" an` al' al" al`            *an`* *an'* *anquote* *al`* *al'* *alquote*
-In' In" In` Il' Il" Il`            *In`* *In'* *Inquote* *Il`* *Il'* *Ilquote*
+in' in" in` il' il" il`                      *in`* *in'* *inquote* *il`* *il'* *ilquote*
+an' an" an` al' al" al`                      *an`* *an'* *anquote* *al`* *al'* *alquote*
+In' In" In` Il' Il" Il`                      *In`* *In'* *Inquote* *Il`* *Il'* *Ilquote*
     All the above pair text objects can be shifted to the next quote by
     including the letter `n`. The command `in'` selects inside of the next
     single quotes. Use the letter `l` instead to work on the previous (last)
@@ -282,16 +282,16 @@ Separator text objects work over multiple lines and support
 The following examples will use commas, but they all work for each listed
 separator character accordingly.
 
-i, i. i; i: i+ i- i= i~             *i,* *i.* *i;* *i:* *i+* *i-* *i=* *i~*
-i_ i/ i| i\ i& i$ i# i*             *i_* *i/* *i|* *i\* *i&* *i$* *i#* *istar*
+i, i. i; i: i+ i- i= i~                           *i,* *i.* *i;* *i:* *i+* *i-* *i=* *i~*
+i_ i/ i| i\ i& i$ i# i*                           *i_* *i/* *i|* *i\* *i&* *i$* *i#* *istar*
     Select inside separators.
 
               ...........
         a , b , cccccccc , d , e ~
                └── i, ──┘
 
-a, a. a; a: a+ a- a= a~             *a,* *a.* *a;* *a:* *a+* *a-* *a=* *a~*
-a_ a/ a| a\ a& a$ a# a*             *a_* *a/* *a|* *a\* *a&* *a$* *a#* *astar*
+a, a. a; a: a+ a- a= a~                           *a,* *a.* *a;* *a:* *a+* *a-* *a=* *a~*
+a_ a/ a| a\ a& a$ a# a              *             *a_* *a/* *a|* *a\* *a&* *a$* *a#* *astar*
     Select an item in a list separated by the separator character. This
     includes the leading separator, but excludes the trailing one. This leaves
     a proper list separated by the separator character after deletion. See
@@ -301,8 +301,8 @@ a_ a/ a| a\ a& a$ a# a*             *a_* *a/* *a|* *a\* *a&* *a$* *a#* *astar*
         a , b , cccccccc , d , e ~
               └─── a, ──┘
 
-I, I. I; I: I+ I- I= I~             *I,* *I.* *I;* *I:* *I+* *I-* *I=* *I~*
-I_ I/ I| I\ I& I$ I# I*             *I_* *I/* *I|* *I\* *I&* *I$* *I#* *Istar*
+I, I. I; I: I+ I- I= I~                           *I,* *I.* *I;* *I:* *I+* *I-* *I=* *I~*
+I_ I/ I| I\ I& I$ I# I              *             *I_* *I/* *I|* *I\* *I&* *I$* *I#* *Istar*
     Select contents between separators. Like inside separators, but exclude
     whitespace at both ends. Useful for changing contents while preserving
     spacing.
@@ -311,8 +311,8 @@ I_ I/ I| I\ I& I$ I# I*             *I_* *I/* *I|* *I\* *I&* *I$* *I#* *Istar*
         a , b , cccccccc , d , e ~
                 └─ I, ─┘
 
-A, A. A; A: A+ A- A= A~             *A,* *A.* *A;* *A:* *A+* *A-* *A=* *A~*
-A_ A/ A| A\ A& A$ A# A*             *A_* *A/* *A|* *A\* *A&* *A$* *A#* *Astar*
+A, A. A; A: A+ A- A= A~                           *A,* *A.* *A;* *A:* *A+* *A-* *A=* *A~*
+A_ A/ A| A\ A& A$ A# A              *             *A_* *A/* *A|* *A\* *A&* *A$* *A#* *Astar*
     Select around a pair of separators. This includes both separators and a
     surrounding whitespace, similar to `a'` and `A(`.
 
@@ -325,23 +325,23 @@ NEXT AND LAST SEPARATOR                          *targets-next-last-separator*
 
 Work directly on distant separators without moving there separately.
 
-                            *in,* *in.* *in;* *in:* *in+* *in-* *in=* *in~*
-                            *an,* *an.* *an;* *an:* *an+* *an-* *an=* *an~*
-                            *In,* *In.* *In;* *In:* *In+* *In-* *In=* *In~*
-                            *An,* *An.* *An;* *An:* *An+* *An-* *An=* *An~*
-                            *il,* *il.* *il;* *il:* *il+* *il-* *il=* *il~*
-                            *al,* *al.* *al;* *al:* *al+* *al-* *al=* *al~*
-                            *Il,* *Il.* *Il;* *Il:* *Il+* *Il-* *Il=* *Il~*
-                            *Al,* *Al.* *Al;* *Al:* *Al+* *Al-* *Al=* *Al~*
+                                          *in,* *in.* *in;* *in:* *in+* *in-* *in=* *in~*
+                                          *an,* *an.* *an;* *an:* *an+* *an-* *an=* *an~*
+                                          *In,* *In.* *In;* *In:* *In+* *In-* *In=* *In~*
+                                          *An,* *An.* *An;* *An:* *An+* *An-* *An=* *An~*
+                                          *il,* *il.* *il;* *il:* *il+* *il-* *il=* *il~*
+                                          *al,* *al.* *al;* *al:* *al+* *al-* *al=* *al~*
+                                          *Il,* *Il.* *Il;* *Il:* *Il+* *Il-* *Il=* *Il~*
+                                          *Al,* *Al.* *Al;* *Al:* *Al+* *Al-* *Al=* *Al~*
 
-                            *in_* *in/* *in|* *in\* *in&* *in$* *in#* *instar*
-                            *an_* *an/* *an|* *an\* *an&* *an$* *an#* *anstar*
-                            *In_* *In/* *In|* *In\* *In&* *In$* *In#* *Instar*
-                            *An_* *An/* *An|* *An\* *An&* *An$* *An#* *Anstar*
-                            *il_* *il/* *il|* *il\* *il&* *il$* *il#* *ilstar*
-                            *al_* *al/* *al|* *al\* *al&* *al$* *al#* *alstar*
-                            *Il_* *Il/* *Il|* *Il\* *Il&* *Il$* *Il#* *Ilstar*
-                            *Al_* *Al/* *Al|* *Al\* *Al&* *Al$* *Al#* *Alstar*
+                                          *in_* *in/* *in|* *in\* *in&* *in$* *in#* *instar*
+                                          *an_* *an/* *an|* *an\* *an&* *an$* *an#* *anstar*
+                                          *In_* *In/* *In|* *In\* *In&* *In$* *In#* *Instar*
+                                          *An_* *An/* *An|* *An\* *An&* *An$* *An#* *Anstar*
+                                          *il_* *il/* *il|* *il\* *il&* *il$* *il#* *ilstar*
+                                          *al_* *al/* *al|* *al\* *al&* *al$* *al#* *alstar*
+                                          *Il_* *Il/* *Il|* *Il\* *Il&* *Il$* *Il#* *Ilstar*
+                                          *Al_* *Al/* *Al|* *Al\* *Al&* *Al$* *Al#* *Alstar*
 
 in, in. in; in: in+ in- in= in~ in_ in/ in| in\ in& in$ in# in*
 an, an. an; an: an+ an- an= an~ an_ an/ an| an\ an& an$ an# an*
@@ -428,8 +428,8 @@ NEXT AND LAST ARGUMENT                            *targets-next-last-argument*
 
 Work directly on distant arguments without moving there separately.
 
-ina ana Ina Ana                                        *ina* *ana* *Ina* *Ana*
-ila ala Ila Ala                                        *ila* *ala* *Ila* *Ala*
+ina ana Ina Ana                                              *ina* *ana* *Ina* *Ana*
+ila ala Ila Ala                                              *ila* *ala* *Ila* *Ala*
 
     All the above argument text objects can be shifted to the next argument
     by including the letter `n`. The command `ina` selects inside of the next
@@ -437,7 +437,7 @@ ila ala Ila Ala                                        *ila* *ala* *Ila* *Ala*
     argument. Uses a [count] to skip multiple argument characters. The order
     is determined by the nearest surrounding argument delimiter.
 
-                                                     *targets-argument-chart*
+                                                      *targets-argument-chart*
 The following chart summarizes all argument mappings:
 
                              .........

@@ -2,20 +2,20 @@
 
 Available mappings
 
-     i(  i)  ib  i{  i}  iB  i[  i]  ir  i<  i>  ia it
-     a(  a)  ab  a{  a}  aB  a[  a]  ar  a<  a>  aa at
-     I(  I)  Ib  I{  I}  IB  I[  I]  Ir  I<  I>  Ia It
-     A(  A)  Ab  A{  A}  AB  A[  A]  Ar  A<  A>  Aa At
+     i(  i)  i{  i}  iB  i[  i]  ir  i<  i>  ia it
+     a(  a)  a{  a}  aB  a[  a]  ar  a<  a>  aa at
+     I(  I)  I{  I}  IB  I[  I]  Ir  I<  I>  Ia It
+     A(  A)  A{  A}  AB  A[  A]  Ar  A<  A>  Aa At
 
-    in( in) inb in{ in} inB in[ in] inr in< in> ina int
-    an( an) anb an{ an} anB an[ an] anr an< an> ana ant
-    In( In) Inb In{ In} InB In[ In] Inr In< In> Ina Int
-    An( An) Anb An{ An} AnB An[ An] Anr An< An> Ana Ant
+    in( in) in{ in} inB in[ in] inr in< in> ina int
+    an( an) an{ an} anB an[ an] anr an< an> ana ant
+    In( In) In{ In} InB In[ In] Inr In< In> Ina Int
+    An( An) An{ An} AnB An[ An] Anr An< An> Ana Ant
 
-    il( il) ilb il{ il} ilB il[ il] ilr il< il> ila ilt
-    al( al) alb al{ al} alB al[ al] alr al< al> ala alt
-    Il( Il) Ilb Il{ Il} IlB Il[ Il] Ilr Il< Il> Ila Ilt
-    Al( Al) Alb Al{ Al} AlB Al[ Al] Alr Al< Al> Ala Alt
+    il( il) il{ il} ilB il[ il] ilr il< il> ila ilt
+    al( al) al{ al} alB al[ al] alr al< al> ala alt
+    Il( Il) Il{ Il} IlB Il[ Il] Ilr Il< Il> Ila Ilt
+    Al( Al) Al{ Al} AlB Al[ Al] Alr Al< Al> Ala Alt
 
 Chart for a list of pairs
 
