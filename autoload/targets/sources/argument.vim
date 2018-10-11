@@ -1,4 +1,4 @@
-function! targets#sources#arguments#new(args)
+function! targets#sources#argument#new(args)
     let [opening, closing, separator] = [a:args['o'], a:args['c'], a:args['s']]
     return {
                 \ 'args': {
@@ -11,9 +11,9 @@ function! targets#sources#arguments#new(args)
                 \     'outer':     opening . '\|' . closing,
                 \ },
                 \ 'genFuncs': {
-                \     'c': function('targets#sources#arguments#current'),
-                \     'n': function('targets#sources#arguments#next'),
-                \     'l': function('targets#sources#arguments#last'),
+                \     'c': function('targets#sources#argument#current'),
+                \     'n': function('targets#sources#argument#next'),
+                \     'l': function('targets#sources#argument#last'),
                 \ },
                 \ 'modFuncs': {
                 \     'i': function('targets#modify#drop'),
@@ -23,7 +23,7 @@ function! targets#sources#arguments#new(args)
                 \ }}
 endfunction
 
-function! targets#sources#arguments#current(args, opts, state)
+function! targets#sources#argument#current(args, opts, state)
     if a:opts.first
         let target = s:select(a:args, '^')
     else
@@ -38,7 +38,7 @@ function! targets#sources#arguments#current(args, opts, state)
     return target
 endfunction
 
-function! targets#sources#arguments#next(args, opts, state)
+function! targets#sources#argument#next(args, opts, state)
     " search for opening or separator, try to select argument from there
     " if that fails, keep searching for opening until an argument can be
     " selected
@@ -60,7 +60,7 @@ function! targets#sources#arguments#next(args, opts, state)
     endwhile
 endfunction
 
-function! targets#sources#arguments#last(args, opts, state)
+function! targets#sources#argument#last(args, opts, state)
     " search for closing or separator, try to select argument from there
     " if that fails, keep searching for closing until an argument can be
     " selected

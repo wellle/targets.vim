@@ -32,7 +32,7 @@ let s:defaultQuoteDirs = get(g:, 'targets_quoteDirs', {
             \ 'n2b': ['002', '200', '202'],
             \ })
 
-function! targets#sources#quotes#new(args)
+function! targets#sources#quote#new(args)
     let quoteDirsConf = get(a:args, 'quoteDirs', s:defaultQuoteDirs)
     let quoteDirs = {}
     for key in keys(s:quoteArgs)
@@ -48,9 +48,9 @@ function! targets#sources#quotes#new(args)
                 \     'quoteDirs': quoteDirs
                 \ },
                 \ 'genFuncs': {
-                \     'c': function('targets#sources#quotes#current'),
-                \     'n': function('targets#sources#quotes#next'),
-                \     'l': function('targets#sources#quotes#last'),
+                \     'c': function('targets#sources#quote#current'),
+                \     'n': function('targets#sources#quote#next'),
+                \     'l': function('targets#sources#quote#last'),
                 \ },
                 \ 'modFuncs': {
                 \     'i': function('targets#modify#drop'),
@@ -60,7 +60,7 @@ function! targets#sources#quotes#new(args)
                 \ }}
 endfunction
 
-function! targets#sources#quotes#current(args, opts, state)
+function! targets#sources#quote#current(args, opts, state)
     if !a:opts.first
         return targets#target#withError('only one current quote')
     endif
@@ -69,7 +69,7 @@ function! targets#sources#quotes#current(args, opts, state)
     return targets#util#select(a:args.delimiter, a:args.delimiter, dir)
 endfunction
 
-function! targets#sources#quotes#next(args, opts, state)
+function! targets#sources#quote#next(args, opts, state)
     if !exists('a:state.rate')
         let [_, a:state.rate, _, skipR, _] = s:quoteDir(a:args.quoteDirs, a:args.delimiter)
         let cnt = a:state.rate - skipR " skip initially once
@@ -88,7 +88,7 @@ function! targets#sources#quotes#next(args, opts, state)
     return target
 endfunction
 
-function! targets#sources#quotes#last(args, opts, state)
+function! targets#sources#quote#last(args, opts, state)
     if !exists('a:state.rate')
         let [_, a:state.rate, skipL, _, _] = s:quoteDir(a:args.quoteDirs, a:args.delimiter)
         let cnt = a:state.rate - skipL " skip initially once

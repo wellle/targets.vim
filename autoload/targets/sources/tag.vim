@@ -1,6 +1,6 @@
 " tags are implemented as special pairs
 " special args must not be modified/escaped
-function! targets#sources#tags#new(args)
+function! targets#sources#tag#new(args)
     return {
                 \ 'args': {
                 \     'opening': '<\a',
@@ -8,9 +8,9 @@ function! targets#sources#tags#new(args)
                 \     'trigger': 't',
                 \ },
                 \ 'genFuncs': {
-                \     'c': function('targets#sources#pairs#current'),
-                \     'n': function('targets#sources#pairs#next'),
-                \     'l': function('targets#sources#pairs#last'),
+                \     'c': function('targets#sources#pair#current'),
+                \     'n': function('targets#sources#pair#next'),
+                \     'l': function('targets#sources#pair#last'),
                 \ },
                 \ 'modFuncs': {
                 \     'i': [function('targets#modify#innert'), function('targets#modify#drop')],

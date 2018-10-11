@@ -1,4 +1,4 @@
-function! targets#sources#pairs#new(args)
+function! targets#sources#pair#new(args)
     " args.trigger is used differently from tags source
     return {
                 \ 'args': {
@@ -7,9 +7,9 @@ function! targets#sources#pairs#new(args)
                 \     'trigger': a:args['c'],
                 \ },
                 \ 'genFuncs': {
-                \     'c': function('targets#sources#pairs#current'),
-                \     'n': function('targets#sources#pairs#next'),
-                \     'l': function('targets#sources#pairs#last'),
+                \     'c': function('targets#sources#pair#current'),
+                \     'n': function('targets#sources#pair#next'),
+                \     'l': function('targets#sources#pair#last'),
                 \ },
                 \ 'modFuncs': {
                 \     'i': function('targets#modify#drop'),
@@ -19,7 +19,7 @@ function! targets#sources#pairs#new(args)
                 \ }}
 endfunction
 
-function! targets#sources#pairs#current(args, opts, state)
+function! targets#sources#pair#current(args, opts, state)
     if a:opts.first
         let cnt = 1
     else
@@ -31,7 +31,7 @@ function! targets#sources#pairs#current(args, opts, state)
     return target
 endfunction
 
-function! targets#sources#pairs#next(args, opts, state)
+function! targets#sources#pair#next(args, opts, state)
     if targets#util#search(a:args.opening, 'W') > 0
         return targets#target#withError('no target')
     endif
@@ -42,7 +42,7 @@ function! targets#sources#pairs#next(args, opts, state)
     return target
 endfunction
 
-function! targets#sources#pairs#last(args, opts, state)
+function! targets#sources#pair#last(args, opts, state)
     if targets#util#search(a:args.closing, 'bW') > 0
         return targets#target#withError('no target')
     endif
@@ -61,7 +61,7 @@ function! s:select(count, trigger)
     let target = targets#target#fromVisualSelection('')
 
     if target.sc == target.ec && target.sl == target.el
-        return targets#target#withError('pairs select')
+        return targets#target#withError('pair select')
     endif
 
     return target
