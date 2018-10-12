@@ -41,7 +41,7 @@ function! s:addAllMappings()
     else
         " otherwise create individual mappings #117
         " NOTE: for old versions only these legacy settings are used
-        " the more flexible g:targets_mappings only work with the expression
+        " the more flexible targets#mappings only work with the expression
         " mappings above (from Vim version 7.3.338 on)
         call targets#legacy#addMappings(s:a, s:i, s:A, s:I, s:n, s:l)
     endif

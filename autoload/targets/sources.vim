@@ -1,30 +1,37 @@
-" maps source to factory constructor, with default sources
+" maps source to factory constructor, default sources get registered below
 " more can be added (before first use) via targets#sources#register()
-let s:sources = {
-            \ 'pair':      function('targets#sources#pair#new'),
-            \ 'quote':     function('targets#sources#quote#new'),
-            \ 'separator': function('targets#sources#separator#new'),
-            \ 'argument':  function('targets#sources#argument#new'),
-            \ 'tag':       function('targets#sources#tag#new'),
-            \ }
+let s:sources = {}
 
 function! targets#sources#register(source, newFactoryFunc)
-    " echom 'registered source: ' . a:source
-    call extend(s:sources, {a:source: a:newFactoryFunc}, 'keep')
+    if has_key(s:sources, a:source)
+        echom 'targets.vim failed to register source ' . a:source . ' (already exists)'
+    else
+        let s:sources[a:source] = a:newFactoryFunc
+        " echom 'registered source: ' . a:source
+    endif
 endfunction
 
-" avoid message "No matching autocommands" in some cases
-augroup targetsSourcesRegisterSilent
-    autocmd!
-    autocmd User targetsSourcesRegister silent
-augroup END
+function! s:registerSources()
+    " register default sources
+    call targets#sources#register('pair',      function('targets#sources#pair#new'))
+    call targets#sources#register('quote',     function('targets#sources#quote#new'))
+    call targets#sources#register('separator', function('targets#sources#separator#new'))
+    call targets#sources#register('argument',  function('targets#sources#argument#new'))
+    call targets#sources#register('tag',       function('targets#sources#tag#new'))
 
-" allow targets plugins
-doautocmd User targetsSourcesRegister
+    " avoid message "No matching autocommands" in some cases
+    augroup targets#sources#silent
+        autocmd!
+        autocmd User targets#sources silent
+    augroup END
+
+    " allow targets plugins to register their sources
+    doautocmd User targets#sources
+endfunction
 
 function! targets#sources#newFactories(trigger)
     let factories = []
-    let sources = s:sources(a:trigger)
+    let sources = targets#mappings#get(a:trigger)
     for source in keys(sources)
         for args in sources[source]
             if !has_key(s:sources, source)
@@ -45,63 +52,4 @@ function! targets#sources#newFactories(trigger)
     return factories
 endfunction
 
-function! s:sources(trigger)
-    if !exists('s:config')
-        " maps triggers to sources (per source a list of factory constructor args)
-        let defaultConfig = {
-                    \ 'b': { 'pair':  [{'o':'(', 'c':')'}, {'o':'[', 'c':']'}, {'o':'{', 'c':'}'}], },
-                    \ 'q': { 'quote': [{'d':"'"}, {'d':'"'}, {'d':'`'}], },
-                    \ }
-
-        let tagTrigger = get(g:, 'targets_tagTrigger', 't')
-        let argTrigger = get(g:, 'targets_argTrigger', 'a')
-        let pairs      = get(g:, 'targets_pairs'     , '() {}B [] <>')
-        let quotes     = get(g:, 'targets_quotes'    , '" '' `')
-        let separators = get(g:, 'targets_separators', ', . ; : + - = ~ _ * # / \ | & $')
-
-        " we need to assign these like this because Vim 7.3 doesn't seem to like
-        " variables as keys in dict definitions like above
-        let defaultConfig[tagTrigger] = { 'tag': [{}], }
-        let defaultConfig[argTrigger] = { 'argument': [{
-                    \ 'o': get(g:, 'targets_argOpening', '[([]'),
-                    \ 'c': get(g:, 'targets_argClosing', '[])]'),
-                    \ 's': get(g:, 'targets_argSeparator', ','),
-                    \ }], }
-
-        " TODO: document g:targets_config, rename to targets_mappings?
-        " as we have other config parameters still, like seekRanges
-        " also document that all of these other settings are deprecated
-        " still supported, but ignored if targets_config is set
-        let s:config = get(g:, 'targets_config', defaultConfig)
-
-        " TODO: should we still apply those if g:targets_config was set? or
-        " only in defaults, like for args and tags?
-        " alternatively we could apply those only if at least one of those
-        " options have been used by the user. but currently we populate them
-        " anyway, so at this point we can't tell anymore. so we would need to
-        " stop doing that in plugin/targets.vim, which is currently only being
-        " used for legacy behavior (many individual mappings)
-        for pair in split(pairs)
-            let config = {'pair': [{'o':pair[0], 'c':pair[1]}]}
-            for trigger in split(pair, '\zs')
-                call extend(s:config, {trigger: config}, 'keep')
-            endfor
-        endfor
-
-        for quote in split(quotes)
-            let config = {'quote': [{'d':quote[0]}]}
-            for trigger in split(quote, '\zs')
-                call extend(s:config, {trigger: config}, 'keep')
-            endfor
-        endfor
-
-        for separator in split(separators)
-            let config = {'separator': [{'d':separator[0]}]}
-            for trigger in split(separator, '\zs')
-                call extend(s:config, {trigger: config}, 'keep')
-            endfor
-        endfor
-    endif
-
-    return get(s:config, a:trigger, {})
-endfunction
+call s:registerSources()
