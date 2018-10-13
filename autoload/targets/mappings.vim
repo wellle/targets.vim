@@ -9,8 +9,9 @@ let s:mappings = {}
 " TODO: document these functions for customization
 " mention that old settings still work, but should be migrated over to use
 " these functions instead
-function! targets#mappings#extend(mappings, ...)
-    call extend(s:mappings, a:mappings, a:0 > 0 ? a:1 : 'force')
+function! targets#mappings#extend(mappings)
+    call extend(s:mappings, a:mappings)
+    " echom 'added mappings ' . string(keys(a:mappings))
 endfunction
 
 function! targets#mappings#remove(triggers)
@@ -19,6 +20,7 @@ function! targets#mappings#remove(triggers)
             call remove(s:mappings, trigger)
         endif
     endfor
+    " echom 'removed mappings ' . string(a:triggers)
 endfunction
 
 function! s:addMappings()
@@ -76,11 +78,14 @@ function! s:addMappings()
     " avoid message "No matching autocommands" in some cases
     augroup targets#mappings#silent
         autocmd!
-        autocmd User targets#mappings silent
+        autocmd User targets#mappings#user silent
+        autocmd User targets#mappings#plugin silent
     augroup END
 
     " allow targets plugins to add their (default mappings)
-    doautocmd User targets#mappings
+    doautocmd User targets#mappings#plugin
+    " allow users to override those
+    doautocmd User targets#mappings#user
 endfunction
 
 function! targets#mappings#get(trigger)

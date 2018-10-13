@@ -25,16 +25,16 @@ function! targets#generator#next(first) dict
         " no/empty return
         if mode() != 'v'
             " not in visual mode, no target
-            return targets#target#withError('no target')
+            let target = targets#target#withError('no target')
+        else
+            " in visual mode, take selection as target
+            normal! v
+            let target = targets#target#fromVisualSelection()
         endif
-
-        " in visual mode, take selection as target
-        normal! v
-        let target = targets#target#fromVisualSelection()
 
     elseif type(target) == type('')
         " returned string, taken as error message
-        return targets#target#withError(target)
+        let target = targets#target#withError(target)
 
     elseif type(target) == type([]) && len(target) == 4
         " returned list of four, taken as [sl, sc, el, ec]
@@ -44,7 +44,7 @@ function! targets#generator#next(first) dict
 
     elseif type(target) != type({})
         echom "targets.vim source '" . self.source . "' genFunc for " . self.which . " returned unexpected " . string(target)
-        return targets#target#withError('bad target')
+        let target = targets#target#withError('bad target')
     endif
 
     let target.gen = self
