@@ -14,15 +14,6 @@ function! targets#mappings#extend(mappings)
     " echom 'added mappings ' . string(keys(a:mappings))
 endfunction
 
-function! targets#mappings#remove(triggers)
-    for trigger in a:triggers
-        if has_key(s:mappings, trigger)
-            call remove(s:mappings, trigger)
-        endif
-    endfor
-    " echom 'removed mappings ' . string(a:triggers)
-endfunction
-
 function! s:addMappings()
     if s:hasLegacySettings()
         " if has any legacy settings (see below), use them
@@ -139,6 +130,5 @@ function! s:addLegacyMappings()
                 \ 's': get(g:, 'targets_argSeparator', ','),
                 \ }]}})
 endfunction
-
 
 call s:addMappings()
