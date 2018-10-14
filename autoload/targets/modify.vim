@@ -1,9 +1,8 @@
 " selection modifiers
 " ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
-" just returns the given target, added for consistency
+" doesn't change given target, added for consistency
 function! targets#modify#keep(target, args)
-    return a:target
 endfunction
 
 " drop delimiters left and right
@@ -13,7 +12,7 @@ endfunction
 " out  │    └───┘
 function! targets#modify#drop(target, args)
     if a:target.state().isInvalid()
-        return a:target
+        return
     endif
 
     let [sLinewise, eLinewise] = [0, 0]
@@ -37,7 +36,6 @@ function! targets#modify#drop(target, args)
     endif
     call a:target.setE()
     let a:target.linewise = sLinewise && eLinewise
-    return a:target
 endfunction
 
 " drop right delimiter
@@ -48,7 +46,6 @@ function! targets#modify#dropr(target, args)
     call a:target.cursorE()
     silent! execute "normal! \<BS>"
     call a:target.setE()
-    return a:target
 endfunction
 
 " drop an argument separator (like a comma), prefer the right one, fall back
@@ -92,7 +89,6 @@ function! targets#modify#innert(target, args)
     call a:target.searchposS('>', 'W')
     call a:target.cursorE()
     call a:target.searchposE('<', 'bW')
-    return a:target
 endfunction
 
 " drop delimiters and whitespace left and right
@@ -102,7 +98,7 @@ endfunction
 " out  │     └─┘     │    └┘
 function! targets#modify#shrink(target, args)
     if a:target.state().isInvalid()
-        return a:target
+        return
     endif
 
     call a:target.cursorE()
@@ -114,7 +110,6 @@ function! targets#modify#shrink(target, args)
         call a:target.cursorS()
         call a:target.searchposS('\S', '', a:target.el)
     endif
-    return a:target
 endfunction
 
 " expand selection by some whitespace
@@ -129,8 +124,7 @@ function! targets#modify#expand(target, args, ...)
         if line > 0 && column-1 > a:target.ec
             " non whitespace or EOL after trailing whitespace found
             " not counting whitespace directly after end
-            call a:target.setE(line, column-1)
-            return a:target
+            return a:target.setE(line, column-1)
         endif
     endif
 
@@ -139,15 +133,12 @@ function! targets#modify#expand(target, args, ...)
         let [line, column] = searchpos('\S', 'b', line('.'))
         if line > 0
             " non whitespace before leading whitespace found
-            call a:target.setS(line, column+1)
-            return a:target
+            return a:target.setS(line, column+1)
         endif
         " only whitespace in front of start
         " include all leading whitespace from beginning of line
         let a:target.sc = 1
     endif
-
-    return a:target
 endfunction
 
 " expand separator selection by one whitespace if there are two
@@ -164,11 +155,8 @@ function! targets#modify#expands(target, args)
         let [sline, scolumn] = searchpos('\S', 'b', line('.'))
         if sline > 0 && scolumn+1 < a:target.sc
 
-            call a:target.setE(eline, ecolumn-1)
-            return a:target
+            return a:target.setE(eline, ecolumn-1)
         endif
     endif
-
-    return a:target
 endfunction
 

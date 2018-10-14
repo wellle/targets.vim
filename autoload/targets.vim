@@ -231,11 +231,12 @@ function! s:modifyTarget(target, modifier)
     " use keep function by default
     let Funcs = get(target.gen.modFuncs, a:modifier, function('targets#modify#keep'))
     if type(Funcs) == type(function('tr')) " single function
-        return Funcs(target, target.gen.args)
+        call Funcs(target, target.gen.args)
+        return target
     endif
 
     for Func in Funcs " list of functions
-        let target = Func(target, target.gen.args)
+        call Func(target, target.gen.args)
     endfor
     return target
 endfunction
