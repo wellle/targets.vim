@@ -44,25 +44,25 @@ function! targets#e(modifier, original)
     endif
 
     let char1 = nr2char(getchar())
-    let [delimiter, which, chars] = [char1, 'c', char1]
+    let [trigger, which, chars] = [char1, 'c', char1]
     for i in range(2)
-        if g:targets_nl[i] ==# delimiter
-            " delimiter was which, get another char for delimiter
+        if g:targets_nl[i] ==# trigger
+            " trigger was which, get another char for trigger
             let char2 = nr2char(getchar())
-            let [delimiter, which, chars] = [char2, 'nl'[i], chars . char2]
+            let [trigger, which, chars] = [char2, 'nl'[i], chars . char2]
             break
         endif
     endfor
 
     let typed = a:original . chars
-    if empty(s:getFactories(delimiter))
+    if empty(s:getFactories(trigger))
         return typed
     endif
 
-    let delimiter = substitute(delimiter, "'", "''", "g")
+    let trigger = substitute(trigger, "'", "''", "g")
     let typed = substitute(typed, "'", "''", "g")
 
-    let s:call = prefix . delimiter . which . a:modifier . "', '" . typed . "', " . v:count1 . ")"
+    let s:call = prefix . trigger . which . a:modifier . "', '" . typed . "', " . v:count1 . ")"
     " indirectly (but silently) call targets#do below
     return "@(targets)"
 endfunction

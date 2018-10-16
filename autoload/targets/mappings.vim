@@ -6,9 +6,6 @@
 " on 'any block' or 'any quote' respectively
 let s:mappings = {}
 
-" TODO: document these functions for customization
-" mention that old settings still work, but should be migrated over to use
-" these functions instead
 function! targets#mappings#extend(mappings)
     call extend(s:mappings, a:mappings)
     " echom 'added mappings ' . string(keys(a:mappings))
