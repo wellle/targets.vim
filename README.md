@@ -545,7 +545,7 @@ for the last, you could set:
 let g:targets_nl = 'nN'
 ```
 
-Required to be a 4 character long list. Use a space to deactivate a direction.
+Required to be a 2 character long list. Use a space to deactivate a direction.
 
 ### g:targets_pairs
 
