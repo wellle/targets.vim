@@ -5,7 +5,7 @@ clean:
 
 test: clean
 	@vim -N -u NONE --noplugin -S test.vim
-	# @/usr/bin/vim -N -u NONE --noplugin -S test.vim # test old vim version
+	@# @/usr/bin/vim -N -u NONE --noplugin -S test.vim # test old vim version
 
 check:
 	@git diff --no-index test1.ok test1.out > test1.diff && rm test1.diff && echo "test1 OK" || echo "test1 failed, check test1.diff"
@@ -16,4 +16,5 @@ check:
 	@git diff --no-index test6.ok test6.out > test6.diff && rm test6.diff && echo "test6 OK" || echo "test6 failed, check test6.diff"
 	@git diff --no-index test7.ok test7.out > test7.diff && rm test7.diff && echo "test7 OK" || echo "test7 failed, check test7.diff"
 	@git diff --no-index test8.ok test8.out > test8.diff && rm test8.diff && echo "test8 OK" || echo "test8 failed, check test8.diff"
+	@git diff --no-index test9.ok test9.out > test9.diff && rm test9.diff && echo "test9 OK" || echo "test9 failed, check test9.diff"
 	@git diff --no-index testM.ok testM.out > testM.diff && rm testM.diff && echo "testM OK" || echo "testM failed, check testM.diff"

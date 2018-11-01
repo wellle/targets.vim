@@ -86,18 +86,6 @@ a ' a ' a ' a ' a ______a v2Al'
 bbbbbbbbb 010 ' bbbbbbbbb
 c ' c ' c ' c ' c ' c ' c
 a ' a ' a ' a ' a ' a ' a
-bbbbbbbbb 010 ' _________ v2I'
-_ ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-bbbbbbbbb 010 '__________ v2i'
-__' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-bbbbbbbbb 010 ___________ v2a'
-___ c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-bbbbbbbbb 010 ___________ v2A'
-____c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
 bbbbbbbbb 010 ' bbbbbbbbb
 c ' c ' _ ' c ' c ' c ' c v2In'
 a ' a ' a ' a ' a ' a ' a
@@ -196,18 +184,6 @@ bbbbbbbbb 001 bbb ' bbbbb
 c ' c ' c ' c ' c ' c ' c
 a ' a ' a ' a ______a ' a v2Al'
 bbbbbbbbb 001 bbb ' bbbbb
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' _ v2I'
-_________________ ' bbbbb
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a '__ v2i'
-__________________' bbbbb
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ___ v2a'
-___________________ bbbbb
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ___ v2A'
-____________________bbbbb
 c ' c ' c ' c ' c ' c ' c
 a ' a ' a ' a ' a ' a ' a
 bbbbbbbbb 001 bbb ' bbbbb
@@ -310,18 +286,6 @@ a ' a ' a ' a ' a ' a ___ v2Al'
 ____b ' b 201 bbb ' bbbbb
 c ' c ' c ' c ' c ' c ' c
 a ' a ' a ' a ' a ' a ' a
-b ' b ' _________ ' bbbbb v2I'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b ' b '___________' bbbbb v2i'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b ' b _____________ bbbbb v2a'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b ' b ______________bbbbb v2A'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
 b ' b ' b 201 bbb ' bbbbb
 c ' _ ' c ' c ' c ' c ' c v2In'
 a ' a ' a ' a ' a ' a ' a
@@ -422,18 +386,6 @@ a ' a ' a ' a ' a ______a v2Al'
 b ' bbbbb 100 bbbbbbbbbbb
 c ' c ' c ' c ' c ' c ' c
 a ' a ' a ' a ' a ' a ' a
-b ' _____________________ v2I'
-_ ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b '______________________ v2i'
-__' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b _______________________ v2a'
-___ c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b _______________________ v2A'
-____c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
 b ' bbbbb 100 bbbbbbbbbbb
 c ' c ' _ ' c ' c ' c ' c v2In'
 a ' a ' a ' a ' a ' a ' a
@@ -532,18 +484,6 @@ b ' bbbbb 102 bbb ' b ' b
 c ' c ' c ' c ' c ' c ' c
 a ' a ' a ' a ' a ______a v2Al'
 b ' bbbbb 102 bbb ' b ' b
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b ' _____________ ' b ' b v2I'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b '_______________' b ' b v2i'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b _________________ b ' b v2a'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b __________________b ' b v2A'
 c ' c ' c ' c ' c ' c ' c
 a ' a ' a ' a ' a ' a ' a
 b ' bbbbb 102 bbb ' b ' _ v2In'
@@ -646,18 +586,6 @@ a ' a ' a ' a ' a ______a v2Al'
 bbbbbbbbb 012 ' b ' b ' b
 c ' c ' c ' c ' c ' c ' c
 a ' a ' a ' a ' a ' a ' a
-bbbbbbbbb 012 ' _ ' b ' b v2I'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-bbbbbbbbb 012 '___' b ' b v2i'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-bbbbbbbbb 012 _____ b ' b v2a'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-bbbbbbbbb 012 ______b ' b v2A'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
 bbbbbbbbb 012 ' b ' b ' _ v2In'
 _ ' c ' c ' c ' c ' c ' c
 a ' a ' a ' a ' a ' a ' a
@@ -756,18 +684,6 @@ ___ bbbbb 111 ' b ' bbbbb
 c ' c ' c ' c ' c ' c ' c
 a ' a ' a ' a ' a ' a ___ v2Al'
 ____bbbbb 111 ' b ' bbbbb
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b ' bbbbb 111 ' _ ' bbbbb v2I'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b ' bbbbb 111 '___' bbbbb v2i'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b ' bbbbb 111 _____ bbbbb v2a'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b ' bbbbb 111 ______bbbbb v2A'
 c ' c ' c ' c ' c ' c ' c
 a ' a ' a ' a ' a ' a ' a
 b ' bbbbb 111 ' b ' bbbbb
@@ -870,18 +786,6 @@ a ' a ' a ' a ' a ' a ' a
 b ______b 210 ' bbbbbbbbb v2Al'
 c ' c ' c ' c ' c ' c ' c
 a ' a ' a ' a ' a ' a ' a
-b ' b ' b 210 ' _________ v2I'
-_ ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b ' b ' b 210 '__________ v2i'
-__' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b ' b ' b 210 ___________ v2a'
-___ c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b ' b ' b 210 ___________ v2A'
-____c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
 b ' b ' b 210 ' bbbbbbbbb
 c ' c ' _ ' c ' c ' c ' c v2In'
 a ' a ' a ' a ' a ' a ' a
@@ -980,18 +884,6 @@ b _____ b 212 ' b ' b ' b v2al'
 c ' c ' c ' c ' c ' c ' c
 a ' a ' a ' a ' a ' a ' a
 b ______b 212 ' b ' b ' b v2Al'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b ' b ' b 212 ' _ ' b ' b v2I'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b ' b ' b 212 '___' b ' b v2i'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b ' b ' b 212 _____ b ' b v2a'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b ' b ' b 212 ______b ' b v2A'
 c ' c ' c ' c ' c ' c ' c
 a ' a ' a ' a ' a ' a ' a
 b ' b ' b 212 ' b ' b ' _ v2In'
@@ -1094,18 +986,6 @@ a ' a ' a ______a ' a ' a v2Al'
 b ' bbbbb 101 bbb ' bbbbb
 c ' c ' c ' c ' c ' c ' c
 a ' a ' a ' a ' a ' a ' a
-b ' _____________ ' bbbbb v2I'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b '_______________' bbbbb v2i'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b _________________ bbbbb v2a'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b __________________bbbbb v2A'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
 b ' bbbbb 101 bbb ' bbbbb
 c ' c ' c ' _ ' c ' c ' c v2In'
 a ' a ' a ' a ' a ' a ' a
@@ -1204,18 +1084,6 @@ bbbbbbbbb 011 ' b ' bbbbb
 c ' c ' c ' c ' c ' c ' c
 a ' a ' a ______a ' a ' a v2Al'
 bbbbbbbbb 011 ' b ' bbbbb
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-bbbbbbbbb 011 ' _ ' bbbbb v2I'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-bbbbbbbbb 011 '___' bbbbb v2i'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-bbbbbbbbb 011 _____ bbbbb v2a'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-bbbbbbbbb 011 ______bbbbb v2A'
 c ' c ' c ' c ' c ' c ' c
 a ' a ' a ' a ' a ' a ' a
 bbbbbbbbb 011 ' b ' bbbbb
@@ -1318,18 +1186,6 @@ a ' a ' a ' a ' a ______a v2Al'
 b ' b ' b 211 ' b ' bbbbb
 c ' c ' c ' c ' c ' c ' c
 a ' a ' a ' a ' a ' a ' a
-b ' b ' b 211 ' _ ' bbbbb v2I'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b ' b ' b 211 '___' bbbbb v2i'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b ' b ' b 211 _____ bbbbb v2a'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b ' b ' b 211 ______bbbbb v2A'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
 b ' b ' b 211 ' b ' bbbbb
 c ' c ' c ' _ ' c ' c ' c v2In'
 a ' a ' a ' a ' a ' a ' a
@@ -1428,18 +1284,6 @@ b ' bbbbb 110 ' bbbbbbbbb
 c ' c ' c ' c ' c ' c ' c
 a ' a ' a ______a ' a ' a v2Al'
 b ' bbbbb 110 ' bbbbbbbbb
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b ' _________ ' bbbbbbbbb v2I'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b '___________' bbbbbbbbb v2i'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b _____________ bbbbbbbbb v2a'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b ______________bbbbbbbbb v2A'
 c ' c ' c ' c ' c ' c ' c
 a ' a ' a ' a ' a ' a ' a
 b ' bbbbb 110 ' bbbbbbbbb
@@ -1542,18 +1386,6 @@ a ' a ' a ______a ' a ' a v2Al'
 b ' bbbbb 112 ' b ' b ' b
 c ' c ' c ' c ' c ' c ' c
 a ' a ' a ' a ' a ' a ' a
-b ' _________ ' b ' b ' b v2I'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b '___________' b ' b ' b v2i'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b _____________ b ' b ' b v2a'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b ______________b ' b ' b v2A'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
 b ' bbbbb 112 ' b ' b ' b
 c ' _ ' c ' c ' c ' c ' c v2In'
 a ' a ' a ' a ' a ' a ' a
@@ -1653,18 +1485,6 @@ c ' c ' c ' c ' c ' c ' c
 a ' a ' a ______a ' a ' a v2Al'
 bbbbbbbbb 000 bbbbbbbbbbb
 c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' _ v2I'
-_________________________
-_ ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a '__ v2i'
-_________________________
-__' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ___ v2a'
-_________________________
-___ c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ___ v2A'
-_________________________
-____c ' c ' c ' c ' c ' c
 a ' a ' a ' a ' a ' a ' a
 bbbbbbbbb 000 bbbbbbbbbbb
 c ' c ' c ' _ ' c ' c ' c v2In'
@@ -1764,18 +1584,6 @@ bbbbbbbbb 002 bbb ' b ' b
 c ' c ' c ' c ' c ' c ' c
 a ' a ' a ______a ' a ' a v2Al'
 bbbbbbbbb 002 bbb ' b ' b
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-bbbbbbbbb 002 bbb ' _ ' b v2I'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-bbbbbbbbb 002 bbb '___' b v2i'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-bbbbbbbbb 002 bbb _____ b v2a'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-bbbbbbbbb 002 bbb ______b v2A'
 c ' c ' c ' c ' c ' c ' c
 a ' a ' a ' a ' a ' a ' a
 bbbbbbbbb 002 bbb ' b ' b
@@ -1878,18 +1686,6 @@ a ' a ' a ' a ' a ______a v2Al'
 b ' b ' b 200 bbbbbbbbbbb
 c ' c ' c ' c ' c ' c ' c
 a ' a ' a ' a ' a ' a ' a
-b ' _ ' b 200 bbbbbbbbbbb v2I'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b '___' b 200 bbbbbbbbbbb v2i'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b _____ b 200 bbbbbbbbbbb v2a'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b ______b 200 bbbbbbbbbbb v2A'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
 b ' b ' b 200 bbbbbbbbbbb
 c ' c ' c ' _ ' c ' c ' c v2In'
 a ' a ' a ' a ' a ' a ' a
@@ -1988,18 +1784,6 @@ b ' b ' b 202 bbb ' b ' b
 c ' c ' c ' c ' c ' c ' c
 a ' a ' a ' a ' a ______a v2Al'
 b ' b ' b 202 bbb ' b ' b
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b ' b ' b 202 bbb ' _ ' b v2I'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b ' b ' b 202 bbb '___' b v2i'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b ' b ' b 202 bbb _____ b v2a'
-c ' c ' c ' c ' c ' c ' c
-a ' a ' a ' a ' a ' a ' a
-b ' b ' b 202 bbb ______b v2A'
 c ' c ' c ' c ' c ' c ' c
 a ' a ' a ' a ' a ' a ' a
 b ' b ' b 202 bbb ' b ' b

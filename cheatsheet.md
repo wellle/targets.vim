@@ -2,20 +2,20 @@
 
 Available mappings
 
-     i(  i)  ib  i{  i}  iB  i[  i]  ir  i<  i>  ia it
-     a(  a)  ab  a{  a}  aB  a[  a]  ar  a<  a>  aa at
-     I(  I)  Ib  I{  I}  IB  I[  I]  Ir  I<  I>  Ia It
-     A(  A)  Ab  A{  A}  AB  A[  A]  Ar  A<  A>  Aa At
+     i(  i)  i{  i}  iB  i[  i]  ir  i<  i>  ia it
+     a(  a)  a{  a}  aB  a[  a]  ar  a<  a>  aa at
+     I(  I)  I{  I}  IB  I[  I]  Ir  I<  I>  Ia It
+     A(  A)  A{  A}  AB  A[  A]  Ar  A<  A>  Aa At
 
-    in( in) inb in{ in} inB in[ in] inr in< in> ina int
-    an( an) anb an{ an} anB an[ an] anr an< an> ana ant
-    In( In) Inb In{ In} InB In[ In] Inr In< In> Ina Int
-    An( An) Anb An{ An} AnB An[ An] Anr An< An> Ana Ant
+    in( in) in{ in} inB in[ in] inr in< in> ina int
+    an( an) an{ an} anB an[ an] anr an< an> ana ant
+    In( In) In{ In} InB In[ In] Inr In< In> Ina Int
+    An( An) An{ An} AnB An[ An] Anr An< An> Ana Ant
 
-    il( il) ilb il{ il} ilB il[ il] ilr il< il> ila ilt
-    al( al) alb al{ al} alB al[ al] alr al< al> ala alt
-    Il( Il) Ilb Il{ Il} IlB Il[ Il] Ilr Il< Il> Ila Ilt
-    Al( Al) Alb Al{ Al} AlB Al[ Al] Alr Al< Al> Ala Alt
+    il( il) il{ il} ilB il[ il] ilr il< il> ila ilt
+    al( al) al{ al} alB al[ al] alr al< al> ala alt
+    Il( Il) Il{ Il} IlB Il[ Il] Ilr Il< Il> Ila Ilt
+    Al( Al) Al{ Al} AlB Al[ Al] Alr Al< Al> Ala Alt
 
 Chart for a list of pairs
 
@@ -130,7 +130,7 @@ a ( bbbbbb , ccccccc , d ( eeeeee , fffffff ) , gggggg ) h
 Seeking is controlled by the setting `g:targets_seekRanges`. Default value:
 
 ```vim
-let g:targets_seekRanges = 'lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA'
+let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA'
 ```
 
 When using a command like `cib` to change inside a block, targets.vim considers
@@ -170,6 +170,7 @@ symbols:
 #### Ranges on cursor:
 
 ```
+cc   |  /  O  /  |   target equals cursor position (single character)
 cr   |  /  () /  |   starting on cursor, current line
 cb   |  /  (  /) |   starting on cursor, multiline down, on screen
 cB   |  /  (  /  |)  starting on cursor, multiline down, partially off screen
@@ -234,30 +235,30 @@ Some other useful example settings:
 
 Prefer multiline targets around cursor over distant targets within cursor line:
 ```vim
-let g:targets_seekRanges = 'cr cb cB lc ac Ac lr lb ar ab lB Ar aB Ab AB rr ll rb al rB Al bb aa bB Aa BB AA'
+let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr lb ar ab lB Ar aB Ab AB rr ll rb al rB Al bb aa bB Aa BB AA'
 ```
 
 Never seek backwards:
 ```vim
-let g:targets_seekRanges = 'cr cb cB lc ac Ac lr rr lb ar ab lB Ar aB Ab AB rb rB bb bB BB'
+let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr rr lb ar ab lB Ar aB Ab AB rb rB bb bB BB'
 ```
 
 Only seek if next/last targets touch current line:
 ```vim
-let g:targets_seekRanges = 'cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb rB al Al'
+let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb rB al Al'
 ```
 
 Only consider targets fully visible on screen:
 ```vim
-let g:targets_seekRanges = 'cr cb cB lc ac Ac lr lb ar ab rr rb bb ll al aa'
+let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr lb ar ab rr rb bb ll al aa'
 ```
 
 Only consider targets around cursor:
 ```vim
-let g:targets_seekRanges = 'cr cb cB lc ac Ac lr lb ar ab lB Ar aB Ab AB'
+let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr lb ar ab lB Ar aB Ab AB'
 ```
 
 Only consider targets fully contained in current line:
 ```vim
-let g:targets_seekRanges = 'cr cb cB lc ac Ac lr rr ll'
+let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr rr ll'
 ```

@@ -45,18 +45,15 @@ correctly.
 		* [Around Argument](#around-argument)
 		* [Next and Last Argument](#next-and-last-argument)
 		* [Argument Seek](#argument-seek)
+	* [Multi Text Objects](#multi-text-objects)
+		* [Any Block](#any-block)
+		* [Any Quote](#any-quote)
 * [Settings](#settings)
 	* [g:targets_aiAI](#gtargets_aiai)
 	* [g:targets_nl](#gtargets_nl)
-	* [g:targets_pairs](#gtargets_pairs)
-	* [g:targets_quotes](#gtargets_quotes)
-	* [g:targets_separators](#gtargets_separators)
-	* [g:targets_tagTrigger](#gtargets_tagtrigger)
-	* [g:targets_argTrigger](#gtargets_argtrigger)
-	* [g:targets_argOpening and g:targets_argClosing](#gtargets_argopening-and-gtargets_argclosing)
-	* [g:targets_argSeparator](#gtargets_argseparator)
 	* [g:targets_seekRanges](#gtargets_seekranges)
 	* [g:targets_jumpRanges](#gtargets_jumpranges)
+	* [targets#mappings#extend](#targets#mappings#extend)
 * [Notes](#notes)
 * [Issues](#issues)
 * [Todos](#todos)
@@ -102,20 +99,25 @@ leave a proper comma separated list behind.
 
 ## Overview
 
-We distinguish between four kinds of text objects that behave slightly
-differently:
+Targets.vim comes with five kinds for text objects:
 
 - Pair text objects
 - Quote text objects
 - Separator text objects
 - Argument text objects
+- Tag text objects
+
+Each of those kinds is implemented by a targets source. Third party plugins can
+provide additional sources to add even more text objects which behave like the
+built in ones. See [plugins][Plugins] for details on how to implement your own
+targets source.
 
 ### Pair Text Objects
 
 These text objects are similar to the built in text objects such as `i)`.
 Supported trigger characters:
 
-- `(` `)` `b` (work on parentheses)
+- `(` `)` (work on parentheses)
 - `{` `}` `B` (work on curly braces)
 - `[` `]` (work on square brackets)
 - `<` `>` (work on angle brackets)
@@ -129,7 +131,7 @@ trigger character accordingly.
 
 #### In Pair
 
-`i( i) ib i{ i} iB i[ i] i< i> it`
+`i( i) i{ i} iB i[ i] i< i> it`
 
 - Select inside of pair characters.
 - This overrides Vim's default text object to allow seeking for the next pair
@@ -147,7 +149,7 @@ a ( b ( cccccccc ) d ) e
 
 #### A Pair
 
-`a( a) ab a{ a} aB a[ a] a< a> at`
+`a( a) a{ a} aB a[ a] a< a> at`
 
 - Select a pair including pair characters.
 - Overrides Vim's default text object to allow seeking.
@@ -162,7 +164,7 @@ a ( b ( cccccccc ) d ) e
 
 #### Inside Pair
 
-`I( I) Ib I{ I} IB I[ I] I< I> It`
+`I( I) I{ I} IB I[ I] I< I> It`
 
 - Select contents of pair characters.
 - Like inside of parentheses, but exclude whitespace at both ends. Useful for
@@ -178,7 +180,7 @@ a ( b ( cccccccc ) d ) e
 
 #### Around Pair
 
-`A( A) Ab A{ A} AB A[ A] A< A> At`
+`A( A) A{ A} AB A[ A] A< A> At`
 
 - Select around pair characters.
 - Like a pair, but include whitespace at one side of the pair. Prefers to
@@ -495,27 +497,36 @@ Like separator seeking. If any of the normal argument commands (not containing
 it seeks for the argument before or after the cursor. This is similar to using
 the explicit version containing `n` or `l`.
 
+### Multi Text Objects
+
+Two multi text objects are included in default settings. See the section on
+settings below to see how to set up other similar multi text objects or
+customize the built in ones.
+
+#### Any Block
+
+`inb anb Inb Anb ilb alb Ilb Alb`
+
+Similar to pair text objects, if you type `dib` within `()` it will delete in
+these. If you do the same within `{}` it will delete in those. If you type
+`d2inb` it will skip one next pair (any kind) and delete in the one after (any
+kind). If you're within `()` nested in `{}`, type `d2ib` to delete in `{}`. All
+of the usual seeking, growing and skipping works.
+
+#### Any Quote
+
+`inq anq Inq Anq ilq alq Ilq Alq`
+
+Similar to quote text objects, if you type `diq` within `""` it will delete in
+these. If you do the same within `''` it will delete in those. If you type
+`d2inq` it will skip one next quote text object (any kind) and delete in the
+one after (any kind). If you're within `""` nested in `''`, type `d2iq` to
+delete in `''`. All of the usual seeking, growing and skipping works.
+
 ## Settings
 
-Put these variables into your vimrc to customize the mappings described above.
-The provided examples also indicate the default values.
-
-Available options:
-
-```vim
-g:targets_aiAI
-g:targets_nl
-g:targets_pairs
-g:targets_quotes
-g:targets_separators
-g:targets_tagTrigger
-g:targets_argTrigger
-g:targets_argOpening
-g:targets_argClosing
-g:targets_argSeparator
-g:targets_seekRanges
-g:targets_jumpRanges
-```
+You can customize the mappings and text objects with the settings described
+here.
 
 ### g:targets_aiAI
 
@@ -547,116 +558,12 @@ let g:targets_nl = 'nN'
 
 Required to be a 2 character long list. Use a space to deactivate a direction.
 
-### g:targets_pairs
-
-Default:
-
-```vim
-let g:targets_pairs = '()b {}B [] <>'
-```
-
-Defines the space separated list of pair objects you wish to use, along with
-optional one letter aliases for them.
-
-### g:targets_quotes
-
-Default:
-
-```vim
-let g:targets_quotes = '" '' `'
-```
-
-Defines the space separated list of quoting objects you wish to use. Note that
-you have to escape the single quote by doubling it. Quote objects can
-optionally be followed by a single one letter alias. For example, to set `d`
-as an alias for double quotes, allowing such commands as `cid` to be
-equivalent to `ci"`, you could define:
-
-```vim
-let g:targets_quotes = '"d '' `'
-```
-
-### g:targets_separators
-
-Default:
-
-```vim
-let g:targets_separators = ', . ; : + - = ~ _ * # / | \ & $'
-```
-
-Defines the space separated list of separator objects you wish to use. Like
-quote objects, separator objects can optionally be followed by a single one
-letter alias. To set `c` as an alias for comma, allowing such commands as
-`dic` to be equivalent to `di,`, you could define:
-
-```vim
-let g:targets_separators = ',c . ; : + - = ~ _ * # / | \ & $'
-```
-
-### g:targets_tagTrigger
-
-Default:
-
-```vim
-let g:targets_tagTrigger = 't'
-```
-
-Defines the key you need to press to operate on tag text objects.
-
-### g:targets_argTrigger
-
-Default:
-
-```vim
-let g:targets_argTrigger = 'a'
-```
-
-Defines the key you need to press to operate on arguments. To use `,` as
-argument trigger, allowing commands as `da,` to act like `daa`, use this:
-
-```vim
-let g:targets_argTrigger = ','
-```
-
-### g:targets_argOpening and g:targets_argClosing
-
-Default:
-
-```vim
-let g:targets_argOpening = '[([]'
-let g:targets_argClosing = '[])]'
-```
-
-Defines regular expressions that match the beginning and closing delimiter of
-an argument list respectively. If you also want to find arguments delimited by
-curly braces, try this:
-
-```vim
-let g:targets_argOpening = '[({[]'
-let g:targets_argClosing = '[]})]'
-```
-
-### g:targets_argSeparator
-
-Default:
-
-```vim
-let g:targets_argSeparator = ','
-```
-
-Defines a regular expression matching separators in an argument list. If you
-also want to find arguments separated by semicolon, use this:
-
-```vim
-let g:targets_argSeparator = '[,;]'
-```
-
 ### g:targets_seekRanges
 
 Default:
 
 ```vim
-let g:targets_seekRanges = 'cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA'
+let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA'
 ```
 
 Defines a priority ordered, space separated list of range types which can be
@@ -671,32 +578,32 @@ Some other useful example settings:
 
 Prefer multiline targets around cursor over distant targets within cursor line:
 ```vim
-let g:targets_seekRanges = 'cr cb cB lc ac Ac lr lb ar ab lB Ar aB Ab AB rr ll rb al rB Al bb aa bB Aa BB AA'
+let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr lb ar ab lB Ar aB Ab AB rr ll rb al rB Al bb aa bB Aa BB AA'
 ```
 
 Never seek backwards:
 ```vim
-let g:targets_seekRanges = 'cr cb cB lc ac Ac lr rr lb ar ab lB Ar aB Ab AB rb rB bb bB BB'
+let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr rr lb ar ab lB Ar aB Ab AB rb rB bb bB BB'
 ```
 
 Only seek if next/last targets touch current line:
 ```vim
-let g:targets_seekRanges = 'cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb rB al Al'
+let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb rB al Al'
 ```
 
 Only consider targets fully visible on screen:
 ```vim
-let g:targets_seekRanges = 'cr cb cB lc ac Ac lr lb ar ab rr rb bb ll al aa'
+let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr lb ar ab rr rb bb ll al aa'
 ```
 
 Only consider targets around cursor:
 ```vim
-let g:targets_seekRanges = 'cr cb cB lc ac Ac lr lb ar ab lB Ar aB Ab AB'
+let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr lb ar ab lB Ar aB Ab AB'
 ```
 
 Only consider targets fully contained in current line:
 ```vim
-let g:targets_seekRanges = 'cr cb cB lc ac Ac lr rr ll'
+let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr rr ll'
 ```
 
 If you want to build your own, or are just curious what those cryptic letters
@@ -707,7 +614,7 @@ mean, check out the full documentation in our [Cheat Sheet][cheatsheet].
 Default:
 
 ```vim
-let g:targets_jumpRanges = 'bb bB BB aa Aa AA' ~
+let g:targets_jumpRanges = 'bb bB BB aa Aa AA'
 ```
 
 Defines an unordered, space separated list of range types which can be used to
@@ -724,18 +631,153 @@ Some other useful example settings (or build your own!):
 
 Never add cursor position to jumplist:
 ```vim
-let g:targets_jumpRanges = '' ~
+let g:targets_jumpRanges = ''
 ```
 
 Always add cursor position to jumplist:
 ```vim
-let g:targets_jumpRanges = 'cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA' ~
+let g:targets_jumpRanges = 'cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA'
 ```
 
 Only add to jumplist if cursor was not inside the target:
 ```vim
-let g:targets_jumpRanges = 'rr rb rB bb bB BB ll al Al aa Aa AA' ~
+let g:targets_jumpRanges = 'rr rb rB bb bB BB ll al Al aa Aa AA'
 ```
+
+### targets#mappings#extend
+
+This function can be used to modify an internal dictionary used to control the
+mappings. The default value of that dictionary is:
+
+```vim
+{
+    \ '(': {'pair': [{'o': '(', 'c': ')'}]},
+    \ ')': {'pair': [{'o': '(', 'c': ')'}]},
+    \ '{': {'pair': [{'o': '{', 'c': '}'}]},
+    \ '}': {'pair': [{'o': '{', 'c': '}'}]},
+    \ 'B': {'pair': [{'o': '{', 'c': '}'}]},
+    \ '[': {'pair': [{'o': '[', 'c': ']'}]},
+    \ ']': {'pair': [{'o': '[', 'c': ']'}]},
+    \ '<': {'pair': [{'o': '<', 'c': '>'}]},
+    \ '>': {'pair': [{'o': '<', 'c': '>'}]},
+    \ '"': {'quote': [{'d': '"'}]},
+    \ "'": {'quote': [{'d': "'"}]},
+    \ '`': {'quote': [{'d': '`'}]},
+    \ ',': {'separator': [{'d': ','}]},
+    \ '.': {'separator': [{'d': '.'}]},
+    \ ';': {'separator': [{'d': ';'}]},
+    \ ':': {'separator': [{'d': ':'}]},
+    \ '+': {'separator': [{'d': '+'}]},
+    \ '-': {'separator': [{'d': '-'}]},
+    \ '=': {'separator': [{'d': '='}]},
+    \ '~': {'separator': [{'d': '~'}]},
+    \ '_': {'separator': [{'d': '_'}]},
+    \ '*': {'separator': [{'d': '*'}]},
+    \ '#': {'separator': [{'d': '#'}]},
+    \ '/': {'separator': [{'d': '/'}]},
+    \ '\': {'separator': [{'d': '\'}]},
+    \ '|': {'separator': [{'d': '|'}]},
+    \ '&': {'separator': [{'d': '&'}]},
+    \ '$': {'separator': [{'d': '$'}]},
+    \ 't': {'tag': [{}]},
+    \ 'a': {'argument': [{'o': '[([]', 'c': '[])]', 's': ','}]},
+    \ 'b': {'pair': [{'o':'(', 'c':')'}, {'o':'[', 'c':']'}, {'o':'{', 'c':'}'}]},
+    \ 'q': {'quote': [{'d':"'"}, {'d':'"'}, {'d':'`'}]},
+    \ }
+```
+
+The keys in this dictionary correspond to the trigger character. For example if
+you type `di(`, `(` is the trigger and gets mapped to the `pair` target source
+with arguments `'o':'('` (opening) and `'c':')'` (closing). Sources `quote` and
+`separator` have argument `'d'` (delimiter), `tag` has no arguments and
+`argument` text objets take `'o'` (opening), `'c'` (closing) and `'s'`
+(separator). Notably the `b` (any block) and `q` (any quote) triggers map to
+one source with three sets of `pair` and `quote` args dictiory respectively.
+That means if you type `dib` each of those sources get taken into account to
+pick the proper target. Also note that it's even possible to have one target
+mapped to multiple different sources to select any of those different text
+objects (see example below).
+
+You can use the `targets#mappings#extend()` function to modify these internal
+mappings. For example if you wanted to switch `b` back to the Vim default
+behavior of operating on paretheses only, you can add this to your vimrc:
+
+```vim
+autocmd User targets#mappings#user call targets#mappings#extend({
+    \ 'b': {'pair': [{'o':'(', 'c':')'}]}
+    \ })
+```
+
+Note that you should always use that `autocmd` prefix to make sure your
+modifications get applied at the right time. There's a similar autogroup for
+plugins which can add other sources and default mappings, which gets triggered
+before this `#user` one. That way the user mappings always take precedence over
+the plugins default mappings
+
+If you want to remove a mapping from the defaults, just set it to an empty list
+of sources:
+
+```vim
+autocmd User targets#mappings#user call targets#mappings#extend({
+    \ 'q': {},
+    \ })
+```
+
+That way targets.vim will ignore it and fall back to Vim default behavior,
+which for the case of `q` does nothing.
+
+Finally here's a more complex example which adds too triggers `s` (any
+separator text object) and `@` (anything at all). So you could type `das` to
+delete the closest separator text object near the cursor, or `da@` to operate
+on the closest text object available via targets.vim. All of those support
+seeking and counts like `d3ins`.
+
+```vim
+autocmd User targets#mappings#user call targets#mappings#extend({
+    \ 's': { 'separator': [{'d':','}, {'d':'.'}, {'d':';'}, {'d':':'}, {'d':'+'}, {'d':'-'},
+    \                      {'d':'='}, {'d':'~'}, {'d':'_'}, {'d':'*'}, {'d':'#'}, {'d':'/'},
+    \                      {'d':'\'}, {'d':'|'}, {'d':'&'}, {'d':'$'}] },
+    \ '@': {
+    \     'separator': [{'d':','}, {'d':'.'}, {'d':';'}, {'d':':'}, {'d':'+'}, {'d':'-'},
+    \                   {'d':'='}, {'d':'~'}, {'d':'_'}, {'d':'*'}, {'d':'#'}, {'d':'/'},
+    \                   {'d':'\'}, {'d':'|'}, {'d':'&'}, {'d':'$'}],
+    \     'pair':      [{'o':'(', 'c':')'}, {'o':'[', 'c':']'}, {'o':'{', 'c':'}'}, {'o':'<', 'c':'>'}],
+    \     'quote':     [{'d':"'"}, {'d':'"'}, {'d':'`'}],
+    \     'tag':       [{}],
+    \     },
+    \ })
+```
+
+Also note how this example shows that you can set multiple triggers in a single
+`targets#mappings#extend()` call. To keep the autocmd overhead minimal I'd
+recommend to keep all your mappings setup in a single such call. But do as you
+wish, I'm not your mom!
+
+### Deprecated settings
+
+If you have set any of the following settings in your vimrc, they will still be
+respected when creating the default mappings dictionary. But it's not possible
+to set up any multi source targets (like any block or any quote) this way. It's
+recommendet to retire those legacy settings and use `targets#mappings#extend()`
+as described above.
+
+```vim
+g:targets_pairs
+g:targets_quotes
+g:targets_separators
+g:targets_tagTrigger
+g:targets_argClosing
+g:targets_argOpening
+g:targets_argSeparator
+g:targets_argTrigger
+```
+
+However, those new mappings settings will only be respected when targets.vim
+can use expression mappings, which need Neovim or Vim with version 7.3.338 or
+later. If you are using an older Vim version, these legacy settings are still
+the only way to do any customization. Please refer to an older version of this
+README (before October 2018) for details. Or open an issue for me to describe
+those legacy settings somewhere still.
 
 ## Notes
 
@@ -756,6 +798,7 @@ let g:targets_jumpRanges = 'rr rb rB bb bB BB ll al Al aa Aa AA' ~
 Create more mappings to support commands like `danw` or `danp` to delete the
 next word or paragraph.
 
+[plugins]: plugins.md
 [cheatsheet]: cheatsheet.md
 [textobjects]: http://vimdoc.sourceforge.net/htmldoc/motion.html#text-objects
 [operator]: http://vimdoc.sourceforge.net/htmldoc/motion.html#operator
