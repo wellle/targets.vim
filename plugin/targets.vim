@@ -51,5 +51,7 @@ endfunction
 
 call s:addAllMappings()
 
+silent! execute 'xnoremap <unique> . :<C-U>call targets#do()<CR>'
+
 let &cpoptions = s:save_cpoptions
 unlet s:save_cpoptions
