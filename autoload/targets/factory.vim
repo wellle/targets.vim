@@ -40,7 +40,7 @@ endfunction
 " invocations
 function! targets#factory#new(oldpos, which) dict
     let GenFunc = get(self.genFuncs, a:which, 0)
-    if GenFunc == 0
+    if type(GenFunc) != type(function("tr"))
         " NOTE: we could drop this message and consider individual gen funcs
         " optional. but for seeking to work we need all three, so all of them
         " are required for now
