@@ -50,6 +50,7 @@ correctly.
 		* [Any Quote](#any-quote)
 * [Settings](#settings)
 	* [g:targets_aiAI](#gtargets_aiai)
+	* [g:targets_mapped_aiAI](#gtargets_mapped_aiai)
 	* [g:targets_nl](#gtargets_nl)
 	* [g:targets_seekRanges](#gtargets_seekranges)
 	* [g:targets_jumpRanges](#gtargets_jumpranges)
@@ -539,6 +540,23 @@ let g:targets_aiAI = 'aiAI'
 Controls the normal mode operator mode maps that get created for In Pair (`i`),
 A Pair (`a`), Inside Pair (`I`), and Around Pair (`A`). Required to be a 4
 character long list. Use a space to deactivate a mode.
+
+### g:targets_mapped_aiAI
+
+Default:
+
+```vim
+let g:targets_mapped_aiAI = g:targets_aiAI
+```
+
+If you can't get your g:targets_aiAI settings to work because they conflict
+with other mappings you have, you might need to use g:targets_mapped_aiAI. For
+example if you want to map `k` to `i` and use `k` as `i` in targets mappings,
+you need to NOT map `k` to `i` in operator pending mode, and set
+`g:targets_aiAI = 'akAI'` and `g:targets_mapped_aiAI = 'aiAI'`.
+
+For more details see issue #213 and don't hesitate to comment there or open a
+new issue if you need assistance.
 
 ### g:targets_nl
 
