@@ -15,20 +15,22 @@ function! s:addAllMappings()
     " places
     let g:targets_nl = get(g:, 'targets_nl', get(g:, 'targets_nlNL', 'nl')[0:1]) " legacy fallback
     let aiAI         = get(g:, 'targets_aiAI', 'aiAI')
-    let [s:a, s:i, s:A, s:I] = split(aiAI, '\zs')
-    let [s:n, s:l]           = split(g:targets_nl, '\zs')
+    let mapped_aiAI  = get(g:, 'targets_mapped_aiAI', aiAI)
+    let [s:a,  s:i,  s:A,  s:I]  = split(aiAI, '\zs')
+    let [s:ma, s:mi, s:mA, s:mI] = split(mapped_aiAI, '\zs')
+    let [s:n, s:l]               = split(g:targets_nl, '\zs')
 
     if v:version >= 704 || (v:version == 703 && has('patch338'))
         " if possible, create only a few expression mappings to speed up loading times
-        silent! execute 'omap <expr> <unique> ' . s:i . " targets#e('i', '" . s:i . "')"
-        silent! execute 'omap <expr> <unique> ' . s:a . " targets#e('a', '" . s:a . "')"
-        silent! execute 'omap <expr> <unique> ' . s:I . " targets#e('I', '" . s:I . "')"
-        silent! execute 'omap <expr> <unique> ' . s:A . " targets#e('A', '" . s:A . "')"
+        silent! execute 'omap <expr> <unique> ' . s:i . " targets#e('i', '" . s:mi . "')"
+        silent! execute 'omap <expr> <unique> ' . s:a . " targets#e('a', '" . s:ma . "')"
+        silent! execute 'omap <expr> <unique> ' . s:I . " targets#e('I', '" . s:mI . "')"
+        silent! execute 'omap <expr> <unique> ' . s:A . " targets#e('A', '" . s:mA . "')"
 
-        silent! execute 'xmap <expr> <unique> ' . s:i . " targets#e('i', '" . s:i . "')"
-        silent! execute 'xmap <expr> <unique> ' . s:a . " targets#e('a', '" . s:a . "')"
-        silent! execute 'xmap <expr> <unique> ' . s:I . " targets#e('I', '" . s:I . "')"
-        silent! execute 'xmap <expr> <unique> ' . s:A . " targets#e('A', '" . s:A . "')"
+        silent! execute 'xmap <expr> <unique> ' . s:i . " targets#e('i', '" . s:mi . "')"
+        silent! execute 'xmap <expr> <unique> ' . s:a . " targets#e('a', '" . s:ma . "')"
+        silent! execute 'xmap <expr> <unique> ' . s:I . " targets#e('I', '" . s:mI . "')"
+        silent! execute 'xmap <expr> <unique> ' . s:A . " targets#e('A', '" . s:mA . "')"
 
         " #209: The above mappings don't use <silent> for better visual
         " feedback on `!ip` (when we pass back control to Vim). To be silent
