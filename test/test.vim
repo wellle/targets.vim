@@ -11,12 +11,12 @@ source ../plugin/targets.vim
 
 function! s:execute(operation, motions)
     if a:operation == 'c'
-        execute "normal " . a:operation . a:motions . "_"
+        execute "normal" a:operation . a:motions . "_"
     elseif a:operation == 'v'
-        execute "normal " . a:operation . a:motions
+        execute "normal" a:operation . a:motions
         normal r_
     else
-        execute "normal " . a:operation . a:motions
+        execute "normal" a:operation . a:motions
     endif
     if a:operation == 'y'
         execute "normal A\<Tab>'\<C-R>\"'"
@@ -247,7 +247,7 @@ function s:testQuotes()
                 for iaIA in [ 'I', 'i', 'a', 'A' ]
                     execute "normal \"pPnw"
                     let command = "v" . cnt . iaIA . ln . "'"
-                    execute "normal " . command . "r_A " . command . "\<Esc>}"
+                    execute "normal" command . "r_A" command . "\<Esc>}"
                 endfor
             endfor
         endfor

@@ -65,7 +65,7 @@ endfunction
 
 " gets called via the @(targets) mapping from above
 function! targets#do()
-    exe s:call
+    execute s:call
 endfunction
 
 " 'x' is for visual (as in :xnoremap, not in select mode)
@@ -391,7 +391,7 @@ endfunction
 " undo last operation if it created a new undo position
 function! targets#undo(lastseq)
     if undotree().seq_cur > a:lastseq
-        silent! execute "normal! u"
+        silent! execute 'normal! u'
     endif
 endfunction
 

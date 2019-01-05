@@ -21,7 +21,7 @@ function! targets#modify#drop(target, args)
         " if only whitespace after cursor
         let sLinewise = 1
     endif
-    silent! execute "normal! 1 "
+    silent! execute 'normal! 1 '
     call a:target.setS()
 
     call a:target.cursorE()
