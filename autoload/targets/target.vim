@@ -224,11 +224,17 @@ endfunction
 function! targets#target#select() dict
     call self.cursorS()
 
-    if self.linewise
-        silent! normal! V
+    let mode = mode(1)
+    if len(mode) >= 3 && mode[0:1] ==# 'no'
+        " apply motion force
+        let selectMode = mode[2]
+    elseif self.linewise
+        let selectMode = 'V'
     else
-        silent! normal! v
+        let selectMode = 'v'
     endif
+
+    silent! execute 'normal!' selectMode
 
     call self.cursorE()
 endfunction

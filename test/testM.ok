@@ -1248,3 +1248,12 @@ Warning: terminal cannot highlight
 /X
 "test9.out"
 "test9.out" [New] 12L, 181C written
+"test10.in"
+"test10.in" 23L, 127C
+/X1
+/X2
+/X3
+3 fewer lines
+/X4
+"test10.out"
+"test10.out" [New] 16L, 74C written

@@ -310,6 +310,24 @@ function s:testGrow()
     write! test9.out
 endfunction
 
+function s:testMotionForce()
+    edit! test10.in
+
+    execute "normal /X1\<CR>"
+    execute "normal di-"
+
+    execute "normal /X2\<CR>"
+    execute "normal dvi-"
+
+    execute "normal /X3\<CR>"
+    execute "normal dVi-"
+
+    execute "normal /X4\<CR>"
+    execute "normal d\<C-V>i-"
+
+    write! test10.out
+endfunction
+
 redir >> testM.out
 
 call s:testBasic()
@@ -321,6 +339,7 @@ call s:testEmpty()
 call s:testQuotes()
 call s:testReselect()
 call s:testGrow()
+call s:testMotionForce()
 
 redir END
 " remove blank messages and trailing whitespace
