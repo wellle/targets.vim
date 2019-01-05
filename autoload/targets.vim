@@ -33,16 +33,7 @@ endfunction
 " mappings to not break non-targets visual mappings
 " and for operator pending mode as well if possible to speed up plugin loading
 " time
-function! targets#e(modifier, original)
-    let mode = mode(1)
-    if mode ==? 'v' " visual mode, from xnoremap
-        let prefix = "call targets#x('"
-    elseif mode ==# 'no' " operator pending, from onoremap
-        let prefix = "call targets#o('"
-    else
-        return a:original
-    endif
-
+function! targets#e(mapmode, modifier, original)
     let char1 = nr2char(getchar())
     let [trigger, which, chars] = [char1, 'c', char1]
     for i in range(2)
@@ -62,7 +53,7 @@ function! targets#e(modifier, original)
     let trigger = substitute(trigger, "'", "''", "g")
     let typed = substitute(typed, "'", "''", "g")
 
-    let s:call = prefix . trigger . which . a:modifier . "', '" . typed . "', " . v:count1 . ")"
+    let s:call = "call targets#" . a:mapmode . "('" . trigger . which . a:modifier . "', '" . typed . "', " . v:count1 . ")"
     " indirectly (but silently) call targets#do below
     return "@(targets)"
 endfunction
