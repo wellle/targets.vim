@@ -73,13 +73,28 @@ function! targets#target#copy() dict
 endfunction
 
 function! targets#target#equal(t) dict
+    " NOTE: linewise targets are equal even if their columns are different
+    " this is important because fromVisualSelection will get 'a large number'
+    " for ec; see :h getpos()
+
+    " all of these must be equal
+    if
+                \ self.error    != a:t.error ||
+                \ self.sl       != a:t.sl    ||
+                \ self.el       != a:t.el    ||
+                \ self.linewise != a:t.linewise
+        return 0
+    endif
+
+    " if targets are linewise, ignore columns
+    if self.linewise
+        return 1
+    endif
+
+    " if characterwise, columns must be equal
     return
-                \ self.error    == a:t.error &&
-                \ self.sl       == a:t.sl    &&
-                \ self.sc       == a:t.sc    &&
-                \ self.el       == a:t.el    &&
-                \ self.ec       == a:t.ec    &&
-                \ self.linewise == a:t.linewise
+                \ self.sc == a:t.sc &&
+                \ self.ec == a:t.ec
 endfunction
 
 function! targets#target#setS(...) dict
