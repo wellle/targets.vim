@@ -220,7 +220,12 @@ function! targets#target#string() dict
     endif
 
     if has_key(self, 'gen')
-        let text .= ' ' . self.gen.source . ' ' . self.gen.which
+        if has_key(self.gen, 'source')
+            let text .= ' ' . self.gen.source
+        endif
+        if has_key(self.gen, 'which')
+            let text .= ' ' . self.gen.which
+        endif
     endif
 
     return text . ' ' . '[' . self.sl . ' ' . self.sc . '; ' . self.el . ' ' . self.ec . ']'
