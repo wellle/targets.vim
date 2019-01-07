@@ -4,3 +4,12 @@ a [ b [ x ] c ] d
 a < b < x > c > d
 a <a> b <b> x </b> c </a> d
 
+a       b
+a ( X   b
+a   c ) b
+a       b
+
+a       b
+a ( Y   b
+a   c ) b
+a       b

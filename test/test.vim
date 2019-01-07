@@ -192,6 +192,11 @@ function s:testVisual()
         normal +
     endfor
 
+    execute "normal /X\<CR>"
+    execute "normal VjIbc.\<Esc>"
+
+    execute "normal /Y\<CR>"
+    execute "normal \<C-V>jIbc.\<Esc>"
 
     write! test4.out
 endfunction

@@ -34,6 +34,11 @@ endfunction
 " and for operator pending mode as well if possible to speed up plugin loading
 " time
 function! targets#e(mapmode, modifier, original)
+    " abort in block mode, to not break v_b_I and v_b_A
+    if mode() !~# "[nvV]"
+        return a:original
+    endif
+
     let char1 = nr2char(getchar())
     let [trigger, which, chars] = [char1, 'c', char1]
     for i in range(2)

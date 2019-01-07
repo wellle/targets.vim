@@ -34,9 +34,11 @@ Warning: terminal cannot highlight
 "test3.out"
 "test3.out" [New] 40L, 270C written
 "test4.in"
-"test4.in" 6L, 101C
+"test4.in" 15L, 182C
+/X
+/Y
 "test4.out"
-"test4.out" [New] 28L, 517C written
+"test4.out" [New] 36L, 594C written
 "test5.in"
 "test5.in" 1L, 11C
 "test5.out"
