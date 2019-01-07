@@ -108,15 +108,6 @@ function! s:initX(trigger)
 
     let visualTarget = targets#target#fromVisualSelection(s:selection)
 
-    " reselect, save mode and go back to normal mode
-    normal! gv
-    if mode() ==# 'V'
-        let visualTarget.linewise = 1
-        normal! V
-    else
-        normal! v
-    endif
-
     let isNewSelection = s:isNewSelection(visualTarget)
     if isNewSelection
         let s:lastRawTarget = targets#target#withError('initial')

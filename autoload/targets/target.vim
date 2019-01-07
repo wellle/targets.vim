@@ -48,7 +48,18 @@ function! targets#target#fromVisualSelection(...)
         let ec -= 1
     endif
 
-    return targets#target#fromValues(sl, sc, el, ec)
+    let target = targets#target#fromValues(sl, sc, el, ec)
+
+    " reselect, save mode and go back to normal mode
+    normal! gv
+    if mode() ==# 'V'
+        let target.linewise = 1
+        normal! V
+    else
+        normal! v
+    endif
+
+    return target
 endfunction
 
 function! targets#target#withError(error)
