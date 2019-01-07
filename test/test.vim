@@ -296,6 +296,12 @@ function s:testGrow()
     " from x, select argument, grow, switch to start, select last (should shrink)
     normal fxvaaaaoalar_
 
+    normal +
+
+    " grow between characterwise and linewise selections
+    execute "normal /X\<CR>"
+    normal vibibibibibibr_
+
     write! test9.out
 endfunction
 

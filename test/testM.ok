@@ -1242,6 +1242,7 @@ Warning: terminal cannot highlight
 "test8.out"
 "test8.out" [New] 1L, 12C written
 "test9.in"
-"test9.in" 6L, 134C
+"test9.in" 12L, 181C
+/X
 "test9.out"
-"test9.out" [New] 6L, 134C written
+"test9.out" [New] 12L, 181C written

@@ -48,7 +48,18 @@ function! targets#target#fromVisualSelection(...)
         let ec -= 1
     endif
 
-    return targets#target#fromValues(sl, sc, el, ec)
+    let target = targets#target#fromValues(sl, sc, el, ec)
+
+    " reselect, save mode and go back to normal mode
+    normal! gv
+    if mode() ==# 'V'
+        let target.linewise = 1
+        normal! V
+    else
+        normal! v
+    endif
+
+    return target
 endfunction
 
 function! targets#target#withError(error)
@@ -62,13 +73,28 @@ function! targets#target#copy() dict
 endfunction
 
 function! targets#target#equal(t) dict
+    " NOTE: linewise targets are equal even if their columns are different
+    " this is important because fromVisualSelection will get 'a large number'
+    " for ec; see :h getpos()
+
+    " all of these must be equal
+    if
+                \ self.error    != a:t.error ||
+                \ self.sl       != a:t.sl    ||
+                \ self.el       != a:t.el    ||
+                \ self.linewise != a:t.linewise
+        return 0
+    endif
+
+    " if targets are linewise, ignore columns
+    if self.linewise
+        return 1
+    endif
+
+    " if characterwise, columns must be equal
     return
-                \ self.error    == a:t.error &&
-                \ self.sl       == a:t.sl    &&
-                \ self.sc       == a:t.sc    &&
-                \ self.el       == a:t.el    &&
-                \ self.ec       == a:t.ec    &&
-                \ self.linewise == a:t.linewise
+                \ self.sc == a:t.sc &&
+                \ self.ec == a:t.ec
 endfunction
 
 function! targets#target#setS(...) dict
@@ -220,7 +246,12 @@ function! targets#target#string() dict
     endif
 
     if has_key(self, 'gen')
-        let text .= ' ' . self.gen.source . ' ' . self.gen.which
+        if has_key(self.gen, 'source')
+            let text .= ' ' . self.gen.source
+        endif
+        if has_key(self.gen, 'which')
+            let text .= ' ' . self.gen.which
+        endif
     endif
 
     return text . ' ' . '[' . self.sl . ' ' . self.sc . '; ' . self.el . ' ' . self.ec . ']'
