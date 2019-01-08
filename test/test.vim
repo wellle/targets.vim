@@ -11,12 +11,12 @@ source ../plugin/targets.vim
 
 function! s:execute(operation, motions)
     if a:operation == 'c'
-        execute "normal " . a:operation . a:motions . "_"
+        execute "normal" a:operation . a:motions . "_"
     elseif a:operation == 'v'
-        execute "normal " . a:operation . a:motions
+        execute "normal" a:operation . a:motions
         normal r_
     else
-        execute "normal " . a:operation . a:motions
+        execute "normal" a:operation . a:motions
     endif
     if a:operation == 'y'
         execute "normal A\<Tab>'\<C-R>\"'"
@@ -192,6 +192,11 @@ function s:testVisual()
         normal +
     endfor
 
+    execute "normal /X\<CR>"
+    execute "normal VjIbc.\<Esc>"
+
+    execute "normal /Y\<CR>"
+    execute "normal \<C-V>jIbc.\<Esc>"
 
     write! test4.out
 endfunction
@@ -242,7 +247,7 @@ function s:testQuotes()
                 for iaIA in [ 'I', 'i', 'a', 'A' ]
                     execute "normal \"pPnw"
                     let command = "v" . cnt . iaIA . ln . "'"
-                    execute "normal " . command . "r_A " . command . "\<Esc>}"
+                    execute "normal" command . "r_A" command . "\<Esc>}"
                 endfor
             endfor
         endfor
@@ -305,6 +310,24 @@ function s:testGrow()
     write! test9.out
 endfunction
 
+function s:testMotionForce()
+    edit! test10.in
+
+    execute "normal /X1\<CR>"
+    execute "normal di-"
+
+    execute "normal /X2\<CR>"
+    execute "normal dvi-"
+
+    execute "normal /X3\<CR>"
+    execute "normal dVi-"
+
+    execute "normal /X4\<CR>"
+    execute "normal d\<C-V>i-"
+
+    write! test10.out
+endfunction
+
 redir >> testM.out
 
 call s:testBasic()
@@ -316,6 +339,7 @@ call s:testEmpty()
 call s:testQuotes()
 call s:testReselect()
 call s:testGrow()
+call s:testMotionForce()
 
 redir END
 " remove blank messages and trailing whitespace

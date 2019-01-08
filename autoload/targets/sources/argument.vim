@@ -30,7 +30,7 @@ function! targets#sources#argument#current(args, opts, state)
         if s:findArgBoundary('cW', 'cW', a:args.opening, a:args.closing, a:args.outer, "")[2] > 0
             return targets#target#withError('AC 1')
         endif
-        silent! execute "normal! 1 "
+        silent! execute 'normal! 1 '
         let target = s:select(a:args, '<')
     endif
 

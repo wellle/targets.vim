@@ -22,15 +22,15 @@ function! s:addAllMappings()
 
     if v:version >= 704 || (v:version == 703 && has('patch338'))
         " if possible, create only a few expression mappings to speed up loading times
-        silent! execute 'omap <expr> <unique> ' . s:i . " targets#e('i', '" . s:mi . "')"
-        silent! execute 'omap <expr> <unique> ' . s:a . " targets#e('a', '" . s:ma . "')"
-        silent! execute 'omap <expr> <unique> ' . s:I . " targets#e('I', '" . s:mI . "')"
-        silent! execute 'omap <expr> <unique> ' . s:A . " targets#e('A', '" . s:mA . "')"
+        silent! execute 'omap <expr> <unique>' s:i "targets#e('o', 'i', '" . s:mi . "')"
+        silent! execute 'omap <expr> <unique>' s:a "targets#e('o', 'a', '" . s:ma . "')"
+        silent! execute 'omap <expr> <unique>' s:I "targets#e('o', 'I', '" . s:mI . "')"
+        silent! execute 'omap <expr> <unique>' s:A "targets#e('o', 'A', '" . s:mA . "')"
 
-        silent! execute 'xmap <expr> <unique> ' . s:i . " targets#e('i', '" . s:mi . "')"
-        silent! execute 'xmap <expr> <unique> ' . s:a . " targets#e('a', '" . s:ma . "')"
-        silent! execute 'xmap <expr> <unique> ' . s:I . " targets#e('I', '" . s:mI . "')"
-        silent! execute 'xmap <expr> <unique> ' . s:A . " targets#e('A', '" . s:mA . "')"
+        silent! execute 'xmap <expr> <unique>' s:i "targets#e('x', 'i', '" . s:mi . "')"
+        silent! execute 'xmap <expr> <unique>' s:a "targets#e('x', 'a', '" . s:ma . "')"
+        silent! execute 'xmap <expr> <unique>' s:I "targets#e('x', 'I', '" . s:mI . "')"
+        silent! execute 'xmap <expr> <unique>' s:A "targets#e('x', 'A', '" . s:mA . "')"
 
         " #209: The above mappings don't use <silent> for better visual
         " feedback on `!ip` (when we pass back control to Vim). To be silent

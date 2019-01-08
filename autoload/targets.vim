@@ -33,13 +33,9 @@ endfunction
 " mappings to not break non-targets visual mappings
 " and for operator pending mode as well if possible to speed up plugin loading
 " time
-function! targets#e(modifier, original)
-    let mode = mode(1)
-    if mode ==? 'v' " visual mode, from xnoremap
-        let prefix = "call targets#x('"
-    elseif mode ==# 'no' " operator pending, from onoremap
-        let prefix = "call targets#o('"
-    else
+function! targets#e(mapmode, modifier, original)
+    " abort in block mode, to not break v_b_I and v_b_A
+    if mode() !~# "[nvV]"
         return a:original
     endif
 
@@ -62,14 +58,14 @@ function! targets#e(modifier, original)
     let trigger = substitute(trigger, "'", "''", "g")
     let typed = substitute(typed, "'", "''", "g")
 
-    let s:call = prefix . trigger . which . a:modifier . "', '" . typed . "', " . v:count1 . ")"
+    let s:call = "call targets#" . a:mapmode . "('" . trigger . which . a:modifier . "', '" . typed . "', " . v:count1 . ")"
     " indirectly (but silently) call targets#do below
     return "@(targets)"
 endfunction
 
 " gets called via the @(targets) mapping from above
 function! targets#do()
-    exe s:call
+    execute s:call
 endfunction
 
 " 'x' is for visual (as in :xnoremap, not in select mode)
@@ -395,7 +391,7 @@ endfunction
 " undo last operation if it created a new undo position
 function! targets#undo(lastseq)
     if undotree().seq_cur > a:lastseq
-        silent! execute "normal! u"
+        silent! execute 'normal! u'
     endif
 endfunction
 
