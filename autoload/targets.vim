@@ -59,6 +59,7 @@ function! targets#e(mapmode, modifier, original)
     let typed = substitute(typed, "'", "''", "g")
 
     let s:call = "call targets#" . a:mapmode . "('" . trigger . which . a:modifier . "', '" . typed . "', " . v:count1 . ")"
+    " echom 's:call' s:call
     " indirectly (but silently) call targets#do below
     return "@(targets)"
 endfunction
@@ -66,6 +67,10 @@ endfunction
 " gets called via the @(targets) mapping from above
 function! targets#do()
     execute s:call
+endfunction
+
+function! targets#reselect()
+    execute "call targets#o(',na', 'an,', 1)"
 endfunction
 
 " 'x' is for visual (as in :xnoremap, not in select mode)

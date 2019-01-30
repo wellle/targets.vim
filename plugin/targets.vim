@@ -52,6 +52,7 @@ endfunction
 call s:addAllMappings()
 
 silent! execute 'xnoremap <unique> . :<C-U>call targets#do()<CR>'
+silent! execute 'onoremap <unique> . :<C-U>call targets#reselect()<CR>'
 
 let &cpoptions = s:save_cpoptions
 unlet s:save_cpoptions

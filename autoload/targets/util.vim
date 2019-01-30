@@ -50,6 +50,6 @@ endfunction
 
 " useful for debugging
 function! targets#util#debug(message)
-    " echom a:message
+    echom a:message
 endfunction
 
