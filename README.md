@@ -71,6 +71,7 @@ correctly.
 | [Vundle][vundle]       | `Bundle 'wellle/targets.vim'`                                                 |
 | [Vim-plug][vim-plug]   | `Plug 'wellle/targets.vim'`                                                   |
 | [Pathogen][pathogen]   | `git clone git://github.com/wellle/targets.vim.git ~/.vim/bundle/targets.vim` |
+| [Dein](https://github.com/Shougo/dein.vim) | 		`call dein#add('wellle/targets.vim')`		 |
 
 ## Examples
 
