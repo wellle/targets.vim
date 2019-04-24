@@ -166,6 +166,6 @@ function! s:rangeScore(range)
             let s:rangeScores[ranges[i]] = rangesN - i
         endfor
     endif
-    return get(s:rangeScores, a:range)
+    return get(s:rangeScores, a:range, -1)
 endfunction
 
