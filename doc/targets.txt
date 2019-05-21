@@ -516,6 +516,7 @@ Available options: ~
     |g:targets_nl|
     |g:targets_seekRanges|
     |g:targets_jumpRanges|
+    |g:targets_gracious|
     |targets#mappings#extend|
 
 ------------------------------------------------------------------------------
@@ -686,6 +687,19 @@ Always add cursor position to jumplist:
 
 Only add to jumplist if cursor was not inside the target:
     let g:targets_jumpRanges = 'rr rb rB bb bB BB ll al Al aa Aa AA' ~
+
+------------------------------------------------------------------------------
+                                                          *g:targets_gracious*
+
+Default:
+    let g:targets_gracious = 0
+
+If enabled (set to `1`) , both growing and seeking will work on the largest
+available count if a too large count is given. For example:
+
+- `v100ab`  will select the most outer block around the cursor
+- `v100inq` will select the most distant quote to the right/down
+  (the last one in the file)
 
 ------------------------------------------------------------------------------
                                                      *targets#mappings#extend*
