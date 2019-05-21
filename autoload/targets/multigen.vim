@@ -23,6 +23,8 @@ function! targets#multigen#add(factories, ...) dict
     endfor
 endfunction
 
+let s:gracious = get(g:, 'targets_gracious', 0)
+
 function! targets#multigen#next(first) dict
     if a:first
         for gen in self.gens
@@ -40,8 +42,12 @@ function! targets#multigen#next(first) dict
     while 1
         let [target, idx] = s:bestTarget(targets, self.context, 'multigen')
         if target.state().isInvalid() " best is invalid -> done
-            let self.currentTarget = target
-            return self.currentTarget
+            let gracious = 1
+            " keep last good target if gracious is enabled
+            if !exists('self.currentTarget') || !s:gracious
+                let self.currentTarget = target
+            endif
+            return [self.currentTarget, 0]
         endif
 
         " if two generators produce the same target, skip it
@@ -52,7 +58,7 @@ function! targets#multigen#next(first) dict
         endif
 
         let self.currentTarget = target
-        return self.currentTarget
+        return [self.currentTarget, 1]
     endwhile
 endfunction
 

@@ -60,8 +60,8 @@ endfunction
 " if a:first is 1, the first call to next will have first set
 function! targets#generator#nextN(n, first) dict
     for i in range(1, a:n)
-        let target = self.next(i == a:first)
-        if target.state().isInvalid()
+        let [target, ok] = self.next(i == a:first)
+        if !ok
             return target
         endif
     endfor
