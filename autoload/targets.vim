@@ -10,7 +10,6 @@ set cpo&vim
 let s:lastRawTarget = targets#target#withError('initial')
 let s:lastTrigger   = "   "
 
-" a:count is unused here, but added for consistency with targets#x
 function! targets#o(trigger, typed, count)
     call s:init()
     let context = targets#context#new('o', a:trigger, 1, {})
@@ -18,7 +17,7 @@ function! targets#o(trigger, typed, count)
     " reset last raw target to not avoid it in #o when it was set from #x
     let s:lastRawTarget = targets#target#withError('#o')
 
-    let [target, rawTarget] = s:findTarget(context, v:count1)
+    let [target, rawTarget] = s:findTarget(context, a:count)
     if target.state().isInvalid()
         call s:abortMatch(context, '#o: ' . target.error)
         return s:cleanUp()
@@ -39,8 +38,16 @@ function! targets#e(mapmode, modifier, original)
         return a:original
     endif
 
-    let char1 = nr2char(getchar())
-    let [trigger, which, chars] = [char1, 'c', char1]
+    let s:char1 = nr2char(getchar())
+    " If char1 is number update v:count1 and get next char
+    if s:char1 =~# '^\d\+$'
+        let s:parsedCount = s:char1
+        let s:char1 = nr2char(getchar())
+    else
+        let s:parsedCount = v:count1
+    endif
+
+    let [trigger, which, chars] = [s:char1, 'c', s:char1]
     for i in range(2)
         if g:targets_nl[i] ==# trigger
             " trigger was which, get another char for trigger
@@ -57,8 +64,8 @@ function! targets#e(mapmode, modifier, original)
 
     let trigger = substitute(trigger, "'", "''", "g")
     let typed = substitute(typed, "'", "''", "g")
-
-    let s:call = "call targets#" . a:mapmode . "('" . trigger . which . a:modifier . "', '" . typed . "', " . v:count1 . ")"
+    echo "call targets#" . a:mapmode . "('" . trigger . which . a:modifier . "', '" . typed . "', " . s:parsedCount . ")"
+    let s:call = "call targets#" . a:mapmode . "('" . trigger . which . a:modifier . "', '" . typed . "', " . s:parsedCount . ")"
     " indirectly (but silently) call targets#do below
     return "@(targets)"
 endfunction
