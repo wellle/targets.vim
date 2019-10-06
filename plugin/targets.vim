@@ -9,6 +9,15 @@ let g:loaded_targets = '0.5.0' " version number
 let s:save_cpoptions = &cpoptions
 set cpo&vim
 
+function! s:getKeysAsList(keys)
+  " if it's already an array, no need to split it.
+  if type(a:keys) == 3
+    return a:keys
+  endif
+  " otherwise, it's a string and will be split by char.
+  return split(a:keys, '\zs')
+endfunction
+
 function! s:addAllMappings()
     " this is somewhat ugly, but we still need these nl values inside of the
     " expression mapping and don't want to have this legacy fallback in two
