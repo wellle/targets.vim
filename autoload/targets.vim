@@ -39,23 +39,42 @@ function! targets#e(mapmode, modifier, original)
     endif
 
     let s:char1 = nr2char(getchar())
-    " If char1 is number update v:count1 and get next char
-    if s:char1 =~# '^\d\+$'
-        let s:parsedCount = s:char1
+
+    " Check if user inputs count
+    let s:parsedCount = 0
+    while s:char1 =~# '^\d\+$'
+        let s:parsedCount *= 10
+        let s:parsedCount += s:char1
         let s:char1 = nr2char(getchar())
-    else
-        let s:parsedCount = v:count1
-    endif
+    endwhile
+
 
     let [trigger, which, chars] = [s:char1, 'c', s:char1]
     for i in range(2)
         if g:targets_nl[i] ==# trigger
             " trigger was which, get another char for trigger
-            let char2 = nr2char(getchar())
-            let [trigger, which, chars] = [char2, 'nl'[i], chars . char2]
+            let s:char2 = nr2char(getchar())
+
+            " Check if user inputs count
+            if s:char2 =~# '^\d\+$'
+                let s:parsedCount = 0
+                while s:char2 =~# '^\d\+$'
+                    let s:parsedCount *= 10
+                    let s:parsedCount += s:char2
+                    let s:char2 = nr2char(getchar())
+                endwhile
+            endif
+
+            let [trigger, which, chars] = [s:char2, 'nl'[i], chars . s:char2]
             break
         endif
     endfor
+
+    if s:parsedCount == 0
+        let s:parsedCount = v:count1
+    endif
+
+    echo "parsed count: " . s:parsedCount
 
     let typed = a:original . chars
     if empty(s:getFactories(trigger))
