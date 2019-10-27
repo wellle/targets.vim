@@ -12,13 +12,13 @@ set cpo&vim
 function! s:addAllMappings()
     " this is somewhat ugly, but we still need these nl values inside of the
     " expression mapping and don't want to have this legacy fallback in two
-    " places
-    let g:targets_nl = get(g:, 'targets_nl', get(g:, 'targets_nlNL', 'nl')[0:1]) " legacy fallback
-    let aiAI         = get(g:, 'targets_aiAI', 'aiAI')
-    let mapped_aiAI  = get(g:, 'targets_mapped_aiAI', aiAI)
-    let [s:a,  s:i,  s:A,  s:I]  = split(aiAI, '\zs')
-    let [s:ma, s:mi, s:mA, s:mI] = split(mapped_aiAI, '\zs')
+    " places. similarly we reuse g:targets_aiAI in the health check
+    let g:targets_nl   = get(g:, 'targets_nl', get(g:, 'targets_nlNL', 'nl')[0:1]) " legacy fallback
+    let g:targets_aiAI = get(g:, 'targets_aiAI', 'aiAI')
+    let mapped_aiAI    = get(g:, 'targets_mapped_aiAI', g:targets_aiAI)
     let [s:n, s:l]               = split(g:targets_nl, '\zs')
+    let [s:a,  s:i,  s:A,  s:I]  = split(g:targets_aiAI, '\zs')
+    let [s:ma, s:mi, s:mA, s:mI] = split(mapped_aiAI, '\zs')
 
     if v:version >= 704 || (v:version == 703 && has('patch338'))
         " if possible, create only a few expression mappings to speed up loading times
