@@ -43,7 +43,7 @@ function! targets#generator#next(first) dict
         let target = targets#target#fromValues(target[0], target[1], target[2], target[3])
 
     elseif type(target) != type({})
-        echom "targets.vim source '" . self.source . "' genFunc for " . self.which . " returned unexpected " . string(target)
+        echom "targets.vim source '" . self.source . "' genFunc for" self.which "returned unexpected" string(target)
         let target = targets#target#withError('bad target')
     endif
 

@@ -4,10 +4,10 @@ let s:sources = {}
 
 function! targets#sources#register(source, newFactoryFunc)
     if has_key(s:sources, a:source)
-        echom 'targets.vim failed to register source ' . a:source . ' (already exists)'
+        echom 'targets.vim failed to register source' a:source '(already exists)'
     else
         let s:sources[a:source] = a:newFactoryFunc
-        " echom 'registered source: ' . a:source
+        " echom 'registered source:' a:source
     endif
 endfunction
 

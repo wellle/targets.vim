@@ -178,7 +178,7 @@ function! s:findRawTarget(context, factories, count)
     let sameModifier  = modifier  ==# modifierL
     let similar = !a:context.newSelection && sameDelimiter
 
-    " echom s:lastTrigger . ' ' a:context.trigger
+    " echom 'triggers' s:lastTrigger a:context.trigger
 
     if which ==# 'c'
         if similar && sameModifier

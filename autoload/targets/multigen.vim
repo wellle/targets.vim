@@ -42,7 +42,7 @@ function! targets#multigen#next(first) dict
     while 1
         let [target, idx] = s:bestTarget(targets, self.context, 'multigen')
         if target.state().isInvalid() " best is invalid -> done
-            let gracious = 1
+            " let gracious = 1 " TODO remove
             " keep last good target if gracious is enabled
             if !exists('self.currentTarget') || !s:gracious
                 let self.currentTarget = target
@@ -142,7 +142,7 @@ function! s:bestTarget(targets, context, message)
 
         " if target.state().isValid()
         "     echom target.string()
-        "     echom 'score ' . score . ' lines ' . lines . ' chars ' . chars
+        "     echom 'range' range 'score' score 'lines' lines 'chars' chars
         " endif
 
         if (score > bestScore) ||
@@ -153,8 +153,8 @@ function! s:bestTarget(targets, context, message)
     endfor
 
     if exists('best')
-        " echom 'best ' . best.string()
-        " echom 'score ' . bestScore . ' lines ' . minLines . ' chars ' . minChars
+        " echom 'best' best.string()
+        " echom 'score' bestScore 'lines' minLines 'chars' minChars
         return [best, bestIdx]
     endif
 

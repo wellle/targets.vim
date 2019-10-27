@@ -8,7 +8,7 @@ let s:mappings = {}
 
 function! targets#mappings#extend(mappings)
     call extend(s:mappings, a:mappings)
-    " echom 'added mappings ' . string(keys(a:mappings))
+    " echom 'added mappings' string(keys(a:mappings))
 endfunction
 
 function! s:addMappings()
