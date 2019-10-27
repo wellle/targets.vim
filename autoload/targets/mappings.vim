@@ -80,6 +80,10 @@ function! targets#mappings#get(trigger)
     return get(s:mappings, a:trigger, {})
 endfunction
 
+function! targets#mappings#list()
+    return keys(s:mappings)
+endfunction
+
 function! s:hasLegacySettings()
     return
                 \ has_key(g:, 'targets_pairs') ||
