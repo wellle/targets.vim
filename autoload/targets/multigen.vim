@@ -161,15 +161,31 @@ function! s:bestTarget(targets, context, message)
     return [targets#target#withError(a:message), -1]
 endfunction
 
+" TODO: do we actually still need this? probably for customization
+" maybe only keep seekRanges as unordered lists so you can still use it to
+" disable certain seeking behaviours, but try to do everything else in how we
+" compare distances...?
+" if so: how could one disable the current 'smart seeking' which prefers close
+" targets in line over multiline targets around cursors? that seems to be the
+" only thing not covered then?...
 function! s:rangeScore(range)
     if !exists('s:rangeScores')
         let s:rangeScores = {}
+        " NOTE: ranges connected via dash get the same score
+        " this allows smarter seeking without breaking some cases, see #234
+        " TODO: problem: now we seek to the closer one, not to the right. for
+        " example: `(a) x ..... (b)`
+        " hmm, or is this actually good? probably not
         let ranges = split(get(g:, 'targets_seekRanges',
-                    \ 'cc cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb al rB Al bb aa bB Aa BB AA'
+                    \ 'cc cr cb cB lc ac Ac lr rr-ll-lb-ar-lB-Ar-rb-al-rB-Al ab aB Ab AB bb aa bB Aa BB AA'
                     \ ))
         let rangesN = len(ranges)
         for i in range(rangesN)
-            let s:rangeScores[ranges[i]] = rangesN - i
+            for range in split(ranges[i], '-')
+                let score = rangesN - i
+                " echom range score
+                let s:rangeScores[range] = score
+            endfor
         endfor
     endif
     return get(s:rangeScores, a:range, -1)

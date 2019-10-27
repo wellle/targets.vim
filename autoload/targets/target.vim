@@ -206,16 +206,16 @@ function! s:position(line, column, context)
 
     elseif a:line < cursorLine
         if a:line >= a:context.minline " above on screen
-            return ['a', cursorLine - a:line, -a:column]
+            return ['a', cursorLine - a:line, 1/0]
         else " above off screen
-            return ['A', cursorLine - a:line, -a:column]
+            return ['A', cursorLine - a:line, 1/0]
         endif
 
     else " a:line > cursorLine
         if a:line <= a:context.maxline " below on screen
-            return ['b', a:line - cursorLine, a:column]
+            return ['b', a:line - cursorLine, 1/0]
         else " below off screen
-            return ['B', a:line - cursorLine, a:column]
+            return ['B', a:line - cursorLine, 1/0]
         endif
     endif
 endfunction
