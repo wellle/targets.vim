@@ -2,7 +2,7 @@ function! health#targets#check() abort
     let conflicts = 0
 
     for trigger in targets#mappings#list()
-        for ai in split(g:targets_aiAI, '\zs')
+        for ai in targets#getKeysAsList(g:targets_aiAI)
             let conflicts += s:check(trigger, ai . trigger)
             for nl in split(g:targets_nl, '\zs')
                 let conflicts += s:check(trigger, ai . nl . trigger)

@@ -10,6 +10,15 @@ set cpo&vim
 let s:lastRawTarget = targets#target#withError('initial')
 let s:lastTrigger   = "   "
 
+function! targets#getKeysAsList(keys)
+  " if it's already an array, no need to split it.
+  if type(a:keys) == type([])
+    return a:keys
+  endif
+  " otherwise, it's a string and will be split by char.
+  return split(a:keys, '\zs')
+endfunction
+
 " a:count is unused here, but added for consistency with targets#x
 function! targets#o(trigger, typed, count)
     call s:init()
@@ -29,6 +38,20 @@ function! targets#o(trigger, typed, count)
     call s:cleanUp()
 endfunction
 
+function! s:getKeyAsStr()
+    " getchar returns an int for a regular character, and a string for a special
+    " key (such as "\<Left>").
+    let getcharOutput = getchar()
+    if type(getcharOutput) == type(0)
+      return nr2char(getcharOutput)
+    endif
+    return getcharOutput
+endfunction
+
+function! s:hasPrefix(str, prefix)
+    return a:str[:len(a:prefix)-1] ==# a:prefix
+endfunction
+
 " 'e' is for expression; return expression to execute, used for visual
 " mappings to not break non-targets visual mappings
 " and for operator pending mode as well if possible to speed up plugin loading
@@ -39,16 +62,25 @@ function! targets#e(mapmode, modifier, original)
         return a:original
     endif
 
-    let char1 = nr2char(getchar())
-    let [trigger, which, chars] = [char1, 'c', char1]
-    for i in range(2)
-        if g:targets_nl[i] ==# trigger
-            " trigger was which, get another char for trigger
-            let char2 = nr2char(getchar())
-            let [trigger, which, chars] = [char2, 'nl'[i], chars . char2]
-            break
-        endif
-    endfor
+    let [nKeys, lKeys] = targets#getKeysAsList(g:targets_nl)
+    let keys = [s:getKeyAsStr()]
+    let chars = join(keys, '')
+    while (len(chars) <= len(nKeys) && s:hasPrefix(nKeys, chars)) || 
+          \ (len(chars) <= len(lKeys) && s:hasPrefix(lKeys, chars))
+        let nextKey = s:getKeyAsStr()
+        let keys = keys + [nextKey]
+        let chars = chars . nextKey
+    endwhile
+    if s:hasPrefix(chars, nKeys) 
+      let which = 'n'
+      let trigger = keys[len(keys)-1]
+    elseif s:hasPrefix(chars, lKeys) 
+      let which = 'l'
+      let trigger = keys[len(keys)-1]
+    else
+      let which = 'c'
+      let trigger = keys[0]
+    endif
 
     let typed = a:original . chars
     if empty(s:getFactories(trigger))
