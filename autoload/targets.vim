@@ -11,12 +11,12 @@ let s:lastRawTarget = targets#target#withError('initial')
 let s:lastTrigger   = "   "
 
 function! targets#getKeysAsList(keys)
-  " if it's already an array, no need to split it.
-  if type(a:keys) == type([])
-    return a:keys
-  endif
-  " otherwise, it's a string and will be split by char.
-  return split(a:keys, '\zs')
+    " if it's already an array, no need to split it.
+    if type(a:keys) == type([])
+        return a:keys
+    endif
+    " otherwise, it's a string and will be split by char.
+    return split(a:keys, '\zs')
 endfunction
 
 " a:count is unused here, but added for consistency with targets#x
@@ -43,7 +43,7 @@ function! s:getKeyAsStr()
     " key (such as "\<Left>").
     let getcharOutput = getchar()
     if type(getcharOutput) == type(0)
-      return nr2char(getcharOutput)
+        return nr2char(getcharOutput)
     endif
     return getcharOutput
 endfunction
@@ -63,26 +63,35 @@ function! targets#e(mapmode, modifier, original)
     endif
 
     let [nKeys, lKeys] = targets#getKeysAsList(g:targets_nl)
-    let keys = [s:getKeyAsStr()]
-    let chars = join(keys, '')
-    while (len(chars) <= len(nKeys) && s:hasPrefix(nKeys, chars)) || 
-          \ (len(chars) <= len(lKeys) && s:hasPrefix(lKeys, chars))
-        let nextKey = s:getKeyAsStr()
-        let keys = keys + [nextKey]
-        let chars = chars . nextKey
-    endwhile
-    if s:hasPrefix(chars, nKeys) 
-      let which = 'n'
-      let trigger = keys[len(keys)-1]
-    elseif s:hasPrefix(chars, lKeys) 
-      let which = 'l'
-      let trigger = keys[len(keys)-1]
-    else
-      let which = 'c'
-      let trigger = keys[0]
-    endif
 
-    let typed = a:original . chars
+    let pending = ''
+    while 1
+        let pending .= s:getKeyAsStr()
+
+        if pending == nKeys
+            let which = 'n'
+            let trigger = s:getKeyAsStr()
+            let typed = a:original . pending . trigger
+            break
+        endif
+
+        if pending == lKeys
+            let which = 'l'
+            let trigger = s:getKeyAsStr()
+            let typed = a:original . pending . trigger
+            break
+        endif
+
+        if s:hasPrefix(nKeys, pending) || s:hasPrefix(lKeys, pending)
+            continue
+        endif
+
+        let which = 'c'
+        let trigger = pending
+        let typed = a:original . pending
+        break
+    endwhile
+
     if empty(s:getFactories(trigger))
         return typed
     endif

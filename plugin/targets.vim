@@ -20,24 +20,18 @@ function! s:addAllMappings()
     let [s:a,  s:i,  s:A,  s:I]  = targets#getKeysAsList(g:targets_aiAI)
     let [s:ma, s:mi, s:mA, s:mI] = targets#getKeysAsList(mapped_aiAI)
 
-    " See https://github.com/wellle/targets.vim/pull/242#issuecomment-557931274
-    for l:keys in [s:a,  s:i,  s:A,  s:I, s:n, s:l, s:ma, s:mi, s:mA, s:mI] 
-      if type(l:keys) != type('') || index(['', ' '], l:keys) >= 0
-        return
-      endif
-    endfor
-
     if v:version >= 704 || (v:version == 703 && has('patch338'))
-        " if possible, create only a few expression mappings to speed up loading times
-        silent! execute 'omap <expr> <unique>' s:i "targets#e('o', 'i', '" . s:mi . "')"
-        silent! execute 'omap <expr> <unique>' s:a "targets#e('o', 'a', '" . s:ma . "')"
-        silent! execute 'omap <expr> <unique>' s:I "targets#e('o', 'I', '" . s:mI . "')"
-        silent! execute 'omap <expr> <unique>' s:A "targets#e('o', 'A', '" . s:mA . "')"
-
-        silent! execute 'xmap <expr> <unique>' s:i "targets#e('x', 'i', '" . s:mi . "')"
-        silent! execute 'xmap <expr> <unique>' s:a "targets#e('x', 'a', '" . s:ma . "')"
-        silent! execute 'xmap <expr> <unique>' s:I "targets#e('x', 'I', '" . s:mI . "')"
-        silent! execute 'xmap <expr> <unique>' s:A "targets#e('x', 'A', '" . s:mA . "')"
+        for map_args in [['i', s:i, s:mi], ['a', s:a, s:ma], ['I', s:I, s:mI], ['A', s:A, s:mA]] 
+            let modifier = map_args[0]
+            let map_lhs = map_args[1]
+            let map_rhs = map_args[2]
+            " See https://github.com/wellle/targets.vim/pull/242#issuecomment-557931274
+            if map_lhs isnot# '' && map_lhs isnot# ' '
+                " if possible, create only a few expression mappings to speed up loading times
+                silent! execute printf("omap <expr> <unique> %s targets#e('o', '%s', '%s')", map_lhs, modifier, map_rhs)
+                silent! execute printf("xmap <expr> <unique> %s targets#e('o', '%s', '%s')", map_lhs, modifier, map_rhs)
+            endif
+        endfor
 
         " #209: The above mappings don't use <silent> for better visual
         " feedback on `!ip` (when we pass back control to Vim). To be silent
