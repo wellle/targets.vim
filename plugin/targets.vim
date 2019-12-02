@@ -20,14 +20,15 @@ function! s:addAllMappings()
     let [s:a,  s:i,  s:A,  s:I]  = targets#getKeysAsList(g:targets_aiAI)
     let [s:ma, s:mi, s:mA, s:mI] = targets#getKeysAsList(mapped_aiAI)
 
+    " if possible, create only a few expression mappings to speed up loading times
     if v:version >= 704 || (v:version == 703 && has('patch338'))
-        for map_args in [['i', s:i, s:mi], ['a', s:a, s:ma], ['I', s:I, s:mI], ['A', s:A, s:mA]] 
-            let modifier = map_args[0]
-            let map_lhs = map_args[1]
-            let map_rhs = map_args[2]
+        for [modifier, map_lhs, map_rhs] in [
+                    \ ['i', s:i, s:mi], 
+                    \ ['a', s:a, s:ma], 
+                    \ ['I', s:I, s:mI], 
+                    \ ['A', s:A, s:mA]] 
             " See https://github.com/wellle/targets.vim/pull/242#issuecomment-557931274
-            if map_lhs isnot# '' && map_lhs isnot# ' '
-                " if possible, create only a few expression mappings to speed up loading times
+            if trim(map_lhs) != ''
                 silent! execute printf("omap <expr> <unique> %s targets#e('o', '%s', '%s')", map_lhs, modifier, map_rhs)
                 silent! execute printf("xmap <expr> <unique> %s targets#e('o', '%s', '%s')", map_lhs, modifier, map_rhs)
             endif
