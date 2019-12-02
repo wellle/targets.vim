@@ -546,6 +546,14 @@ string or a list with 4 characters/elements.
 Use a space to deactivate a mode. If you want to use multiple keys, for example
 `<Space>a` instead of `A`, you must use a list.
 
+In contrast to `g:targets_nl`, special keys must not be escaped with a
+backslash. For example, use `"<Space>"`
+or `'<Space>'`, **not** `"\<Space>"`. Example for configuring `g:targets_aiAI`:
+
+```vim
+let g:targets_aiAI = ['<Space>a', '<Space>i', '<Space>A', '<Space>I']
+```
+
 ### g:targets_mapped_aiAI
 
 Default:
@@ -585,6 +593,14 @@ Required to be either a string or a list with 2 characters/elements.
 
 Use a space to deactivate a mode. If you want to use multiple keys, for example
 `<Space>n` instead of `n`, you must use a list.
+
+In contrast to `g:targets_aiAI`, special keys must be escaped with a backslash.
+For example, use `"\<Space>"`, **not** `"<Space>"` nor `'<Space>'`. Example for
+configuring `g:targets_nl`:
+
+```vim
+let g:targets_nl = ["\<Space>a", "\<Space>i", "\<Space>A", "\<Space>I"]
+```
 
 ### g:targets_seekRanges
 
