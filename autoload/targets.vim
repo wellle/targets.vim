@@ -68,14 +68,14 @@ function! targets#e(mapmode, modifier, original)
     while 1
         let pending .= s:getKeyAsStr()
 
-        if pending == nKeys
+        if pending ==# nKeys
             let which = 'n'
             let trigger = s:getKeyAsStr()
             let typed = a:original . pending . trigger
             break
         endif
 
-        if pending == lKeys
+        if pending ==# lKeys
             let which = 'l'
             let trigger = s:getKeyAsStr()
             let typed = a:original . pending . trigger
