@@ -9,16 +9,25 @@ let g:loaded_targets = '0.5.0' " version number
 let s:save_cpoptions = &cpoptions
 set cpo&vim
 
+function! s:getKeysAsList(keys)
+    " if it's already an array, no need to split it.
+    if type(a:keys) == type([])
+        return a:keys
+    endif
+    " otherwise, it's a string and will be split by char.
+    return split(a:keys, '\zs')
+endfunction
+
 function! s:addAllMappings()
     " this is somewhat ugly, but we still need these nl values inside of the
     " expression mapping and don't want to have this legacy fallback in two
     " places. similarly we reuse g:targets_aiAI in the health check
-    let g:targets_nl   = get(g:, 'targets_nl', get(g:, 'targets_nlNL', 'nl')[0:1]) " legacy fallback
-    let g:targets_aiAI = get(g:, 'targets_aiAI', 'aiAI')
-    let mapped_aiAI    = get(g:, 'targets_mapped_aiAI', g:targets_aiAI)
-    let [s:n, s:l]               = targets#getKeysAsList(g:targets_nl)
-    let [s:a,  s:i,  s:A,  s:I]  = targets#getKeysAsList(g:targets_aiAI)
-    let [s:ma, s:mi, s:mA, s:mI] = targets#getKeysAsList(mapped_aiAI)
+    let g:targets_nl   = s:getKeysAsList(get(g:, 'targets_nl', get(g:, 'targets_nlNL', 'nl')[0:1])) " legacy fallback
+    let g:targets_aiAI = s:getKeysAsList(get(g:, 'targets_aiAI', 'aiAI'))
+    let mapped_aiAI    = s:getKeysAsList(get(g:, 'targets_mapped_aiAI', g:targets_aiAI))
+    let [s:n, s:l]               = g:targets_nl
+    let [s:a,  s:i,  s:A,  s:I]  = g:targets_aiAI
+    let [s:ma, s:mi, s:mA, s:mI] = mapped_aiAI
 
     " if possible, create only a few expression mappings to speed up loading times
     if v:version >= 704 || (v:version == 703 && has('patch338'))

@@ -10,15 +10,6 @@ set cpo&vim
 let s:lastRawTarget = targets#target#withError('initial')
 let s:lastTrigger   = "   "
 
-function! targets#getKeysAsList(keys)
-    " if it's already an array, no need to split it.
-    if type(a:keys) == type([])
-        return a:keys
-    endif
-    " otherwise, it's a string and will be split by char.
-    return split(a:keys, '\zs')
-endfunction
-
 " a:count is unused here, but added for consistency with targets#x
 function! targets#o(trigger, typed, count)
     call s:init()
@@ -62,7 +53,7 @@ function! targets#e(mapmode, modifier, original)
         return a:original
     endif
 
-    let [nKeys, lKeys] = targets#getKeysAsList(g:targets_nl)
+    let [nKeys, lKeys] = g:targets_nl
 
     let pending = ''
     while 1
