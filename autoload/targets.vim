@@ -29,20 +29,6 @@ function! targets#o(trigger, typed, count)
     call s:cleanUp()
 endfunction
 
-function! s:getKeyAsStr()
-    " getchar returns an int for a regular character, and a string for a special
-    " key (such as "\<Left>").
-    let getcharOutput = getchar()
-    if type(getcharOutput) == type(0)
-        return nr2char(getcharOutput)
-    endif
-    return getcharOutput
-endfunction
-
-function! s:hasPrefix(str, prefix)
-    return a:str[:len(a:prefix)-1] ==# a:prefix
-endfunction
-
 " 'e' is for expression; return expression to execute, used for visual
 " mappings to not break non-targets visual mappings
 " and for operator pending mode as well if possible to speed up plugin loading
@@ -93,6 +79,20 @@ function! targets#e(mapmode, modifier, original)
     let s:call = "call targets#" . a:mapmode . "('" . trigger . which . a:modifier . "', '" . typed . "', " . v:count1 . ")"
     " indirectly (but silently) call targets#do below
     return "@(targets)"
+endfunction
+
+function! s:getKeyAsStr()
+    " getchar returns an int for a regular character, and a string for a special
+    " key (such as "\<Left>").
+    let getcharOutput = getchar()
+    if type(getcharOutput) == type(0)
+        return nr2char(getcharOutput)
+    endif
+    return getcharOutput
+endfunction
+
+function! s:hasPrefix(str, prefix)
+    return a:str[:len(a:prefix)-1] ==# a:prefix
 endfunction
 
 " gets called via the @(targets) mapping from above

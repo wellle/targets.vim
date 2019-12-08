@@ -599,7 +599,7 @@ For example, use `"\<Space>"`, **not** `"<Space>"` nor `'<Space>'`. Example for
 configuring `g:targets_nl`:
 
 ```vim
-let g:targets_nl = ["\<Space>a", "\<Space>i", "\<Space>A", "\<Space>I"]
+let g:targets_nl = ["\<Space>n", "\<Space>l"]
 ```
 
 ### g:targets_seekRanges

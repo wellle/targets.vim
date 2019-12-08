@@ -9,15 +9,6 @@ let g:loaded_targets = '0.5.0' " version number
 let s:save_cpoptions = &cpoptions
 set cpo&vim
 
-function! s:getKeysAsList(keys)
-    " if it's already an array, no need to split it.
-    if type(a:keys) == type([])
-        return a:keys
-    endif
-    " otherwise, it's a string and will be split by char.
-    return split(a:keys, '\zs')
-endfunction
-
 function! s:addAllMappings()
     " this is somewhat ugly, but we still need these nl values inside of the
     " expression mapping and don't want to have this legacy fallback in two
@@ -32,10 +23,10 @@ function! s:addAllMappings()
     " if possible, create only a few expression mappings to speed up loading times
     if v:version >= 704 || (v:version == 703 && has('patch338'))
         for [modifier, map_lhs, map_rhs] in [
-                    \ ['i', s:i, s:mi], 
-                    \ ['a', s:a, s:ma], 
-                    \ ['I', s:I, s:mI], 
-                    \ ['A', s:A, s:mA]] 
+                    \ ['i', s:i, s:mi],
+                    \ ['a', s:a, s:ma],
+                    \ ['I', s:I, s:mI],
+                    \ ['A', s:A, s:mA]]
             " See https://github.com/wellle/targets.vim/pull/242#issuecomment-557931274
             if trim(map_lhs) != ''
                 silent! execute printf("omap <expr> <unique> %s targets#e('o', '%s', '%s')", map_lhs, modifier, map_rhs)
@@ -58,6 +49,15 @@ function! s:addAllMappings()
         " mappings above (from Vim version 7.3.338 on)
         call targets#legacy#addMappings(s:a, s:i, s:A, s:I, s:n, s:l)
     endif
+endfunction
+
+function! s:getKeysAsList(keys)
+    " if it's already an array, no need to split it.
+    if type(a:keys) == type([])
+        return a:keys
+    endif
+    " otherwise, it's a string and will be split by char.
+    return split(a:keys, '\zs')
 endfunction
 
 call s:addAllMappings()
