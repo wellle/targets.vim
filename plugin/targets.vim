@@ -13,24 +13,26 @@ function! s:addAllMappings()
     " this is somewhat ugly, but we still need these nl values inside of the
     " expression mapping and don't want to have this legacy fallback in two
     " places. similarly we reuse g:targets_aiAI in the health check
-    let g:targets_nl   = get(g:, 'targets_nl', get(g:, 'targets_nlNL', 'nl')[0:1]) " legacy fallback
-    let g:targets_aiAI = get(g:, 'targets_aiAI', 'aiAI')
-    let mapped_aiAI    = get(g:, 'targets_mapped_aiAI', g:targets_aiAI)
-    let [s:n, s:l]               = split(g:targets_nl, '\zs')
-    let [s:a,  s:i,  s:A,  s:I]  = split(g:targets_aiAI, '\zs')
-    let [s:ma, s:mi, s:mA, s:mI] = split(mapped_aiAI, '\zs')
+    let g:targets_nl   = s:getKeysAsList(get(g:, 'targets_nl', get(g:, 'targets_nlNL', 'nl')[0:1])) " legacy fallback
+    let g:targets_aiAI = s:getKeysAsList(get(g:, 'targets_aiAI', 'aiAI'))
+    let mapped_aiAI    = s:getKeysAsList(get(g:, 'targets_mapped_aiAI', g:targets_aiAI))
+    let [s:n, s:l]               = g:targets_nl
+    let [s:a,  s:i,  s:A,  s:I]  = g:targets_aiAI
+    let [s:ma, s:mi, s:mA, s:mI] = mapped_aiAI
 
+    " if possible, create only a few expression mappings to speed up loading times
     if v:version >= 704 || (v:version == 703 && has('patch338'))
-        " if possible, create only a few expression mappings to speed up loading times
-        silent! execute 'omap <expr> <unique>' s:i "targets#e('o', 'i', '" . s:mi . "')"
-        silent! execute 'omap <expr> <unique>' s:a "targets#e('o', 'a', '" . s:ma . "')"
-        silent! execute 'omap <expr> <unique>' s:I "targets#e('o', 'I', '" . s:mI . "')"
-        silent! execute 'omap <expr> <unique>' s:A "targets#e('o', 'A', '" . s:mA . "')"
-
-        silent! execute 'xmap <expr> <unique>' s:i "targets#e('x', 'i', '" . s:mi . "')"
-        silent! execute 'xmap <expr> <unique>' s:a "targets#e('x', 'a', '" . s:ma . "')"
-        silent! execute 'xmap <expr> <unique>' s:I "targets#e('x', 'I', '" . s:mI . "')"
-        silent! execute 'xmap <expr> <unique>' s:A "targets#e('x', 'A', '" . s:mA . "')"
+        for [modifier, map_lhs, map_rhs] in [
+                    \ ['i', s:i, s:mi],
+                    \ ['a', s:a, s:ma],
+                    \ ['I', s:I, s:mI],
+                    \ ['A', s:A, s:mA]]
+            " See https://github.com/wellle/targets.vim/pull/242#issuecomment-557931274
+            if map_lhs != '' && map_lhs != ' '
+                silent! execute printf("omap <expr> <unique> %s targets#e('o', '%s', '%s')", map_lhs, modifier, map_rhs)
+                silent! execute printf("xmap <expr> <unique> %s targets#e('o', '%s', '%s')", map_lhs, modifier, map_rhs)
+            endif
+        endfor
 
         " #209: The above mappings don't use <silent> for better visual
         " feedback on `!ip` (when we pass back control to Vim). To be silent
@@ -47,6 +49,15 @@ function! s:addAllMappings()
         " mappings above (from Vim version 7.3.338 on)
         call targets#legacy#addMappings(s:a, s:i, s:A, s:I, s:n, s:l)
     endif
+endfunction
+
+function! s:getKeysAsList(keys)
+    " if it's already an array, no need to split it.
+    if type(a:keys) == type([])
+        return a:keys
+    endif
+    " otherwise, it's a string and will be split by char.
+    return split(a:keys, '\zs')
 endfunction
 
 call s:addAllMappings()

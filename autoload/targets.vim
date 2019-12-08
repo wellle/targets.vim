@@ -39,18 +39,36 @@ function! targets#e(mapmode, modifier, original)
         return a:original
     endif
 
-    let char1 = nr2char(getchar())
-    let [trigger, which, chars] = [char1, 'c', char1]
-    for i in range(2)
-        if g:targets_nl[i] ==# trigger
-            " trigger was which, get another char for trigger
-            let char2 = nr2char(getchar())
-            let [trigger, which, chars] = [char2, 'nl'[i], chars . char2]
+    let [nKeys, lKeys] = g:targets_nl
+
+    let pending = ''
+    while 1
+        let pending .= s:getKeyAsStr()
+
+        if pending ==# nKeys
+            let which = 'n'
+            let trigger = s:getKeyAsStr()
+            let typed = a:original . pending . trigger
             break
         endif
-    endfor
 
-    let typed = a:original . chars
+        if pending ==# lKeys
+            let which = 'l'
+            let trigger = s:getKeyAsStr()
+            let typed = a:original . pending . trigger
+            break
+        endif
+
+        if s:hasPrefix(nKeys, pending) || s:hasPrefix(lKeys, pending)
+            continue
+        endif
+
+        let which = 'c'
+        let trigger = pending
+        let typed = a:original . pending
+        break
+    endwhile
+
     if empty(s:getFactories(trigger))
         return typed
     endif
@@ -61,6 +79,20 @@ function! targets#e(mapmode, modifier, original)
     let s:call = "call targets#" . a:mapmode . "('" . trigger . which . a:modifier . "', '" . typed . "', " . v:count1 . ")"
     " indirectly (but silently) call targets#do below
     return "@(targets)"
+endfunction
+
+function! s:getKeyAsStr()
+    " getchar returns an int for a regular character, and a string for a special
+    " key (such as "\<Left>").
+    let getcharOutput = getchar()
+    if type(getcharOutput) == type(0)
+        return nr2char(getcharOutput)
+    endif
+    return getcharOutput
+endfunction
+
+function! s:hasPrefix(str, prefix)
+    return a:str[:len(a:prefix)-1] ==# a:prefix
 endfunction
 
 " gets called via the @(targets) mapping from above

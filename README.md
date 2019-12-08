@@ -540,8 +540,19 @@ let g:targets_aiAI = 'aiAI'
 ```
 
 Controls the normal mode operator mode maps that get created for In Pair (`i`),
-A Pair (`a`), Inside Pair (`I`), and Around Pair (`A`). Required to be a 4
-character long list. Use a space to deactivate a mode.
+A Pair (`a`), Inside Pair (`I`), and Around Pair (`A`). Required to be either a
+string or a list with 4 characters/elements.
+
+Use a space to deactivate a mode. If you want to use multiple keys, for example
+`<Space>a` instead of `A`, you must use a list.
+
+In contrast to `g:targets_nl`, special keys must not be escaped with a
+backslash. For example, use `"<Space>"`
+or `'<Space>'`, **not** `"\<Space>"`. Example for configuring `g:targets_aiAI`:
+
+```vim
+let g:targets_aiAI = ['<Space>a', '<Space>i', '<Space>A', '<Space>I']
+```
 
 ### g:targets_mapped_aiAI
 
@@ -556,6 +567,8 @@ with other mappings you have, you might need to use g:targets_mapped_aiAI. For
 example if you want to map `k` to `i` and use `k` as `i` in targets mappings,
 you need to NOT map `k` to `i` in operator pending mode, and set
 `g:targets_aiAI = 'akAI'` and `g:targets_mapped_aiAI = 'aiAI'`.
+
+Has the same format as `g:targets_aiAI`.
 
 For more details see issue #213 and don't hesitate to comment there or open a
 new issue if you need assistance.
@@ -576,7 +589,18 @@ for the last, you could set:
 let g:targets_nl = 'nN'
 ```
 
-Required to be a 2 character long list. Use a space to deactivate a direction.
+Required to be either a string or a list with 2 characters/elements.
+
+Use a space to deactivate a mode. If you want to use multiple keys, for example
+`<Space>n` instead of `n`, you must use a list.
+
+In contrast to `g:targets_aiAI`, special keys must be escaped with a backslash.
+For example, use `"\<Space>"`, **not** `"<Space>"` nor `'<Space>'`. Example for
+configuring `g:targets_nl`:
+
+```vim
+let g:targets_nl = ["\<Space>n", "\<Space>l"]
+```
 
 ### g:targets_seekRanges
 
