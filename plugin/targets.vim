@@ -28,7 +28,7 @@ function! s:addAllMappings()
                     \ ['I', s:I, s:mI],
                     \ ['A', s:A, s:mA]]
             " See https://github.com/wellle/targets.vim/pull/242#issuecomment-557931274
-            if trim(map_lhs) != ''
+            if map_lhs != '' && map_lhs != ' '
                 silent! execute printf("omap <expr> <unique> %s targets#e('o', '%s', '%s')", map_lhs, modifier, map_rhs)
                 silent! execute printf("xmap <expr> <unique> %s targets#e('o', '%s', '%s')", map_lhs, modifier, map_rhs)
             endif
