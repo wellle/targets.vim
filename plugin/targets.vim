@@ -21,6 +21,7 @@ function! s:addAllMappings()
     let [s:ma, s:mi, s:mA, s:mI] = mapped_aiAI
 
     " if possible, create only a few expression mappings to speed up loading times
+    " TODO: has('patch-7.3.338')
     if v:version >= 704 || (v:version == 703 && has('patch338'))
         for [modifier, map_lhs, map_rhs] in [
                     \ ['i', s:i, s:mi],
