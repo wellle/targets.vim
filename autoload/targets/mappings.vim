@@ -57,7 +57,7 @@ function! s:addMappings()
                     \ })
 
         call targets#mappings#extend({'t': {'tag': [{}]}})
-        call targets#mappings#extend({'a': {'argument': [{'o': '[([]', 'c': '[])]', 's': ','}]}})
+        call targets#mappings#extend({'a': {'argument': [{'o': '[{([]', 'c': '[])}]', 's': ','}]}})
 
         call targets#mappings#extend({'b': {'pair': [{'o':'(', 'c':')'}, {'o':'[', 'c':']'}, {'o':'{', 'c':'}'}]}})
         call targets#mappings#extend({'q': {'quote': [{'d':"'"}, {'d':'"'}, {'d':'`'}]}})
