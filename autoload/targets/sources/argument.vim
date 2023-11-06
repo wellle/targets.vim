@@ -161,8 +161,14 @@ function! s:findArgBoundary(flags1, flags2, skip, finish, all, separator)
 
     let [tl, rl, rc] = [0, 0, 0]
     let [rl, rc] = searchpos(a:all, a:flags1)
+    let iteration = 0
     while 1
-        if rl == 0
+        if iteration >= 50000
+            echohl ErrorMsg
+            echomsg "ERROR: exceded maximum number of iterations"
+            echohl None
+            return [0, 0, targets#util#fail('findArgBoundary 2')]
+        elseif rl == 0
             return [0, 0, targets#util#fail('findArgBoundary 1', a:)]
         endif
 
@@ -177,11 +183,17 @@ function! s:findArgBoundary(flags1, flags2, skip, finish, all, separator)
             endif
             break
         elseif char =~# a:skip
+            let [lastB, lastL, lastC, curO] = getpos('.')
             silent! keepjumps normal! %
+            let [_, curL, curC, lastO] = getpos('.')
+            if curL < lastL || (curL == lastL && curC < lastC) || (curL == lastL && curC == lastC && curO < lastO)
+                call setpos('.', [lastB, lastL, lastC, lastO])
+            endif
         else
             return [0, 0, targets#util#fail('findArgBoundary 2')]
         endif
         let [rl, rc] = searchpos(a:all, a:flags2)
+        let iteration += 1
     endwhile
 
     return [rl, rc, 0]
