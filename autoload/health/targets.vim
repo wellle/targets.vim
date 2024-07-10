@@ -11,7 +11,7 @@ function! health#targets#check() abort
     endfor
 
     if conflicts == 0
-        call health#report_ok('No conflicting mappings found')
+        call v:lua.vim.health.ok('No conflicting mappings found')
     endif
 endfunction
 
@@ -22,12 +22,14 @@ function! s:check(trigger, map)
             continue
         endif
 
-        call health#report_warn("Conflicting mapping found:\n"
+        let warning = "Conflicting mapping found:\n"
                     \ . a:map . ' → ' . arg . "\n"
                     \ . a:trigger . " → " . string(targets#mappings#get(a:trigger))
-                    \ )
+        
+        call v:lua.vim.health.warn(warning)
         " no need to warn again for the other mode
         return 1
     endfor
     return 0
 endfunction
+
