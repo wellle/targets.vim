@@ -108,7 +108,7 @@ Targets.vim comes with five kinds for text objects:
 - Quote text objects
 - Separator text objects
 - Argument text objects
-- Tag text objects
+- Multi text objects
 
 Each of those kinds is implemented by a targets source. Third party plugins can
 provide additional sources to add even more text objects which behave like the
