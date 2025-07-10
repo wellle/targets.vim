@@ -866,7 +866,7 @@ Forcing motion to work linewise by inserting `V` in `dVan(` doesn't work
 for operator-pending mappings. See |o_V|.
 
 Report issues or submit pull requests to:
-    https://github.com/wellle/vim-targets
+    https://github.com/wellle/targets.vim
 
 
 ==============================================================================
